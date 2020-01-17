@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<link rel="stylesheet" href="../css/element.css" />
+		<link rel="stylesheet" href="../css/main.css" />
+
+		<title>Document</title>
+	</head>
+
+	<body>
+		<div id="costAnalysisTableApp">
+			<div class="table-box">
+				<el-table ref="costAnalysisTable" :data="tableData" style="width: 100%;height: 100%;" :cell-style="cellStyle"
+					:span-method="objectSpanMethod" :border="true">
+					<el-table-column label="任务" align="center">
+						<el-table-column label="工程量" align="center">
+							<el-table-column label="计划" width="80" align="center">
+								<template>
+									<div style="width:100%;height:100%;">
+										${quantities.plan}
+									</div>
+								</template>
+							</el-table-column>
+							<el-table-column label="实际" width="80" align="center">
+								<template>
+									<div style="width:100%;height:100%;" :class="[quantities.fact>quantities.plan?'mt_color':'lt_color']">
+										${quantities.fact}
+									</div>
+								</template>
+							</el-table-column>
+						</el-table-column>
+						<el-table-column label="工期" align="center">
+							<el-table-column label="计划" width="80" align="center">
+								<template>
+									<div style="width:100%;height:100%;">
+										${duration.plan}
+									</div>
+								</template>
+							</el-table-column>
+							<el-table-column label="实际" width="80" align="center">
+								<template>
+									<div style="width:100%;height:100%;" :class="[duration.fact>duration.plan?'mt_color':'lt_color']">
+										${duration.fact}
+									</div>
+								</template>
+							</el-table-column>
+						</el-table-column>
+					</el-table-column>
+					<el-table-column label="消耗资源" align="center">
+						<el-table-column prop="resource_name" label="名称" width="120" align="center"></el-table-column>
+						<el-table-column label="总消耗量" align="center">
+							<el-table-column prop="total_consumption_unit" label="单位" width="80" align="center"></el-table-column>
+							<el-table-column prop="total_consumption_plan" label="计划" width="80" align="center">
+							</el-table-column>
+							<el-table-column prop="total_consumption_fact" label="实际" width="80" align="center">
+								<template slot-scope="scope">
+									<div style="width:100%;height:100%;"
+										:class="[scope.row.total_consumption_fact>scope.row.total_consumption_plan?'mt_color':'lt_color']">
+										${scope.row.total_consumption_fact}
+									</div>
+								</template>
+							</el-table-column>
+						</el-table-column>
+						<el-table-column label="费用（元）" align="center">
+							<el-table-column prop="cost_plan" label="计划" width="80" align="center"></el-table-column>
+							<el-table-column prop="cost_fact" label="实际" width="80" align="center"></el-table-column>
+							<el-table-column prop="cost_deviation" label="偏差值" width="80" align="center"></el-table-column>
+						</el-table-column>
+						<el-table-column label="单位工程资源消耗量" align="center">
+							<el-table-column prop="per_unit_cost_plan" label="计划" width="80" align="center"></el-table-column>
+							<el-table-column prop="per_unit_cost_fact" label="实际" width="80" align="center"></el-table-column>
+							<el-table-column prop="per_unit_cost_deviation" label="偏差值" width="80" align="center"></el-table-column>
+						</el-table-column>
+						<el-table-column label="单价" align="center">
+							<el-table-column prop="price_unit" label="单位" width="80" align="center"></el-table-column>
+							<el-table-column prop="plan_unitprice" label="计划" width="80" align="center"></el-table-column>
+							<el-table-column prop="fact_unitprice" label="实际" width="80" align="center"></el-table-column>
+							<el-table-column prop="price_uplift" label="涨幅" width="80" align="center"></el-table-column>
+						</el-table-column>
+						<el-table-column label="单价影响后单位工程资源消耗量" align="center">
+							<el-table-column prop="recommended_value" label="建议值" width="130" align="center"></el-table-column>
+							<el-table-column prop="benchmark_value" label="基准值" width="130" align="center">
+								<template slot-scope="scope">
+									<div v-if="scope.row.benchmark_value" style="width:100%;height:100%;">
+										${scope.row.benchmark_value}
+									</div>
+									<el-input type="string" v-model.lazy.trim="scope.row.benchmark_input" v-else
+										@change="setBenchmark(scope.row)" size="mini" placeholder="请填写基准">
+									</el-input>
+								</template>
+							</el-table-column>
+						</el-table-column>
+						<el-table-column prop="benchmark_consumption_deviation" label="基准消耗偏差指数" width="140" align="center">
+						</el-table-column>
+						<el-table-column prop="deviation_type" label="偏差类型" width="100" align="center"></el-table-column>
+						<el-table-column prop="deviation_reason" label="偏差原因" width="100" align="center"></el-table-column>
+						<el-table-column prop="deviation_measure" label="纠偏措施" align="center"></el-table-column>
+					</el-table-column>
+				</el-table>
+			</div>
+		</div>
+		<script src="../js/vue.min.js"></script>
+		<script src="../js/vue.js"></script>
+		<script src="../js/element.js"></script>
+		<script src="../js/test.js"></script>
+	</body>
+
+</html>

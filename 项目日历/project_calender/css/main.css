@@ -1,0 +1,285 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+div {
+  box-sizing: border-box;
+}
+
+#projectCalenderApp {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+#projectCalenderApp .btn-list {
+  width: 100%;
+  height: 50px;
+  background: #fff;
+  text-align: left;
+  border: 1px solid #f2f2f2;
+  box-sizing: border-box;
+  display: inline-flex;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative;
+  /* padding-left: 20px; */
+}
+
+#projectCalenderApp .btn {
+  border: none;
+  font-size: 12px;
+  color: #fff;
+  background: #5582f4;
+  margin: 0 0 0 12px;
+  height: 28px;
+  /* font-weight: bold; */
+  padding: 0 15px;
+  border-radius: 2px;
+  margin-right: 20px;
+}
+
+#projectCalenderApp .btn:hover {
+  background: #779bf5;
+}
+
+#projectCalenderApp .set-time-panel {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+#projectCalenderApp .set-time-content {
+  width: 800px;
+  /* height: 400px; */
+  border: 1px solid #999;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+#projectCalenderApp .top-box {
+  display: flex;
+  width: 100%;
+  height: 50px;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding: 0 10px;
+}
+
+#projectCalenderApp .icon {
+  font-size: 18px;
+  color: red;
+}
+
+#projectCalenderApp .content-box {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 20px 0;
+}
+
+#projectCalenderApp .set-time-btn-list {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid #eee;
+}
+
+#projectCalenderApp .calendar-box {
+  /* width: 500px; */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  border: 1px solid #ccc;
+}
+
+#projectCalenderApp .calendar-box-top {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+}
+
+#projectCalenderApp .calendar-box-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+#projectCalenderApp .calendar-box-content .calendar-row {
+  /* width: 100%; */
+  /* height: 60px; */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+#projectCalenderApp .calendar-row-item {
+  /* flex: 1;
+  height: 100%; */
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  border-right: 1px solid #eee;
+}
+
+#projectCalenderApp .item-day {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  /* border: none; */
+}
+
+#projectCalenderApp .item-week {
+  height: 40px;
+  border-right: none;
+}
+
+#projectCalenderApp .day-info {
+  font-size: 20px;
+  font-weight: 800px;
+}
+
+#projectCalenderApp .wnl-info {
+  font-size: 12px;
+  font-weight: 700px;
+}
+
+#projectCalenderApp .calendar-box-bottom {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+#projectCalenderApp .calendar-box-bottom span {
+  font-size: 14px;
+  margin-left: 4px;
+}
+
+#projectCalenderApp .ledeng-box {
+  display: flex;
+  /* flex: 1; */
+  justify-content: space-around;
+  align-items: center;
+}
+
+#projectCalenderApp .ledeng-cube {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #eee;
+}
+
+#projectCalenderApp .calendar-row .calendar-row-item:last-of-type {
+  border-right: none;
+}
+
+#projectCalenderApp .bottom-box {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid #eee;
+}
+
+#projectCalenderApp .el-button {
+  font-size: 12px;
+  margin: 0 0 0 12px;
+  height: 28px;
+  /* font-weight: bold; */
+  padding: 0 15px;
+  border-radius: 2px;
+  margin-right: 20px;
+}
+
+
+/* .edit-calendar-panel {
+  margin-left: 40px;
+} */
+
+#projectCalenderApp .content-item {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 20px;
+  margin-bottom: 20px;
+}
+
+#projectCalenderApp .content-item-last {
+  justify-content: center;
+  margin-bottom: 0px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+#projectCalenderApp .level-three-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
+  margin-left: 40px;
+}
+
+#projectCalenderApp .exc-input-item {
+  margin-right: 15px;
+  font-size: 14px;
+}
+
+#projectCalenderApp .exc-input-item-label {
+  font-size: 14px;
+  color: #333;
+  margin-right: 5px;
+}
+
+#projectCalenderApp .set-as-week-checkbox-group {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 10px;
+}
+
+#projectCalenderApp .set-as-month {
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+#projectCalenderApp .set-as-month .exc-input-item {
+  margin-top: 10px;
+}
+
+#projectCalenderApp .excname-cell {
+  color: #5582f4;
+  cursor: pointer;
+}

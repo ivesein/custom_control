@@ -1,0 +1,9 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#qualityAnalysisTableApp .layui-table td, 
+#qualityAnalysisTableApp .layui-table th {
+    padding: 9px 12px;
+}

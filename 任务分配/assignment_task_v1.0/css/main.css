@@ -1,0 +1,65 @@
+#assignmentTaskApp {
+  width: 100%;
+  background: #f3f3f3;
+  padding: 0 0 10px 0;
+}
+
+#assignmentTaskApp .btn-list {
+  width: 100%;
+  height: 50px;
+  background: #fff;
+  text-align: left;
+  border: 1px solid #f2f2f2;
+  box-sizing: border-box;
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  /* padding-left: 20px; */
+}
+#assignmentTaskApp .btn-list .left-btns{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#assignmentTaskApp .btn-list button {
+  border: none;
+  font-size: 12px;
+  color: #fff;
+  background: #5582f4;
+  margin: 0 0 0 12px;
+  height: 28px;
+  /* font-weight: bold; */
+  padding: 0 15px;
+  border-radius: 2px;
+  margin-right: 20px;
+}
+
+#assignmentTaskApp .btn-list button:hover {
+  background: #779bf5;
+}
+
+/* #assignmentTaskApp .my-cell {
+  padding-left: 0;
+  padding-right: 0;
+} */
+/* #assignmentTaskApp .el-table .cell {
+  padding: 0px;
+} */
+/* .el-table__body tr.current-row > td {
+  background-color: #bbcdfa !important;
+} */
+
+#assignmentTaskApp .el-table__body tr.current-row > td {
+  background-color: #bbcdfa !important;
+  /* color: #f19944; */ /* 设置文字颜色，可以选择不设置 */
+}
+#assignmentTaskApp .el-table--enable-row-hover .el-table__body tr:hover > td {
+  background-color: #bbcdfa;
+  /* color: #f19944; */ /* 设置文字颜色，可以选择不设置 */
+}
+#assignmentTaskApp .text-task-name {
+  color: #5582f4;
+  cursor: pointer;
+}

@@ -1,0 +1,161 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<link rel="stylesheet" href="../css/element.css" />
+		<link rel="stylesheet" href="../css/main.css" />
+
+		<title>Document</title>
+	</head>
+
+	<body> -->
+<div id="costAnalysisTableApp">
+	<div class="table-box">
+		<el-table
+			ref="costAnalysisTable"
+			:data="tableData"
+			style="width: 100%;height: 100%;"
+			:cell-style="cellStyle"
+			:border="true"
+		>
+			<el-table-column label="任务">
+				<el-table-column label="名称">
+					<template slot-scope="scope">
+						<div
+							@dblclick="nameDbclick(scope.row)"
+							style="width:100%;height:100%;"
+						>
+							${scope.row.task_name}
+						</div>
+					</template>
+				</el-table-column>
+				<el-table-column
+					prop="wbs"
+					label="代码"
+					width="80"
+				></el-table-column>
+				<el-table-column
+					prop="design_owner"
+					label="承担人"
+					width="80"
+				></el-table-column>
+				<el-table-column
+					prop="task_status"
+					label="状态"
+					width="60"
+				></el-table-column>
+			</el-table-column>
+			<el-table-column label="工期">
+				<el-table-column
+					prop="plan_duration"
+					label="计划"
+					width="60"
+				></el-table-column>
+				<el-table-column
+					prop="fact_duration"
+					label="实际"
+					width="60"
+				></el-table-column>
+			</el-table-column>
+			<el-table-column label="工程量">
+				<el-table-column
+					prop="plan_quantities"
+					label="计划"
+					width="80"
+				></el-table-column>
+				<el-table-column
+					prop="fact_quantities"
+					label="实际"
+					width="80"
+				></el-table-column>
+			</el-table-column>
+			<el-table-column label="总费用">
+				<el-table-column
+					prop="plan_cost"
+					label="计划"
+					width="80"
+				></el-table-column>
+				<el-table-column label="实际" width="80">
+					<template slot-scope="scope">
+						<div
+							@dblclick="factCostDbclick(scope.row)"
+							style="width:100%;height:100%;color:#0079ff;"
+						>
+							${scope.row.fact_cost}
+						</div>
+					</template>
+				</el-table-column>
+			</el-table-column>
+			<el-table-column label="综合单价">
+				<el-table-column
+					prop="plan_unitprice"
+					label="计划"
+					width="80"
+				></el-table-column>
+				<el-table-column
+					prop="fact_unitprice"
+					label="实际"
+					width="80"
+				></el-table-column>
+			</el-table-column>
+			<el-table-column
+				prop="task_bcwp"
+				label="已完工作预算(BCWP)"
+				width="100"
+			></el-table-column>
+			<el-table-column
+				prop="task_bcws"
+				label="计划工作预算(BCWS)"
+				width="100"
+			></el-table-column>
+			<el-table-column
+				prop="task_acwp"
+				label="已完工作实际费用(ACWP)"
+				width="100"
+			></el-table-column>
+			<el-table-column
+				prop="task_cv"
+				label="成本偏差(CV)"
+				width="100"
+			></el-table-column>
+			<el-table-column
+				prop="task_sv"
+				label="进度偏差(SV)"
+				width="100"
+			></el-table-column>
+			<el-table-column
+				prop="task_cpi"
+				label="成本绩效指数(CPI)"
+				width="80"
+			></el-table-column>
+			<el-table-column
+				prop="task_spi"
+				label="进度绩效指数(SPI)"
+				width="80"
+			></el-table-column>
+			<el-table-column
+				prop="deviation_type"
+				label="偏差类型"
+				width="100"
+			></el-table-column>
+			<el-table-column
+				prop="deviation_reason"
+				label="偏差原因"
+				width="100"
+			></el-table-column>
+			<el-table-column
+				prop="deviation_measure"
+				label="采取措施"
+				width="100"
+			></el-table-column>
+		</el-table>
+	</div>
+</div>
+<!-- <script src="../js/vue.min.js"></script>
+		<script src="../js/vue.js"></script>
+		<script src="../js/element.js"></script>
+		<script src="../js/test.js"></script>
+	</body>
+</html> -->

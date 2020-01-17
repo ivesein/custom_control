@@ -1,0 +1,140 @@
+/* .el-table--border th,
+.el-table__fixed-right-patch {
+	background-color: #e5e5e5;
+	color: #333;
+}
+
+.el-table_1_column_4 {
+	text-align: center !important;
+}
+
+.el-table__row {
+	height: 30px;
+} */
+
+/* 设置表主体的高度 */
+/* .el-table__body td,
+.el-table__body th {
+	padding: 1px;
+} */
+
+#qualityPlanApp {
+  width: 100%;
+  background: #f3f3f3;
+}
+
+#qualityPlanApp .btn-lsit {
+  width: 100%;
+  height: 50px;
+  background: #fff;
+  text-align: left;
+  border: 1px solid #f2f2f2;
+  box-sizing: border-box;
+  display: inline-flex;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative;
+}
+
+#qualityPlanApp .btn-lsit button {
+  border: none;
+  font-size: 12px;
+  color: #fff;
+  background: #5582f4;
+  margin: 0 0 0 12px;
+  height: 28px;
+  /* font-weight: bold; */
+  padding: 0 15px;
+  border-radius: 2px;
+}
+
+#qualityPlanApp .btn-lsit button:hover {
+  background: #779bf5;
+}
+
+#qualityPlanApp .recheck-box {
+  width: 120%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin: 0 -10px;
+  text-indent: 10px;
+}
+#qualityPlanApp .recheck-box div {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#qualityPlanApp .recheck-box .recheck-top {
+  width: 100%;
+  height: 30px;
+}
+#qualityPlanApp .recheck-box .recheck-mid {
+  width: 100%;
+  display: flex;
+  border-top: 1px solid #ebeef5;
+  border-bottom: 1px solid #ebeef5;
+}
+#qualityPlanApp .recheck-box .recheck-mid .mid-left {
+  width: 50%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#qualityPlanApp .recheck-box .recheck-mid .mid-right {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  border-left: 1px solid #ebeef5;
+}
+#qualityPlanApp .mid-right-item {
+  width: 100%;
+  height: 30px;
+}
+#qualityPlanApp .mid-right-top {
+  border-bottom: 1px solid #ebeef5;
+}
+#qualityPlanApp .recheck-bot {
+  width: 100%;
+  height: 30px;
+}
+#qualityPlanApp .checek-man {
+  width: 140%;
+  height: 30px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  /* border-bottom: 1px solid #ebeef5; */
+  margin: 0 -10px;
+  text-indent: 10px;
+}
+
+#qualityPlanApp .checek-man:nth-child(2) {
+  border-top: 1px solid #ebeef5;
+}
+#qualityPlanApp .checek-man:nth-child(3) {
+  border-top: 1px solid #ebeef5;
+  border-bottom: 1px solid #ebeef5;
+  height: 32px;
+}
+
+.my-cell {
+  padding-left: 0;
+  padding-right: 0;
+}
+/* #qualityPlanApp .el-table .cell {
+  padding: 0px !important;
+} */
+#qualityPlanApp .el-table__body tr.current-row > td {
+  background-color: #bbcdfa !important;
+  /* color: #f19944; */ /* 设置文字颜色，可以选择不设置 */
+}
+#qualityPlanApp .el-table--enable-row-hover .el-table__body tr:hover > td {
+  background-color: #bbcdfa;
+  /* color: #f19944; */ /* 设置文字颜色，可以选择不设置 */
+}

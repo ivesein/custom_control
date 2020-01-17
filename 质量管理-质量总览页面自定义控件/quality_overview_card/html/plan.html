@@ -1,0 +1,43 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<link rel="stylesheet" href="../css/element.css" />
+		<link rel="stylesheet" href="../css/main.css" />
+
+		<title>Document</title>
+	</head>
+
+	<body> -->
+<div id="qualityOverviewCardApp">
+	<div class="card-container">
+		<div class="card-box" v-for="item in cardData">
+			<div class="card-title" :style="{background:item.color}">
+				${item.title}
+			</div>
+			<div class="card-content">
+				<div class="content-top">
+					<span class="complated-item"
+						>已完成 ${item.completed}个</span
+					>
+					<span class="overtime-item">(超时 </span
+					><span class="warning-text"
+						>&nbsp;&nbsp;${item.overtime}</span
+					><span class="overtime-item">个)</span>
+				</div>
+				<div class="content-bottom">
+					<span>计划完成${item.plan}个</span
+					><span>偏差${item.deviation}个</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- <script src="../js/vue.min.js"></script>
+		<script src="../js/vue.js"></script>
+		<script src="../js/element.js"></script>
+		<script src="../js/test.js"></script>
+	</body>
+</html> -->

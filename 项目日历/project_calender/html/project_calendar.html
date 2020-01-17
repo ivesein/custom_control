@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="stylesheet" href="../css/element.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="projectCalenderApp">
+    <div class="btn-list">
+      <button class="btn set-project-time" @click="openSetTime">
+          设置项目时间
+        </button>
+      <button class="btn set-project-calendar" @click="openSetCalendar">
+          设置项目日历
+        </button>
+    </div>
+    <div class="set-time-panel" v-if="setTimePanelShow">
+      <div class="set-time-content">
+        <div class="top-box">
+          <span>设置项目时间</span>
+          <i class="el-icon-close icon" @click="closeSetTimePanel"></i>
+        </div>
+        <div class="content-box">
+          <el-form ref="form" label-position="right" :model="form" label-width="140px">
+            <el-form-item label="当前日期：">
+              <el-input v-model="form.currentDate" disabled></el-input>
+            </el-form-item>
+            <el-form-item label="日程排定方式：">
+              <el-select v-model="form.schedule">
+                <el-option label="项目开始日期" :value=1></el-option>
+                <el-option label="项目结束日期" :value=2></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item :label="form.schedule===1?'项目开始日期：':'项目结束日期：'">
+              <el-date-picker value-format="yyyy-MM-dd  HH:mm:ss" format="yyyy-MM-dd  HH:mm:ss" :clearable=false :editable=false type="date" placeholder="选择日期" @change="changeProjectStartOrEndDate" v-model="form.date">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item label="日历：">
+              <el-input v-model="form.calendarName" disabled></el-input>
+            </el-form-item>
+          </el-form>
+        </div>
+        <div class="set-time-btn-list">
+          <el-button @click="setTimeConfirm" type="primary">确定</el-button>
+          <el-button @click="setTimeCancel">取消</el-button>
+        </div>
+      </div>
+    </div>
+    <div class="set-time-panel" v-if="setCalendarPanelShow">
+      <div class="set-time-content">
+        <div class="top-box">
+          <div class="top-left-box">
+            <span>选择日历</span>
+            <el-select value-key="calendarId" v-model="selectedCalendar" size="mini">
+              <el-option v-for="item in calendarData" :key="item.calendarId" :label="item.calendarName" :value="item">
+              </el-option>
+            </el-select>
+            <el-button type="danger">删除日历</el-button>
+          </div>
+          <i class="el-icon-close icon" @click="closeSetCalendarPanel"></i>
+        </div>
+        <div class="content-box">
+          <div class="calendar-box">
+            <div class="calendar-box-top">
+              <el-date-picker :clearable="false" size="mini" @change="changeMonth" value-format="yyyy-MM" format="yyyy-MM" :editable="false" size="mini" style="margin-left:20px;width:120px" v-model="currentYearAndMonth" type="month" placeholder="选择月">
+              </el-date-picker>
+            </div>
+            <div class="calendar-box-content">
+              <div class="calendar-row">
+                <div class="calendar-row-item item-week" v-for="(item,index) in week" :key="index+item">
+                  ${item}
+                </div>
+              </div>
+              <div class="calendar-row" v-for="(row,index) in renderDate">
+                <div class="calendar-row-item item-day" v-for="(item,index1) in row" :key="index1" :style="{background:item.color}">
+                  <span class="day-info">${item.day}</span>
+                  <span class="wnl-info">${item.wnl}</span>
+                </div>
+              </div>
+            </div>
+            <div class="calendar-box-bottom">
+              <div class="ledeng-box">
+                <div class="ledeng-cube" style="border: 1px solid #ccc;"></div>
+                <span>工作日</span>
+              </div>
+              <div class="ledeng-box" v-for="(item,index) in legendText" :key="index+item" :style="{color:legendColors[index+1]}">
+                <div class="ledeng-cube" :style="{background:legendColors[index+1]}"></div>
+                <span>${item}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bottom-box">
+          <el-button @click="goEdit(true)" :disabled="editCalendarPanelShow">修改</el-button>
+          <el-button @click="goEdit(false)" type="primary" :disabled="editCalendarPanelShow">新建</el-button>
+          <el-button type="success" :disabled="editCalendarPanelShow">应用</el-button>
+        </div>
+      </div>
+      <div class="level-three-panel">
+        <div class="edit-calendar-panel" v-if="editCalendarPanelShow">
+          <div class="set-time-content edit-panel-content">
+            <div class="top-box">
+              <span>设置项目日历</span>
+              <i class="el-icon-close icon" @click="closeEditCalendarPanel"></i>
+            </div>
+            <div class="content-box">
+              <div class="content-item">
+                <span>日历名称：</span>
+                <el-input size="mini" style="width:160px" v-model.trim="editCalendarName"></el-input>
+              </div>
+              <div class="content-item">
+                <span>例外日期</span>
+                <el-button @click="addExc" type="primary">新增</el-button>
+                <el-button @click="delExc" type="danger">删除</el-button>
+              </div>
+              <div class="content-item">
+                <el-table max-height="250" border ref="multipleTable" :data="tableExcData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+                  <el-table-column type="selection" width="55">
+                  </el-table-column>
+                  <el-table-column type="index" label="序号" width="120">
+                  </el-table-column>
+                  <el-table-column label="名称" show-overflow-tooltip>
+                    <template slot-scope="scope">
+                        <div class="excname-cell" @click="excNameClick(scope.row)">${scope.row.exceptionName}</div>
+                      </template>
+                  </el-table-column>
+                  <el-table-column label="例外类型" width="160">
+                    <template slot-scope="scope">
+                        <div v-show="scope.row.exceptionType==='1'">工作日例外</div>
+                        <div v-show="scope.row.exceptionType==='2'">非工作日例外</div>
+                      </template>
+                  </el-table-column>
+                  <el-table-column prop="startTime" label="起始日期" width="160">
+                  </el-table-column>
+                  <el-table-column prop="endTime" label="结束日历" width="160">
+                  </el-table-column>
+                </el-table>
+              </div>
+              <div class="content-item content-item-last">
+                <el-button @click="editConfirm" type="primary" :disabled="addExcPanelShow">确定</el-button>
+                <el-button @click="editCancel" :disabled="addExcPanelShow">取消</el-button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="add-exc-pannel" v-if="addExcPanelShow">
+          <div class="set-time-content edit-panel-content">
+            <div class="top-box">
+              <span>新增/编辑例外</span>
+              <i class="el-icon-close icon" @click="closeaddExcPanel"></i>
+            </div>
+            <div class="content-box">
+              <div class="content-item">
+                <div class="exc-input-item">
+                  <span class="exc-input-item-label">例外名称</span>
+                  <el-input size="mini" style="width:140px" v-model.trim="editExcName"></el-input>
+                </div>
+                <div class="exc-input-item">
+                  <span class="exc-input-item-label">例外类型</span>
+                  <el-select value-key="typeNum" style="width:140px" v-model="editExcType" size="mini">
+                    <el-option v-for="item in editExcTypeOption" :key="item.typeNum" :label="item.excTypeName" :value="item.typeNum">
+                    </el-option>
+                  </el-select>
+                </div>
+                <div class="exc-input-item">
+                  <span class="exc-input-item-label">例外范围</span>
+                  <el-date-picker :clearable="false" style="width:220px" :editable="false" size="mini" v-model="pickedDateRange" type="daterange" range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd" :picker-options="pickerOptions">
+                  </el-date-picker>
+                </div>
+              </div>
+              <div class="content-item">
+                <div>
+                  <el-radio-group v-model="cycleType" size="mini">
+                    <el-radio-button label="0">按天设置</el-radio-button>
+                    <el-radio-button label="1">按周设置</el-radio-button>
+                    <el-radio-button label="2">按月设置</el-radio-button>
+                  </el-radio-group>
+                </div>
+              </div>
+              <div class="content-item set-as-day" v-if="cycleType==0">
+                <div class="exc-input-item">
+                  <span>每间隔</span>&nbsp;&nbsp;
+                  <el-input-number controls-position="right" :min="0" :max="100" size="mini" v-model="stepDay">
+                  </el-input-number><span>&nbsp;&nbsp;天</span>
+                </div>
+              </div>
+              <div class="content-item set-as-week" v-if="cycleType==1">
+                <div class="exc-input-item">
+                  <span>每间隔</span>&nbsp;&nbsp;
+                  <el-input-number controls-position="right" :min="0" :max="100" size="mini" v-model="stepWeek">
+                  </el-input-number>
+                  <span>&nbsp;&nbsp;周</span>
+                  <el-checkbox-group @change="handleWeekSelectChange" class="set-as-week-checkbox-group" v-model="weekChecked" size="mini">
+                    <el-checkbox v-for="(item,index) in daysInOneWeek" :key="index+item.dayText" :label=item.dayIndex border>${item.dayText}</el-checkbox>
+                  </el-checkbox-group>
+                </div>
+              </div>
+              <div class="content-item set-as-month" v-if="cycleType==2">
+                <div class="exc-input-item">
+                  <span>每间隔</span>&nbsp;&nbsp;
+                  <el-input-number controls-position="right" :min="0" :max="100" size="mini" v-model="stepMonth">
+                  </el-input-number>
+                  <span>&nbsp;&nbsp;月</span>
+                </div>
+                <div class="exc-input-item">
+                  <el-select value-key="weekIndex" style="width:140px" v-model="selectedWeekInOneMonth" size="mini">
+                    <el-option v-for="item in weeksInOneMonth" :key="item.weekIndex" :label="item.weekText" :value="item.weekIndex">
+                    </el-option>
+                  </el-select>
+                  <el-select value-key="dayIndex" style="width:140px" v-model="selectedDayInOneWeek" size="mini">
+                    <el-option v-for="item in daysInOneWeek" :key="item.dayIndex" :label="item.dayText" :value="item.dayIndex">
+                    </el-option>
+                  </el-select>
+                </div>
+              </div>
+              <div class="content-item content-item-last">
+                <el-button @click="addExcConfirm" type="primary">确定</el-button>
+                <el-button @click="addExcCancel">取消</el-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="../js/time.js"></script>
+  <script src="../js/lodash.js"></script>
+  <script src="../js/nongli.js"></script>
+  <script src="../js/vue.min.js"></script>
+  <script src="../js/vue.js"></script>
+  <script src="../js/element.js"></script>
+  <script src="../js/test.js"></script>
+</body>
+
+</html>

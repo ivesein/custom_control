@@ -1,0 +1,235 @@
+var taskKanbanVue = null
+	; (function (KDApi, $) {
+		var displayWhichOne = "chartOne"
+		function MyComponent(model) {
+			this._setModel(model)
+		}
+		MyComponent.prototype = {
+			// 内部函数不推荐修改
+			_setModel: function (model) {
+				this.model = model // 内部变量挂载
+			},
+			init: function (props) {
+				console.log("init---", this.model, props)
+				setHtml(this.model, props)
+			},
+			update: function (props) {
+				// var tData = JSON.parse(props.data)
+				console.log("-----update", this.model, props)
+				// firstInit(props, this.model)
+				// setHtml(this.model, props)
+				if (taskKanbanVue && props.data) {
+					taskKanbanVue.handleUpdata(this.model, props)
+				} else {
+					setHtml(this.model, props)
+				}
+			},
+			destoryed: function () {
+				console.log("-----destoryed", this.model)
+				taskKanbanVue = null
+			}
+		}
+		/**
+		 *@description 第一次打开页面加载相关依赖前端文件
+		 *
+		 * @param {*} model 金蝶内建对象model
+		 */
+		var setHtml = function (model, props) {
+			KDApi.loadFile("./css/element.css", model.schemaId, function () {
+				KDApi.loadFile("./css/main.css", model.schemaId, function () {
+					KDApi.loadFile("./js/vue.min.js", model.schemaId, function () {
+						KDApi.loadFile("./js/vue.js", model.schemaId, function () {
+							KDApi.loadFile(
+								"./js/echarts.min.js",
+								model.schemaId,
+								function () {
+									KDApi.loadFile(
+										"./js/element.js",
+										model.schemaId,
+										function () {
+											KDApi.templateFilePath(
+												"./html/task_kanban.html",
+												model.schemaId,
+												{
+													path:
+														KDApi.nameSpace(
+															model.schemaId
+														) + "./img/lock.png"
+												}
+											).then(function (result) {
+												model.dom.innerHTML = result
+												// model.invoke("initData", '') //初始化
+												console.log(props.data)
+												// if (props.data === undefined || props.data === null) {
+												// 	return
+												// }
+												taskKanbanVue = new Vue(
+													{
+														delimiters: ["${", "}"],
+														data: {
+															allDatas: null,
+															currentType: "",
+															summarData: [],
+															responsibleTaskInfos: [],
+															participtionTaskInfos: [],
+															professionalAuditTaskInfos: []
+														},
+														mounted() {
+															if (props.data) {
+																this.allDatas = props.data
+																this.summarData = this.allDatas.summarData
+																for (let i = 0; i < this.summarData.length; i++) {
+																	if (this.summarData[i].focus) {
+																		this.currentType = this.summarData[i].title
+																		break;
+																	}
+																}
+																this.handleCurrentTypeToDisplay(this.currentType, this.allDatas)
+															}
+														},
+														methods: {
+															handleCurrentTypeToDisplay(currentType, allData) {
+																// console.log("currentType>>>", currentType)
+																// console.log("allData>>>", allData)
+																switch (currentType) {
+																	case "总任务":
+																		this.responsibleTaskInfos = allData.all.responsibleTaskInfos
+																		this.participtionTaskInfos = allData.all.participtionTaskInfos
+																		this.professionalAuditTaskInfos = allData.all.professionalAuditTaskInfos
+																		break;
+																	case "待完成任务":
+																		this.responsibleTaskInfos = allData.beCompleted.responsibleTaskInfos
+																		this.participtionTaskInfos = allData.beCompleted.participtionTaskInfos
+																		this.professionalAuditTaskInfos = allData.beCompleted.professionalAuditTaskInfos
+																		break;
+																	case "已完成任务":
+																		this.responsibleTaskInfos = allData.completed.responsibleTaskInfos
+																		this.participtionTaskInfos = allData.completed.participtionTaskInfos
+																		this.professionalAuditTaskInfos = allData.completed.professionalAuditTaskInfos
+																		break;
+																	case "已过期任务":
+																		this.responsibleTaskInfos = allData.overTime.responsibleTaskInfos
+																		this.participtionTaskInfos = allData.overTime.participtionTaskInfos
+																		this.professionalAuditTaskInfos = allData.overTime.professionalAuditTaskInfos
+																		break;
+																	default:
+																		this.responsibleTaskInfos = allData.all.responsibleTaskInfos
+																		this.participtionTaskInfos = allData.all.participtionTaskInfos
+																		this.professionalAuditTaskInfos = allData.all.professionalAuditTaskInfos
+																}
+															},
+															handleUpdata(model, props) {
+																// console.log("handleUpdate props>>>", props)
+																this.allDatas = props.data
+																// console.log("handleUpdate this.allDatas>>>", this.allDatas)
+																this.summarData = this.allDatas.summarData
+																for (let i = 0; i < this.summarData.length; i++) {
+																	if (this.summarData[i].focus) {
+																		this.currentType = this.summarData[i].title
+																		break;
+																	}
+																}
+																this.handleCurrentTypeToDisplay(this.currentType, this.allDatas)
+															},
+															handleSummaryItemClicked(item) {
+																this.summarData.forEach(function (fuck) {
+																	fuck.focus = false
+																})
+																item.focus = true
+																this.currentType = item.title
+																this.handleCurrentTypeToDisplay(this.currentType, this.allDatas)
+															},
+															// clickNameOpenTaskDetail
+															handleTaskNameClicked(item) {
+																console.log(item)
+																let sendData = {
+																	data: item
+																}
+																model.invoke("clickNameOpenTaskDetail", sendData)
+															},
+															designClickAccept(item) {
+																// console.log(item)
+																this.$confirm('确认接受该任务?', '接受', {
+																	confirmButtonText: '确定',
+																	cancelButtonText: '取消',
+																	type: 'warning'
+																}).then(() => {
+																	let sendData = {
+																		type: this.currentType,
+																		data: item
+																	}
+																	model.invoke("designCliickAcceptTaskButton", sendData)
+																})
+															},
+															auditUrge(item) {
+																this.$confirm('确定催办该任务?', '催办', {
+																	confirmButtonText: '确定',
+																	cancelButtonText: '取消',
+																	type: 'warning'
+																}).then(() => {
+																	let sendData = {
+																		type: this.currentType,
+																		data: item
+																	}
+																	model.invoke("auditClickUrgeTaskButton", sendData)
+																})
+															},
+															reviewUrge(item) {
+																this.$confirm('确定催办该任务?', '催办', {
+																	confirmButtonText: '确定',
+																	cancelButtonText: '取消',
+																	type: 'warning'
+																}).then(() => {
+																	let sendData = {
+																		type: this.currentType,
+																		data: item
+																	}
+																	model.invoke("reviewClickUrgeTaskButton", sendData)
+																})
+															},
+															iconArrowClick(item) {
+																item.open = !item.open
+															},
+															auditClickAccept(row) {
+																this.$confirm('确定接受该任务?', '接受', {
+																	confirmButtonText: '确定',
+																	cancelButtonText: '取消',
+																	type: 'warning'
+																}).then(() => {
+																	let sendData = {
+																		type: this.currentType,
+																		data: row
+																	}
+																	model.invoke("auditCliickAcceptTaskButton", sendData)
+																})
+
+															},
+															reviewClickAccept(item) {
+																this.$confirm('确定接受该任务?', '接受', {
+																	confirmButtonText: '确定',
+																	cancelButtonText: '取消',
+																	type: 'warning'
+																}).then(() => {
+																	let sendData = {
+																		type: this.currentType,
+																		data: item
+																	}
+																	model.invoke("reviewCliickAcceptTaskButton", sendData)
+																})
+															}
+														}
+													}
+												).$mount("#taskKanbanApp")
+											})
+										}
+									)
+								}
+							)
+						})
+					})
+				})
+			})
+		}
+		// 注册自定义控件
+		KDApi.register("task_kanban_v1.0", MyComponent)
+	})(window.KDApi, jQuery)
