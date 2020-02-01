@@ -14,94 +14,97 @@
 <body>
   <div id="taskKanbanApp">
     <div class="top-box">
-      <el-card shadow="always" v-for="(item,index) in summarData" :key="index" :body-style="{padding:'0'}">
-        <div @click="handleSummaryItemClicked(item)" class="chose-time-slot" :class="{'focus':item.focus}">
-          <div class="item-card-number">${item.number}</div>
-          <div class="item-card-title">${item.title}</div>
-        </div>
-      </el-card>
+      <div v-for="(item,index) in summarData" :key="index" @click="handleSummaryItemClicked(item)" class="chose-time-slot">
+        <div class="item-card-title">${item.title}</div>
+        <div class="item-card-number" :class="{'focus':item.focus}">${item.number}</div>
+      </div>
     </div>
     <div class="bottom-box">
-      <div class="label-text">
-        我负责的
-      </div>
-      <div class="label-text label-particiption">
-        我参与的
-      </div>
       <div class="bottom-part responsible-box">
-        <div class="task-detail" v-for="(item,index) in responsibleTaskInfos" :key="index">
-          <div class="task-status-icon">
-            <i v-show="item.task_status==='toBeComplected'" class="el-icon-s-flag"></i>
-            <i v-show="item.task_status==='inProgress'" class="el-icon-time"></i>
-            <i v-show="item.task_status==='complected'" class="el-icon-check"></i>
-          </div>
-          <div class="task-text-box">
-            <span class="task-name" @click="handleTaskNameClicked(item)">${item.task_name}</span>
-            <span class="project-name">${item.project_name}</span>
-          </div>
-          <div v-show="item.task_status==='toBeComplected'" class="btn-box">
-            <div class="btn" @click="designClickAccept(item)">接受</div>
+        <div class="bottom-part-title label-text">我负责的</div>
+        <div class="bottom-part-content">
+          <div class="task-detail" v-for="(item,index) in responsibleTaskInfos" :key="index">
+            <div v-show="item.task_status==='toBeComplected'" class="task-detail-left-toBeComplected"></div>
+            <div v-show="item.task_status==='inProgress'" class="task-detail-left-inProgress"></div>
+            <div v-show="item.task_status==='complected'" class="task-detail-left-complected"></div>
+            <div class="task-status-icon">
+              <i v-show="item.task_status==='toBeComplected'" class="el-icon-remove-outline"></i>
+              <i v-show="item.task_status==='inProgress'" class="el-icon-time"></i>
+              <i v-show="item.task_status==='complected'" class="el-icon-check"></i>
+            </div>
+            <div class="task-text-box">
+              <span class="task-name" @click="handleTaskNameClicked(item)">${item.task_name}</span>
+              <span class="project-name">${item.project_name}</span>
+            </div>
+            <div v-show="item.task_status==='toBeComplected'" class="btn-box">
+              <div class="btn" @click="designClickAccept(item)">接受</div>
+            </div>
           </div>
         </div>
       </div>
       <div class="bottom-part particiption-box">
-        <!-- 专业审核 -->
-        <div class="professional_audit_task" v-for="(item,index) in professionalAuditTaskInfos" :key="index+item.task_name">
-          <div class="task-name">
-            <!-- <span class="professional_audit_task_name" @click="handleTaskNameClicked(item)">${item.task_name}</span> -->
-            <span class="professional_audit_task_name">${item.task_name}</span>
-            <i class="el-icon-arrow-down" @click="iconArrowClick(item)" v-if="item.open"></i>
-            <i class="el-icon-arrow-right" @click="iconArrowClick(item)" v-else></i>
+        <div class="bottom-part-title label-text">我参与的</div>
+        <div class="bottom-part-content">
+          <div class="professional_audit_task" v-for="(item,index) in professionalAuditTaskInfos" :key="index+item.task_name">
+            <div class="task-name">
+              <div class="professional_audit_task_text">
+                <div class="professional_audit_task_name">${item.task_name}</div>
+                <div class="project-name">${item.project_name}</div>
+              </div>
+              <div class="drop-btn">
+                <i class="el-icon-caret-bottom" @click="iconArrowClick(item)" v-if="item.open"></i>
+                <i class="el-icon-caret-right" @click="iconArrowClick(item)" v-else></i>
+              </div>
+            </div>
+            <div class="pa_task_table_box" v-if="item.open">
+              <el-table :data="item.auditTask" border style="width: 100%;" max-height=220 :header-cell-style="{background: '#eef1f6',color: '#606266'}">
+                <el-table-column prop="wbs" label="任务代码" width="120">
+                </el-table-column>
+                <el-table-column label="任务名称">
+                  <template slot-scope="scope">
+                      <div class="pa-task-name" @click="handleTaskNameClicked(scope.row)">${scope.row.task_name}</div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="design_owner" label="设计承担人" width="120">
+                </el-table-column>
+                <el-table-column prop="review_owner" label="复核承担人" width="120">
+                </el-table-column>
+                <el-table-column prop="task_status" label="任务状态" width="120">
+                  <template slot-scope="scope">
+                      <span v-show="scope.row.task_status==='toBeComplected'">待开始</span>
+                      <span v-show="scope.row.task_status==='inProgress'">进行中</span>
+                      <span v-show="scope.row.task_status==='complected'">已完成</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="开始任务" width="120">
+                  <template slot-scope="scope">
+                      <div class="pa_task_btn" v-show="scope.row.task_status==='toBeComplected'">
+                        <div class="btn" v-if="scope.row.taskScheduleStatus" @click="auditClickAccept(scope.row)"
+                          type="text" size="small">接受</div>
+                        <div class="btn" v-else @click="auditUrge(scope.row)" type="text" size="small">催办</div>
+                      </div>
+                    </template>
+                </el-table-column>
+              </el-table>
+            </div>
           </div>
-          <div class="project-name">${item.project_name}</div>
-          <div class="pa_task_table_box" v-if="item.open">
-            <el-table :data="item.auditTask" border style="width: 100%" height=220>
-              <el-table-column prop="wbs" label="任务代码" width="120">
-              </el-table-column>
-              <el-table-column label="任务名称">
-                <template slot-scope="scope">
-                    <div class="pa-task-name" @click="handleTaskNameClicked(scope.row)">${scope.row.task_name}</div>
-                  </template>
-              </el-table-column>
-              <el-table-column prop="design_owner" label="设计承担人" width="120">
-              </el-table-column>
-              <el-table-column prop="review_owner" label="复核承担人" width="120">
-              </el-table-column>
-              <el-table-column prop="task_status" label="任务状态" width="120">
-                <template slot-scope="scope">
-                    <span v-show="scope.row.task_status==='toBeComplected'">待开始</span>
-                    <span v-show="scope.row.task_status==='inProgress'">进行中</span>
-                    <span v-show="scope.row.task_status==='complected'">已完成</span>
-                  </template>
-              </el-table-column>
-              <el-table-column label="开始任务" width="120">
-                <template slot-scope="scope">
-                    <div class="pa_task_btn" v-show="scope.row.task_status==='toBeComplected'">
-                      <div class="btn" v-if="scope.row.taskScheduleStatus" @click="auditClickAccept(scope.row)"
-                        type="text" size="small">接受</div>
-                      <div class="btn" v-else @click="auditUrge(scope.row)" type="text" size="small">催办</div>
-                    </div>
-                  </template>
-              </el-table-column>
-            </el-table>
-          </div>
-        </div>
-        <!-- 专业审核 -->
-        <el-divider></el-divider>
-        <div class="task-detail" v-for="(item,index) in participtionTaskInfos" :key="index">
-          <div class="task-status-icon">
-            <i v-show="item.task_status==='toBeComplected'" class="el-icon-s-flag"></i>
-            <i v-show="item.task_status==='inProgress'" class="el-icon-time"></i>
-            <i v-show="item.task_status==='complected'" class="el-icon-check"></i>
-          </div>
-          <div class="task-text-box">
-            <span class="task-name" @click="handleTaskNameClicked(item)">${item.task_name}</span>
-            <span class="project-name">${item.project_name}</span>
-          </div>
-          <div class="btn-box" v-show="item.task_status==='toBeComplected'">
-            <!-- <el-button type="primary">接受</el-button> -->
-            <div class="btn" v-if="item.taskScheduleStatus" @click="reviewClickAccept(item)">接受</div>
-            <div class="btn" v-else @click="reviewUrge(item)">催办</div>
+          <div class="task-detail" v-for="(item,index) in participtionTaskInfos" :key="index">
+            <div v-show="item.task_status==='toBeComplected'" class="task-detail-left-toBeComplected"></div>
+            <div v-show="item.task_status==='inProgress'" class="task-detail-left-inProgress"></div>
+            <div v-show="item.task_status==='complected'" class="task-detail-left-complected"></div>
+            <div class="task-status-icon">
+              <i v-show="item.task_status==='toBeComplected'" class="el-icon-remove-outline"></i>
+              <i v-show="item.task_status==='inProgress'" class="el-icon-time"></i>
+              <i v-show="item.task_status==='complected'" class="el-icon-check"></i>
+            </div>
+            <div class="task-text-box">
+              <span class="task-name" @click="handleTaskNameClicked(item)">${item.task_name}</span>
+              <span class="project-name">${item.project_name}</span>
+            </div>
+            <div class="btn-box" v-show="item.task_status==='toBeComplected'">
+              <div class="btn" v-if="item.taskScheduleStatus" @click="reviewClickAccept(item)">接受</div>
+              <div class="btn" v-else @click="reviewUrge(item)">催办</div>
+            </div>
           </div>
         </div>
       </div>

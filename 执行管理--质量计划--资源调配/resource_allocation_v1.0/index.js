@@ -291,7 +291,9 @@
                                 task_id: v.task_id,
                                 task_name: v.task_name,
                                 task_type: v.task_type,
-                                duration: v.duration
+                                duration: v.duration,
+                                owner: v.owner,
+                                owner_role: v.owner_role
                               })
                             }
                           })
@@ -389,14 +391,20 @@
                             data: ids
                           }
                           if (ids.length > 0) {
-                            changedIds = changedIds.concat(this.currentSelectedIds)
-                            model.invoke(
-                              "setQualityPlanRole",
-                              sendData
-                            )
+                            let flag = ids.every(function(v) {
+                              return v.owner_role === "" || v.owner_role === null || v.owner_role === undefined
+                            })
+                            if (flag) {
+                              changedIds = changedIds.concat(this.currentSelectedIds)
+                              model.invoke(
+                                "setQualityPlanRole",
+                                sendData
+                              )
+                            } else {
+                              this.$message.error("只有新增的任务可以设置角色")
+                            }
                           } else {
                             this.$message.error("未勾选任务")
-
                           }
                         },
                         getTask(tasks, selectedIds) {
@@ -416,11 +424,19 @@
                             data: ids
                           }
                           if (ids.length > 0) {
-                            changedIds = changedIds.concat(this.currentSelectedIds)
-                            model.invoke(
-                              "setQualityPlanStaff",
-                              sendData
-                            )
+                            let flag = ids.every(function(v) {
+                              return v.owner === "" || v.owner === null || v.owner === undefined
+                            })
+                            if (flag) {
+                              changedIds = changedIds.concat(this.currentSelectedIds)
+                              model.invoke(
+                                "setQualityPlanStaff",
+                                sendData
+                              )
+                            } else {
+                              this.$message.error("只有新增的任务可以设置人员")
+                            }
+
                           } else {
                             this.$message.error("未勾选任务")
 
@@ -439,11 +455,16 @@
                           } else if (ids[0].task_type !== "3") {
                             this.$message.error("只有复核任务可以设置任务持续时间")
                           } else {
-                            changedIds = changedIds.concat(this.currentSelectedIds)
-                            model.invoke(
-                              "SetDurationTime",
-                              sendData
-                            )
+                            if (ids[0].duration === "" || ids[0].duration === null || ids[0].duration === undefined) {
+                              changedIds = changedIds.concat(this.currentSelectedIds)
+                              model.invoke(
+                                "SetDurationTime",
+                                sendData
+                              )
+                            } else {
+                              this.$message.error("只有新增的复核任务可以设置任务持续时间")
+
+                            }
                           }
                         },
                         refreshData() {
