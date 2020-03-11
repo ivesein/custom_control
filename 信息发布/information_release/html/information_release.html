@@ -1,0 +1,41 @@
+<!-- <!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="../css/element.css" />
+    <link rel="stylesheet" href="../css/main.css" />
+
+    <title>Document</title>
+  </head>
+  <body> -->
+    <!-- 
+      @author zhang fq
+      @date 2020-02-21
+      @description  信息发布 仿金蝶首页信息发布 以作备用
+     -->
+  <div id="informationReleaseApp">
+    <div class="title-box">信息发布</div>
+    <div ref="newList" class="new-list" :class="{anim:animate}" @mouseenter="Stop()" @mouseleave="Up()">
+      <div class="info-item" v-for="(item, index) in infos" :key="index">
+        <el-image style="width: 60px; margin: 8px 0 16px;":src="item.img" fit="fit">
+          <div slot="placeholder" class="image-slot">
+            <img :src="defaultImg" alt="">
+          </div>
+          <div slot="error" class="image-slot">
+            <img :src="defaultImg" alt="">
+          </div>
+        </el-image>
+        <p class="info-text">${item.text}</p>
+      </div>
+    </div>
+  </div>
+  <!-- <script src="../js/lodash.js"></script>
+  <script src="../js/vue.min.js"></script>
+  <script src="../js/vue.js"></script>
+  <script src="../js/element.js"></script>
+  <script src="../js/test.js"></script>
+  </body>
+</html> -->

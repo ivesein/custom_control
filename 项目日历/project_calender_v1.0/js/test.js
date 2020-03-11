@@ -160,50 +160,38 @@ new Vue({
       calendarName: "",
       calendarChange: null,
       exArr: []
-    } // 将要发送到后台保存的例外数据
-  },
-  components: {},
-  created() {
-    this.initCurrentDate()
-    this.projectCalendarData.calendarData = this.initSelectedMonthDays(this.currentYearAndMonth)
-    var excArr = [{
-        exceptionId: 'uuid', // 数据库中取出的例外的主键,新增的没有
-        exceptionName: '月例外', // 例外名称
-        exceptionType: 3, // 例外类型
-        startTime: '2020-01-01', // 开始时间
-        endTime: '2020-07-31', // 结束时间
-        cycleType: '0', // 例外设置类型 (0:按天设置1:按周设置2:按月设置)
-        jgNumber: 1, //按天设置时候的间隔,按周设置时候的间隔,按月设置时候每间隔几月
-        weekChecks: [4], // 按周设置时候选择的星期数,(0-6日-六)
-        isChange: "0", // 是否 0 : 新增   1: 修改  2: 删除
-        monthIndex: 1, // 按月设置时候 每月第1个周几
-      },
+    }, // 将要发送到后台保存的例外数据
+    myExcData:[
+      // {
+      //     "cycleType": "2",
+      //     "endTime": "2020-03-30",
+      //     "exceptionId": "800610794533300224",
+      //     "exceptionName": "month",
+      //     "exceptionType": "4",
+      //     "jgNumber": "0",
+      //     "startTime": "2020-02-17",
+      //     "weekChecks": ["3"],
+      //     "monthIndex": '4',
+      // },
       {
         exceptionId: 'uuid', // 数据库中取出的例外的主键,新增的没有
-        exceptionName: '月例外', // 例外名称
+        exceptionName: 'month', // 例外名称
         exceptionType: 4, // 例外类型
-        startTime: '2020-01-01', // 开始时间
-        endTime: '2021-01-01', // 结束时间
-        cycleType: '1', // 例外设置类型 (0:按天设置1:按周设置2:按月设置)
-        jgNumber: 1, //按天设置时候的间隔,按周设置时候的间隔,按月设置时候每间隔几月
-        weekChecks: [0, 6], // 按周设置时候选择的星期数,(0-6日-六)
-        isChange: "0", // 是否 0 : 新增   1: 修改  2: 删除
-        monthIndex: 1, // 按月设置时候 每月第1个周几
-      },
-      {
-        exceptionId: 'uuid', // 数据库中取出的例外的主键,新增的没有
-        exceptionName: '月例外', // 例外名称
-        exceptionType: 3, // 例外类型
-        startTime: '2020-01-01', // 开始时间
-        endTime: '2025-07-31', // 结束时间
+        startTime: '2020-02-17', // 开始时间
+        endTime: '2020-03-30', // 结束时间
         cycleType: '2', // 例外设置类型 (0:按天设置1:按周设置2:按月设置)
-        jgNumber: 1, //按天设置时候的间隔,按周设置时候的间隔,按月设置时候每间隔几月
-        weekChecks: [4], // 按周设置时候选择的星期数,(0-6日-六)
+        jgNumber: 0, //按天设置时候的间隔,按周设置时候的间隔,按月设置时候每间隔几月
+        weekChecks: [3], // 按周设置时候选择的星期数,(0-6日-六)
         isChange: "0", // 是否 0 : 新增   1: 修改  2: 删除
-        monthIndex: 1, // 按月设置时候 每月第1个周几
+        monthIndex: 4, // 按月设置时候 每月第1个周几
       }
     ]
-    excArr.forEach(v => {
+  },
+  components: {},
+  mounted() {
+    this.initCurrentDate()
+    this.projectCalendarData.calendarData = this.initSelectedMonthDays(this.currentYearAndMonth)
+    this.myExcData.forEach(v => {
       this.renderDate = this.handleCalendarData(this.projectCalendarData.calendarData, v)
     })
 
@@ -250,6 +238,7 @@ new Vue({
     },
     // 处理日期数据为日历数据
     handleCalendarData(dateData, exceptionalData) {
+      console.log("here excData>>>",exceptionalData)
       if (dateData.length === 0) return
         // let _dateData = _.cloneDeep(dateData)
       let _dateData = dateData
@@ -526,36 +515,37 @@ new Vue({
         // 改变后 初始化所选月份的基础日历
       this.projectCalendarData.calendarData = this.initSelectedMonthDays(this.currentYearAndMonth)
         // 在该所选月的基础日历数据上添加例外信息 并返回给要渲染的数据
-      var excArr = [{
+      var excArr = [
+        // {
+        //   exceptionId: 'uuid', // 数据库中取出的例外的主键,新增的没有
+        //   exceptionName: '月例外', // 例外名称
+        //   exceptionType: 3, // 例外类型
+        //   startTime: '2020-01-01', // 开始时间
+        //   endTime: '2020-07-31', // 结束时间
+        //   cycleType: '0', // 例外设置类型 (0:按天设置1:按周设置2:按月设置)
+        //   jgNumber: 1, //按天设置时候的间隔,按周设置时候的间隔,按月设置时候每间隔几月
+        //   weekChecks: [4], // 按周设置时候选择的星期数,(0-6日-六)
+        //   isChange: "0", // 是否 0 : 新增   1: 修改  2: 删除
+        //   monthIndex: 1, // 按月设置时候 每月第1个周几
+        // },
+        // {
+        //   exceptionId: 'uuid', // 数据库中取出的例外的主键,新增的没有
+        //   exceptionName: '月例外', // 例外名称
+        //   exceptionType: 4, // 例外类型
+        //   startTime: '2020-01-01', // 开始时间
+        //   endTime: '2021-01-01', // 结束时间
+        //   cycleType: '1', // 例外设置类型 (0:按天设置1:按周设置2:按月设置)
+        //   jgNumber: 1, //按天设置时候的间隔,按周设置时候的间隔,按月设置时候每间隔几月
+        //   weekChecks: [0, 6], // 按周设置时候选择的星期数,(0-6日-六)
+        //   isChange: "0", // 是否 0 : 新增   1: 修改  2: 删除
+        //   monthIndex: 1, // 按月设置时候 每月第1个周几
+        // },
+        {
           exceptionId: 'uuid', // 数据库中取出的例外的主键,新增的没有
           exceptionName: '月例外', // 例外名称
           exceptionType: 3, // 例外类型
           startTime: '2020-01-01', // 开始时间
           endTime: '2020-07-31', // 结束时间
-          cycleType: '0', // 例外设置类型 (0:按天设置1:按周设置2:按月设置)
-          jgNumber: 1, //按天设置时候的间隔,按周设置时候的间隔,按月设置时候每间隔几月
-          weekChecks: [4], // 按周设置时候选择的星期数,(0-6日-六)
-          isChange: "0", // 是否 0 : 新增   1: 修改  2: 删除
-          monthIndex: 1, // 按月设置时候 每月第1个周几
-        },
-        {
-          exceptionId: 'uuid', // 数据库中取出的例外的主键,新增的没有
-          exceptionName: '月例外', // 例外名称
-          exceptionType: 4, // 例外类型
-          startTime: '2020-01-01', // 开始时间
-          endTime: '2021-01-01', // 结束时间
-          cycleType: '1', // 例外设置类型 (0:按天设置1:按周设置2:按月设置)
-          jgNumber: 1, //按天设置时候的间隔,按周设置时候的间隔,按月设置时候每间隔几月
-          weekChecks: [0, 6], // 按周设置时候选择的星期数,(0-6日-六)
-          isChange: "0", // 是否 0 : 新增   1: 修改  2: 删除
-          monthIndex: 1, // 按月设置时候 每月第1个周几
-        },
-        {
-          exceptionId: 'uuid', // 数据库中取出的例外的主键,新增的没有
-          exceptionName: '月例外', // 例外名称
-          exceptionType: 3, // 例外类型
-          startTime: '2020-01-01', // 开始时间
-          endTime: '2025-07-31', // 结束时间
           cycleType: '2', // 例外设置类型 (0:按天设置1:按周设置2:按月设置)
           jgNumber: 1, //按天设置时候的间隔,按周设置时候的间隔,按月设置时候每间隔几月
           weekChecks: [4], // 按周设置时候选择的星期数,(0-6日-六)
@@ -563,7 +553,7 @@ new Vue({
           monthIndex: 1, // 按月设置时候 每月第1个周几
         }
       ]
-      excArr.forEach(v => {
+      this.myExcData.forEach(v => {
         this.renderDate = this.handleCalendarData(this.projectCalendarData.calendarData, v)
       })
     },
@@ -681,6 +671,20 @@ new Vue({
               _this.tableExcData.splice(k, 1)
             }
           })
+          // TODO 删除完后  重新渲染删除完该条例外后的日历 
+          let holeExcData=[]
+          //先判断  如果是新增 将继承的例外和新增的例外合并  
+          if(this.currentCalOperateFlag===0){
+            holeExcData=[..._this.currentCalanderExcData,..._this.tableExcData]
+          }else{
+            holeExcData=_this.tableExcData
+          }
+          // 获取当前所选年月的初始化日历数据 
+          let initDateData=_this.initSelectedMonthDays(_this.currentYearAndMonth)
+          // 给初始化日历数据应用所有例外
+          holeExcData.forEach(function(v) {
+            _this.renderDate = _this.handleCalendarData(initDateData, v)
+          })
         })
       })
     },
@@ -742,6 +746,7 @@ new Vue({
 
     },
     addExcConfirm() {
+      let _this=this
       // 添加例外 确定
       // 判断必填项是否已填
       if (this.editExcName === "") {
@@ -785,17 +790,41 @@ new Vue({
           break;
       }
       console.log(this.currentExcOperateFlag)
+      // TODO 添加或编辑例外后 实时将该例外叠加渲染到日历数据
+      // 首先判断是新建日历还是编辑日历 
+      // 新建日历要合并继承来的例外和当前例外表格里的例外  因为新建日历 右边的例外表格不显示继承的例外 但是又要渲染继承的例外
+      // 编辑的话 就直接渲染例外表格里的例外了
       if (this.currentExcOperateFlag === 0) {
         // 如果是新增操作
         // 添加新增的例外信息到 例外表格信息
         tempExcData.exceptionId = ""
         tempExcData.index = this.tableExcData.length
         this.tableExcData.push(tempExcData)
+        // 合并例外
+        let holeExcData=[]
+        //先判断  如果是新增 将继承的例外和新增的例外合并  
+        holeExcData=[...this.currentCalanderExcData,...this.tableExcData]
+        // 获取当前所选年月的初始化日历数据 
+        let initDateData=_this.initSelectedMonthDays(_this.currentYearAndMonth)
+        // 给初始化日历数据应用所有例外
+        holeExcData.forEach(function(v) {
+          _this.renderDate = _this.handleCalendarData(initDateData, v)
+        })
       } else if (this.currentExcOperateFlag === 1) {
         // 如果是编辑操作
         tempExcData.exceptionId = this.editExcId // 将当前点击的例外的id赋值给当前编辑例外临时变量
         tempExcData.index = this.currentClickedExcIndex
         this.$set(this.tableExcData, this.currentClickedExcIndex, tempExcData) // 为当前点击的例外赋值
+        // 直接应用例外
+        let holeExcData=[]
+        //先判断  如果是新增 将继承的例外和新增的例外合并  
+        holeExcData=this.tableExcData
+        // 获取当前所选年月的初始化日历数据 
+        let initDateData=this.initSelectedMonthDays(this.currentYearAndMonth)
+        // 给初始化日历数据应用所有例外
+        holeExcData.forEach(function(v) {
+          _this.renderDate = _this.handleCalendarData(initDateData, v)
+        })
       }
       this.resetEditExcInfos()
       this.addExcPanelShow = false

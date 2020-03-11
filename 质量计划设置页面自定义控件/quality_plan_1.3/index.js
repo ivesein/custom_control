@@ -278,24 +278,46 @@
                         getSelectedId() {
                           var that = this
                           this.currentSelectedIds = []
-                          let idArr = []
+                          let resData={
+                            selected:[],
+                            idArr:[]
+                          }
+                          // let idArr = []
                           let tempArr = this.traversalNode(
                             this.tableData[0]
                           )
                           tempArr.forEach(function(v) {
-                            if (v.checked && v.type == "task" && v.task_type !== "4") {
-                              that.currentSelectedIds.push(v.task_id)
-                              idArr.push({
-                                project_id: v.project_id,
-                                plan_id: v.plan_id,
-                                task_id: v.task_id,
-                                task_name: v.task_name,
-                                task_type: v.task_type,
-                                duration: v.duration
-                              })
+                            if(v.checked&&v.type!=='project'){
+                              resData.selected.push(v)
+                              if(v.type == "task" && v.task_type !== "4"){
+                                that.currentSelectedIds.push(v.task_id)
+                                resData.idArr.push(v)
+                                // resData.idArr.push({
+                                //   project_id: v.project_id,
+                                //   plan_id: v.plan_id,
+                                //   task_id: v.task_id,
+                                //   task_name: v.task_name,
+                                //   task_type: v.task_type,
+                                //   duration: v.duration,
+                                //   task_assign_id:v.task_assign_id,
+                                //   skill:v.skill,
+                                //   skill_id:v.skill_id
+                                // })
+                              }
                             }
+                            // if (v.checked && v.type == "task" && v.task_type !== "4") {
+                            //   that.currentSelectedIds.push(v.task_id)
+                            //   idArr.push({
+                            //     project_id: v.project_id,
+                            //     plan_id: v.plan_id,
+                            //     task_id: v.task_id,
+                            //     task_name: v.task_name,
+                            //     task_type: v.task_type,
+                            //     duration: v.duration
+                            //   })
+                            // }
                           })
-                          return idArr
+                          return resData
                         },
                         cellStyle({
                           row,
@@ -330,17 +352,20 @@
                           var _this = this
                           let ids = this.getSelectedId()
                           let sendData = {
-                            data: ids
+                            data: ids.idArr
                           }
-                          if (ids.length > 0) {
+                          if(ids.selected.length===0){
+                            this.$message.error("未勾选任务")
+                            return
+                          }
+                          if (ids.idArr.length > 0) {
                             changedIds = changedIds.concat(this.currentSelectedIds)
                             model.invoke(
                               "setQualityPlanRole",
                               sendData
                             )
                           } else {
-                            this.$message.error("未勾选任务")
-
+                            this.$message.error("您勾选的任务无法设置角色")
                           }
                         },
                         getTask(tasks, selectedIds) {
@@ -357,38 +382,62 @@
                         SetStaff() {
                           let ids = this.getSelectedId()
                           let sendData = {
-                            data: ids
+                            data: ids.idArr
                           }
-                          if (ids.length > 0) {
+                          if(ids.selected.length===0){
+                            this.$message.error("未勾选任务")
+                            return
+                          }
+                          if (ids.idArr.length > 0) {
                             changedIds = changedIds.concat(this.currentSelectedIds)
                             model.invoke(
                               "setQualityPlanStaff",
                               sendData
                             )
                           } else {
-                            this.$message.error("未勾选任务")
-
+                            this.$message.error("您勾选的任务无法设置人员")
                           }
                         },
 
                         SetDurationTime() {
                           let ids = this.getSelectedId()
                           let sendData = {
-                            data: ids
+                            data: ids.idArr
                           }
-                          if (ids.length == 0) {
+                          if(ids.selected.length===0){
                             this.$message.error("未勾选任务")
-                          } else if (ids.length > 1) {
+                            return
+                          }
+                          if(ids.selected.length>1){
                             this.$message.error("设置任务持续时间不能多选")
-                          } else if (ids[0].task_type !== "3") {
+                            return
+                          }
+                          if(ids.idArr.length===0){
+                            this.$message.error("您勾选的任务无法设置任务持续时间")
+                          }else if(ids.idArr.length>1){
+                            this.$message.error("设置任务持续时间不能多选")
+                          }else if (ids.idArr[0].task_type !== "3"){
                             this.$message.error("只有复核任务可以设置任务持续时间")
-                          } else {
+                          }else{
                             changedIds = changedIds.concat(this.currentSelectedIds)
                             model.invoke(
                               "SetDurationTime",
                               sendData
                             )
                           }
+                          // if (ids.length == 0) {
+                          //   this.$message.error("未勾选任务")
+                          // } else if (ids.length > 1) {
+                          //   this.$message.error("设置任务持续时间不能多选")
+                          // } else if (ids[0].task_type !== "3") {
+                          //   this.$message.error("只有复核任务可以设置任务持续时间")
+                          // } else {
+                          //   changedIds = changedIds.concat(this.currentSelectedIds)
+                          //   model.invoke(
+                          //     "SetDurationTime",
+                          //     sendData
+                          //   )
+                          // }
                         },
                         refreshData() {
                           // console.log("refreshData")
@@ -514,6 +563,7 @@
           if (fuck.parent === shit.parent && shit.task_type !== "3") {
             fuck.the_owner = shit.owner
             fuck.the_owner_role = shit.owner_role
+            fuck.the_skill=shit.skill
           }
         })
       }

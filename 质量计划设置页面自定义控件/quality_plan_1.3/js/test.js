@@ -70,6 +70,7 @@ new Vue({
       "plan_endtime": "2019-02-08",
       "qualityplan_version": "",
       "parent": "2",
+      "skill":"挖土",
       "type": "task",
       "task_type": "1",
       "audit_task_id": ""
@@ -85,6 +86,7 @@ new Vue({
       "owner": "严孝祥",
       "owner_id": "1111",
       "owner_role": "勘查员",
+      "skill":"挖土",
       "owner_roleid": "789577577239965700",
       "duration": "",
       "plan_starttime": "2019-02-09",

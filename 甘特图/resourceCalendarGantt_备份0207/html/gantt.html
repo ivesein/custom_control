@@ -1,0 +1,1097 @@
+<!-- <!DOCTYPE html>
+
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <title>中达-Gantt</title>
+    <script src="../js/dhtmlxgantt.js?v=6.2.4"></script>
+    <script src="../js/dhtmlxgantt_grouping.js"></script>
+    <script src="../js/locale_cn.js"></script>
+    <script src="../js/dhtmlxgantt_critical_path.js"></script>
+    <script src="../js/dhtmlxgantt_auto_scheduling.js"></script>
+    <script src="../js/dhtmlxgantt_multiselect.js"></script>
+    <script src="../js/dhtmlxgantt_undo.js"></script>
+    <script src="../js/dhtmlxgantt_marker.js"></script>
+    <script src="../js/dhtmlxgantt_export_pdf.js"></script>
+    <link rel="stylesheet" href="../css/dhtmlxgantt.css?v=6.2.4" />
+    <link rel="stylesheet" href="../css/customstyle.css?" />
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_1434073_hbdlninso9m.css" />
+    <link rel="stylesheet" href="../css/dialog.css">
+    <script src="../js/testdata_with_planned_date.js"></script>
+    <script src="../js/event.js"></script>
+    <script src="../js/jquery-1.11.1.js"></script>
+    <script src="../js/md5.min.js"></script>
+    <script src="../js/select2.min.js"></script>
+    <link rel="stylesheet" href="../css/select2.min.css">
+    <link rel="stylesheet" href="../css/gantt-abstracu.css">
+    <script src="../js/event.js"></script>
+    <script src="../js/newData.js"></script>
+
+</head>
+
+<body> -->
+
+<div class="gantt_container">
+    <!-- 摘要任务 -->
+
+
+    <!-- 部分新增页面  -->
+    <div class="container-add-task">
+        <div class="gantt-add-task-box">
+            <div class="gannt-add-task">
+                <span class="gannt-add-task-name">新增任务</span>
+                <span id="add-task-parentid" style="display: none;"></span>
+                <span style="cursor: pointer;" class="gannt-add-hide">x</span>
+            </div>
+            <button>基本信息</button>
+
+            <div class="gantt-add-task-box-item">
+                <label for="add-task-name">任务名称</label>
+                <input id="add-task-name" type="text" maxlength="20" placeholder="请输入任务名称">
+
+                <label style="margin-left: 100px;">任务类型</label>
+                <span id="add-task-status">任务类型</span>
+            </div>
+            <div class="gantt-add-task-box-item">
+                <label for="add-task-start-time">开始时间</label>
+                <input id="add-task-start-time" type="date">
+
+                <label style="margin-left: 100px;" for="add-task-end-status">结束时间</label>
+                <input id="add-task-end-status" type="date">
+            </div>
+
+            <div style="display: none;" class="gantt-add-task-box-item" id="gantt-add-task-box-items">
+                <label for="add-task-major">专业</label>
+                <select class="gantt-add-task-box-item-select">
+
+					</select>
+
+            </div>
+
+            <div style="flex: 1;"></div>
+            <div class="container-add-task-bottom">
+
+                <button class="container-add-task-bottom-cancel">取消</button>
+                <button class="container-add-task-bottom-ok">保存</button>
+
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <!-- 删除 -->
+    <div class="container_delete">
+        <div class="delete-box">
+            <div class="delete-task">
+                <span>删除任务</span>
+                <span class="delete-hide">x</span>
+            </div>
+            <div class="delete-task-name">
+                <span class="delete-task-name-explain">请确认是否删除该任务</span>
+
+
+
+            </div>
+
+            <div class="delete-box-btn">
+
+                <button class="delte-box-btn-cancel">取消</button>
+                <button class="delte-box-btn-ok">确认</button>
+            </div>
+
+        </div>
+    </div>
+    <!-- 编辑任务 或者 添加任务  -->
+    <div class="box-container" id="my-form">
+        <div class="box-container-container">
+            <div class="main">
+                <div class="add_task">
+                    <span>添加任务 </span>
+                    <span class="close">×</span>
+                </div>
+                <div class="tab" id="tab">
+                    <div class="active">基本信息</div>
+                    <div>任务细目</div>
+                    <div>紧前任务</div>
+
+                </div>
+
+                <!-- 基本信息 -->
+                <div class="message">
+                    <div style="height: 320px;">
+                        <div class="item">
+                            <span>任务名称</span>
+                            <input class="item-name" type="text" placeholder="输入任务名称">
+                        </div>
+
+                        <div class="item">
+                            <span>任务类型</span>
+                            <select name="" id="choose" style="width: 205px; height: 25px;">
+									<option value="1">一般任务</option>
+									<option value="2">专业审核</option>
+									<option value="3">复核任务</option>
+									<option value="4">摘要任务</option>
+
+								</select>
+                        </div>
+                        <div class="item" style="display: none;">
+                            <span>选择资源</span>
+                            <div class="gantt_select">
+                                <div class="gantt_select_data"></div>
+                                <div class="selct_data">
+
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+                        <div class="item isEditeMilestone">
+                            <span>工程量</span>
+                            <input class="item-plan" type="number" placeholder="输入工程量">
+                        </div>
+
+                        <div class="item_select isEditeMilestone">
+                            <span>单位</span>
+                            <select name="" class="item-unit" style="width: 205px;">
+
+								</select>
+
+                        </div>
+
+                        <div class="item" id="do_date">
+                            <span>工期（天）</span>
+
+                            <input class="item-duration" type="number" placeholder="输入工期">
+                        </div>
+                        <div class="item">
+                            <span>开始时间</span>
+
+                            <input class="item_start_time" type="date">
+                        </div>
+
+
+                        <div class="item_select isEditeMilestone">
+                            <span>专业</span>
+                            <select name="" class="gannt-major" style="width: 205px;">
+
+								</select>
+
+                        </div>
+                        <div class="item">
+                            <span>是否里程碑</span>
+                            <input class="switch switch-anim" type="checkbox" id="switchAnim" />
+                        </div>
+                    </div>
+
+                    <!-- 被审核任务 -->
+
+                    <div id="resign_task" style="display: none;">
+                        <p style="font-size: 15px; margin: 20px;">被审核任务</p>
+
+                        <div class="audited_task">
+
+                            <div class="skillBtn">
+                                <span class="text" id="task_one">增行</span>
+                                <span class="icon">|</span>
+                                <span class="text" id="task_delete_check">删行</span>
+
+                                <span class="text uprow" index="table1" style="display: none;">上移</span>
+
+                                <span class="text downrow" index="table1" style="display: none;">下移</span>
+                            </div>
+
+                            <table id="table1">
+                                <thead>
+                                    <tr style="background: #e5e5e5;">
+                                        <th style="width: 40px;">序号</th>
+
+                                        <th style="width: 200px;">任务名称</th>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td class="td">1</td>
+
+                                        <td>
+                                            <select name="" class="select1-name" style="width: 100%;height: 100%;">
+													<option value="请选择名称">请选择名称</option>
+												</select></td>
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- 任务细目 -->
+                <div class="message" style="display: none;">
+                    <div class="skillBtn">
+                        <span class="text" id="task_two">增行</span>
+                        <span class="icon">|</span>
+                        <span class="text" id="task_delete_detail">删行</span>
+                        <span class="text uprow" index="table2" style="display: none;">上移</span>
+                        <span class="text downrow" index="table2" style="display: none;">下移</span>
+                    </div>
+
+                    <table id="table2">
+                        <thead>
+                            <tr style="background: #e5e5e5;">
+                                <th style="width: 40px;">序号</th>
+                                <th style="width: 180px;">名称</th>
+                                <th style="width: 280px;">描述</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td class="td">1</td>
+                                <td>
+                                    <input type="text" placeholder="请输入名称">
+                                </td>
+                                <td>
+                                    <input type="text" placeholder="请输入描述" style="width: 100%;
+													height: 100%;">
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+                </div>
+
+                <!-- 紧前任务 -->
+                <div class="message" style="display: none;">
+                    <div class="skillBtn">
+                        <span class="text" id="task_three">增行</span>
+                        <span class="icon">|</span>
+                        <span class="text" id="task_delete_before">删行</span>
+
+                        <span class="text uprow" index="table3" style="display: none;">上移</span>
+
+                        <span class="text downrow" index="table3" style="display: none;">下移</span>
+                    </div>
+
+                    <table id="table3">
+                        <thead>
+                            <tr style="background: #e5e5e5;">
+                                <th style="width: 40px;">序号</th>
+                                <th style="width: 60px; display: none;">任务id</th>
+                                <th style="width: 260px;">任务名称</th>
+                                <th style="width: 200px;">类型</th>
+                                <th>间隔时间（天）</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td class="td">1</td>
+                                <td class="td-source"></td>
+                                <td><select class="table3-name" name="" id="" style="width: 100%;height: 100%;">
+
+										</select>
+
+                                </td>
+                                <td>
+                                    <select class="table3-type" name="" id="" style="width: 100%;height: 100%;padding: 5px 0px;">
+											<option>请选择类型</option>
+											<option>FS</option>
+											<option>FF</option>
+											<option>SF</option>
+											<option>SS</option>
+
+										</select>
+                                </td>
+                                <td>
+                                    <input type="number" placeholder="请输入间隔时间" style="width: 100%;
+												height: 100%;">
+                                </td>
+                                <td class="before_task_id"></td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+
+            <div style="background: white; padding-top: 5px;">
+                <span class="cancle">取消</span>
+                <span class="save">保存</span>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="btn-box">
+        <div class="buttonToggle">
+
+            <button class="ganttNewAddTask" style="width: 100px; text-align: left;">
+					新增
+				</button>
+            <div class="ganttNewAddTaskOption">
+
+            </div>
+            <button id="insertion">
+					插入
+				</button>
+            <button class="gantt-task-delete">
+					删除
+				</button>
+            <button class="gantt-task-compile">
+					编辑
+				</button>
+            <button onclick="retreat()">
+					<!-- <i class="iconfont icon-undo"></i>后退 -->
+					撤销
+				</button>
+            <button onclick="advance()">
+					<!-- <i class="iconfont icon-redo"></i>前进 -->
+					恢复
+				</button>
+            <button style="display: none;" id="ganttUp">
+					<!-- <i class="iconfont icon-up-down icon-shengji"></i>升级 -->
+					上移
+				</button>
+            <button style="display: none;" id="ganttDown">
+					<!-- <i class="iconfont icon-up-down icon-jiangji"></i>降级 -->
+					下移
+				</button>
+            <button onclick="zoomIn()">
+					<!-- <i class="iconfont icon-zoom_out"></i>缩小 -->
+					缩小时间刻度
+				</button>
+            <button onclick="zoomOut()">
+					<!-- <i class="iconfont icon-zoom_in"></i>放大 -->
+					放大时间刻度
+				</button>
+            <button class="ganttSave">
+					<!-- <i class="iconfont icon-save"></i>保存 -->
+					保存
+				</button>
+            <button onclick="updateCriticalPath(this)">
+					<!-- <i class="iconfont icon-lianxian_icon"></i>关键路径 -->
+					关键路径
+				</button>
+            <!-- <button onclick='gantt.exportToPDF({ skin:"" })'>
+			<i class="iconfont icon-pdf"></i>导出PDF
+		</button> -->
+            <!-- 后台发起提交数据 -->
+            <button id="ganttSubmitData" style="display: none;">提交数据</button>
+            <button id="ganttSwitch" style="display: none;">页面切换保存数据</button>
+        </div>
+        <button class="newworkPlanning">
+				<!-- <i class="iconfont icon-save"></i>保存 -->
+				查看网络图
+			</button>
+        <button style="display: none;" class="rankHide">
+				<!-- <i class="iconfont icon-save"></i>保存 -->
+				二级隐藏
+			</button>
+        <button class="ganntCompile" style="display: none;">
+				<!-- <i class="iconfont icon-save"></i>保存 -->
+				编辑
+			</button>
+
+    </div>
+    <!-- 摘要任务 -->
+    <div class="gantt-abstract-task">
+        <div class="gantt-box-abstract">
+            <div class="gantt-abstract-add">
+
+                <span>新增</span>
+                <span class="gantt-abstract-delete">X</span>
+
+            </div>
+            <div class="gantt-abstract-tab">
+                <div class="gantt-abstract-item  gantt-abstract-active" index="1">
+                    基本信息
+                </div>
+                <div class="gantt-abstract-item" index="2">
+                    任务明细
+                </div>
+                <div class="gantt-abstract-item" index="3">
+                    前置任务
+                </div>
+            </div>
+            <!-- 基本信息 -->
+            <div class="gantt-abstract-select-item  abstract-itemshow" id="ganttSelect2Id">
+
+                <div>
+
+                    <div class="gantt-abstract-line-data">
+
+
+                        <div class="item">
+
+                            <span class="gannt-abstract-line-name">
+					任务类型
+				  </span>
+                            <select class="abstract-type" id="abstract-task-types">
+				  </select>
+
+                        </div>
+                        <div class="item">
+
+                            <span class="gannt-abstract-line-name" style="width: 200px;">是否里程碑</span>
+                            <input class="switch switch-anim" type="checkbox" id="switchAbstract" />
+
+                        </div>
+
+                    </div>
+                    <div>
+                        <strong class="gantt-addTask-name" class="gantt-abstract-name">摘要任务</strong class="gantt-addTask-name" >
+				  <div class="gantt-abstract-line-data">
+					<div class="item">
+					<span class="gannt-abstract-line-name">
+					  任务名称
+					</span>
+					<input class="gannt-abstract-line-input" id="abtract-name" type="text">
+			   
+					</div>
+					<div class="item isShowMilestone" style="display: none;">
+			
+					<span class="gannt-abstract-line-name">
+					  工期
+					</span>
+					<input class="abstract-day abstractOne" class="gannt-abstract-line-input" type="number">
+				  </div>
+					<div class="item isMilestone">
+					<span class="gannt-abstract-line-name">
+					  单位
+					</span>
+					<select class="abstract-type" id="abstract-unit"></select>
+					</div>
+			   
+			   
+			   
+				  </div>
+			   
+				  <div class="gantt-abstract-line-data isMilestone">
+					<div class="item">
+					<span class="gannt-abstract-line-name">
+					  工程量
+					</span>
+					<input id="abstract-number" class="gannt-abstract-line-input" type="number">
+			   
+					</div>
+					<div class="item">
+					<span class="gannt-abstract-line-name">
+					  专业
+					</span>
+					<select id="abstractMajor" class="abstract-type"></select>
+					</div>
+			   
+			   
+				  </div>
+				  
+				  <div class="gantt-abstract-line-data  abstractStartEndTime">
+				  <div class="item">
+					<span class="gannt-abstract-line-name">
+					开始时间
+					</span>
+					<input id="abstract-startTime" placeholder="根据子任务计算开始时间" class="gannt-abstract-line-input" type="type" disabled="disabled">
+			 
+				  </div>
+				  <div class="item">
+				  <span class="gannt-abstract-line-name">
+					 结束时间
+					</span>
+					<input id="abstract-endTime" placeholder="根据子任务计算结束时间" class="gannt-abstract-line-input" type="text" disabled="disabled">
+				  </div>
+			 
+			 
+				  </div>
+			 
+			
+			
+				<div class="gantt-abstract-time" style="display: none;">
+					<div class="gantt-abstract-line-data">
+			   
+					<div class="item">
+					  <span class="gannt-abstract-line-name">
+					  开始时间
+					  </span>
+					  <input id="abstract-time-start" class="gannt-abstract-line-input" type="date">
+			   
+			   
+					</div>
+			   
+			   
+			   
+					<div class="item">
+					  <span class="gannt-abstract-line-name">
+					  结束时间
+					  </span>
+					  <input id="abstract-time-end" placeholder="自动计算出来" class="gannt-abstract-line-input"
+					  type="text" disabled="disabled">
+			   
+					</div>
+			   
+			   
+					</div>
+					<div class="gantt-abstract-line-data isMilestone">
+			   
+					<div class="item" style="justify-content: left;margin-left: 65px;">
+					  <span class="gannt-abstract-line-name">
+					  工期
+					  </span>
+					  <input style="margin-left: 13px;" class="abstract-day abstractTwo" class="gannt-abstract-line-input" type="number">
+					</div>
+					</div>
+				  </div>
+			   
+			   
+			   
+			   
+				  <div class="abstract-check-task" style="display: none;">
+			   
+					<div class="abstract-skillBtn">
+					<div style="font-size: 15px; color: black;">被审核任务</div>
+					<div>
+					  <span class="text" id="abstract-task_one">增行</span>
+					  <span class="icon">|</span>
+					  <span class="text" id="abstract-task_delete_check">删行</span>
+					</div>
+			   
+					</div>
+					<table id="abstract-table1">
+					<thead>
+					  <tr style="background: #e5e5e5;height: 35px;">
+					  <th style="width: 40px; font-size: 16px;">序号</th>
+			   
+					  <th style="width: 200px;font-size: 16px;">任务名称</th>
+					  </tr>
+			   
+					</thead>
+			   
+					<tbody>
+					  <tr>
+					  <td class="td">1</td>
+			   
+					  <td>
+						<select class="abstract-select1-name" style="width: 95%"></select>
+					  </td>
+					  </tr>
+			   
+			   
+					</tbody>
+			   
+					</table>
+				  </div>
+				  </div>
+				  </div>
+			   
+				  <div class="gantt-sbatract-detail">
+				  <!-- 设计任务 -->
+				  <div>
+					<strong class="gantt-abstract-name">设计</strong>
+                        <div class="gantt-abstract-line-data">
+                            <div class="item">
+                                <span class="gannt-abstract-line-name">
+					  任务名称
+					  </span>
+                                <input class="gannt-abstract-line-input" id="design-name" disabled="disabled">
+
+                            </div>
+                            <div class="item">
+                                <span class="gannt-abstract-line-name">
+					  任务类型
+					  </span>
+                                <select class="abstract-type" id="design-task-type"></select>
+                            </div>
+
+
+                        </div>
+
+                        <div class="gantt-abstract-line-data">
+                            <div class="item">
+                                <span class="gannt-abstract-line-name">
+					  工程量
+					  </span>
+                                <input id="design-number" class="gannt-abstract-line-input" type="number">
+
+                            </div>
+                            <div class="item">
+                                <span class="gannt-abstract-line-name">
+					  专业
+					  </span>
+                                <select id="design-major" class="abstract-type"></select>
+                            </div>
+
+
+                        </div>
+                        <div class="gantt-abstract-line-data">
+                            <div class="item">
+                                <span class="gannt-abstract-line-name">
+					  开始时间
+					  </span>
+                                <input id="design-time" class="gannt-abstract-line-input" type="date">
+
+                            </div>
+                            <div class="item">
+                                <span class="gannt-abstract-line-name">
+					  单位
+					  </span>
+                                <select class="abstract-type" id="design-unit"></select>
+
+
+                            </div>
+
+
+                        </div>
+
+                        <div class="gantt-abstract-line-data">
+
+                            <div class="item">
+                                <span class="gannt-abstract-line-name">
+					  工期
+					  </span>
+                                <input id="design-day" class="gannt-abstract-line-input" type="number">
+
+
+                            </div>
+                            <div class="item">
+                                <span class="gannt-abstract-line-name">
+					  结束时间
+					  </span>
+                                <input id="design-time-end" placeholder="自动计算出来" class="gannt-abstract-line-input" type="text" disabled="disabled">
+
+                            </div>
+
+
+
+                        </div>
+
+
+
+
+                    </div>
+                    <!-- 复核 -->
+                    <div>
+                        <strong class="gantt-abstract-name">复核</strong>
+                        <div class="gantt-abstract-line-data">
+                            <div class="item">
+                                <span class="gannt-abstract-line-name">
+					  任务名称
+					  </span>
+                                <input class="gannt-abstract-line-input" id="check-name" disabled="disabled">
+
+                            </div>
+                            <div class="item">
+                                <span class="gannt-abstract-line-name">
+					  任务类型
+					  </span>
+                                <select class="check-type" id="cheek-task-type"></select>
+                            </div>
+
+
+                        </div>
+
+                        <div class="gantt-abstract-line-data">
+                            <div class="item">
+                                <span class="gannt-abstract-line-name">
+					  工程量
+					  </span>
+                                <input id="check-number" class="gannt-abstract-line-input" type="number">
+
+                            </div>
+
+
+                            <span class="item">
+					  <span class="gannt-abstract-line-name">
+					  专业
+					  </span>
+
+                            <select id="checkMajor" class="abstract-type"></select>
+                        </div>
+
+                        <div class="gantt-abstract-line-data">
+                            <div class="item">
+                                <span class="gannt-abstract-line-name">
+					  开始时间
+					  </span>
+                                <input id="check-time-start" placeholder="自动计算出来" class="gannt-abstract-line-input" disabled="disabled">
+
+                            </div>
+                            <div class="item">
+
+                                <span class="gannt-abstract-line-name">
+					  单位
+					  </span>
+                                <select class="abstract-type" id="check-unit"></select>
+                            </div>
+
+
+                        </div>
+
+                        <!-- <div class="gantt-abstract-line-data">
+			   
+					<div class="item" style="justify-content: left;margin-left: 65px;">
+					  <span class="gannt-abstract-line-name">
+					  工期
+					  </span>
+					  <input id="check-day" class="gannt-abstract-line-input" type="number">
+					</div>
+					</div> -->
+
+
+                        <div class="gantt-abstract-line-data">
+
+                            <div class="item">
+                                <span class="gannt-abstract-line-name">
+					  工期
+					  </span>
+                                <input id="check-day" class="gannt-abstract-line-input" type="number">
+
+
+                            </div>
+
+
+
+                            <div class="item">
+                                <span class="gannt-abstract-line-name">
+					  结束时间
+					  </span>
+                                <input id="check-time-end" placeholder="自动计算出来" class="gannt-abstract-line-input" type="text" disabled="disabled">
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- 任务细目 -->
+            <div class="gantt-abstract-select-item">
+
+                <div class="abstract-check-task-add">
+
+                    <div class="abstract-skillBtn">
+                        <div class="gantt-addTask-name" style="font-size: 15px; color: black;">摘要任务</div>
+                        <div>
+                            <span class="text" id="abstract-task_two">增行</span>
+                            <span class="icon">|</span>
+                            <span class="text" id="abstract-task_delete_check2">删行</span>
+                        </div>
+
+                    </div>
+                    <table id="abstract-table2">
+                        <thead>
+                            <tr style="background: #e5e5e5;height: 35px;">
+                                <th style="width: 40px;">序号</th>
+                                <th style="width: 180px;">名称</th>
+                                <th style="width: 280px;">描述</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td class="td">1</td>
+                                <td>
+                                    <input type="text" placeholder="请输入名称">
+                                </td>
+                                <td>
+                                    <input type="text" placeholder="请输入描述">
+                                </td>
+                            </tr>
+
+
+                        </tbody>
+
+                    </table>
+                </div>
+
+                <!-- 如果是摘要任务 或者不是里程碑 -->
+                <div class="gantt-sbatract-detail">
+                    <!-- 设计细目 -->
+                    <div class="abstract-check-task-add">
+
+                        <div class="abstract-skillBtn">
+                            <div style="font-size: 15px; color: black;">设计任务</div>
+                            <div>
+                                <span class="text" id="abstract-task_three">增行</span>
+                                <span class="icon">|</span>
+                                <span class="text" id="abstract-task_delete_check3">删行</span>
+                            </div>
+
+                        </div>
+                        <table id="abstract-table3">
+                            <thead>
+                                <tr style="background: #e5e5e5;height: 35px;">
+                                    <th style="width: 40px;">序号</th>
+                                    <th style="width: 180px;">名称</th>
+                                    <th style="width: 280px;">描述</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <td class="td">1</td>
+                                    <td>
+                                        <input type="text" placeholder="请输入名称">
+                                    </td>
+                                    <td>
+                                        <input type="text" placeholder="请输入描述">
+                                    </td>
+                                </tr>
+
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <!-- 复核细目 -->
+                    <div class="abstract-check-task-add">
+
+                        <div class="abstract-skillBtn">
+                            <div style="font-size: 15px; color: black;">复核任务</div>
+                            <div>
+                                <span class="text" id="abstract-task_four">增行</span>
+                                <span class="icon">|</span>
+                                <span class="text" id="abstract-task_delete_check4">删行</span>
+                            </div>
+
+                        </div>
+                        <table id="abstract-table4">
+                            <thead>
+                                <tr style="background: #e5e5e5;height: 35px;">
+                                    <th style="width: 40px;">序号</th>
+                                    <th style="width: 180px;">名称</th>
+                                    <th style="width: 280px;">描述</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <td class="td">1</td>
+                                    <td>
+                                        <input type="text" placeholder="请输入名称">
+                                    </td>
+                                    <td>
+                                        <input type="text" placeholder="请输入描述">
+                                    </td>
+                                </tr>
+
+
+                            </tbody>
+
+                        </table>
+                    </div>
+
+
+                </div>
+
+            </div>
+            <!-- 前置任务 -->
+            <div class="gantt-abstract-select-item">
+                <div class="abstract-check-task-add">
+
+                    <div class="abstract-skillBtn">
+                        <div class="gantt-addTask-name" style="font-size: 15px; color: black;">摘要任务</div>
+                        <div>
+                            <span class="text" id="abstract-task_five">增行</span>
+                            <span class="icon">|</span>
+                            <span class="text" id="abstract-task_delete_check5">删行</span>
+                        </div>
+
+                    </div>
+                    <table id="abstract-table5">
+                        <thead>
+                            <tr style="background: #e5e5e5;height: 35px;">
+                                <th style="width: 40px;">序号</th>
+                                <th style="width: 260px;">任务名称</th>
+                                <th style="width: 200px;">类型</th>
+                                <th>间隔时间（天）</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td class="td">1</td>
+
+                                <td><select class="abstract-select1-name" style="width: 247px">
+			   
+					  </select>
+
+                                </td>
+                                <td>
+                                    <select class="abstract-select1-name">
+						<option>请选择类型</option>
+						<option>FS</option>
+						<option>FF</option>
+						<option>SF</option>
+						<option>SS</option>
+			   
+					  </select>
+                                </td>
+                                <td>
+                                    <input type="number" placeholder="请输入间隔时间">
+                                </td>
+
+                            </tr>
+
+
+                        </tbody>
+
+                    </table>
+                </div>
+
+                <!-- 如果是摘要任务 或者不是里程碑 -->
+                <div class="gantt-sbatract-detail">
+                    <!-- 设计细目 -->
+                    <div class="abstract-check-task-add">
+
+                        <div class="abstract-skillBtn">
+                            <div style="font-size: 15px; color: black;">设计任务</div>
+                            <div>
+                                <span class="text" id="abstract-task_six">增行</span>
+                                <span class="icon">|</span>
+                                <span class="text" id="abstract-task_delete_check6">删行</span>
+                            </div>
+
+                        </div>
+                        <table id="abstract-table6">
+                            <thead>
+                                <tr style="background: #e5e5e5;height: 35px;">
+                                    <th style="width: 40px;">序号</th>
+                                    <th style="width: 260px;">任务名称</th>
+                                    <th style="width: 200px;">类型</th>
+                                    <th>间隔时间（天）</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <td class="td">1</td>
+
+                                    <td><select class="abstract-select1-name" style="width: 247px">
+			   
+						</select>
+
+                                    </td>
+                                    <td>
+                                        <select class="abstract-select1-name">
+						<option>请选择类型</option>
+						<option>FS</option>
+						<option>FF</option>
+						<option>SF</option>
+						<option>SS</option>
+			   
+						</select>
+                                    </td>
+                                    <td>
+                                        <input type="number" placeholder="请输入间隔时间">
+                                    </td>
+
+                                </tr>
+
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <!-- 复核细目 -->
+                    <div class="abstract-check-task-add">
+
+                        <div class="abstract-skillBtn">
+                            <div style="font-size: 15px; color: black;">复核任务</div>
+                            <div style="display: none;">
+                                <span class="text" id="abstract-task_seven">增行</span>
+                                <span class="icon">|</span>
+                                <span class="text" id="abstract-task_delete_check7">删行</span>
+                            </div>
+
+                        </div>
+                        <table id="abstract-table7">
+                            <thead>
+                                <tr style="background: #e5e5e5;height: 35px;">
+                                    <th style="width: 40px;">序号</th>
+
+                                    <th style="width: 260px;">任务名称</th>
+                                    <th style="width: 200px;">类型</th>
+                                    <th>间隔时间（天）</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <td class="td">1</td>
+
+                                    <td><select class="abstract-select1-name" style="width: 247px">
+						<option id="abstract-option-name" selected="selected">设计</option>
+						</select>
+
+                                    </td>
+                                    <td>
+                                        <select class="abstract-select1-name">
+			   
+						<option selected="selected">FS</option>
+			   
+			   
+						</select>
+                                    </td>
+                                    <td>
+                                        <input type="number" placeholder="请输入间隔时间" value="0" disabled="disabled">
+                                    </td>
+
+                                </tr>
+
+
+                            </tbody>
+
+                        </table>
+                    </div>
+
+
+                </div>
+
+            </div>
+            <div class="gantt-abstract-btn">
+                <span class="gantt-abstract-btn-cancal">取消</span>
+                <span class="gantt-abstract-btn-ok">添加</span>
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+
+    <div id="gantt_line" style="width:100%; height:10px"></div>
+
+
+    <div id="gantt_here"></div>
+
+
+
+
+</div>
+
+
+<!-- </body>
+
+<script>
+    var mygantt = Gantt.getGanttInstance();
+    getInitDataGannt();
+    setGanttData(projects_with_milestones)
+</script> -->

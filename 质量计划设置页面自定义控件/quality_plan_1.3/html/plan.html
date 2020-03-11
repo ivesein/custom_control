@@ -1,7 +1,6 @@
 <!-- <!DOCTYPE html>
 
-<body lang="en">
-
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,7 +11,7 @@
     <title>Document</title>
   </head>
 
-  <body> -->
+<body> -->
 <div id="qualityPlanApp">
   <div class="btn-lsit">
     <button class="btn-itme" id="setBtn4" @click="SetRole">
@@ -26,9 +25,9 @@
     </button>
     <button class="btn-itme" id="refresh" @click="refreshData">刷新</button>
   </div>
-  <el-table ref="qualityPlanTable" :header-cell-style="{background:'#eef1f6',color:'#606266'}" :data="tableData" style="width:1400px;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true" :height="tableHeight" default-expand-all
+  <el-table ref="qualityPlanTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="tableData" style="width:1600px;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true" :height="tableHeight" default-expand-all
     :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
-    <el-table-column width="120">
+    <el-table-column type="select" width="40" align="center">
       <template slot="header" slot-scope="scope">
         <el-checkbox @change="handleCheckAllChange" v-model="allChecked"></el-checkbox>
       </template>
@@ -36,10 +35,11 @@
         <el-checkbox @change="itemChange(scope.row)" v-model="scope.row.checked"></el-checkbox>
       </template>
     </el-table-column>
-    <el-table-column type="index" label="序号" width="80" align="center">
+    <el-table-column type="index" label="序号" width="60" align="center">
     </el-table-column>
-    <el-table-column prop="wbs" label="任务代码" width="120"></el-table-column>
     <el-table-column prop="task_name" label="WBS任务名称"></el-table-column>
+    <el-table-column prop="wbs" label="任务代码" width="100" ></el-table-column>
+    
     <el-table-column label="工期" width="120">
       <template slot-scope="scope">
         <div>
@@ -143,6 +143,25 @@
         </div>
       </template>
     </el-table-column>
+    <el-table-column label="承担人技能" width="120">
+      <template slot-scope="scope">
+        <div class="checek-man" v-show="scope.row.task_type === '3'">
+          ${ scope.row.skill }
+        </div>
+        <div class="checek-man" v-show="scope.row.task_type === '3'">
+          ${ scope.row.the_skill }
+        </div>
+        <div class="checek-man" v-show="scope.row.task_type === '3'">
+          ${ scope.row.skill }
+        </div>
+        <div class="checek-man" style="border:none" v-show="scope.row.task_type === '3'">
+          ${ scope.row.skill }
+        </div>
+        <div v-show="scope.row.task_type === '1'||scope.row.task_type === '2'">
+          ${ scope.row.skill }
+        </div>
+      </template>
+    </el-table-column>
   </el-table>
 </div>
 <!-- <script src="../js/lodash.js"></script>
@@ -152,4 +171,4 @@
     <script src="../js/test.js"></script>
   </body>
 
-</body> -->
+</html> -->

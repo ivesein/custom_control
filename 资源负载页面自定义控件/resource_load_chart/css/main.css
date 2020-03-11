@@ -1,0 +1,108 @@
+#resourceLoadChartsApp .chart-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  flex: 1;
+  height: 600px;
+  border: 1px solid #ccc;
+  /* margin: 20px; */
+  background: #fff;
+}
+#resourceLoadChartsApp .chart-container{
+  position: relative;
+}
+#resourceLoadChartsApp .chart-box .title-box {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 60px;
+  font-size: 26px;
+  font-weight: 800;
+  color: #333;
+  padding-left: 20px;
+}
+
+#resourceLoadChartsApp .chart-box .chart-content {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  flex: 1;
+  position: relative;
+}
+#resourceLoadChartsApp .chart-box .chart-content .legend-border-box {
+  width: 320px;
+  height: 160px;
+  position: absolute;
+  right: 15px;
+  top: 32%;
+  z-index: 888;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  pointer-events: none;
+  padding: 10px 0 0 10px;
+}
+
+.resourceLoadCharts {
+  width: 100%;
+  height: 100%;
+}
+
+.tooltip-plan {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.tooltip-plan .color-icon-plan {
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  background: #3ba1ff;
+  margin-right: 10px;
+}
+
+.tooltip-plan .text-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.tooltip-fact .color-icon-fact {
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  background: #ff2727;
+  margin-right: 10px;
+}
+.tooltip-fact {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.tooltip-fact .text-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.chart-box2{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -100;
+}
+
+/* .tooltip-content{
+  background: rgba(255,255,255,.6);
+} */
+.tooltip-item-box{
+  width: 130px;
+  height: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

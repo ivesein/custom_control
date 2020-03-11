@@ -155,3 +155,10 @@
   /* color: #f19944; */
   /* 设置文字颜色，可以选择不设置 */
 }
+#resourceAllocationApp .type-one .checek-man{
+  border-top: none;
+  border-bottom: 1px solid #ebeef5;
+}
+#resourceAllocationApp .type-one .checek-man:nth-last-of-type(1) {
+  border: none;
+}

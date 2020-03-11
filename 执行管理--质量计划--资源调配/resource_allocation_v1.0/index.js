@@ -27,7 +27,7 @@
           theData = []
           originData = []
           changedIds = []
-          this.model.qualityPlanVue = null
+          this.model.resourceAllocationVue = null
           setHtml(this.model, props)
         }
         console.log(this.model.resourceAllocationVue)
@@ -37,7 +37,7 @@
       },
       destoryed: function() {
         console.log("-----destoryed", this.model)
-        this.model.qualityPlanVue = null
+        this.model.resourceAllocationVue = null
       }
     }
     /**
@@ -124,10 +124,13 @@
                             originData.forEach(function(ov) {
                               if (sv === ov.task_id) {
                                 changeData.forEach(function(cv) {
-                                  if (ov.task_type === cv.task_type) {
-                                    for (var key in cv) {
-                                      ov[key] = cv[key]
-                                    }
+                                  // if (ov.task_type === cv.task_type) {
+                                  //   for (var key in cv) {
+                                  //     ov[key] = cv[key]
+                                  //   }
+                                  // }
+                                  for (var key in cv) {
+                                    ov[key] = cv[key]
                                   }
                                 })
                               }
@@ -278,82 +281,128 @@
                         getSelectedId() {
                           var that = this
                           this.currentSelectedIds = []
-                          let idArr = []
-                          let tempArr = this.traversalNode(
-                            this.tableData[0]
-                          )
-                          tempArr.forEach(function(v) {
-                            if (v.checked && v.type == "task" && v.task_type !== "4") {
-                              that.currentSelectedIds.push(v.task_id)
-                              idArr.push({
-                                project_id: v.project_id,
-                                plan_id: v.plan_id,
-                                task_id: v.task_id,
-                                task_name: v.task_name,
-                                task_type: v.task_type,
-                                duration: v.duration,
-                                owner: v.owner,
-                                owner_role: v.owner_role
-                              })
-                            }
-                          })
-                          return idArr
-                        },
-                        resourceAllocationGetSelectedId() {
-                          var that = this
-                          this.currentSelectedIds = []
-                          let idArr = {
-                            type_one: [], // type=="task"  task_type===1
-                            type_two: [], // type=="task"   task_type===2
-                            type_three: [] // type=="task"  
+                          // let idArr = []
+                          let resData={
+                            selected:[],
+                            idArr:[]
                           }
                           let tempArr = this.traversalNode(
                             this.tableData[0]
                           )
                           tempArr.forEach(function(v) {
-                            if (v.checked && v.task_type !== "") {
-                              if (v.task_type === "4") {
-                                idArr.type_one.push({
-                                  task_id: v.task_id,
-                                  task_name: v.task_name,
-                                  plan_starttime: v.plan_starttime,
-                                  plan_endtime: v.plan_endtime,
-                                  owner: v.owner,
-                                  owner_id: v.owner_id,
-                                  task_type: v.task_type,
-                                  duration: v.duration,
-                                  parent: v.parent
-                                })
-                              } else if (v.task_type === "2") {
+                            if(v.checked){
+                              resData.selected.push(v)
+                              if(v.type == "task" && v.task_type !== "4"){
                                 that.currentSelectedIds.push(v.task_id)
-                                idArr.type_two.push({
-                                  task_id: v.task_id,
-                                  task_name: v.task_name,
-                                  plan_starttime: v.plan_starttime,
-                                  plan_endtime: v.plan_endtime,
-                                  owner: v.owner,
-                                  owner_id: v.owner_id,
-                                  task_type: v.task_type,
-                                  duration: v.duration,
-                                  parent: v.parent
-                                })
-                              } else {
-                                that.currentSelectedIds.push(v.task_id)
-                                idArr.type_three.push({
-                                  task_id: v.task_id,
-                                  task_name: v.task_name,
-                                  plan_starttime: v.plan_starttime,
-                                  plan_endtime: v.plan_endtime,
-                                  owner: v.owner,
-                                  owner_id: v.owner_id,
-                                  task_type: v.task_type,
-                                  duration: v.duration,
-                                  parent: v.parent
-                                })
+                                resData.idArr.push(v)
                               }
                             }
+                            // if (v.checked && v.type == "task" && v.task_type !== "4") {
+                            //   that.currentSelectedIds.push(v.task_id)
+                            //   idArr.push({
+                            //     project_id: v.project_id,
+                            //     plan_id: v.plan_id,
+                            //     task_id: v.task_id,
+                            //     task_name: v.task_name,
+                            //     task_type: v.task_type,
+                            //     duration: v.duration,
+                            //     owner: v.owner,
+                            //     owner_role: v.owner_role,
+                            //     task_assign_id:v.task_assign_id,
+                            //     task_status:v.task_status
+                            //   })
+                            // }
                           })
-                          return idArr
+                          return resData
+                        },
+                        resourceAllocationGetSelectedId() {
+                          var that = this
+                          this.currentSelectedIds = []
+                          let tempArr = this.traversalNode(
+                            this.tableData[0]
+                          )
+                          // let idArr = []
+                          let resData={
+                            selected:[],
+                            idArr:[]
+                          }
+
+                          // 原逻辑
+                          // let idArr = {
+                          //   type_one: [], // type=="task"  task_type===1
+                          //   type_two: [], // type=="task"   task_type===2
+                          //   type_three: [] // type=="task"  
+                          // }
+                          tempArr.forEach(function(v) {
+                            if(v.checked){
+                              resData.selected.push(v)
+                              if(v.type==="task"){
+                                that.currentSelectedIds.push(v.task_id)
+                                resData.idArr.push(v)
+                              }
+                            }
+                            // if(v.checked && v.type==="task"){
+                            //   that.currentSelectedIds.push(v.task_id)
+                            //   idArr.push({
+                            //     task_id: v.task_id,
+                            //     task_name: v.task_name,
+                            //     plan_starttime: v.plan_starttime,
+                            //     plan_endtime: v.plan_endtime,
+                            //     owner: v.owner,
+                            //     owner_id: v.owner_id,
+                            //     owner_role:v.owner_role,
+                            //     owner_role_id:v.owner_role_id,
+                            //     task_type: v.task_type,
+                            //     duration: v.duration,
+                            //     parent: v.parent,
+                            //     task_assign_id:v.task_assign_id,
+                            //     task_status:v.task_status
+                            //   })
+                            // }
+                            // 原逻辑
+                            // if (v.checked && v.task_type !== "") {
+                            //   if (v.task_type === "4") {
+                            //     idArr.type_one.push({
+                            //       task_id: v.task_id,
+                            //       task_name: v.task_name,
+                            //       plan_starttime: v.plan_starttime,
+                            //       plan_endtime: v.plan_endtime,
+                            //       owner: v.owner,
+                            //       owner_id: v.owner_id,
+                            //       task_type: v.task_type,
+                            //       duration: v.duration,
+                            //       parent: v.parent
+                            //     })
+                            //   } else if (v.task_type === "2") {
+                            //     that.currentSelectedIds.push(v.task_id)
+                            //     idArr.type_two.push({
+                            //       task_id: v.task_id,
+                            //       task_name: v.task_name,
+                            //       plan_starttime: v.plan_starttime,
+                            //       plan_endtime: v.plan_endtime,
+                            //       owner: v.owner,
+                            //       owner_id: v.owner_id,
+                            //       task_type: v.task_type,
+                            //       duration: v.duration,
+                            //       parent: v.parent
+                            //     })
+                            //   } else {
+                            //     that.currentSelectedIds.push(v.task_id)
+                            //     idArr.type_three.push({
+                            //       task_id: v.task_id,
+                            //       task_name: v.task_name,
+                            //       plan_starttime: v.plan_starttime,
+                            //       plan_endtime: v.plan_endtime,
+                            //       owner: v.owner,
+                            //       owner_id: v.owner_id,
+                            //       task_type: v.task_type,
+                            //       duration: v.duration,
+                            //       parent: v.parent
+                            //     })
+                            //   }
+                            // }
+                          })
+                          return resData
                         },
                         cellStyle({
                           row,
@@ -388,24 +437,69 @@
                           var _this = this
                           let ids = this.getSelectedId()
                           let sendData = {
-                            data: ids
+                            data: ids.idArr
                           }
-                          if (ids.length > 0) {
-                            let flag = ids.every(function(v) {
-                              return v.owner_role === "" || v.owner_role === null || v.owner_role === undefined
-                            })
-                            if (flag) {
-                              changedIds = changedIds.concat(this.currentSelectedIds)
-                              model.invoke(
-                                "setQualityPlanRole",
-                                sendData
-                              )
-                            } else {
-                              this.$message.error("只有新增的任务可以设置角色")
-                            }
-                          } else {
+                          if(ids.selected.length===0){
                             this.$message.error("未勾选任务")
+                            return
+                          }else if(0<ids.selected.length<=2){
+                            if(ids.idArr.length===0){
+                              this.$message.error("您勾选任务无法设置角色")
+                              return
+                            }else if(ids.idArr.length===1){
+                              if(ids.idArr[0].subArray[0].owner_role===""||ids.idArr[0].subArray[0].owner_role===null||ids.idArr[0].subArray[0].owner_role===undefined){
+                                changedIds = changedIds.concat(this.currentSelectedIds)
+                                model.invoke(
+                                  "setQualityPlanRole",
+                                  sendData
+                                )
+                              }else{
+                                this.$message.error("只有新增的任务可以设置角色")
+                                return
+                              }
+                            }else{
+                              this.$message.error("设置任务角色不能多选")
+                              return
+                            }
+                          }else{
+                            this.$message.error("设置任务角色不能多选")
+                            return
                           }
+                         
+                          // if(ids.idArr.length===0){
+                          //   this.$message.error("您勾选任务无法设置角色")
+                          //   return
+                          // }else if(ids.idArr.length>1){
+                          //   this.$message.error("设置任务角色不能多选")
+                          //   return
+                          // }else{
+                          //   if(ids.idArr[0].subArray[0].owner_role===""||ids.idArr[0].subArray[0].owner_role===null||ids.idArr[0].subArray[0].owner_role===undefined){
+                          //     changedIds = changedIds.concat(this.currentSelectedIds)
+                          //     model.invoke(
+                          //       "setQualityPlanRole",
+                          //       sendData
+                          //     )
+                          //   }else{
+                          //     this.$message.error("只有新增的任务可以设置角色")
+                          //     return
+                          //   }
+                          // }
+                          // if (ids.length > 0) {
+                          //   let flag = ids.every(function(v) {
+                          //     return v.owner_role === "" || v.owner_role === null || v.owner_role === undefined
+                          //   })
+                          //   if (flag) {
+                          //     changedIds = changedIds.concat(this.currentSelectedIds)
+                          //     model.invoke(
+                          //       "setQualityPlanRole",
+                          //       sendData
+                          //     )
+                          //   } else {
+                          //     this.$message.error("只有新增的任务可以设置角色")
+                          //   }
+                          // } else {
+                          //   this.$message.error("未勾选任务")
+                          // }
                         },
                         getTask(tasks, selectedIds) {
                           let task = []
@@ -446,26 +540,76 @@
                         SetDurationTime() {
                           let ids = this.getSelectedId()
                           let sendData = {
-                            data: ids
+                            data: ids.idArr
                           }
-                          if (ids.length == 0) {
+                          if(ids.selected.length===0){
                             this.$message.error("未勾选任务")
-                          } else if (ids.length > 1) {
-                            this.$message.error("设置任务持续时间不能多选")
-                          } else if (ids[0].task_type !== "3") {
-                            this.$message.error("只有复核任务可以设置任务持续时间")
-                          } else {
-                            if (ids[0].duration === "" || ids[0].duration === null || ids[0].duration === undefined) {
-                              changedIds = changedIds.concat(this.currentSelectedIds)
-                              model.invoke(
-                                "SetDurationTime",
-                                sendData
-                              )
-                            } else {
-                              this.$message.error("只有新增的复核任务可以设置任务持续时间")
-
+                            return
+                          }else if(0<ids.selected.length<=2){
+                            if(ids.idArr.length===0){
+                              this.$message.error("您勾选任务无法设置任务持续时间")
+                              return
+                            }else if(ids.idArr.length===1){
+                              if (ids.idArr[0].duration === "" || ids.idArr[0].duration === null || ids.idArr[0].duration === undefined) {
+                                changedIds = changedIds.concat(this.currentSelectedIds)
+                                model.invoke(
+                                  "SetDurationTime",
+                                  sendData
+                                )
+                              } else {
+                                this.$message.error("只有新增的复核任务可以设置任务持续时间")
+                                return
+                              }
+                            }else{
+                              this.$message.error("设置任务持续时间不能多选")
+                              return
                             }
+                          }else{
+                            this.$message.error("设置任务持续时间不能多选")
+                            return
                           }
+                          // if(ids.selected.length===2){
+                          //   if(ids.idArr.length===1){
+                          //     this.$message.error("设置任务持续时间不能多选")
+                          //     return
+                          //   }
+                          // }
+                          // if(ids.idArr.length===0){
+                          //   this.$message.error("您勾选任务无法设置任务持续时间")
+                          //   return
+                          // }else if(ids.idArr.length>1){
+                          //   this.$message.error("设置任务持续时间不能多选")
+                          //   return
+                          // }else{
+                          //   if (ids.idArr[0].duration === "" || ids.idArr[0].duration === null || ids.idArr[0].duration === undefined) {
+                          //     changedIds = changedIds.concat(this.currentSelectedIds)
+                          //     model.invoke(
+                          //       "SetDurationTime",
+                          //       sendData
+                          //     )
+                          //   } else {
+                          //     this.$message.error("只有新增的复核任务可以设置任务持续时间")
+                          //     return
+                          //   }
+                          // }
+                          // if (ids.length == 0) {
+                          //   this.$message.error("未勾选任务")
+                          // } else if (ids.length > 1) {
+                          //   this.$message.error("设置任务持续时间不能多选")
+                          // } else if (ids[0].task_type !== "3") {
+                          //   this.$message.error("只有复核任务可以设置任务持续时间")
+                          // } else {
+                          //   if (ids[0].duration === "" || ids[0].duration === null || ids[0].duration === undefined) {
+                          //     changedIds = changedIds.concat(this.currentSelectedIds)
+                          //     model.invoke(
+                          //       "SetDurationTime",
+                          //       sendData
+                          //     )
+                          //   } else {
+                          //     this.$message.error("只有新增的复核任务可以设置任务持续时间")
+
+                          //   }
+                          // }
                         },
                         refreshData() {
                           // console.log("refreshData")
@@ -480,70 +624,138 @@
                         goAllocation() {
                           // 资源调配
                           var _this = this
-                          let ids = this.resourceAllocationGetSelectedId()
-                            // let sendData = {
-                            //   data: ids
-                            // }
-                          if (ids.type_one.length === 0 && ids.type_two.length === 0 && ids.type_three.length === 0) {
+                          let ids =this.resourceAllocationGetSelectedId()
+                          let sendData = {
+                            data: ids.idArr
+                          }
+                          if (ids.selected.length===0){
                             this.$message.error("未勾选任务")
                             return
-                          }
-                          if (ids.type_two.length === 1) {
-                            if (ids.type_one.length !== 0 || ids.type_three.length !== 0) {
-                              this.$message.error("专业审核任务不能和其它类型任务一起选择")
+                          }else if(0<ids.selected.length<=2){
+                            if(ids.idArr.length===0){
+                              this.$message.error("您勾选任务无法进行资源调配")
                               return
-                            } else {
-                              // 如果只选择了一种 并且只选择了一个专业审核任务
-                              let sendData = {
-                                data: ids.type_two
-                              }
-                              model.invoke(
-                                "resourceAllocation",
-                                sendData
-                              )
-                              changedIds = changedIds.concat(this.currentSelectedIds)
-                            }
-                          } else if (ids.type_two.length > 1) {
-                            this.$message.error("专业审核任务不能多选")
-                            return
-                          } else {
-                            // 进入到没有专业审核的情况
-                            if (ids.type_one.length === 0) {
-                              if (ids.type_three.length > 2) {
-                                this.$message.error("不能选择不同摘要任务下的设计任务和复核任务")
-                                return
-                              } else if (ids.type_three.length === 2) {
-                                if (ids.type_three[0].parent !== ids.type_three[1].parent) {
-                                  this.$message.error("不能选择不同摘要任务下的设计任务或复核任务")
-                                  return
-                                }
-                              } else if (0 < ids.type_three.length < 2) {
-                                let sendData = {
-                                  data: ids.type_three
-                                }
+                            }else if(ids.idArr.length===1){
+                              if (ids.idArr[0].subArray[0].owner_id === "" || ids.idArr[0].subArray[0].owner_id === null || ids.idArr[0].subArray[0].owner_id === undefined) {
+                                this.$message.error("新增的任务不能进行资源调配")
+                              } else {
+                                changedIds = changedIds.concat(this.currentSelectedIds)
                                 model.invoke(
                                   "resourceAllocation",
                                   sendData
                                 )
-                                changedIds = changedIds.concat(this.currentSelectedIds)
-                              } else {
-                                this.$message.error("未勾选任务")
-                                return
                               }
-                            } else if (ids.type_one.length > 1) {
-                              this.$message.error("不能选择不同摘要任务下的设计任务或复核任务")
+                            }else{
+                              this.$message.error("资源调配不能多选")
                               return
-                            } else {
-                              let sendData = {
-                                data: ids.type_three
-                              }
-                              model.invoke(
-                                "resourceAllocation",
-                                sendData
-                              )
-                              changedIds = changedIds.concat(this.currentSelectedIds)
                             }
+                          }else{
+                            this.$message.error("资源调配不能多选")
+                            return
                           }
+                          // if(ids.idArr.length===0){
+                          //   this.$message.error("您勾选任务无法进行资源调配")
+                          //   return
+                          // }else if(ids.idArr.length>1){
+                          //   this.$message.error("资源调配不能多选")
+                          //   return
+                          // }else{
+                          //   if (ids.idArr[0].subArray[0].owner_id === "" || ids.idArr[0].subArray[0].owner_id === null || ids.idArr[0].subArray[0].owner_id === undefined) {
+                          //     this.$message.error("新增的任务不能进行资源调配")
+                          //   } else {
+                          //     changedIds = changedIds.concat(this.currentSelectedIds)
+                          //     model.invoke(
+                          //       "resourceAllocation",
+                          //       sendData
+                          //     )
+                          //   }
+                          // }
+
+                          // if (ids.length == 0) {
+                          //   this.$message.error("未勾选任务")
+                          // } else if (ids.length > 1) {
+                          //   this.$message.error("资源调配不能多选")
+                          // } else{
+                          //   if (ids[0].owner_id === "" || ids[0].owner_id === null || ids[0].owner_id === undefined) {
+                          //     this.$message.error("新增的任务不能进行资源调配")
+                          //   } else {
+                          //     changedIds = changedIds.concat(this.currentSelectedIds)
+                          //     model.invoke(
+                          //       "resourceAllocation",
+                          //       sendData
+                          //     )
+                          //   }
+                          // }
+                          //******************************************* */
+                          // let ids = this.resourceAllocationGetSelectedId()
+                          //   // let sendData = {
+                          //   //   data: ids
+                          //   // }
+                          // /**
+                          //  * @author zhang fq
+                          //  * @date  2020-02-17
+                          //  * @description  计量管理-资源调配  修改需求只能单选
+                          //  */
+                          // if (ids.type_one.length === 0 && ids.type_two.length === 0 && ids.type_three.length === 0) {
+                          //   this.$message.error("未勾选任务")
+                          //   return
+                          // }
+                          // if (ids.type_two.length === 1) {
+                          //   if (ids.type_one.length !== 0 || ids.type_three.length !== 0) {
+                          //     this.$message.error("专业审核任务不能和其它类型任务一起选择")
+                          //     return
+                          //   } else {
+                          //     // 如果只选择了一种 并且只选择了一个专业审核任务
+                          //     let sendData = {
+                          //       data: ids.type_two
+                          //     }
+                          //     model.invoke(
+                          //       "resourceAllocation",
+                          //       sendData
+                          //     )
+                          //     changedIds = changedIds.concat(this.currentSelectedIds)
+                          //   }
+                          // } else if (ids.type_two.length > 1) {
+                          //   this.$message.error("专业审核任务不能多选")
+                          //   return
+                          // } else {
+                          //   // 进入到没有专业审核的情况
+                          //   if (ids.type_one.length === 0) {
+                          //     if (ids.type_three.length > 2) {
+                          //       this.$message.error("不能选择不同摘要任务下的设计任务和复核任务")
+                          //       return
+                          //     } else if (ids.type_three.length === 2) {
+                          //       if (ids.type_three[0].parent !== ids.type_three[1].parent) {
+                          //         this.$message.error("不能选择不同摘要任务下的设计任务或复核任务")
+                          //         return
+                          //       }
+                          //     } else if (0 < ids.type_three.length < 2) {
+                          //       let sendData = {
+                          //         data: ids.type_three
+                          //       }
+                          //       model.invoke(
+                          //         "resourceAllocation",
+                          //         sendData
+                          //       )
+                          //       changedIds = changedIds.concat(this.currentSelectedIds)
+                          //     } else {
+                          //       this.$message.error("未勾选任务")
+                          //       return
+                          //     }
+                          //   } else if (ids.type_one.length > 1) {
+                          //     this.$message.error("不能选择不同摘要任务下的设计任务或复核任务")
+                          //     return
+                          //   } else {
+                          //     let sendData = {
+                          //       data: ids.type_three
+                          //     }
+                          //     model.invoke(
+                          //       "resourceAllocation",
+                          //       sendData
+                          //     )
+                          //     changedIds = changedIds.concat(this.currentSelectedIds)
+                          //   }
+                          // }
                         }
                       }
                     }).$mount($("#resourceAllocationApp", model.dom).get(0))
@@ -559,6 +771,7 @@
 
   // 将源数据格式化为表格树形结构数据
   function formatToTreeData({ arrayList, pidStr = 'parent', idStr = 'id', childrenStr = 'children' }) {
+    if(arrayList===[]||arrayList===undefined||arrayList===null) return
     let templist = _.cloneDeep(arrayList)
     let listObj = {}; // 用来储存{key: obj}格式的对象
     let treeList = []; // 用来储存最终树形结构数据的数组
@@ -661,8 +874,8 @@
       if (fuck.task_type === "3") {
         originData.forEach(function(shit) {
           if (fuck.parent === shit.parent && shit.task_type !== "3") {
-            fuck.the_owner = shit.owner
-            fuck.the_owner_role = shit.owner_role
+            fuck.subArray[0].the_owner = shit.subArray[0].owner
+            fuck.subArray[0].the_owner_role = shit.subArray[0].owner_role
           }
         })
       }

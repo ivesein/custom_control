@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>元素弧线运动</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0
+        }
+        /*简单的浏览器兼容*/
+        /*设置初始样式*/
+        
+        .item,
+        .item2 {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            position: absolute;
+            top: 50px;
+            left: 20px;
+            background-color: #00aa00;
+            border-radius: 50%;
+            transition: all 2s;
+        }
+        /*竖直运动*/
+        
+        .wraper {
+            transition: all 1s cubic-bezier(.1, -.33, .55, .100);
+        }
+        /*水平运动*/
+        
+        .wraper .item {
+            transition: all 1s linear;
+        }
+        
+        @keyframes hor {
+            0% {
+                transform: translateX(0px);
+            }
+            100% {
+                transform: translateX(400px);
+            }
+        }
+        
+        @keyframes vertical {
+            0% {
+                transform: translateY(0px);
+            }
+            100% {
+                transform: translateY(400px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <button>开始运动</button>
+    <div class="wraper">
+        <!--控制竖直运动-->
+        <div class="item"></div>
+        <!--控制水平运动-->
+    </div>
+    <div class="item2"></div>
+</body>
+<script src="../js//jquery-1.11.1.js"></script>
+<script>
+    let number = 400;
+    $("button").on("click", function() {
+        $(".wraper").css("transform", "translateY(" + number + "px)")
+        $(".wraper .item").css("transform", "translateX(" + number + "px)")
+        number += 100;
+
+
+    })
+</script>
+
+</html>

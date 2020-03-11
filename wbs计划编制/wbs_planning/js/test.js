@@ -2,192 +2,158 @@ new Vue({
   delimiters: ["${", "}"],
   data: {
     activeName: 'first',
+    addNewTaskSelectionOptions: [{
+      value: '1',
+      label: '新增工作包'
+    }, {
+      value: '2',
+      label: '新增摘要任务'
+    }, {
+      value: '3',
+      label: '新增专业审核'
+    }],
+    addNewTaskValue: '', //新增下拉框所选值
     tableData: [],
     multipleSelection: [],
-    here: "hahaha",
     allChecked: false,
     allItems: null,
     isIndeterminate: false,
     tableHeight: 800
   },
   created() {
-    // var tData = [{
-    //   "task_id": "1",
-    //   "position": "1",
-    //   "task_name": "项目准备阶段工作",
-    //   "wbs": "1",
-    //   "first_duration": "",
-    //   "modify_duration": "",
-    //   "mod_con_duration": "",
-    //   "confirm_duration": "",
-    //   "owner": "",
-    //   "owner_id": "",
-    //   "owner_role": "",
-    //   "owner_roleid": "",
-    //   "duration": "",
-    //   "plan_starttime": "",
-    //   "plan_endtime": "",
-    //   "qualityplan_version": "",
-    //   "parent": "0",
-    //   "type": "project",
-    //   "task_type": "",
-    //   "audit_task_id": ""
-    // }, {
-    //   "task_id": "2",
-    //   "position": "2",
-    //   "task_name": " 测设人员名单",
-    //   "wbs": "1.1",
-    //   "first_duration": "",
-    //   "modify_duration": "",
-    //   "mod_con_duration": "",
-    //   "confirm_duration": "",
-    //   "owner": "",
-    //   "owner_id": "",
-    //   "owner_role": "",
-    //   "owner_roleid": "",
-    //   "duration": "",
-    //   "plan_starttime": "2019-02-06",
-    //   "plan_endtime": "2019-02-15",
-    //   "qualityplan_version": "",
-    //   "parent": "1",
-    //   "type": "project",
-    //   "task_type": "4",
-    //   "audit_task_id": ""
-    // }, {
-    //   "task_id": "3",
-    //   "position": "3",
-    //   "task_name": "测设人员名单设计",
-    //   "wbs": "1.1.1",
-    //   "first_duration": "0.1",
-    //   "modify_duration": "0.4",
-    //   "mod_con_duration": "0.4",
-    //   "confirm_duration": "0.1",
-    //   "owner": "卢峰",
-    //   "owner_id": "754806414039319552",
-    //   "owner_role": "设计员",
-    //   "owner_roleid": "789577461510730800",
-    //   "duration": "",
-    //   "plan_starttime": "2019-02-06",
-    //   "plan_endtime": "2019-02-08",
-    //   "qualityplan_version": "",
-    //   "parent": "2",
-    //   "type": "task",
-    //   "task_type": "1",
-    //   "audit_task_id": ""
-    // }, {
-    //   "task_id": "4",
-    //   "position": "4",
-    //   "task_name": "测设人员名单复核",
-    //   "wbs": "1.1.2",
-    //   "first_duration": "0.1",
-    //   "modify_duration": "0.4",
-    //   "mod_con_duration": "0.4",
-    //   "confirm_duration": "0.1",
-    //   "owner": "严孝祥",
-    //   "owner_id": "1111",
-    //   "owner_role": "勘查员",
-    //   "owner_roleid": "789577577239965700",
-    //   "duration": "",
-    //   "plan_starttime": "2019-02-09",
-    //   "plan_endtime": "2019-02-15",
-    //   "qualityplan_version": "",
-    //   "parent": "2",
-    //   "type": "task",
-    //   "task_type": "3",
-    //   "audit_task_id": ""
-    // }, {
-    //   "task_id": "5",
-    //   "position": "5",
-    //   "task_name": "勘察设计大纲编制与审批",
-    //   "wbs": "1.2",
-    //   "first_duration": "",
-    //   "modify_duration": "",
-    //   "mod_con_duration": "",
-    //   "confirm_duration": "",
-    //   "owner": "",
-    //   "owner_id": "",
-    //   "owner_role": "",
-    //   "owner_roleid": "",
-    //   "duration": "",
-    //   "plan_starttime": "2019-02-16",
-    //   "plan_endtime": "2019-02-28",
-    //   "qualityplan_version": "",
-    //   "parent": "1",
-    //   "type": "task",
-    //   "task_type": "4",
-    //   "audit_task_id": ""
-    // }, {
-    //   "task_id": "6",
-    //   "position": "6",
-    //   "task_name": "勘察设计大纲编制与审批设计",
-    //   "wbs": "1.2.1",
-    //   "first_duration": "0.1",
-    //   "modify_duration": "0.4",
-    //   "mod_con_duration": "0.4",
-    //   "confirm_duration": "0.1",
-    //   "owner": "李洋波",
-    //   "owner_id": "2222",
-    //   "owner_role": "设计员",
-    //   "owner_roleid": "789577461510730800",
-    //   "duration": "",
-    //   "plan_starttime": "2019-02-16",
-    //   "plan_endtime": "2019-02-24",
-    //   "qualityplan_version": "",
-    //   "parent": "5",
-    //   "type": "task",
-    //   "task_type": "1",
-    //   "audit_task_id": "1"
-    // }, {
-    //   "task_id": "8",
-    //   "position": "8",
-    //   "task_name": "专业审核",
-    //   "wbs": "1.3",
-    //   "first_duration": "",
-    //   "modify_duration": "",
-    //   "mod_con_duration": "",
-    //   "confirm_duration": "",
-    //   "owner": "李四",
-    //   "owner_id": "4444",
-    //   "owner_role": "审核组长",
-    //   "owner_roleid": "55555",
-    //   "duration": "",
-    //   "plan_starttime": "2019-03-01",
-    //   "plan_endtime": "2019-03-08",
-    //   "qualityplan_version": "",
-    //   "parent": "1",
-    //   "type": "task",
-    //   "task_type": "2",
-    //   "audit_task_id": "2,5"
-    // }, {
-    //   "task_id": "7",
-    //   "position": "7",
-    //   "task_name": "勘察设计大纲编制与审批复核",
-    //   "wbs": "1.2.2",
-    //   "first_duration": "0.1",
-    //   "modify_duration": "0.4",
-    //   "mod_con_duration": "0.4",
-    //   "confirm_duration": "0.1",
-    //   "owner": "张三",
-    //   "owner_id": "3333",
-    //   "owner_role": "勘查员",
-    //   "owner_roleid": "789577577239965700",
-    //   "duration": "",
-    //   "plan_starttime": "2019-02-24",
-    //   "plan_endtime": "2019-02-28",
-    //   "qualityplan_version": "",
-    //   "parent": "5",
-    //   "type": "task",
-    //   "task_type": "3",
-    //   "audit_task_id": "3"
-    // }]
-    // var data_ = this.addSortNum(tData).sort(this.compare('sortNum'))
-    // console.table(data_)
-    // data_ = this.setAuditTaskUndertaker(data_)
-    // console.log("data_>>>", data_)
-
-    // this.tableData = this.formatToTreeData({ arrayList: tData, idStr: "task_id" })
-
-    // console.log("this.tableData>>>", this.tableData)
+    var tData = [{
+      id: "1", // 任务id
+      wbs_code:"1",
+      text: "测试任务", // 任务名称
+      parent: "0", // 父任务id
+      duration: 10, // 工期
+      task_type: "", // 任务类型2  一般任务  复核任务  专业审核等
+      type: "project", // 任务类型1  摘要任务  子任务  里程碑
+      describe: "任务说明1", // 任务说明
+      open: true, // 是否展开
+      isMilestone: false, // 是否是里程碑
+      start_date: "2020-02-03 00:00:00",
+      effect: "", //功效
+      duration_plan: "", //工程量
+      major: {
+        text: "专业1", //专业名称
+        id: "", //专业id
+      },
+      my_unit: { //工程量单位和功效单位 目前为同一个
+        text: "km", // 单位名称
+        id: "", //单位id
+      },
+      task_before: [], //紧前任务
+      first_duration: "", //首次复核持续时间
+      modify_duration: "", //修改持续时间
+      mod_con_duration: "", //确认修改持续时间
+      confirm_duration: "", //复核确认持续时间
+      owner_role: "", //承担人角色
+      owner_roleid: "", //承担人角色id
+      audit_task_id: "2,5", //审核的任务id
+      delegate: "0", //是否委外
+      contract_thing: "合同测试", //合同事项
+      delegate_reason: "测试委派", //委外原因
+      delegate_role_id: 757802139937423360,
+      delegate_role_name: "专业组长", //委外负责人角色
+      delegate_person_id: 754911742466739200, //委外负责人id
+      delegate_person_name: "田重辉", //委外负责人名称
+      assn_pro_num: "300", //工程量/单位
+      assn_pro_unit:"m³", //单位
+      assn_merits_price: 50, //绩效奖金(元/单位工程量)
+      assn_merits_total: 15000, //绩效奖金小计
+      fmachine_name: ["挖掘机"], //机械名称
+      fmachine_type: ["WJ-50"], //型号
+      machine_id: [""], //机械id
+      fmachine_used: ["4"], //机械耗用量
+      fmachine_price: ["200"], //机械单价
+      fmachine_unit: ["台"], //机械单位
+      fmachine_subtotal: ["800"], //机械小计
+      fmachine_all: "800", //机械合计
+      fmaterial_name: ["", "材料", "", "材料"], //材料名称
+      material_id: ["", "2", "", "2"], //材料id
+      fmaterial_used: ["", "2", "", "2"], //材料耗用量
+      fmaterial_price: ["", "2", "", "2"], //材料单价
+      fmaterial_unit: ["", "2", "", "2"], //材料单位
+      fmaterial_subtotal: ["1", "2", "1", "2"], //材料小计
+      fmaterial_all: "2", //材料合计
+      fmanual_name: ["人工", "人工1"], //人工名称
+      person_id: ["12", "11"], //人工id
+      fmanual_workload: ["1", "2"], //人工负载
+      fmanual_price: ["1", "2"], //人工单价
+      fmanual_unit: ["1", "2"], //人工单位
+      fmanual_subtotal: ["1", "2"], //人工小计
+      fmanual_all: "2", //人工合计
+      ffee_subtotal: "2",
+      ffee_all: "1",
+    },
+    {
+      id: "2", // 任务id
+      wbs_code:"1.1",
+      text: "测试任务2", // 任务名称
+      parent: "0", // 父任务id
+      duration: 3, // 工期
+      task_type: "3", // 任务类型2  一般任务  复核任务  专业审核等
+      type: "milestone", // 任务类型1  摘要任务  子任务  里程碑
+      describe: "任务说明2", // 任务说明
+      open: true, // 是否展开
+      isMilestone: false, // 是否是里程碑
+      start_date: "2020-02-03 00:00:00",
+      effect: "", //功效
+      duration_plan: "", //工程量
+      major: {
+        text: "专业2", //专业名称
+        id: "", //专业id
+      },
+      my_unit: { //工程量单位和功效单位 目前为同一个
+        text: "km", // 单位名称
+        id: "", //单位id
+      },
+      task_before: [], //紧前任务
+      first_duration: "", //首次复核持续时间
+      modify_duration: "", //修改持续时间
+      mod_con_duration: "", //确认修改持续时间
+      confirm_duration: "", //复核确认持续时间
+      owner_role: "", //承担人角色
+      owner_roleid: "", //承担人角色id
+      audit_task_id: "2,5", //审核的任务id
+      delegate: "0", //是否委外
+      contract_thing: "合同测试", //合同事项
+      delegate_reason: "测试委派", //委外原因
+      delegate_role_id: 757802139937423360,
+      delegate_role_name: "专业组长", //委外负责人角色
+      delegate_person_id: 754911742466739200, //委外负责人id
+      delegate_person_name: "田重辉", //委外负责人名称
+      assn_pro_num: "", //工程量/单位
+      assn_merits_price: 0, //绩效奖金(元/单位工程量)
+      assn_merits_total: 0, //绩效奖金小计
+      fmachine_name: [""], //机械名称
+      machine_id: [""], //机械id
+      fmachine_used: [""], //机械耗用量
+      fmachine_price: [""], //机械单价
+      fmachine_unit: [""], //机械单位
+      fmachine_subtotal: [""], //机械小计
+      fmachine_all: "1.2", //机械合计
+      fmaterial_name: ["", "材料", "", "材料"], //材料名称
+      material_id: ["", "2", "", "2"], //材料id
+      fmaterial_used: ["", "2", "", "2"], //材料耗用量
+      fmaterial_price: ["", "2", "", "2"], //材料单价
+      fmaterial_unit: ["", "2", "", "2"], //材料单位
+      fmaterial_subtotal: ["1", "2", "1", "2"], //材料小计
+      fmaterial_all: "2", //材料合计
+      fmanual_name: ["人工", "人工1"], //人工名称
+      person_id: ["12", "11"], //人工id
+      fmanual_workload: ["1", "2"], //人工负载
+      fmanual_price: ["1", "2"], //人工单价
+      fmanual_unit: ["1", "2"], //人工单位
+      fmanual_subtotal: ["1", "2"], //人工小计
+      fmanual_all: "2", //人工合计
+      ffee_subtotal: "2",
+      ffee_all: "1",
+    }
+    ]
+    // 假数据模拟
+    this.tableData = tData
   },
   mounted() {
     // this.$nextTick(function() {
@@ -204,7 +170,7 @@ new Vue({
     handleTabClick(tab, event) {
       console.log(tab, event);
     },
-    // // 处理复核任务 整改-修改 承担人和承担人名称
+    // 处理复核任务 整改-修改 承担人和承担人名称
     // setAuditTaskUndertaker(originData) {
     //   if (originData.length === 0) return
     //   originData.forEach(function(fuck) {
@@ -370,123 +336,127 @@ new Vue({
     //   })
     //   return idArr
     // },
-    cellStyle({ row, column, rowIndex, columnIndex }) {
+    cellStyle({
+      row,
+      column,
+      rowIndex,
+      columnIndex
+    }) {
       if (columnIndex === 0) {
         // console.log(column)
         return "padding: 0px!important;"
       }
 
     },
-    // // 将源数据格式化为表格树形结构数据
-    // formatToTreeData({ arrayList, pidStr = 'parent', idStr = 'id', childrenStr = 'children' }) {
-    //   let templist = _.cloneDeep(arrayList)
-    //   let listObj = {}; // 用来储存{key: obj}格式的对象
-    //   let treeList = []; // 用来储存最终树形结构数据的数组
-    //   // 将数据变换成{key: obj}格式，方便下面处理数据
-    //   for (let i = 0; i < templist.length; i++) {
-    //     templist[i].checked = false
-    //     listObj[templist[i][idStr]] = templist[i]
-    //   }
-    //   // 根据pid来将数据进行格式化
-    //   for (let j = 0; j < templist.length; j++) {
-    //     // 判断父级是否存在
-    //     let haveParent = listObj[templist[j][pidStr]]
-    //     if (haveParent) {
-    //       // 如果有没有父级children字段，就创建一个children字段
-    //       !haveParent[childrenStr] && (haveParent[childrenStr] = [])
-    //         // 在父级里插入子项
-    //       haveParent[childrenStr].push(templist[j])
-    //     } else {
-    //       // 如果没有父级直接插入到最外层
-    //       treeList.push(templist[j])
-    //     }
-    //   }
-    //   return treeList
-    // },
-    // // 树形结构数据扁平化处理  如果需要可以设置该节点以及子节点checked
-    // traversalNode(node, bool) {
-    //   let nodes = []
-    //   if (node) {
-    //     if (bool !== undefined) node.checked = bool
-    //     let stack = []
-    //     stack.push(node)
-    //     while (stack.length != 0) {
-    //       let item = stack.shift()
-    //       nodes.push(item)
-    //       let children = item.children ? item.children : []
-    //       children.forEach(function(v) {
-    //         if (bool !== undefined) v.checked = bool
-    //         stack.push(v)
-    //       })
-    //     }
-    //   }
-    //   return nodes
-    // },
-    // // 递归找到所有父节点设为false
-    // findYouAndSetFalse(node, pids) {
-    //   var that = this
-    //   if (pids.includes(node.task_id)) {
-    //     node.checked = false
-    //   }
-    //   let children = node.children ? node.children : []
-    //   children.forEach(function(v) {
-    //     that.findYouAndSetFalse(v, pids)
-    //   })
-    // },
-    // // 在扁平化的树结构数据中递归找到所点击任务的所有父节点task_id
-    // findParentIds(arr, pid) {
-    //   let pids = []
-    //   let currentpid = pid
-    //   console.log(Array.isArray(arr))
-    //   if (Array.isArray(arr) && arr.length > 0) {
-    //     while (currentpid != 0) {
-    //       arr.forEach(function(v) {
-    //         if (v.task_id == currentpid) {
-    //           pids.push(v.task_id)
-    //           currentpid = v.parent
-    //         }
-    //       })
-    //     }
-    //   }
-    //   return pids
-    // },
-    // // flatdata 为表格绑定的整个数据的扁平化数据  pids为包含所点击节点的所有父节点数组
-    // // 在整个扁平化数据中循环查找每个父节点下的子节点 判断  
-    // // 若果有一个子节点为false 置所有父节点为false 
-    // // 如果循环到当前父节点下的所有子节点都为true  置该父节点为true 继续找该父节点的父节点 重复该步骤
-    // helloKids(flatdata, pids) {
-    //   let _that = this
-    //   let arr = []
-    //     // 如果pids为空 表示点击的节点为根节点没有父节点 直接置为true
-    //   if (pids.length == 0) {
-    //     this.allChecked = true
-    //     return flatdata
-    //   }
-    //   for (let i = 0, len = pids.length; i < len; i++) {
-    //     for (let j = 0, jlen = flatdata.length; j < jlen; j++) {
-    //       if (pids[i] == flatdata[j].task_id) {
-    //         let bool = flatdata[j].checked
-    //         let children = flatdata[j].children ? flatdata[j].children : []
-    //         for (let k = 0, klen = children.length; k < klen; k++) {
-    //           if (!children[k].checked) {
-    //             bool = false;
-    //             _that.allChecked = false
-    //             break;
-    //           } else {
-    //             bool = true
+    // 将源数据格式化为表格树形结构数据
+    formatToTreeData({ arrayList, pidStr = 'parent', idStr = 'id', childrenStr = 'children' }) {
+      let templist = _.cloneDeep(arrayList)
+      let listObj = {}; // 用来储存{key: obj}格式的对象
+      let treeList = []; // 用来储存最终树形结构数据的数组
+      // 将数据变换成{key: obj}格式，方便下面处理数据
+      for (let i = 0; i < templist.length; i++) {
+        templist[i].checked = false
+        listObj[templist[i][idStr]] = templist[i]
+      }
+      // 根据pid来将数据进行格式化
+      for (let j = 0; j < templist.length; j++) {
+        // 判断父级是否存在
+        let haveParent = listObj[templist[j][pidStr]]
+        if (haveParent) {
+          // 如果有没有父级children字段，就创建一个children字段
+          !haveParent[childrenStr] && (haveParent[childrenStr] = [])
+            // 在父级里插入子项
+          haveParent[childrenStr].push(templist[j])
+        } else {
+          // 如果没有父级直接插入到最外层
+          treeList.push(templist[j])
+        }
+      }
+      return treeList
+    },
+    // 树形结构数据扁平化处理  如果需要可以设置该节点以及子节点checked
+    traversalNode(node, bool) {
+      let nodes = []
+      if (node) {
+        if (bool !== undefined) node.checked = bool
+        let stack = []
+        stack.push(node)
+        while (stack.length != 0) {
+          let item = stack.shift()
+          nodes.push(item)
+          let children = item.children ? item.children : []
+          children.forEach(function(v) {
+            if (bool !== undefined) v.checked = bool
+            stack.push(v)
+          })
+        }
+      }
+      return nodes
+    },
+    // 递归找到所有父节点设为false
+    findYouAndSetFalse(node, pids) {
+      var that = this
+      if (pids.includes(node.task_id)) {
+        node.checked = false
+      }
+      let children = node.children ? node.children : []
+      children.forEach(function(v) {
+        that.findYouAndSetFalse(v, pids)
+      })
+    },
+    // 在扁平化的树结构数据中递归找到所点击任务的所有父节点task_id
+    findParentIds(arr, pid) {
+      let pids = []
+      let currentpid = pid
+      console.log(Array.isArray(arr))
+      if (Array.isArray(arr) && arr.length > 0) {
+        while (currentpid != 0) {
+          arr.forEach(function(v) {
+            if (v.task_id == currentpid) {
+              pids.push(v.task_id)
+              currentpid = v.parent
+            }
+          })
+        }
+      }
+      return pids
+    },
+    // flatdata 为表格绑定的整个数据的扁平化数据  pids为包含所点击节点的所有父节点数组
+    // 在整个扁平化数据中循环查找每个父节点下的子节点 判断  
+    // 若果有一个子节点为false 置所有父节点为false 
+    // 如果循环到当前父节点下的所有子节点都为true  置该父节点为true 继续找该父节点的父节点 重复该步骤
+    helloKids(flatdata, pids) {
+      let _that = this
+      let arr = []
+        // 如果pids为空 表示点击的节点为根节点没有父节点 直接置为true
+      if (pids.length == 0) {
+        this.allChecked = true
+        return flatdata
+      }
+      for (let i = 0, len = pids.length; i < len; i++) {
+        for (let j = 0, jlen = flatdata.length; j < jlen; j++) {
+          if (pids[i] == flatdata[j].task_id) {
+            let bool = flatdata[j].checked
+            let children = flatdata[j].children ? flatdata[j].children : []
+            for (let k = 0, klen = children.length; k < klen; k++) {
+              if (!children[k].checked) {
+                bool = false;
+                _that.allChecked = false
+                break;
+              } else {
+                bool = true
 
-    //           }
-    //         }
-    //         flatdata[j].checked = bool
-    //         if (bool) {
-    //           _that.allChecked = true
-    //         }
-    //       }
-    //     }
+              }
+            }
+            flatdata[j].checked = bool
+            if (bool) {
+              _that.allChecked = true
+            }
+          }
+        }
 
-    //   }
-    //   console.log("arr>>>", arr)
-    //   return flatdata
-    // }
+      }
+      return flatdata
+    }
   }
 }).$mount("#wbsPlanningApp")

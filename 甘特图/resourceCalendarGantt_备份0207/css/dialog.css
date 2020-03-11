@@ -1,0 +1,612 @@
+.gantt_container .box-container {
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    display: none;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid #ccc;
+}
+
+.gantt_container #gantt_here {
+    width: 100%;
+    height: 94%;
+    box-sizing: border-box;
+    min-height: 650px;
+}
+
+.gantt_container .box-container-container {
+    position: absolute;
+    width: 900px;
+    height: 600px;
+    background: #fff;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.gantt_container .main {
+    width: 92%;
+    margin: 20px auto;
+    height: 550px;
+    border-bottom: 2px solid #d0d0d0;
+    padding-bottom: 15px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.gantt_container .add_task {
+    width: 100%;
+    height: 30px;
+    border-bottom: 1px solid #999;
+    box-sizing: border-box;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.gantt_container .close {
+    position: absolute;
+    right: 10px;
+    font-size: 20px;
+    color: #999;
+    top: 0;
+    cursor: pointer;
+}
+
+.gantt_container .tab {
+    width: 280px;
+    height: 40px;
+    background: #fff;
+    margin-top: 10px;
+    display: inline-flex;
+    justify-content: space-between;
+    border: 1px solid #999;
+    font-size: 14px;
+    color: #333;
+}
+
+.gantt_container .tab div {
+    width: 33.3%;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+}
+
+.gantt_container .message {
+    width: 100%;
+    border: 1px solid #fafafa;
+}
+
+.gantt_container .cancle,
+.gantt_container .save {
+    width: 70px;
+    height: 40px;
+    display: inline-block;
+    margin-left: 28%;
+    text-align: center;
+    line-height: 40px;
+    font-size: 14px;
+    color: white;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.gantt_container .cancle {
+    cursor: pointer;
+    background: #999;
+}
+
+.gantt_container .save {
+    cursor: pointer;
+    background: #5582f3;
+}
+
+.gantt_container .item {
+    width: 45%;
+    padding-top: 20px;
+    padding-left: 20px;
+    float: left;
+    height: 55px;
+}
+
+.gantt_container .item_select {
+    width: 45%;
+    float: left;
+    padding-top: 20px;
+    padding-left: 20px;
+}
+
+.gantt_container .item_select>span {
+    margin-bottom: 10px;
+    display: block;
+}
+
+.gantt_container .box-container .item span {
+    padding: 0px 0 10px 0;
+    display: block;
+}
+
+.gantt_container .item input {
+    border: none;
+    outline: none;
+    height: 28px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding-left: 3px;
+    background: inherit;
+    width: 205px;
+}
+
+.gantt_container .item .switch-anim {
+    border: 1px solid #ccc;
+    width: 57px;
+}
+
+.gantt_container #table2 input,
+.gantt_container #table3 input {
+    border: none;
+    outline: none;
+    height: 100%;
+    width: 100%;
+    background: inherit;
+}
+
+.gantt_container #table3 select {
+    width: 100%;
+    height: 100%;
+}
+
+.gantt_container .active {
+    color: #549de8;
+    border-bottom: 2px solid #549de8;
+}
+
+.gantt_container .skillBtn {
+    width: 95%;
+    height: 40px;
+    background: #fff;
+    margin: 20px;
+    text-align: right;
+    line-height: 40px;
+}
+
+.gantt_container .skillBtn span {
+    padding: 0 10px 0 0;
+}
+
+.gantt_container .text {
+    color: #6887ec;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.gantt_container .icon {
+    color: #d3d7dc;
+    font-size: 16px;
+}
+
+.gantt_container .box-container table {
+    width: 96%;
+    background: #fff;
+    margin: 20px auto;
+    text-align: left;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.gantt_container .box-container table,
+.gantt_container .box-container table tr th,
+.gantt_container .box-container table tr td {
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+}
+
+
+/* 被审核任务 */
+
+.gantt_container #resign_task {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.gantt_container .audited_task {
+    margin-top: 30px;
+    width: 96%;
+    background: #fff;
+    margin: 0 auto;
+    margin-bottom: 15px;
+}
+
+.gantt_container .audited_task tr td {
+    position: relative;
+    height: 34px;
+}
+
+.gantt_container table td img {
+    position: absolute;
+    right: 2px;
+    top: 8px;
+    width: 20px;
+    height: 20px;
+}
+
+.gantt_container table .move {
+    background-color: rgba(12, 11, 11, 0.1) !important;
+}
+
+
+/* .resign_task_table_td {
+    height: 25px;
+    position: relative;
+} */
+
+
+/* .resign_task_table_td img {
+    position: absolute;
+    right: 2px;
+    top: 8px;
+    width: 20px;
+    height: 20px;
+} */
+
+
+/* switch开关 */
+
+.gantt_container .switch {
+    width: 57px;
+    height: 28px;
+    position: relative;
+    border: 1px solid #dfdfdf;
+    background-color: #fdfdfd;
+    box-shadow: #dfdfdf 0 0 0 0 inset;
+    border-radius: 5px;
+    background-clip: content-box;
+    display: inline-block;
+    -webkit-appearance: none;
+    user-select: none;
+    outline: none;
+    background: #ccc;
+}
+
+.gantt_container .switch:before {
+    content: '';
+    width: 26px;
+    height: 26px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.gantt_container .switch:checked {
+    border-color: #64bd63;
+    box-shadow: #64bd63 0 0 0 16px inset;
+    background-color: #64bd63;
+}
+
+.gantt_container .switch:checked:before {
+    left: 30px;
+}
+
+
+/* .switch.switch-anim {
+    transition: border cubic-bezier(0, 0, 0, 1) 0.4s, box-shadow cubic-bezier(0, 0, 0, 1) 0.4s;
+} */
+
+.gantt_container .switch.switch-anim:before {
+    transition: left 0.3s;
+}
+
+.gantt_container .switch.switch-anim:checked {
+    box-shadow: #64bd63 0 0 0 16px inset;
+    background-color: #64bd63;
+    /* transition: border ease 0.4s, box-shadow ease 0.4s, background-color ease 1.2s; */
+}
+
+.gantt_container .switch.switch-anim:checked:before {
+    transition: left 0.3s;
+}
+
+.gantt_container .hide_project_progress_drag .gantt_task_progress_drag {
+    visibility: hidden;
+}
+
+.gantt_container .before_task_id {
+    display: none;
+}
+
+
+/* 设置资源的页面 */
+
+.gantt_container .resource_marker {
+    text-align: center;
+}
+
+.gantt_container .resource_marker div {
+    width: 28px;
+    height: 28px;
+    line-height: 29px;
+    display: inline-block;
+    color: #FFF;
+    margin: 3px;
+}
+
+.gantt_container .resource_marker.workday_ok div {
+    background: #51c185;
+    margin: 10px;
+    border-radius: 15px;
+}
+
+.gantt_container .resource_marker.workday_over div {
+    background: #ff8686;
+}
+
+
+/* 设置隐藏日历 */
+
+.gantt_container .resource_marker.workday_over_hide div {
+    display: none;
+}
+
+.gantt_container .td-source {
+    display: none;
+}
+
+.gantt_container .item .gantt_select .selct_data {
+    max-height: 220px !important;
+    overflow-y: scroll;
+}
+
+.dhtmlx_message_area {
+    display: none !important;
+}
+
+
+/* 删除弹框 */
+
+.gantt_container .container_delete {
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    display: none;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid #ccc;
+}
+
+.gantt_container .container_delete .delete-box {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    width: 800px;
+    height: 500px;
+    background: #fff;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.gantt_container .container_delete .delete-box .delete-task {
+    width: 100%;
+    height: 45px;
+    border-bottom: 1px solid #ccc;
+}
+
+.gantt_container .container_delete .delete-box .delete-task span {
+    display: inline-block;
+    height: 45px;
+    font: 500 18px/45px "微软雅黑";
+    padding: 0px 20px;
+    cursor: pointer;
+}
+
+.gantt_container .container_delete .delete-box .delete-task .delete-hide {
+    float: right;
+}
+
+.gantt_container .container_delete .delete-box .delete-task-name {
+    width: 100%;
+    flex: 1;
+}
+
+.gantt_container .delete-task-name .delete-task-name-explain {
+    display: inline-block;
+    margin: 20px;
+    font-size: 18px;
+    white-space: normal;
+    line-height: 30px;
+}
+
+.gantt_container .delete-box .delete-box-btn {
+    height: 50px;
+    position: relative;
+    border-top: 1px solid #ccc;
+}
+
+.gantt_container .delete-box-btn button {
+    position: absolute;
+    top: 7.5px;
+    border: none;
+    outline: none;
+    height: 35px;
+    width: 60px;
+    text-align: center;
+    background: #ccc;
+}
+
+.gantt_container .delete-box-btn .delte-box-btn-cancel {
+    left: 50%;
+    margin-left: -120px;
+}
+
+.gantt_container .delete-box-btn .delte-box-btn-ok {
+    right: 50%;
+    background: #5582f3;
+    color: white;
+    margin-right: -120px;
+}
+
+
+/* 设置新增按钮的样式 */
+
+.gantt_container .ganttNewAddTaskOption {
+    position: absolute;
+    left: 11px;
+    top: 41px;
+    width: 100px;
+    border: 1px solid #ccc;
+    background-color: white;
+    display: none;
+    z-index: 100;
+}
+
+.gantt_container .ganttNewAddTaskOption div {
+    width: 100px;
+    text-align: left;
+    padding: 0px 5px;
+    box-sizing: border-box;
+    font: 500 13px/35px "微软雅黑";
+    border-bottom: 1px solid #ccc;
+}
+
+.gantt_container .ganttNewAddTaskOption div:last-child {
+    border-bottom: none;
+}
+
+.gantt_container .ganttNewAddTaskOption div:hover {
+    background-color: #5582f3;
+    color: white;
+}
+
+
+/* 新增任务弹框 */
+
+.gantt_container .container-add-task {
+    display: none;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid #ccc;
+}
+
+.gantt_container .container-add-task .gantt-add-task-box {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    width: 800px;
+    height: 400px;
+    background: #fff;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.gantt_container .gantt-add-task-box .gannt-add-task {
+    height: 35px;
+    margin: 0px 10px;
+    line-height: 35px;
+    border-bottom: 1px solid #ccc;
+}
+
+.gantt_container .gannt-add-task .gannt-add-hide {
+    float: right;
+    display: inline-block;
+    height: 35px;
+    width: 30px;
+    text-align: right;
+}
+
+.gantt_container .gantt-add-task-box>button {
+    margin-top: 10px;
+    background: none;
+    width: 80px;
+    display: inline-block;
+    border: none;
+    outline: none;
+    color: #5582f3;
+    margin-left: 10px;
+    padding: 5px 0px;
+    border-bottom: 1px solid #5582f3;
+}
+
+.gantt_container .gantt-add-task-box-item {
+    display: flex;
+    height: 50px;
+    margin-left: 15px;
+    align-items: center;
+}
+
+.gantt_container .gantt-add-task-box-item label {
+    color: #5582f3;
+    font-size: 14px;
+    width: 80px;
+    margin-right: 40px;
+}
+
+.gantt_container .gantt-add-task-box-item #add-task-status {
+    display: inline-block;
+    border: 1px solid #ccc;
+    padding: 3px 0px;
+    width: 176px;
+    padding-left: 5px;
+    font-size: 13px;
+}
+
+.gantt_container .gantt-add-task-box-item input {
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+    padding: 3px 0px;
+    width: 185px;
+    padding-left: 5px;
+    font-size: 13px;
+    border: 1px solid #ccc;
+}
+
+.gantt_container .gantt-add-task-box-item #add-task-name {
+    padding: 6px 0px;
+}
+
+.gantt_container .gantt-add-task-box-item .gantt-add-task-box-item-select {
+    border: none;
+    outline: none;
+    padding: 5px 4px;
+    border: 1px solid #ccc;
+    width: 183px;
+}
+
+.gantt_container .container-add-task-bottom {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 50px;
+    width: 100%;
+    border-top: 1px solid #ccc;
+}
+
+.gantt_container .container-add-task-bottom-cancel {
+    position: absolute;
+    left: 300px;
+    border: none;
+    outline: none;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+}
+
+.gantt_container .container-add-task-bottom-ok {
+    position: absolute;
+    right: 300px;
+    border: none;
+    outline: none;
+    border: 1px solid #ccc;
+    background-color: #5582f3;
+    color: white;
+    padding: 5px 10px;
+}

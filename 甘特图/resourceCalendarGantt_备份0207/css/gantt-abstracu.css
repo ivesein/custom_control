@@ -1,0 +1,323 @@
+.gantt_container .gantt-abstract-task {
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    display: none;
+    position: absolute;
+    box-sizing: border-box;
+    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid #ccc;
+}
+
+.gantt_container .gantt-abstract-task .gantt-box-abstract {
+    position: absolute;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    width: 900px;
+    height: 600px;
+    background: #fff;
+    left: 50%;
+    top: 50%;
+    padding: 10px;
+    transform: translate(-50%, -50%);
+}
+
+.gantt_container .gantt-abstract-task .gantt-abstract-add {
+    display: flex;
+    justify-content: space-between;
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+    border-bottom: 1px solid #ccc;
+}
+
+.gantt_container .gantt-abstract-task .gantt-abstract-delete {
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    padding-left: 30px;
+}
+
+.gantt_container .gantt-abstract-task .gantt-abstract-tab {
+    display: inline-block;
+    margin: 10px 0px;
+    height: 30px;
+    width: 260px;
+    line-height: 30px;
+    border: 1px solid #ccc;
+}
+
+.gantt_container .gantt-abstract-task .gantt-abstract-item {
+    height: 30px;
+    box-sizing: border-box;
+    display: inline-block;
+    padding: 0px 10px;
+    margin: 0px 5px;
+    font-size: 13px;
+    text-align: center;
+}
+
+.gantt_container .gantt-abstract-task .gantt-abstract-active {
+    border-bottom: 1px solid #549de8;
+    color: #549de8;
+}
+
+.gantt_container .gantt-abstract-task .gantt-abstract-btn {
+    border-top: 1px solid #ccc;
+    height: 40px;
+    width: 100%;
+    line-height: 40px;
+    text-align: center;
+    font-size: 13px;
+}
+
+.gantt_container .gantt-abstract-task .gantt-abstract-btn-cancal {
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    margin-right: 120px;
+    width: 50px;
+    background-color: #ccc;
+}
+
+.gantt_container .gantt-abstract-task .gantt-abstract-btn-ok {
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    width: 50px;
+    color: white;
+    background-color: #549de8;
+}
+
+.gantt_container .gantt-abstract-task .gantt-abstract-select-item {
+    height: 1000px;
+    display: none;
+    /* margin: 0px 10px; */
+    overflow-y: scroll;
+}
+
+.gantt_container .gantt-abstract-task .abstract-itemshow {
+    display: block;
+}
+
+.gantt_container .gantt-abstract-task .gantt-abstract-name {
+    font-size: 15px;
+    color: #549de8;
+    font-family: 700;
+}
+
+.gantt_container .gantt-abstract-task .gantt-abstract-line-data {
+    display: flex;
+    margin-top: 5px;
+}
+
+.gantt_container .gantt-abstract-task .gantt-abstract-line-data-one {
+    display: flex;
+    margin-left: 65px;
+    justify-content: left;
+}
+
+.gantt_container .gantt-abstract-line-data .item {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    height: 28px;
+}
+
+.gantt_container .gantt-abstract-task .item select {
+    margin-left: 15px;
+    width: 200px;
+}
+
+.gantt_container .gantt-abstract-task .item #abstract-task-type {
+    height: 30px;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background-size: 10%;
+    font-size: 14px;
+    padding-left: 8px;
+    font-family: Microsoft YaHei;
+    color: #666;
+    outline: none;
+    margin-left: 0px;
+}
+
+.gantt_container .gantt-abstract-task .select2-selection__rendered {
+    height: 100%;
+}
+
+.gantt_container .gantt-abstract-task .gannt-abstract-line-name {
+    font-size: 13px;
+    display: inline-block;
+    width: 65px;
+    color: #549de8;
+}
+
+.gantt_container .gantt-abstract-task .gannt-abstract-line-input {
+    border: none;
+    outline: none;
+    height: 23px;
+    width: 200px;
+    border: 1px solid #ccc;
+    margin-left: 10px;
+    border-radius: 5px;
+}
+
+.gantt_container .gantt-abstract-task .switch {
+    width: 57px;
+    height: 28px;
+    position: relative;
+    border: 1px solid #dfdfdf;
+    background-color: #fdfdfd;
+    box-shadow: #dfdfdf 0 0 0 0 inset;
+    border-radius: 5px;
+    background-clip: content-box;
+    display: inline-block;
+    -webkit-appearance: none;
+    user-select: none;
+    margin-left: 20px;
+    outline: none;
+    background: #ccc;
+}
+
+.gantt_container .gantt-abstract-task .switch:before {
+    content: '';
+    width: 26px;
+    height: 26px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.gantt_container .gantt-abstract-task .switch:checked {
+    border-color: #64bd63;
+    box-shadow: #64bd63 0 0 0 16px inset;
+    background-color: #64bd63;
+}
+
+.gantt_container .gantt-abstract-task .switch:checked:before {
+    left: 30px;
+}
+
+
+/* .switch.switch-anim {
+transition: border cubic-bezier(0, 0, 0, 1) 0.4s, box-shadow cubic-bezier(0, 0, 0, 1) 0.4s;
+} */
+
+.gantt_container .gantt-abstract-task.switch.switch-anim:before {
+    transition: left 0.3s;
+}
+
+.gantt_container .gantt-abstract-task .switch.switch-anim:checked {
+    box-shadow: #64bd63 0 0 0 16px inset;
+    background-color: #64bd63;
+    /* transition: border ease 0.4s, box-shadow ease 0.4s, background-color ease 1.2s; */
+}
+
+.gantt_container .gantt-abstract-task .switch.switch-anim:checked:before {
+    transition: left 0.3s;
+}
+
+.gantt_container .abstract-check-task,
+.gantt_container .abstract-check-task-add {
+    box-sizing: border-box;
+    margin-top: 25px;
+    width: 95%;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: white;
+}
+
+.gantt_container .abstract-skillBtn {
+    display: flex;
+    line-height: 30px;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #549de8;
+}
+
+.gantt_container .abstract-check-task table,
+.gantt_container .abstract-check-task-add table {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+}
+
+.gantt_container .abstract-check-task table tr,
+.gantt_container .abstract-check-task-add table tr {
+    box-sizing: border-box;
+}
+
+.gantt_container .abstract-check-task table tr td,
+.gantt_container .abstract-check-task-add table tr td {
+    box-sizing: border-box;
+    border-collapse: collapse;
+    text-align: center;
+    height: 35px;
+    border: 1px solid #ccc;
+}
+
+.gantt_container .abstract-check-task table tr td input,
+.gantt_container .abstract-check-task-add table tr td input {
+    border: none;
+    outline: none;
+    padding-left: 5px;
+    box-sizing: border-box;
+    border-right: 1px solid #ccc;
+    width: 100%;
+    height: 100%;
+}
+
+.gantt_container .abstract-check-task .abstract-select1-name,
+.gantt_container .abstract-check-task-add .abstract-select1-name {
+    width: 95%;
+    height: 25px;
+}
+
+.gantt_container .item .select {
+    position: relative;
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    height: 28px;
+}
+
+.gantt_container .item .select_data {
+    width: 100%;
+    height: 30px;
+    padding-left: 8px;
+    font-size: 13px;
+    line-height: 28px;
+    color: #444;
+}
+
+.gantt_container .item .select_box {
+    position: absolute;
+    z-index: 9999;
+    background-color: white;
+    width: 100px;
+    display: none;
+    left: -1px;
+    top: 28px;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    border-radius: 0px 0px 5px 5px;
+}
+
+.gantt_container .item .select_box p {
+    width: 100%;
+    font-size: 14px;
+    line-height: 28px;
+    padding-left: 8px;
+}
+
+.gantt_container .item .select_box p:hover {
+    background-color: #5897FB;
+    color: white;
+}
