@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 
 <body lang="en">
   <head>
@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../css/element.css" />
     <link rel="stylesheet" href="../css/main.css" />
     <title>Document</title>
-  </head>
+  </head> -->
   <div id="wbsPlanningApp">
     <el-tabs v-model="activeName" @tab-click="handleTabClick">
       <el-tab-pane label="进度计划" name="first">
@@ -28,7 +28,7 @@
             插入
           </button>
         </div> -->
-        <el-table ref="qualityPlanTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="tableData" style="width:1800px;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true" :height="tableHeight" default-expand-all
+        <el-table ref="scheduleTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="scheduleData" style="width:1800px;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true" :height="tableHeight" default-expand-all
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
           <!-- <el-table-column width="40">
             <template slot="header" slot-scope="scope">
@@ -39,8 +39,8 @@
             </template>
           </el-table-column> -->
           <el-table-column type="index" label="序号" width="50"></el-table-column>
-          <el-table-column prop="wbs_code" label="WBS编码" width="120"></el-table-column>
-          <el-table-column prop="text" label="W任务名称"></el-table-column>
+          <el-table-column prop="wbs" label="WBS编码" width="120"></el-table-column>
+          <el-table-column prop="task_name" label="W任务名称"></el-table-column>
           <el-table-column prop="major.text" label="专业" width="120"></el-table-column>
           <el-table-column prop="describe" label="任务说明" width="120"></el-table-column>
           <el-table-column label="工期" width="120">
@@ -77,7 +77,7 @@
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="委外计划" name="second">
-        <el-table ref="qualityPlanTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="tableData" style="width:1800px;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true" :height="tableHeight" default-expand-all
+        <el-table ref="contractTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="contractData" style="width:1800px;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true" :height="tableHeight" default-expand-all
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
           <!-- <el-table-column width="40">
             <template slot="header" slot-scope="scope">
@@ -88,8 +88,8 @@
             </template>
           </el-table-column> -->
           <el-table-column type="index" label="序号" width="50"></el-table-column>
-          <el-table-column prop="wbs_code" label="WBS编码" width="100"></el-table-column>
-          <el-table-column prop="text" label="任务名称"></el-table-column>
+          <el-table-column prop="wbs" label="WBS编码" width="100"></el-table-column>
+          <el-table-column prop="task_name" label="任务名称"></el-table-column>
           <el-table-column prop="major.text" label="专业" width="120"></el-table-column>
           <el-table-column prop="describe" label="任务说明" width="120"></el-table-column>
           <el-table-column label="工期" width="120">
@@ -106,7 +106,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="结束日期" width="120">
+          <el-table-column label="结束日期" width="180">
             <template slot-scope="scope">
               <div>
                 ${ scope.row.end_date }
@@ -138,7 +138,7 @@
           </button>
           <button class="btn-itme" id="refresh" @click="refreshData">刷新</button>
         </div> -->
-        <el-table ref="qualityPlanTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="tableData" style="width:1800px;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true" :height="tableHeight" default-expand-all
+        <el-table ref="qualityTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="qualityData" style="width:1800px;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true" :height="tableHeight" default-expand-all
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
           <!-- <el-table-column width="40">
             <template slot="header" slot-scope="scope">
@@ -149,8 +149,8 @@
             </template>
           </el-table-column> -->
           <el-table-column type="index" label="序号" width="50"></el-table-column>
-          <el-table-column prop="wbs_code" label="WBS编码" width="100"></el-table-column>
-          <el-table-column prop="text" label="任务名称"></el-table-column>
+          <el-table-column prop="wbs" label="WBS编码" width="100"></el-table-column>
+          <el-table-column prop="task_name" label="任务名称"></el-table-column>
           <el-table-column prop="major.text" label="专业" width="120"></el-table-column>
           <el-table-column prop="describe" label="任务说明" width="180"></el-table-column>
           <!-- <el-table-column label="工期" width="120">
@@ -163,14 +163,14 @@
           <el-table-column label="开始日期" width="180">
             <template slot-scope="scope">
               <div>
-                ${ scope.row.start_date }
+                ${ scope.row.plan_starttime }
               </div>
             </template>
           </el-table-column>
           <el-table-column label="结束日期" width="180">
             <template slot-scope="scope">
               <div>
-                ${ scope.row.end_date }
+                ${ scope.row.plan_endtime }
               </div>
             </template>
           </el-table-column>
@@ -221,19 +221,19 @@
           <el-table-column label="技能等级" width="120">
             <template slot-scope="scope">
               <div class="checek-man" v-show="scope.row.task_type === '3'">
-                ${ scope.row.skill_level }
+                ${ scope.row.skill }
               </div>
               <div class="checek-man" v-show="scope.row.task_type === '3'">
-                ${ scope.row.skill_level }
+                ${ scope.row.skill }
               </div>
               <div class="checek-man" v-show="scope.row.task_type === '3'">
-                ${ scope.row.skill_level }
+                ${ scope.row.skill }
               </div>
               <div class="checek-man" style="border:none" v-show="scope.row.task_type === '3'">
-                ${ scope.row.skill_level }
+                ${ scope.row.skill }
               </div>
               <div v-show="scope.row.task_type === '1'||scope.row.task_type === '2'">
-                ${ scope.row.skill_level }
+                ${ scope.row.skill }
               </div>
             </template>
           </el-table-column>
@@ -278,7 +278,7 @@
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="成本计划" name="fourth">
-        <el-table ref="qualityPlanTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="tableData" style="width:1800px;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true" :height="tableHeight" default-expand-all
+        <el-table ref="costTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="costData" style="width:1800px;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true" :height="tableHeight" default-expand-all
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
           <!-- <el-table-column width="40">
             <template slot="header" slot-scope="scope">
@@ -289,8 +289,8 @@
             </template>
           </el-table-column> -->
           <el-table-column type="index" label="序号" width="50"></el-table-column>
-          <el-table-column prop="wbs_code" label="WBS编码" width="100"></el-table-column>
-          <el-table-column prop="text" label="W任务名称"></el-table-column>
+          <el-table-column prop="wbs" label="WBS编码" width="100"></el-table-column>
+          <el-table-column prop="task_name" label="W任务名称"></el-table-column>
           <el-table-column prop="major.text" label="专业" width="120"></el-table-column>
           <el-table-column prop="describe" label="任务说明" width="120"></el-table-column>
           <!-- <el-table-column label="工期" width="120">
@@ -332,10 +332,10 @@
       </el-tab-pane>
     </el-tabs>
     
-  </div>
+  <!-- </div>
   <script src="../js/lodash.js"></script>
   <script src="../js/vue.min.js"></script>
   <script src="../js/vue.js"></script>
   <script src="../js/element.js"></script>
   <script src="../js/test.js"></script>
-</body>
+</body> -->

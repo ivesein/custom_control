@@ -1,15 +1,16 @@
 ### 1.文件夹结构及命名
 
 ```
-    成本分析控制自定义控件--zfq    //最外层文件夹 中文命名加作者名 一眼可看出是谁开发的什么自定义控件
-        ├─cost_analysis_chart_v1.0   //全小写字母英文加下划线加版本号
-        ├─css                 //css样式文件夹
-        │  └─mian.css
-        ├─html                //html代码片段文件夹
-        │  └─cost_analysis_chart.html
-        ├─js                  //第三方js文件夹
-        │  └─jquery.js
-        └─index.js            //金蝶自定义控件主入口js文件
+    zfq                             //最外层文件夹 作者名称中文缩写 
+     └─成本分析控制自定义控件         //中文命名 一眼可看出是什么自定义控件
+            └──cost_analysis_chart_v1.0   //全小写字母英文加下划线加版本号
+                    ├─css                   //css样式文件夹
+                    │  └─mian.css
+                    ├─html                  //html代码片段文件夹
+                    │  └─cost_analysis_chart.html
+                    ├─js                    //第三方js文件夹
+                    │  └─jquery.js
+                    └─index.js              //金蝶自定义控件主入口js文件
 ```
 ### 2.版本控制规范
 + 第一版以v1.0开始，在需求不变，只是修改当前需求下的功能，bug，样式等问题，不增加版本号。
@@ -23,10 +24,11 @@
 + 组员开发需切换到dev分支，最后由组长合并到master分支统一打版本号
 + 每次git add 都必须仔细查看status 确保没有更改尤其是删除他人的文件。
 + git commit 须添加commit说明 遵守commit 格式  
-    + 添加新功能> feature 功能描述
-    + 修复某bug> fix **bug
-    + 修改样式> style **样式
-    + 修改文档注释等> docs **注释 文档
-    + 方法重构> refactor **function 
+    + 添加新控件>  add package 控件名
+    + 添加新功能> feature 功能描述 控件名
+    + 修复某bug> fix **bug  控件名
+    + 修改样式> style **样式 控件名
+    + 修改文档注释等> docs **注释 文档 控件名
+    + 方法重构> refactor **function  控件名
 
 ### 后面会详细修改此文档 进一步规范前端自定义控件git的使用
