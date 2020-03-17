@@ -86,24 +86,21 @@
                       },
                       created() {
                         if(resData!==undefined){
-                          this.scheduleData=resData.data.scheduleData
-                          this.qualityData=resData.data.qualityData
-                          this.contractData=resData.data.contractData
-                          this.costData=resData.data.costData
+                          this.updataData(resData.data)
                         }
-                        
                       },
                       mounted() {
-                        // 固定表格表头 设置表格高度自适应填满剩余高度
-                        this.$nextTick(function() {
-                          this.tableHeight = window.innerHeight - this.$refs.qualityPlanTable.$el.offsetTop - 60
-
-                          // 监听窗口大小变化
-                          let self = this;
-                          window.onresize = function() {
-                            self.tableHeight = window.innerHeight - self.$refs.qualityPlanTable.$el.offsetTop - 60
-                          }
-                        })
+                        // this.$nextTick(function() {
+                        //   // this.tableHeight = window.innerHeight - this.$refs.wbsPlanningApp.$el.offsetTop - 10
+                        //   this.tableHeight = window.innerHeight - this.$el.offsetTop - 75
+                  
+                        //   // 监听窗口大小变化
+                        //   let self = this;
+                        //   window.onresize = function() {
+                        //     // self.tableHeight = window.innerHeight - self.$refs.wbsPlanningApp.$el.offsetTop - 10
+                        //     self.tableHeight = window.innerHeight - self.$el.offsetTop - 75
+                        //   }
+                        // })
                       },
                       methods: {
                         handleUpdata(model, props) {
@@ -112,6 +109,18 @@
                           }
                         },
                         updataData(data) {
+                          if(data.qualityData&&data.qualityData.length>0){
+                            data.qualityData.forEach(function(fuck){
+                              if(fuck.task_type==='3'){
+                                data.qualityData.forEach(function(shit){
+                                  if (fuck.parent === shit.parent && shit.task_type !== "3") {
+                                    fuck.the_owner_role = shit.owner_role
+                                    fuck.the_skill=shit.skill
+                                  }
+                                })
+                              }
+                            })
+                          }
                           this.scheduleData=data.scheduleData||[]
                           this.qualityData=data.qualityData||[]
                           this.contractData=data.contractData||[]

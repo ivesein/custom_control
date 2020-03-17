@@ -14,10 +14,10 @@ new Vue({
     }],
     addNewTaskValue: '', //新增下拉框所选值
     tableData: [],
-    scheduleData:[],//进度表格数据
-    contractData:[],//委外合同表格数据
-    qualityData:[], //质量表格数据
-    costData:[], //成本表格数据
+    scheduleData: [],//进度表格数据
+    contractData: [],//委外合同表格数据
+    qualityData: [], //质量表格数据
+    costData: [], //成本表格数据
     multipleSelection: [],
     allChecked: false,
     allItems: null,
@@ -27,7 +27,7 @@ new Vue({
   created() {
     var tData = [{
       id: "1", // 任务id
-      wbs_code:"1",
+      wbs_code: "1",
       text: "测试任务", // 任务名称
       parent: "0", // 父任务id
       duration: 10, // 工期
@@ -63,7 +63,7 @@ new Vue({
       delegate_person_id: 754911742466739200, //委外负责人id
       delegate_person_name: "田重辉", //委外负责人名称
       assn_pro_num: "300", //工程量/单位
-      assn_pro_unit:"m³", //单位
+      assn_pro_unit: "m³", //单位
       assn_merits_price: 50, //绩效奖金(元/单位工程量)
       assn_merits_total: 15000, //绩效奖金小计
       fmachine_name: ["挖掘机"], //机械名称
@@ -93,7 +93,7 @@ new Vue({
     },
     {
       id: "2", // 任务id
-      wbs_code:"1.1",
+      wbs_code: "1.1",
       text: "测试任务2", // 任务名称
       parent: "0", // 父任务id
       duration: 3, // 工期
@@ -158,7 +158,7 @@ new Vue({
     ]
     // 假数据模拟
     this.tableData = tData
-    var apiData={
+    var apiData = {
       "qualityData": [{
         "task_name": "demo",
         "owner": "",
@@ -181,8 +181,8 @@ new Vue({
         "position": "1",
         "mod_con_duration": "",
         "task_type": "",
-        "skill":"",
-        "skill_id":""
+        "skill": "",
+        "skill_id": ""
       }, {
         "task_name": "设置围堰",
         "owner": "",
@@ -205,8 +205,8 @@ new Vue({
         "position": "2",
         "mod_con_duration": "",
         "task_type": "2",
-        "skill":"测试",
-        "skill_id":""
+        "skill": "测试",
+        "skill_id": ""
       }, {
         "task_name": "P4挖土",
         "owner": "",
@@ -229,8 +229,8 @@ new Vue({
         "position": "3",
         "mod_con_duration": "",
         "task_type": "4",
-        "skill":"挖土",
-        "skill_id":""
+        "skill": "挖土",
+        "skill_id": ""
       }, {
         "task_name": "P4挖土设计",
         "owner": "YAN001",
@@ -253,8 +253,8 @@ new Vue({
         "position": "4",
         "mod_con_duration": "",
         "task_type": "1",
-        "skill":"挖土设计",
-        "skill_id":""
+        "skill": "挖土设计",
+        "skill_id": ""
       }, {
         "task_name": "P4挖土复核",
         "owner": "YAN002",
@@ -277,8 +277,8 @@ new Vue({
         "position": "5",
         "mod_con_duration": "",
         "task_type": "3",
-        "skill":"挖土复核",
-        "skill_id":""
+        "skill": "挖土复核",
+        "skill_id": ""
       }],
       "scheduleData": [{
         "task_name": "demo",
@@ -486,22 +486,270 @@ new Vue({
         "end_date": "2019-10-10 00:00:00",
         "delegate_role_id": "",
         "start_date": "2019-10-03 00:00:00"
+      }],
+      "costData": [{
+        "task_name": "demo",
+        "end_date": "2019-10-17 18:30:02",
+        "ffee_subtotal": "",
+        "fmachine_price": [],
+        "wbs": "0",
+        "task_id": "23738b34-7b9c-4fa4-a59c-3369de670022",
+        "ffee_all": "",
+        "work_amount_unit":"Km",
+        "performance_bonus":"1.2",
+        "performance_bonus_subtotal":"200",
+        "fmaterial_number": [],
+        "fmachine_all": "",
+        "fmaterial_used": [],
+        "duration": "11",
+        "fmanual_workload": [],
+        "project_id": "999999",
+        "fmaterial_unit": [],
+        "id": "23738b34-7b9c-4fa4-a59c-3369de670022",
+        "fmachine_used": [],
+        "person_id": [],
+        "start_date": "2019-10-03 00:00:00",
+        "fmaterial_name": [],
+        "fmaterial_subtotal": [],
+        "fmachine_number": [],
+        "fmachine_unit": [],
+        "task_merits_price": "1",
+        "task_merits_used": "8",
+        "machine_id": [],
+        "fmanual_role": [],
+        "fmachine_name": [],
+        "fmaterial_all": "",
+        "fmanual_unit": [],
+        "plan_time": "",
+        "fmanual_price": [],
+        "parent_id": "0",
+        "fmaterial_price": [],
+        "material_id": [],
+        "position": "1",
+        "fmanual_subtotal": [],
+        "task_type": "",
+        "fmachine_subtotal": [],
+        "fmanual_name": [],
+        "task_merits_id": "1",
+        "task_merits_subtotal": 8.0,
+        "fmanual_all": "",
+        "check_time": ""
+      }, {
+        "task_name": "设置围堰",
+        "end_date": "2019-10-17 18:30:02",
+        "fmachine_price": [],
+        "wbs": "1",
+        "task_id": "23738b34-7b9c-4fa4-a59c-3369de670021",
+        "ffee_all": "",
+        "work_amount_unit":"Km",
+        "performance_bonus":"1.2",
+        "performance_bonus_subtotal":"200",
+        "fmaterial_number": [],
+        "fmachine_all": "",
+        "fmaterial_used": [],
+        "duration": "11",
+        "fmanual_workload": [],
+        "project_id": "999999",
+        "fmaterial_unit": [],
+        "id": "23738b34-7b9c-4fa4-a59c-3369de670021",
+        "fmachine_used": [],
+        "person_id": [],
+        "start_date": "2019-10-03 00:00:00",
+        "fmaterial_name": [],
+        "fmaterial_subtotal": [],
+        "fmachine_number": [],
+        "fmachine_unit": [],
+        "task_merits_price": "1",
+        "task_merits_used": "8",
+        "machine_id": [],
+        "fmanual_role": [],
+        "fmachine_name": [],
+        "fmaterial_all": "",
+        "fmanual_unit": [],
+        "plan_time": "",
+        "fmanual_price": [],
+        "parent_id": "23738b34-7b9c-4fa4-a59c-3369de670022",
+        "fmaterial_price": [],
+        "material_id": [],
+        "position": "2",
+        "fmanual_subtotal": [],
+        "task_type": "",
+        "fmachine_subtotal": [],
+        "fmanual_name": [],
+        "task_merits_id": "1",
+        "task_merits_subtotal": 8.0,
+        "fmanual_all": "",
+        "check_time": ""
+      }, {
+        "task_name": "P4挖土",
+        "end_date": "2019-10-10 00:00:00",
+        "fmachine_price": ["100","200","300"],
+        "wbs": "1.1",
+        "task_id": "239 924b8fe9-f24e-4919-a65c-af9c9f38f49c",
+        "ffee_all": "",
+        "work_amount_unit":"Km",
+        "performance_bonus":"1.2",
+        "performance_bonus_subtotal":"200",
+        "fmaterial_number": ["型号1","型号2","型号3","型号4"],
+        "fmachine_all": "",
+        "fmaterial_used": ["20","10","5","30"],
+        "duration": "5",
+        "fmanual_workload": ["10","20"],
+        "project_id": "999999",
+        "fmaterial_unit": ["米","吨","方","个"],
+        "id": "239 924b8fe9-f24e-4919-a65c-af9c9f38f49c",
+        "fmachine_used": ["10","12","20"],
+        "person_id": [],
+        "start_date": "2019-10-03 00:00:00",
+        "fmaterial_name": ["钢筋","水泥","混凝土","柱子"],
+        "fmaterial_subtotal": ["1000","2000","2500","3000"],
+        "fmachine_number": ["WJ-001","WJ-002","WJ-003"],
+        "fmachine_unit": ["台","台","台",],
+        "task_merits_price": "1",
+        "task_merits_used": "10",
+        "machine_id": [],
+        "fmanual_role": ["挖土员","挖土员"],
+        "fmachine_name": ["挖掘机1","挖掘机2","挖掘机3",],
+        "fmaterial_all": "",
+        "fmanual_unit": ["人","人"],
+        "plan_time": "",
+        "fmanual_price": ["100","200"],
+        "parent_id": "23738b34-7b9c-4fa4-a59c-3369de670021",
+        "fmaterial_price": ["100","200","300","400"],
+        "material_id": [],
+        "position": "3",
+        "fmanual_subtotal": ["1000","2000"],
+        "task_type": "4",
+        "fmachine_subtotal": ["1000","2000","3000"],
+        "fmanual_name": ["张三","李四"],
+        "task_merits_id": "1",
+        "task_merits_subtotal": 10.0,
+        "fmanual_all": "",
+        "check_time": ""
+      }, {
+        "task_name": "P4挖土设计",
+        "end_date": "2019-10-10 00:00:00",
+        "fmachine_price": ["200","200","200"],
+        "wbs": "1.1.1",
+        "task_id": "239 924b8fe9-f24e-4919-a65c-af9c9f38f49c1",
+        "ffee_all": "",
+        "work_amount_unit":"Km",
+        "performance_bonus":"1.2",
+        "performance_bonus_subtotal":"200",
+        "fmaterial_number": [],
+        "fmachine_all": "",
+        "fmaterial_used": [],
+        "duration": "5",
+        "fmanual_workload": [],
+        "project_id": "999999",
+        "fmaterial_unit": [],
+        "id": "239 924b8fe9-f24e-4919-a65c-af9c9f38f49c1",
+        "fmachine_used": ["5","10","15"],
+        "person_id": [],
+        "start_date": "2019-10-03 00:00:00",
+        "fmaterial_name": [],
+        "fmaterial_subtotal": [],
+        "fmachine_number": [],
+        "fmachine_unit": [],
+        "task_merits_price": "1",
+        "task_merits_used": "10",
+        "machine_id": [],
+        "fmanual_role": [],
+        "fmachine_name": [],
+        "fmaterial_all": "",
+        "fmanual_unit": [],
+        "plan_time": "",
+        "fmanual_price": [],
+        "parent_id": "239 924b8fe9-f24e-4919-a65c-af9c9f38f49c",
+        "fmaterial_price": [],
+        "material_id": [],
+        "position": "4",
+        "fmanual_subtotal": [],
+        "task_type": "1",
+        "fmachine_subtotal": ["1000","2000","3000"],
+        "fmanual_name": [],
+        "task_merits_id": "1",
+        "task_merits_subtotal": 10.0,
+        "fmanual_all": "",
+        "check_time": ""
+      }, {
+        "task_name": "P4挖土复核",
+        "end_date": "2019-10-10 00:00:00",
+        "fmachine_price": [],
+        "wbs": "1.1.2",
+        "task_id": "239 924b8fe9-f24e-4919-a65c-af9c9f38f49c2",
+        "ffee_all": "",
+        "work_amount_unit":"Km",
+        "performance_bonus":"1.2",
+        "performance_bonus_subtotal":"200",
+        "fmaterial_number": [],
+        "fmachine_all": "",
+        "fmaterial_used": [],
+        "duration": "5",
+        "fmanual_workload": [],
+        "project_id": "999999",
+        "fmaterial_unit": [],
+        "id": "239 924b8fe9-f24e-4919-a65c-af9c9f38f49c2",
+        "fmachine_used": [],
+        "person_id": [],
+        "start_date": "2019-10-03 00:00:00",
+        "fmaterial_name": [],
+        "fmaterial_subtotal": [],
+        "fmachine_number": [],
+        "fmachine_unit": [],
+        "task_merits_price": "1",
+        "task_merits_used": "10",
+        "machine_id": [],
+        "fmanual_role": [],
+        "fmachine_name": [],
+        "fmaterial_all": "",
+        "fmanual_unit": [],
+        "plan_time": "",
+        "fmanual_price": [],
+        "parent_id": "239 924b8fe9-f24e-4919-a65c-af9c9f38f49c",
+        "fmaterial_price": [],
+        "material_id": [],
+        "position": "5",
+        "fmanual_subtotal": [],
+        "task_type": "3",
+        "fmachine_subtotal": [],
+        "fmanual_name": [],
+        "task_merits_id": "1",
+        "task_merits_subtotal": 10.0,
+        "fmanual_all": "",
+        "check_time": ""
       }]
     }
-    this.scheduleData=apiData.scheduleData
-    this.qualityData=apiData.qualityData
-    this.contractData=apiData.contractData
+    if(apiData.qualityData&&apiData.qualityData.length>0){
+      apiData.qualityData.forEach(function(fuck){
+        if(fuck.task_type==='3'){
+          apiData.qualityData.forEach(function(shit){
+            if (fuck.parent === shit.parent && shit.task_type !== "3") {
+              fuck.the_owner_role = shit.owner_role
+              fuck.the_skill=shit.skill
+            }
+          })
+        }
+      })
+    }
+    this.scheduleData = apiData.scheduleData
+    this.qualityData = apiData.qualityData
+    this.contractData = apiData.contractData
+    this.costData = apiData.costData
   },
   mounted() {
-    // this.$nextTick(function() {
-    //   this.tableHeight = window.innerHeight - this.$refs.qualityPlanTable.$el.offsetTop - 10
+    this.$nextTick(function() {
+      // this.tableHeight = window.innerHeight - this.$refs.wbsPlanningApp.$el.offsetTop - 10
+      this.tableHeight = window.innerHeight - this.$el.offsetTop - 75
 
-    //   // 监听窗口大小变化
-    //   let self = this;
-    //   window.onresize = function() {
-    //     self.tableHeight = window.innerHeight - self.$refs.qualityPlanTable.$el.offsetTop - 10
-    //   }
-    // })
+
+      // 监听窗口大小变化
+      let self = this;
+      window.onresize = function() {
+        // self.tableHeight = window.innerHeight - self.$refs.wbsPlanningApp.$el.offsetTop - 10
+        self.tableHeight = window.innerHeight - self.$el.offsetTop - 75
+      }
+    })
   },
   methods: {
     handleTabClick(tab, event) {
@@ -702,7 +950,7 @@ new Vue({
         if (haveParent) {
           // 如果有没有父级children字段，就创建一个children字段
           !haveParent[childrenStr] && (haveParent[childrenStr] = [])
-            // 在父级里插入子项
+          // 在父级里插入子项
           haveParent[childrenStr].push(templist[j])
         } else {
           // 如果没有父级直接插入到最外层
@@ -722,7 +970,7 @@ new Vue({
           let item = stack.shift()
           nodes.push(item)
           let children = item.children ? item.children : []
-          children.forEach(function(v) {
+          children.forEach(function (v) {
             if (bool !== undefined) v.checked = bool
             stack.push(v)
           })
@@ -737,7 +985,7 @@ new Vue({
         node.checked = false
       }
       let children = node.children ? node.children : []
-      children.forEach(function(v) {
+      children.forEach(function (v) {
         that.findYouAndSetFalse(v, pids)
       })
     },
@@ -748,7 +996,7 @@ new Vue({
       console.log(Array.isArray(arr))
       if (Array.isArray(arr) && arr.length > 0) {
         while (currentpid != 0) {
-          arr.forEach(function(v) {
+          arr.forEach(function (v) {
             if (v.task_id == currentpid) {
               pids.push(v.task_id)
               currentpid = v.parent
@@ -765,7 +1013,7 @@ new Vue({
     helloKids(flatdata, pids) {
       let _that = this
       let arr = []
-        // 如果pids为空 表示点击的节点为根节点没有父节点 直接置为true
+      // 如果pids为空 表示点击的节点为根节点没有父节点 直接置为true
       if (pids.length == 0) {
         this.allChecked = true
         return flatdata

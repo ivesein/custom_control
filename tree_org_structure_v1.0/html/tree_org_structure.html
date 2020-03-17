@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="../css/element.css" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <div id="treeOrgStructureApp">
+      <div class="root-box">
+        <div class="wrap">
+          <div class="root-label item-label" @click="rootClick(treeData)">
+            ${treeData.label}
+          </div>
+        </div>
+        <div class="root-content" v-show="treeData.open">
+          <div class="wrap">
+            <div class="vertical-line"></div>
+          </div>
+          <div class="children-content">
+            <div class="con-line" :style="{width:levelOneWidth}"></div>
+            <div class="level-one">
+              <div ref="cb" class="children-box" v-for="(item, index) in treeData.children" :key="index">
+                <div class="item-box">
+                  <div class="wrap">
+                    <div class="vertical-line"></div>
+                  </div>
+                  <div class="item-label level-one-label" v-show="item.label!==''">
+                    <span>${item.label}</span>
+                    <span v-for="(stuff, index) in item.stuff_name" :key="index">${stuff}</span>
+                  </div>
+                  <div class="wrap" v-show="item.children.length">
+                    <div class="vertical-line vertical-line-down"></div>
+                  </div>
+                </div>
+                <div ref="conLine" class="con-line" :style="{position:'absolute',width:item.levelTwoWidth}"
+                  v-show="item.children.length"></div>
+                <div ref="levelTwo" class="level-two">
+                  <div class="major-box" v-for="(major, index) in item.children" :key="index">
+                    <div class="wrap">
+                      <div class="vertical-line"></div>
+                    </div>
+                    <div class="item-major" v-show="major.label!==''">
+                      <div class="major-label" @click="majorClick(major)">${major.label}</div>
+                    </div>
+                    <div class="major-stuff-box" v-for="(stuff, index) in major.stuff_name" :key="index"
+                      v-show="major.open">
+                      <div class="vertical-line major-vertical-line" style="margin-left: 5px;"></div>
+                      <div class="major-stuff">
+                        ${stuff}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="../js/lodash.js"></script>
+    <script src="../js/vue.min.js"></script>
+    <script src="../js/vue.js"></script>
+    <script src="../js/element.js"></script>
+    <script src="../js/test.js"></script>
+  </body>
+
+</html>

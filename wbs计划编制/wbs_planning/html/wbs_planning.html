@@ -1,6 +1,7 @@
 <!-- <!DOCTYPE html>
 
 <body lang="en">
+
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -28,7 +29,10 @@
             插入
           </button>
         </div> -->
-        <el-table ref="scheduleTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="scheduleData" style="width:1800px;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true" :height="tableHeight" default-expand-all
+        <el-table ref="scheduleTable"
+          :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
+          :data="scheduleData" style="width:1800px;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id"
+          :border="true" :height="tableHeight" default-expand-all
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
           <!-- <el-table-column width="40">
             <template slot="header" slot-scope="scope">
@@ -38,7 +42,7 @@
               <el-checkbox @change="itemChange(scope.row)" v-model="scope.row.checked"></el-checkbox>
             </template>
           </el-table-column> -->
-          <el-table-column type="index" label="序号" width="50"></el-table-column>
+          <el-table-column type="index" label="序号" width="60"></el-table-column>
           <el-table-column prop="wbs" label="WBS编码" width="120"></el-table-column>
           <el-table-column prop="task_name" label="W任务名称"></el-table-column>
           <el-table-column prop="major.text" label="专业" width="120"></el-table-column>
@@ -77,7 +81,10 @@
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="委外计划" name="second">
-        <el-table ref="contractTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="contractData" style="width:1800px;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true" :height="tableHeight" default-expand-all
+        <el-table ref="contractTable"
+          :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
+          :data="contractData" style="width:1800px;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id"
+          :border="true" :height="tableHeight" default-expand-all
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
           <!-- <el-table-column width="40">
             <template slot="header" slot-scope="scope">
@@ -87,7 +94,7 @@
               <el-checkbox @change="itemChange(scope.row)" v-model="scope.row.checked"></el-checkbox>
             </template>
           </el-table-column> -->
-          <el-table-column type="index" label="序号" width="50"></el-table-column>
+          <el-table-column type="index" label="序号" width="60"></el-table-column>
           <el-table-column prop="wbs" label="WBS编码" width="100"></el-table-column>
           <el-table-column prop="task_name" label="任务名称"></el-table-column>
           <el-table-column prop="major.text" label="专业" width="120"></el-table-column>
@@ -138,7 +145,10 @@
           </button>
           <button class="btn-itme" id="refresh" @click="refreshData">刷新</button>
         </div> -->
-        <el-table ref="qualityTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="qualityData" style="width:1800px;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true" :height="tableHeight" default-expand-all
+        <el-table ref="qualityTable"
+          :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
+          :data="qualityData" style="width:1800px;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id"
+          :border="true" :height="tableHeight" default-expand-all
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
           <!-- <el-table-column width="40">
             <template slot="header" slot-scope="scope">
@@ -148,7 +158,7 @@
               <el-checkbox @change="itemChange(scope.row)" v-model="scope.row.checked"></el-checkbox>
             </template>
           </el-table-column> -->
-          <el-table-column type="index" label="序号" width="50"></el-table-column>
+          <el-table-column type="index" label="序号" width="60"></el-table-column>
           <el-table-column prop="wbs" label="WBS编码" width="100"></el-table-column>
           <el-table-column prop="task_name" label="任务名称"></el-table-column>
           <el-table-column prop="major.text" label="专业" width="120"></el-table-column>
@@ -224,7 +234,7 @@
                 ${ scope.row.skill }
               </div>
               <div class="checek-man" v-show="scope.row.task_type === '3'">
-                ${ scope.row.skill }
+                ${ scope.row.the_skill }
               </div>
               <div class="checek-man" v-show="scope.row.task_type === '3'">
                 ${ scope.row.skill }
@@ -278,8 +288,11 @@
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="成本计划" name="fourth">
-        <el-table ref="costTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="costData" style="width:1800px;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true" :height="tableHeight" default-expand-all
-        :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
+        <el-table ref="costTable"
+          :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
+          :data="costData" style="width:100%;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id"
+          :border="true" :height="tableHeight" default-expand-all
+          :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
           <!-- <el-table-column width="40">
             <template slot="header" slot-scope="scope">
               <el-checkbox @change="handleCheckAllChange" v-model="allChecked"></el-checkbox>
@@ -288,7 +301,7 @@
               <el-checkbox @change="itemChange(scope.row)" v-model="scope.row.checked"></el-checkbox>
             </template>
           </el-table-column> -->
-          <el-table-column type="index" label="序号" width="50"></el-table-column>
+          <el-table-column type="index" label="序号" width="60"></el-table-column>
           <el-table-column prop="wbs" label="WBS编码" width="100"></el-table-column>
           <el-table-column prop="task_name" label="W任务名称"></el-table-column>
           <el-table-column prop="major.text" label="专业" width="120"></el-table-column>
@@ -315,23 +328,147 @@
             </template>
           </el-table-column>
           <el-table-column label="任务绩效" width="120">
-            <el-table-column prop="assn_pro_num" label="工程量" width="80"></el-table-column>
-            <el-table-column prop="assn_pro_unit" label="单位" width="80"></el-table-column>
-            <el-table-column prop="assn_merits_price" label="绩效" width="80"></el-table-column>
-            <el-table-column prop="assn_merits_total" label="小计" width="80"></el-table-column>
+            <el-table-column prop="work_amount_unit" label="工程量/单位" width="100"></el-table-column>
+            <!-- <el-table-column prop="assn_pro_unit" label="单位" width="80"></el-table-column> -->
+            <el-table-column prop="performance_bonus" label="绩效" width="80"></el-table-column>
+            <el-table-column prop="performance_bonus_subtotal" label="小计" width="80"></el-table-column>
           </el-table-column>
-          <el-table-column prop="" label="机械（材料、人工；同）" width="120">
-            <el-table-column prop="fmachine_name" label="名称" width="100"></el-table-column>
-            <el-table-column prop="fmachine_type" label="型号" width="80"></el-table-column>
-            <el-table-column prop="fmachine_used" label="耗用量" width="80"></el-table-column>
-            <el-table-column prop="fmachine_unit" label="单位" width="80"></el-table-column>
-            <el-table-column prop="fmachine_price" label="单价" width="80"></el-table-column>
-            <el-table-column prop="fmachine_subtotal" label="小计" width="80"></el-table-column>
+          <el-table-column prop="" label="机械" width="120">
+            <el-table-column  label="名称" width="100">
+              <template slot-scope="scope">
+                <div class="checek-man-cost" v-for="(item, index) in scope.row.fmachine_name" :key="index">
+                  ${ item }
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="型号" width="80">
+              <template slot-scope="scope">
+                <div class="checek-man-cost" v-for="(item, index) in scope.row.fmachine_number" :key="index">
+                  ${ item }
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="耗用量" width="80">
+              <template slot-scope="scope">
+                <div class="checek-man-cost" v-for="(item, index) in scope.row.fmachine_used" :key="index">
+                  ${ item }
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="单位" width="80">
+              <template slot-scope="scope">
+                <div class="checek-man-cost" v-for="(item, index) in scope.row.fmachine_unit" :key="index">
+                  ${ item }
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="单价" width="80">
+              <template slot-scope="scope">
+                <div class="checek-man-cost" v-for="(item, index) in scope.row.fmachine_price" :key="index">
+                  ${ item }
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="小计" width="80">
+              <template slot-scope="scope">
+                <div class="checek-man-cost" v-for="(item, index) in scope.row.fmachine_subtotal" :key="index">
+                  ${ item }
+                </div>
+              </template>
+            </el-table-column>
+          </el-table-column>
+          <el-table-column prop="" label="材料" width="120">
+            <el-table-column label="名称" width="100">
+              <template slot-scope="scope">
+                <div class="checek-man-cost" v-for="(item, index) in scope.row.fmaterial_name" :key="index">
+                  ${ item }
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="型号" width="80">
+              <template slot-scope="scope">
+                <div class="checek-man-cost" v-for="(item, index) in scope.row.fmaterial_number" :key="index">
+                  ${ item }
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="耗用量" width="80">
+              <template slot-scope="scope">
+                <div class="checek-man-cost" v-for="(item, index) in scope.row.fmaterial_used" :key="index">
+                  ${ item }
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="单位" width="80">
+              <template slot-scope="scope">
+                <div class="checek-man-cost" v-for="(item, index) in scope.row.fmaterial_unit" :key="index">
+                  ${ item }
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="单价" width="80">
+              <template slot-scope="scope">
+                <div class="checek-man-cost" v-for="(item, index) in scope.row.fmaterial_price" :key="index">
+                  ${ item }
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="小计" width="80">
+              <template slot-scope="scope">
+                <div class="checek-man-cost" v-for="(item, index) in scope.row.fmaterial_subtotal" :key="index">
+                  ${ item }
+                </div>
+              </template>
+            </el-table-column>
+          </el-table-column>
+          <el-table-column prop="" label="人工" width="120">
+            <el-table-column label="角色名称" width="100">
+              <template slot-scope="scope">
+                <div class="checek-man-cost" v-for="(item, index) in scope.row.fmanual_role" :key="index">
+                  ${ item }
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="人员姓名" width="80">
+              <template slot-scope="scope">
+                <div class="checek-man-cost" v-for="(item, index) in scope.row.fmanual_name" :key="index">
+                  ${ item }
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="工作量" width="80">
+              <template slot-scope="scope">
+                <div class="checek-man-cost" v-for="(item, index) in scope.row.fmanual_workload" :key="index">
+                  ${ item }
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="工作量单位" width="80">
+              <template slot-scope="scope">
+                <div class="checek-man-cost" v-for="(item, index) in scope.row.fmanual_unit" :key="index">
+                  ${ item }
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="单价" width="80">
+              <template slot-scope="scope">
+                <div class="checek-man-cost" v-for="(item, index) in scope.row.fmanual_price" :key="index">
+                  ${ item }
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="小计" width="80">
+              <template slot-scope="scope">
+                <div class="checek-man-cost" v-for="(item, index) in scope.row.fmanual_subtotal" :key="index">
+                  ${ item }
+                </div>
+              </template>
+            </el-table-column>
           </el-table-column>
         </el-table>
       </el-tab-pane>
     </el-tabs>
-    
+
   <!-- </div>
   <script src="../js/lodash.js"></script>
   <script src="../js/vue.min.js"></script>
