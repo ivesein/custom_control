@@ -550,7 +550,16 @@
                               this.$message.error("您勾选任务无法设置任务持续时间")
                               return
                             }else if(ids.idArr.length===1){
-                              if (ids.idArr[0].duration === "" || ids.idArr[0].duration === null || ids.idArr[0].duration === undefined) {
+                              /**
+                               * @author: zhang fq
+                               * @date: 2020-03-19
+                               * @description: 修改资源调配 设置持续时间 所勾选任务的筛选判断逻辑
+                               */
+                              if(ids.idArr[0].task_type !== "3"){
+                                this.$message.error("只有复核任务可以设置任务持续时间")
+                                return
+                              }
+                              if (ids.idArr[0].subArray[0].first_duration === "" && ids.idArr[0].subArray[0].mod_con_duration === "" && ids.idArr[0].subArray[0].confirm_duration === "" && ids.idArr[0].subArray[0].modify_duration === "") {
                                 changedIds = changedIds.concat(this.currentSelectedIds)
                                 model.invoke(
                                   "SetDurationTime",
