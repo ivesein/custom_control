@@ -103,7 +103,9 @@
                             // 如果是通知自定义控件执行保存
                             if (props.data.isSave === true) {
                               this.saveData()
-                            } else if (props.data.isRefresh === true) {
+                            } else if(props.data.isPush){
+                              this.pushData()
+                            }else if (props.data.isRefresh === true) {
                               this.refreshData()
                             } else if (props.data.method === "isExit") {
                               this.isExit()
@@ -163,6 +165,21 @@
                           }
                           model.invoke(
                             "submitQualityPlan",
+                            sendData
+                          )
+                          changedIds = []
+                        },
+                        pushData(){
+                          if (changedIds.length === 0) return
+                          let saveData = handleDataAtSave(
+                            originData,
+                            changedIds
+                          )
+                          let sendData = {
+                            data: saveData
+                          }
+                          model.invoke(
+                            "pushQualityData",
                             sendData
                           )
                           changedIds = []
