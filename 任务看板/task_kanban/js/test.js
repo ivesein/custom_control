@@ -26,22 +26,26 @@ new Vue({
     responsibleTaskInfos: [{
         task_status: "toBeComplected",
         task_name: "平纵数据自检修改完成",
-        project_name: "陕西汉中项目"
+        project_name: "陕西汉中项目",
+        check_status:"check_in"
       },
       {
         task_status: "complected",
         task_name: "p3挖土",
-        project_name: "陕西汉中项目"
+        project_name: "陕西汉中项目",
+        check_status:"check_in"
       },
       {
         task_status: "inProgress",
         task_name: "p4挖土",
-        project_name: "陕西汉中项目"
+        project_name: "陕西汉中项目",
+        check_status:"check_in"
       },
       {
         task_status: "toBeComplected",
         task_name: "平纵数据自检修改完成",
-        project_name: "陕西汉中项目"
+        project_name: "陕西汉中项目",
+        check_status:"check_out"
       },
       {
         task_status: "complected",
@@ -88,19 +92,22 @@ new Vue({
         task_status: "toBeComplected",
         task_name: "平纵数据自检修改完成",
         project_name: "陕西汉中项目",
-        taskScheduleStatus: false
+        taskScheduleStatus: false,
+        check_status:"check_out"
       },
       {
         task_status: "complected",
         task_name: "p3挖土",
         project_name: "陕西汉中项目",
-        taskScheduleStatus: true
+        taskScheduleStatus: true,
+        check_status:"check_in"
       },
       {
         task_status: "inProgress",
         task_name: "p4挖土",
         project_name: "陕西汉中项目",
-        taskScheduleStatus: false
+        taskScheduleStatus: false,
+        check_status:"check_in"
       }
     ],
     professionalAuditTaskInfos: [{
@@ -114,7 +121,8 @@ new Vue({
             design_owner: "设计人1",
             review_owner: "复核人1",
             task_status: "toBeComplected",
-            taskScheduleStatus: false
+            taskScheduleStatus: false,
+            check_status:"check_in"
           },
           {
             wbs: "0102", //任务代码
@@ -122,7 +130,8 @@ new Vue({
             design_owner: "设计人1",
             review_owner: "复核人1",
             task_status: "inProgress",
-            taskScheduleStatus: false
+            taskScheduleStatus: false,
+            check_status:"check_in"
           },
           {
             wbs: "0103", //任务代码
@@ -130,7 +139,8 @@ new Vue({
             design_owner: "设计人1",
             review_owner: "复核人1",
             task_status: "complected",
-            taskScheduleStatus: false
+            taskScheduleStatus: false,
+            check_status:"check_in"
           }
         ]
       },
@@ -145,7 +155,8 @@ new Vue({
             design_owner: "设计人2",
             review_owner: "复核人2",
             task_status: "toBeComplected",
-            taskScheduleStatus: true
+            taskScheduleStatus: true,
+            check_status:"check_in"
           },
           {
             wbs: "0202", //任务代码
