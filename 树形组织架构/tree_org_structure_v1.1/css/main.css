@@ -1,0 +1,164 @@
+html,body{
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* 
+  @author  zhang fuqiang
+  @time  2020-02-07  
+  @description  头像墙自定义空页面样式
+*/
+
+#treeOrgStructureApp {
+  width: 100%;
+  height: 100%;
+  /* background: #f2f5fe; */
+}
+/* 
+  @author:zhang fq
+  @date:2020-03-11
+  @description: 样式代码
+*/
+.root-box{
+  width: 100%;
+  height: 100%;
+  display:flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 20px;
+}
+
+.item-label{
+  width: 120px;
+  height: 60px;
+  border: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  cursor: pointer;
+  background: rgb(38, 99, 231);
+  color: #fff;
+}
+
+.level-one-label{
+  background: rgb(252, 127, 2);
+}
+
+.wrap{
+  width: 100%;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.root-content{
+  width: 100%;
+}
+.vertical-line{
+  width: 0px;
+  height: 50px;
+  border:none;
+  border-left: 1px solid #000;
+}
+
+.vertical-line-down{
+  height: 100px;
+}
+
+.children-content{
+  /* width: 100%; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.children-box{
+  width: 120px;
+  margin: 0 50px;
+  /* position: relative; */
+  /* border-top: 1px solid #000; */
+}
+.level-one{
+  display: flex;
+  /* flex-direction: column; */
+  justify-content: center;
+  align-items: flex-start;
+}
+.con-line{
+  /* width: 100%; */
+  height: 0px;
+  border: none;
+  border-top: 1px solid #000;
+  /* position: absolute; */
+  /* background: #000; */
+}
+.level-two-box{
+  /* width: 100%; */
+  /* max-width: 1600px; */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.level-two{
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  /* position: absolute; */
+  /* width: 100%; */
+}
+
+.major-box{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 120px;
+  margin:0 25px
+}
+
+.item-major{
+  /* width: 120px; */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.major-label{
+  width: 120px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #eee;
+  cursor: pointer;
+  background: rgb(0, 168, 173);
+}
+
+.major-stuff-box{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.major-vertical-line{
+  height: 30px;
+  margin-left: 5px;
+}
+
+.major-stuff{
+  width: 120px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #eee;
+  background: rgb(61, 141, 200);
+  color: #fff;
+}

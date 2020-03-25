@@ -18,6 +18,15 @@ new Vue({
           open: true,
           children: []
         },
+        
+        {
+          id: "4",
+          label: "技术负责人",
+          stuff_name: ["韩亮亮"],
+          type: "1",
+          open: true,
+          children: []
+        },
         {
           id: "3",
           label: "",
@@ -41,94 +50,86 @@ new Vue({
               open: true,
               children: []
             },
-            {
-              id: "3.3",
-              label: "路线",
-              stuff_name: ["勘探员1", "勘探员2", "勘探员3"],
-              type: "3",
-              open: true,
-              children: []
-            },
-            {
-              id: "3.4",
-              label: "路基路面",
-              stuff_name: ["勘探员1", "勘探员2"],
-              type: "3",
-              open: true,
-              children: []
-            },
-            {
-              id: "3.5",
-              label: "桥涵",
-              stuff_name: ["勘探员1"],
-              type: "3",
-              open: true,
-              children: []
-            },
-            {
-              id: "3.6",
-              label: "隧道",
-              stuff_name: ["勘探员1", "勘探员2"],
-              type: "3",
-              open: true,
-              children: []
-            },
-            {
-              id: "3.7",
-              label: "造假",
-              stuff_name: ["造价员1"],
-              type: "3",
-              open: true,
-              children: []
-            },
-            {
-              id: "3.8",
-              label: "总体",
-              stuff_name: ["勘探员1", "勘探员2"],
-              type: "3",
-              open: true,
-              children: []
-            },
-            {
-              id: "3.9",
-              label: "其他",
-              stuff_name: ["勘探员1", "勘探员2", "勘探员3"],
-              type: "3",
-              open: true,
-              children: []
-            },
-            {
-              id: "3.9",
-              label: "其他",
-              stuff_name: ["勘探员1", "勘探员2", "勘探员3"],
-              type: "3",
-              open: true,
-              children: []
-            },
-            {
-              id: "3.9",
-              label: "其他",
-              stuff_name: ["勘探员1", "勘探员2", "勘探员3"],
-              type: "3",
-              open: true,
-              children: []
-            }, {
-              id: "3.9",
-              label: "其他",
-              stuff_name: ["勘探员1", "勘探员2", "勘探员3"],
-              type: "3",
-              open: true,
-              children: []
-            }
+            // {
+            //   id: "3.3",
+            //   label: "路线",
+            //   stuff_name: ["勘探员1", "勘探员2", "勘探员3"],
+            //   type: "3",
+            //   open: true,
+            //   children: []
+            // },
+            // {
+            //   id: "3.4",
+            //   label: "路基路面",
+            //   stuff_name: ["勘探员1", "勘探员2"],
+            //   type: "3",
+            //   open: true,
+            //   children: []
+            // },
+            // {
+            //   id: "3.5",
+            //   label: "桥涵",
+            //   stuff_name: ["勘探员1"],
+            //   type: "3",
+            //   open: true,
+            //   children: []
+            // },
+            // {
+            //   id: "3.6",
+            //   label: "隧道",
+            //   stuff_name: ["勘探员1", "勘探员2"],
+            //   type: "3",
+            //   open: true,
+            //   children: []
+            // },
+            // {
+            //   id: "3.7",
+            //   label: "造假",
+            //   stuff_name: ["造价员1"],
+            //   type: "3",
+            //   open: true,
+            //   children: []
+            // },
+            // {
+            //   id: "3.8",
+            //   label: "总体",
+            //   stuff_name: ["勘探员1", "勘探员2"],
+            //   type: "3",
+            //   open: true,
+            //   children: []
+            // },
+            // {
+            //   id: "3.9",
+            //   label: "其他",
+            //   stuff_name: ["勘探员1", "勘探员2", "勘探员3"],
+            //   type: "3",
+            //   open: true,
+            //   children: []
+            // },
+            // {
+            //   id: "3.9",
+            //   label: "其他",
+            //   stuff_name: ["勘探员1", "勘探员2", "勘探员3"],
+            //   type: "3",
+            //   open: true,
+            //   children: []
+            // },
+            // {
+            //   id: "3.9",
+            //   label: "其他",
+            //   stuff_name: ["勘探员1", "勘探员2", "勘探员3"],
+            //   type: "3",
+            //   open: true,
+            //   children: []
+            // }, {
+            //   id: "3.9",
+            //   label: "其他",
+            //   stuff_name: ["勘探员1", "勘探员2", "勘探员3"],
+            //   type: "3",
+            //   open: true,
+            //   children: []
+            // }
           ]
-        },
-        {
-          id: "4",
-          label: "技术负责人",
-          stuff_name: ["韩亮亮"],
-          type: "1",
-          open: true,
-          children: []
         },
         {
           id: "4",

@@ -2,6 +2,8 @@ new Vue({
   delimiters: ["${", "}"],
   data: {
     levelOneWidth:"200px",
+    appWidth:'100%',
+
     treeData:{
       id:"1",
       project_name:"西藏墨脱项目",
@@ -118,6 +120,54 @@ new Vue({
             //   type:"3",
             //   open:true,
             //   children:[]
+            // },
+            // {
+            //   id:"3.9",
+            //   label:"其他",
+            //   stuff_name:["勘探员1","勘探员2","勘探员3"],
+            //   type:"3",
+            //   open:true,
+            //   children:[]
+            // },
+            // {
+            //   id:"3.9",
+            //   label:"其他",
+            //   stuff_name:["勘探员1","勘探员2","勘探员3"],
+            //   type:"3",
+            //   open:true,
+            //   children:[]
+            // },
+            // {
+            //   id:"3.9",
+            //   label:"其他",
+            //   stuff_name:["勘探员1","勘探员2","勘探员3"],
+            //   type:"3",
+            //   open:true,
+            //   children:[]
+            // },
+            // {
+            //   id:"3.9",
+            //   label:"其他",
+            //   stuff_name:["勘探员1","勘探员2","勘探员3"],
+            //   type:"3",
+            //   open:true,
+            //   children:[]
+            // },
+            // {
+            //   id:"3.9",
+            //   label:"其他",
+            //   stuff_name:["勘探员1","勘探员2","勘探员3"],
+            //   type:"3",
+            //   open:true,
+            //   children:[]
+            // },
+            // {
+            //   id:"3.9",
+            //   label:"其他",
+            //   stuff_name:["勘探员1","勘探员2","勘探员3"],
+            //   type:"3",
+            //   open:true,
+            //   children:[]
             // }
           ]
         },
@@ -128,24 +178,16 @@ new Vue({
           type:"1",
           open:true,
           children:[]
-        }
+        },
+       
       ]
     }
   },
   created() {
-    let lenOne=this.treeData.children.length
-    // this.levelOneWidth=(lenOne-1)*50+lenOne*120-1+'px'
-    this.levelOneWidth=(lenOne-1)*120+(lenOne-1)*50*2+'px'
-    console.log(this.levelOneWidth)
-    this.treeData.children.forEach(v => {
-      let len=v.children.length
-      let theWidth=(len-1)*120+(len-1)*25*2+(len-1)*2
-      v.levelTwoWidth=theWidth+'px'
-      v.offsetLeft=-theWidth/2+50+9+'px'
-      console.log(v.offsetLeft)
-    });
+    
   },
   mounted() {
+    this.draw()
   },
   methods: {
     errorHandler(){
@@ -157,6 +199,28 @@ new Vue({
     majorClick(data){
       data.open=!data.open
       // data.children.push(...ApiData)
+    },
+    draw(){
+      let lenOne=this.treeData.children.length
+      // this.levelOneWidth=(lenOne-1)*50+lenOne*120-1+'px'
+      this.levelOneWidth=(lenOne-1)*120+(lenOne-1)*50*2+1+'px'
+      console.log(this.levelOneWidth)
+      this.treeData.children.forEach(v => {
+        let len=v.children.length
+        let theWidth=(len-1)*120+(len-1)*25*2+1
+        v.levelTwoWidth=theWidth+'px'
+        v.offsetLeft=-theWidth/2+50+len+'px'
+        console.log(v.offsetLeft)
+      });
+      // 设置页面最大宽度
+      let temp=[]
+      this.$refs.levelTwo.forEach(v=>{
+        temp.push(v.clientWidth)
+      })
+      let tempWidth=Math.max(...temp)
+      console.log(document.body.clientWidth)
+      let windowWidth=document.body.clientWidth
+      this.appWidth=tempWidth>windowWidth?tempWidth+'px':windowWidth+'px'
     }
   }
 }).$mount("#treeOrgStructureApp")
