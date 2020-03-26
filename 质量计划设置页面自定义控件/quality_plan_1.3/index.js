@@ -358,14 +358,16 @@
                             this.$message.error("未勾选任务")
                             return
                           }
-                          if (ids.idArr.length > 0) {
+                          if (ids.idArr.length===0){
+                            this.$message.error("您勾选的任务无法设置角色")
+                          }else if(ids.idArr.length === 1) {
                             changedIds = changedIds.concat(this.currentSelectedIds)
                             model.invoke(
                               "setQualityPlanRole",
                               sendData
                             )
                           } else {
-                            this.$message.error("您勾选的任务无法设置角色")
+                            this.$message.error("设置角色不能多选")
                           }
                         },
                         getTask(tasks, selectedIds) {
