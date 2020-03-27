@@ -902,6 +902,7 @@
           if (fuck.parent === shit.parent && shit.task_type !== "3") {
             fuck.subArray[0].the_owner = shit.subArray[0].owner
             fuck.subArray[0].the_owner_role = shit.subArray[0].owner_role
+            fuck.subArray[0].the_skill=shit.subArray[0].skill
           }
         })
       }

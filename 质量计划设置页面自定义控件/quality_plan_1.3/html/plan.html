@@ -1,4 +1,4 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="en">
   <head>
@@ -11,7 +11,7 @@
     <title>Document</title>
   </head>
 
-<body> -->
+<body>
 <div id="qualityPlanApp">
   <div class="btn-lsit">
     <button class="btn-itme" id="setBtn4" @click="SetRole">
@@ -126,19 +126,19 @@
     </el-table-column>
     <el-table-column label="承担人名称" width="120">
       <template slot-scope="scope">
-        <div class="checek-man" v-show="scope.row.task_type === '3'">
+        <div class="checek-man" v-show="scope.row.task_type === '3'&&scope.row.isreply==='2'">
           ${ scope.row.owner }
         </div>
-        <div class="checek-man" v-show="scope.row.task_type === '3'">
+        <div class="checek-man" v-show="scope.row.task_type === '3'&&scope.row.isreply==='2'">
           ${ scope.row.the_owner }
         </div>
-        <div class="checek-man" v-show="scope.row.task_type === '3'">
+        <div class="checek-man" v-show="scope.row.task_type === '3'&&scope.row.isreply==='2'">
           ${ scope.row.owner }
         </div>
-        <div class="checek-man" style="border:none" v-show="scope.row.task_type === '3'">
+        <div class="checek-man" style="border:none" v-show="scope.row.task_type === '3'&&scope.row.isreply==='2'">
           ${ scope.row.owner }
         </div>
-        <div v-show="scope.row.task_type === '1'||scope.row.task_type === '2'">
+        <div v-show="(scope.row.task_type === '1'||scope.row.task_type === '2')&&scope.row.isreply==='2'">
           ${ scope.row.owner }
         </div>
       </template>
@@ -164,11 +164,11 @@
     </el-table-column>
   </el-table>
 </div>
-<!-- <script src="../js/lodash.js"></script>
+<script src="../js/lodash.js"></script>
     <script src="../js/vue.min.js"></script>
     <script src="../js/vue.js"></script>
     <script src="../js/element.js"></script>
     <script src="../js/test.js"></script>
   </body>
 
-</html> -->
+</html>

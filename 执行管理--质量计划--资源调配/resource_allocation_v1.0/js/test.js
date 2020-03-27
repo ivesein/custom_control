@@ -35,7 +35,9 @@ new Vue({
           "first_duration": "",
           "modify_duration": "",
           "mod_con_duration": "",
-          "owner_roleid": ""
+          "owner_roleid": "",
+          "skill":"技能1",
+          "isreply":'1'
         }]
       }, {
         "task_name": "设置围堰",
@@ -61,7 +63,9 @@ new Vue({
           "first_duration": "3",
           "modify_duration": "",
           "mod_con_duration": "",
-          "owner_roleid": ""
+          "owner_roleid": "",
+          "skill":"技能1",
+          "isreply":'1'
         }]
       }, {
         "task_name": "P4挖土",
@@ -87,7 +91,9 @@ new Vue({
           "first_duration": "",
           "modify_duration": "",
           "mod_con_duration": "",
-          "owner_roleid": ""
+          "owner_roleid": "",
+          "skill":"技能1",
+          "isreply":'1'
         }]
       }, {
         "task_name": "P4挖土设计",
@@ -113,7 +119,9 @@ new Vue({
           "first_duration": "1",
           "modify_duration": "",
           "mod_con_duration": "",
-          "owner_roleid": "789577461510730800"
+          "owner_roleid": "789577461510730800",
+          "skill":"技能1",
+          "isreply":'2'
         }, {
           "owner": "yxx100",
           "plan_starttime":  "2020-02-01",
@@ -126,7 +134,9 @@ new Vue({
           "first_duration": "2",
           "modify_duration": "",
           "mod_con_duration": "",
-          "owner_roleid": "789577461510730800"
+          "owner_roleid": "789577461510730800",
+          "skill":"技能1",
+          "isreply":'2'
         }, {
           "owner": "yxx101",
           "plan_starttime":  "2020-02-01",
@@ -139,7 +149,9 @@ new Vue({
           "first_duration": "3",
           "modify_duration": "",
           "mod_con_duration": "",
-          "owner_roleid": "789577461510730800"
+          "owner_roleid": "789577461510730800",
+          "skill":"技能1",
+          "isreply":'2'
         }]
       }, {
         "task_name": "P4挖土复核",
@@ -165,7 +177,9 @@ new Vue({
           "first_duration": "1",
           "modify_duration": "1",
           "mod_con_duration": "3",
-          "owner_roleid": "789577461510730800"
+          "owner_roleid": "789577461510730800",
+          "skill":"技能1",
+          "isreply":'1'
         }, {
           "owner": "yxx102",
           "plan_starttime": "",
@@ -178,7 +192,9 @@ new Vue({
           "first_duration": "",
           "modify_duration": "",
           "mod_con_duration": "",
-          "owner_roleid": "789577461510730800"
+          "owner_roleid": "789577461510730800",
+          "skill":"技能1",
+          "isreply":'1'
         }]
       }, {
         "task_name": "2223",
@@ -202,7 +218,9 @@ new Vue({
           "first_duration": "",
           "modify_duration": "",
           "mod_con_duration": "",
-          "owner_roleid": ""
+          "owner_roleid": "",
+          "skill":"技能1",
+          "isreply":'1'
         }, {
           "owner": "",
           "plan_starttime": "",
@@ -215,7 +233,9 @@ new Vue({
           "first_duration": "",
           "modify_duration": "",
           "mod_con_duration": "",
-          "owner_roleid": ""
+          "owner_roleid": "",
+          "skill":"技能1",
+          "isreply":'1'
         }]
       }, {
         "task_name": "2223设计",
@@ -239,7 +259,9 @@ new Vue({
           "first_duration": "",
           "modify_duration": "",
           "mod_con_duration": "",
-          "owner_roleid": ""
+          "owner_roleid": "",
+          "skill":"技能1",
+          "isreply":'1'
         }, {
           "owner": "",
           "plan_starttime": "",
@@ -252,7 +274,9 @@ new Vue({
           "first_duration": "",
           "modify_duration": "",
           "mod_con_duration": "",
-          "owner_roleid": ""
+          "owner_roleid": "",
+          "skill":"技能1",
+          "isreply":'1'
         }]
       }, {
         "task_name": "2223复核",
@@ -276,7 +300,9 @@ new Vue({
           "first_duration": "",
           "modify_duration": "",
           "mod_con_duration": "",
-          "owner_roleid": ""
+          "owner_roleid": "",
+          "skill":"技能1",
+          "isreply":'1'
         }, {
           "owner": "",
           "plan_starttime": "",
@@ -289,7 +315,9 @@ new Vue({
           "first_duration": "",
           "modify_duration": "",
           "mod_con_duration": "",
-          "owner_roleid": ""
+          "owner_roleid": "",
+          "skill":"技能1",
+          "isreply":'1'
         }]
       }, {
         "task_name": "1",
@@ -313,7 +341,9 @@ new Vue({
           "first_duration": "",
           "modify_duration": "",
           "mod_con_duration": "",
-          "owner_roleid": ""
+          "owner_roleid": "",
+          "skill":"技能1",
+          "isreply":'1'
         }, {
           "owner": "",
           "plan_starttime": "",
@@ -326,7 +356,9 @@ new Vue({
           "first_duration": "",
           "modify_duration": "",
           "mod_con_duration": "",
-          "owner_roleid": ""
+          "owner_roleid": "",
+          "skill":"技能1",
+          "isreply":'1'
         }]
       }, {
         "task_name": "1111",
@@ -350,7 +382,9 @@ new Vue({
           "first_duration": "",
           "modify_duration": "",
           "mod_con_duration": "",
-          "owner_roleid": ""
+          "owner_roleid": "",
+          "skill":"技能1",
+          "isreply":'1'
         }]
       }, {
         "task_name": "1111设计",
@@ -374,7 +408,9 @@ new Vue({
           "first_duration": "",
           "modify_duration": "",
           "mod_con_duration": "",
-          "owner_roleid": ""
+          "owner_roleid": "",
+          "skill":"技能1",
+          "isreply":'1'
         }]
       }, {
         "task_name": "1111复核",
@@ -398,7 +434,9 @@ new Vue({
           "first_duration": "",
           "modify_duration": "",
           "mod_con_duration": "",
-          "owner_roleid": ""
+          "owner_roleid": "",
+          "skill":"技能1",
+          "isreply":'1'
         }]
       }
     ]

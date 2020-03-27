@@ -36,7 +36,7 @@
               <span class="task-name" @click="handleTaskNameClicked(item)">${item.task_name}</span>
               <span class="project-name">${item.project_name}</span>
             </div>
-            <div v-show="item.check_status==='check_in'">
+            <div v-show="item.check_status==='check_in'&&item.beforeTaskStatus===true">
               <div v-show="item.task_status==='toBeComplected'" class="btn-box">
                 <div class="btn" @click="designClickAccept(item)">接受</div>
               </div>
@@ -80,7 +80,7 @@
                 </el-table-column>
                 <el-table-column label="开始任务" width="120">
                   <template slot-scope="scope">
-                    <div v-show="item.check_status==='check_in'">
+                    <div v-show="item.check_status==='check_in'&&item.beforeTaskStatus===true">
                       <div class="pa_task_btn" v-show="scope.row.task_status==='toBeComplected'">
                         <div class="btn" v-if="scope.row.taskScheduleStatus" @click="auditClickAccept(scope.row)"
                           type="text" size="small">接受</div>
@@ -105,7 +105,7 @@
               <span class="task-name" @click="handleTaskNameClicked(item)">${item.task_name}</span>
               <span class="project-name">${item.project_name}</span>
             </div>
-            <div v-show="item.check_status==='check_in'">
+            <div v-show="item.check_status==='check_in'&&item.beforeTaskStatus===true">
               <div class="btn-box" v-show="item.task_status==='toBeComplected'">
                 <div class="btn" v-if="item.taskScheduleStatus" @click="reviewClickAccept(item)">接受</div>
                 <div class="btn" v-else @click="reviewUrge(item)">催办</div>

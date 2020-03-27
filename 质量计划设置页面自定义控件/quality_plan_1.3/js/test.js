@@ -30,7 +30,8 @@ new Vue({
       "parent": "0",
       "type": "project",
       "task_type": "",
-      "audit_task_id": ""
+      "audit_task_id": "",
+      "isreply":'1'
     }, {
       "task_id": "2",
       "position": "2",
@@ -51,7 +52,8 @@ new Vue({
       "parent": "1",
       "type": "project",
       "task_type": "4",
-      "audit_task_id": ""
+      "audit_task_id": "",
+      "isreply":'1'
     }, {
       "task_id": "3",
       "position": "3",
@@ -73,7 +75,8 @@ new Vue({
       "skill":"挖土",
       "type": "task",
       "task_type": "1",
-      "audit_task_id": ""
+      "audit_task_id": "",
+      "isreply":'2'
     }, {
       "task_id": "4",
       "position": "4",
@@ -95,7 +98,8 @@ new Vue({
       "parent": "2",
       "type": "task",
       "task_type": "3",
-      "audit_task_id": ""
+      "audit_task_id": "",
+      "isreply":'2'
     }, {
       "task_id": "5",
       "position": "5",
@@ -116,7 +120,8 @@ new Vue({
       "parent": "1",
       "type": "task",
       "task_type": "4",
-      "audit_task_id": ""
+      "audit_task_id": "",
+      "isreply":'2'
     }, {
       "task_id": "6",
       "position": "6",
@@ -137,7 +142,8 @@ new Vue({
       "parent": "5",
       "type": "task",
       "task_type": "1",
-      "audit_task_id": "1"
+      "audit_task_id": "1",
+      "isreply":'1'
     }, {
       "task_id": "8",
       "position": "8",
@@ -158,7 +164,8 @@ new Vue({
       "parent": "1",
       "type": "task",
       "task_type": "2",
-      "audit_task_id": "2,5"
+      "audit_task_id": "2,5",
+      "isreply":'2'
     }, {
       "task_id": "7",
       "position": "7",
@@ -179,7 +186,8 @@ new Vue({
       "parent": "5",
       "type": "task",
       "task_type": "3",
-      "audit_task_id": "3"
+      "audit_task_id": "3",
+      "isreply":'1'
     }]
     var data_ = this.addSortNum(tData).sort(this.compare('sortNum'))
     console.table(data_)
