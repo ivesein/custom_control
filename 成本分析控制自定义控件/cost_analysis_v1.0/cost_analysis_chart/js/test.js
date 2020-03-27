@@ -1,6 +1,9 @@
+
 new Vue({
 	delimiters: ["${", "}"],
 	data: {
+		plan_money : 0,
+		fact_money : 0,
 		tableData: [],
 		option: {
 			// title: {
@@ -114,7 +117,7 @@ new Vue({
 	},
 	created() {},
 	mounted() {
-		var myChart = echarts.init(document.getElementById("myCharts"))
+		var myChart = echarts.init(document.getElementById("costAnalysisCharts"))
 		myChart.setOption(this.option)
 	},
 	methods: {
@@ -126,4 +129,4 @@ new Vue({
 			return "padding-left: 0px!important;padding-right: 0px!important;"
 		}
 	}
-}).$mount("#app")
+}).$mount("#costAnalysisChartApp")
