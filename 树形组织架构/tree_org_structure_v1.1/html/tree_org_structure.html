@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -8,12 +8,12 @@
     <link rel="stylesheet" href="../css/main.css" />
     <title>Document</title>
   </head>
-  <body>
+  <body> -->
   <div id="treeOrgStructureApp" :style="{'width':appWidth}">
     <div class="root-box">
       <div class="wrap">
         <div class="root-label item-label" @click="rootClick(treeData)">
-          ${treeData.label}
+          ${treeData.name?treeData.name:""}
         </div>
       </div>
       <div class="root-content" v-show="treeData.open">
@@ -28,9 +28,9 @@
                 <div class="wrap">
                   <div class="vertical-line"></div>
                 </div>
-                <div class="item-label level-one-label" v-show="item.label!==''">
-                  <span>${item.label}</span>
-                  <span v-for="(stuff, index) in item.stuff_name" :key="index">${stuff}</span>
+                <div class="item-label level-one-label" v-show="item.major!==''">
+                  <span>${item.major}</span>
+                  <span>${item.person}</span>
                 </div>
                 <div class="wrap" v-show="item.children.length">
                   <div class="vertical-line vertical-line-down"></div>
@@ -42,17 +42,17 @@
         <div class="level-two-box" v-for="(item, index) in treeData.children" :key="index" v-show="item.children.length">
           <div class="con-line" :style="{width:item.levelTwoWidth}" v-show="item.children.length"></div>
           <div ref="levelTwo" class="level-two" v-show="item.children.length">
-            <div class="major-box" v-for="(major, index) in item.children" :key="index">
+            <div class="major-box" v-for="(item, index) in item.children" :key="index">
               <div class="wrap">
                 <div class="vertical-line"></div>
               </div>
-              <div class="item-major" v-show="major.label!==''">
-                <div class="major-label" @click="majorClick(major)">${major.label}</div>
+              <div class="item-major" v-show="item.major!==''">
+                <div class="major-label" @click="majorClick(item,index)">${item.major}</div>
               </div>
-              <div class="major-stuff-box" v-for="(stuff, index) in major.stuff_name" :key="index" v-show="major.open">
+              <div class="major-stuff-box" v-for="(stuff, index) in item.children" :key="index" v-show="item.open">
                 <div class="vertical-line major-vertical-line" style="margin-left: 5px;"></div>
                 <div class="major-stuff">
-                  ${stuff}
+                  ${stuff.major}
                 </div>
               </div>
             </div>
@@ -61,10 +61,10 @@
       </div>
     </div>
   </div>
-  <script src="../js/lodash.js"></script>
+  <!-- <script src="../js/lodash.js"></script>
   <script src="../js/vue.min.js"></script>
   <script src="../js/vue.js"></script>
   <script src="../js/element.js"></script>
   <script src="../js/test.js"></script>
   </body>
-</html>
+</html> -->
