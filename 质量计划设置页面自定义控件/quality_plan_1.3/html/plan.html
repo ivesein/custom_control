@@ -126,20 +126,25 @@
     </el-table-column>
     <el-table-column label="承担人名称" width="120">
       <template slot-scope="scope">
-        <div class="checek-man" v-show="scope.row.task_type === '3'&&scope.row.isreply==='2'">
-          ${ scope.row.owner }
+        <div class="checek-man" v-show="scope.row.task_type === '3'">
+          <span v-if="scope.row.isreply==='2'"> ${ scope.row.owner }</span>
+          <span v-else></span>
         </div>
-        <div class="checek-man" v-show="scope.row.task_type === '3'&&scope.row.the_isreply==='2'">
-          ${ scope.row.the_owner }
+        <div class="checek-man" v-show="scope.row.task_type === '3'">
+          <span v-if="scope.row.the_isreply==='2'"> ${ scope.row.the_owner }</span>
+          <span v-else></span>
         </div>
-        <div class="checek-man" v-show="scope.row.task_type === '3'&&scope.row.isreply==='2'">
-          ${ scope.row.owner }
+        <div class="checek-man" v-show="scope.row.task_type === '3'">
+          <span v-if="scope.row.isreply==='2'"> ${ scope.row.owner }</span>
+          <span v-else></span>
         </div>
-        <div class="checek-man" style="border:none" v-show="scope.row.task_type === '3'&&scope.row.isreply==='2'">
-          ${ scope.row.owner }
+        <div class="checek-man" style="border:none" v-show="scope.row.task_type === '3'">
+          <span v-if="scope.row.isreply==='2'"> ${ scope.row.owner }</span>
+          <span v-else></span>
         </div>
-        <div v-show="(scope.row.task_type === '1'||scope.row.task_type === '2')&&scope.row.isreply==='2'">
-          ${ scope.row.owner }
+        <div v-show="scope.row.task_type === '1'||scope.row.task_type === '2'">
+          <span v-if="scope.row.isreply==='2'"> ${ scope.row.owner }</span>
+          <span v-else></span>
         </div>
       </template>
     </el-table-column>
