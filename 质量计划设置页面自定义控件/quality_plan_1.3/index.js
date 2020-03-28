@@ -564,6 +564,7 @@
         originData.forEach(function(shit) {
           if (fuck.parent === shit.parent && shit.task_type !== "3") {
             fuck.the_owner = shit.owner
+            fuck.the_isreply=shit.isreply
             fuck.the_owner_role = shit.owner_role
             fuck.the_skill=shit.skill
           }
