@@ -19,7 +19,7 @@
       },
       init: function(props) {
         console.log("init---", this.model, props)
-        setHtml(this.model, props)
+        // setHtml(this.model, props)
       },
       update: function(props) {
         console.log("-----update", this.model, props)
@@ -29,9 +29,7 @@
           changedIds = []
           this.model.qualityPlanVue = null
           setHtml(this.model, props)
-        }
-        console.log(this.model.qualityPlanVue)
-        if (this.model.qualityPlanVue) {
+        }else if (this.model.qualityPlanVue) {
           this.model.qualityPlanVue.handleUpdata(this.model, props)
         }
       },
@@ -49,14 +47,14 @@
     KDApi.loadFile("./css/element.css", model.schemaId, function() {
       KDApi.loadFile("./css/main.css", model.schemaId, function() {
         KDApi.loadFile("./js/vue.min.js", model.schemaId, function() {
-          KDApi.loadFile("./js/vue.js", model.schemaId, function() {
+          // KDApi.loadFile("./js/vue.js", model.schemaId, function() {
             KDApi.loadFile("./js/lodash.js", model.schemaId, function() {
               KDApi.loadFile(
                 "./js/element.js",
                 model.schemaId,
                 function() {
                   KDApi.templateFilePath(
-                    "./html/plan.html",
+                    "./html/quality_plan.html",
                     model.schemaId, {
                       path: KDApi.nameSpace(
                         model.schemaId
@@ -86,12 +84,16 @@
                       },
                       created() {},
                       mounted() {
+                        let self = this;
                         // 固定表格表头 设置表格高度自适应填满剩余高度
                         this.$nextTick(function() {
-                          this.tableHeight = window.innerHeight - this.$refs.qualityPlanTable.$el.offsetTop - 60
-
+                          if(self.$refs.thequalityPlanTable.$el!==undefined){
+                            self.tableHeight = window.innerHeight - self.$refs.thequalityPlanTable.$el.offsetTop - 60
+                          }else{
+                            // 处理偶发性初始化加载不出来的bug
+                            setHtml(model, props)
+                          }
                           // 监听窗口大小变化
-                          let self = this;
                           window.onresize = function() {
                             self.tableHeight = window.innerHeight - self.$refs.qualityPlanTable.$el.offsetTop - 60
                           }
@@ -453,7 +455,7 @@
                 }
               )
             })
-          })
+          // })
         })
       })
     })

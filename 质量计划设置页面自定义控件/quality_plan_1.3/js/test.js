@@ -199,13 +199,15 @@ new Vue({
     console.log("this.tableData>>>", this.tableData)
   },
   mounted() {
+    let self = this;
+    // 固定表格表头 设置表格高度自适应填满剩余高度
     this.$nextTick(function() {
-      this.tableHeight = window.innerHeight - this.$refs.qualityPlanTable.$el.offsetTop - 10
+      self.tableHeight = window.innerHeight - self.$refs.qualityPlanTable.$el.offsetTop - 60
 
       // 监听窗口大小变化
-      let self = this;
+      
       window.onresize = function() {
-        self.tableHeight = window.innerHeight - self.$refs.qualityPlanTable.$el.offsetTop - 10
+        self.tableHeight = window.innerHeight - self.$refs.qualityPlanTable.$el.offsetTop - 60
       }
     })
   },
