@@ -80,21 +80,23 @@ new Vue({
           handling_measures:"请输入处理措施"
         }
       ]
-    }
+    },
+    tableWidth:'100%'
   },
   created() {
    
   },
   mounted() {
-    // this.$nextTick(function() {
-    //   this.tableHeight = window.innerHeight - this.$refs.qualityPlanTable.$el.offsetTop - 10
-
-    //   // 监听窗口大小变化
-    //   let self = this;
-    //   window.onresize = function() {
-    //     self.tableHeight = window.innerHeight - self.$refs.qualityPlanTable.$el.offsetTop - 10
-    //   }
-    // })
+    this.$nextTick(function() {
+      // this.tableHeight = window.innerHeight - this.$refs.qualityPlanTable.$el.offsetTop - 10
+      this.tableWidth=this.$refs.projectTable.$el.clientWidth+'px'
+      console.log(this.tableWidth)
+      // 监听窗口大小变化
+      let self = this;
+      window.onresize = function() {
+        self.tableWidth=self.$refs.projectTable.$el.clientWidth+'px'
+      }
+    })
   },
   methods: {
     refreshData(){},

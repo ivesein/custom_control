@@ -90,7 +90,7 @@
           <span class="title-text">${beforeTaskInfo.title}</span>
         </div>
         <div class="table-info-box" v-if="beforeTaskInfo.open">
-          <el-table ref="beforeTaskTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="beforeTaskInfo.data" style="margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true">
+          <el-table ref="TableRight" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="beforeTaskInfo.data" style="margin:10px 0 10px 0;" :style="{width:tableWidth}" :cell-style="cellStyle" row-key="task_id" :border="true">
             <el-table-column prop="before_task_name" label="紧前任务名称" width="200" ></el-table-column>
             <el-table-column prop="handling_measures" label="当前任务处理措施"></el-table-column>
           </el-table>
@@ -105,7 +105,7 @@
           <span class="title-text">${currentTaskInfo.title}</span>
         </div>
         <div class="table-info-box" v-if="currentTaskInfo.open">
-          <el-table ref="currentTaskInfoTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="currentTaskInfo.data" style="width:1000px;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true">
+          <el-table ref="TableRight" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="currentTaskInfo.data" style="margin:10px 0 10px 0;" :style="{width:tableWidth}" :cell-style="cellStyle" row-key="task_id" :border="true">
             <el-table-column prop="plan_duration" label="计划工期" width="100"></el-table-column>
             <el-table-column prop="plan_quantities" label="计划工程量" width="100"></el-table-column>
             <el-table-column prop="duration_after_adjustment" label="调整后工期" width="100"></el-table-column>
@@ -149,7 +149,7 @@
           <span class="title-text">${followTaskProcessing.title}</span>
         </div>
         <div class="table-info-box" v-if="followTaskProcessing.open">
-          <el-table ref="currentTaskInfoTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="followTaskProcessing.data" style="margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true">
+          <el-table ref="TableRight" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="followTaskProcessing.data" style="margin:10px 0 10px 0;" :style="{width:tableWidth}" :cell-style="cellStyle" row-key="task_id" :border="true">
             <el-table-column prop="follow_task_name" label="后续任务名称" >
               <template slot-scope="scope">
                 <div class="search-icon">
@@ -171,5 +171,4 @@
     <script src="../js/element.js"></script>
     <script src="../js/test.js"></script>
   </body>
-
 </html>
