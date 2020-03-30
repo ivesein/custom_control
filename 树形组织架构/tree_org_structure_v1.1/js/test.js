@@ -5,42 +5,42 @@ new Vue({
     appWidth:'100%',
 
     treeData:{
-      id:"1",
-      project_name:"西藏墨脱项目",
-      label:"西藏墨脱项目",
+      name:"西藏墨脱项目",
       open:true,
-      type:'0',
       children:[
         {
           id:"2",
-          label:"项目经理",
+          major:"项目经理",
           type:"1",
-          stuff_name:["孙航天"],
+          person:"孙航天",
           open:true,
           children:[]
         },
         {
           id:"3",
-          label:"",
-          stuff_name:[],
+          major:"",
+          person:"",
           type:"2",
           open:true,
           children:[
             {
               id:"3.1",
-              label:"工程测绘",
-              stuff_name:["测绘员1"],
-              type:"3",
+              major:"工程测绘",
               open:true,
               children:[]
             },
             {
               id:"3.2",
-              label:"工程地质勘探",
-              stuff_name:["勘探员1","勘探员2","勘探员3"],
-              type:"3",
+              major:"工程地质勘探",
               open:true,
-              children:[]
+              children:[
+                {
+                  major:"测绘1"
+                },
+                {
+                  major:"测绘2"
+                }
+              ]
             },
             // {
             //   id:"3.3",
@@ -173,8 +173,8 @@ new Vue({
         },
         {
           id:"4",
-          label:"技术负责人",
-          stuff_name:["韩亮亮"],
+          major:"技术负责人",
+          person:"韩亮亮",
           type:"1",
           open:true,
           children:[]
@@ -198,6 +198,7 @@ new Vue({
     },
     majorClick(data){
       data.open=!data.open
+      console.log(data.id)
       // data.children.push(...ApiData)
     },
     draw(){
