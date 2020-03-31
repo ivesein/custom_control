@@ -10,7 +10,6 @@ new Vue({
 	data: {
 		plan_money : 0,
 		fact_money : 0,
-		tableData: [],
 		option: {
 			// title: {
 			// 	text: "项目累计金额对比图"
@@ -77,74 +76,112 @@ new Vue({
 				type: "category",
 				boundaryGap: false,
 				step: "1",
+				// axisTick: {
+				// 	alignWithLabel: false
+				// },
 				data: [
-					"2005/05/01",
-					"2005/05/02",
-					"2005/05/03",
-					"2005/05/04",
-					"2005/05/05",
-					"2005/05/06",
-					"2005/05/07",
-					"2005/05/08",
-					"2005/05/09",
-					"2005/05/10",
-					"2005/05/11",
-					"2005/05/12",
-					"2005/05/13",
-					"2005/05/14"
+					"2020/03/01",
+					"2020/03/02",
+					"2020/03/03",
+					"2020/03/04",
+					"2020/03/05",
+					"2020/03/06",
+					"2020/03/07",
+					"2020/03/08",
+					"2020/03/09",
+					"2020/03/10",
+					"2020/03/11",
+					"2020/03/12",
+					"2020/03/13",
+					"2020/03/14"
 				]
 			},
 			yAxis: {
 				type: "value",
 				name: "累计金额（万元）",
-				nameLocation: "middle",
+				// nameLocation: "middle",
 				nameTextStyle: {
-					fontSize: 18,
-					padding: [0, 0, 30, 0]
+					fontSize: 14,
+					// padding: [0, 0, 30, 0]
 				}
 			},
 			series: [
 				{
-					name: "plan",
+					name: "最早开始计划累计金额",
 					type: "line",
-					stack: "总量",
-					data: [0, 132, 101, 134, 90, 230, 210],
-					color: "#578bac"
+					// stack: "总量",
+					data: [1, 2, 3, 4, 5, 6, 7,9,11,10,13,14,16,15],
+					color: "#9e480e"
 				},
 				{
-					name: "fact",
+					name: "实际累计金额",
 					type: "line",
-					stack: "总量",
-					data: [0, 182, 191, 234, 290, 330, 310],
-					color: "#d70304"
-				}
+					// stack: "总量",
+					data: [1, 2, 3, 4, 5, 6, 7,8,9,10,11,12,13,14],
+					color: "#70ad47"
+				},
+				{
+					name: "最晚开始计划累计金额",
+					type: "line",
+					// stack: "总量",
+					data: [1, 2, 3, 4, 5, 6, 7,6,7,9,10,9,12,11],
+					color: "#a6a6a6"
+				},
+				{
+					name: '计划金额',
+					type: 'bar',
+					barWidth: '20%',
+					barMaxWidth: 200,
+					data: [1, 1, 1, 1, 1, 1, 1, 1,1, 1, 1, 1,1, 1],
+					color:"#ffc000"
+				},
+				{
+					name: '累计金额',
+					type: 'bar',
+					barWidth: '20%',
+
+					barMaxWidth: 200,
+					data: [2,3,4,5,6,7,8,9,10,11,12,13,14,15],
+					color:"#ed7d31"
+
+				},
+				
 			]
 		},
-		option2 :{
-			title: {
-			  text: "text",
-			},
-			tooltip: {
-			  trigger: 'axis', // 显示横坐标值
-			},
-			legend: {
-				data:['指标值']
-			},
-			xAxis: {
-			  type: 'time',
-			  splitLine: {
-				show: true
-			  },
-			  interval:7*24*60*60*1000
-			},
-			yAxis: {
-				type: 'value'
-			},
-			series: [{
-				type: 'line',
-				data: dataArr
-			}]
-		 }
+		 amountInfoData:[
+			 {
+				title:"实际累计金额",
+				money:600,
+				earliest_accumulative_amount:17900,  //最早开始计划累计金额
+				latest_accumulative_amount:17900,	//最晚开始计划累计金额
+				earliest_deviation:0,  //最早偏差
+				latest_deviation:0	//最晚偏差
+			 },
+			 {
+				title:"人工实际累计金额(包含绩效奖金)",
+				money:600,
+				earliest_accumulative_amount:600,  //最早开始计划累计金额
+				latest_accumulative_amount:600,	//最晚开始计划累计金额
+				earliest_deviation:0,  //最早偏差
+				latest_deviation:0	//最晚偏差
+			 },
+			 {
+				title:"机械实际累计金额",
+				money:0,
+				earliest_accumulative_amount:0,  //最早开始计划累计金额
+				latest_accumulative_amount:0,	//最晚开始计划累计金额
+				earliest_deviation:0,  //最早偏差
+				latest_deviation:0	//最晚偏差
+			 },
+			 {
+				title:"材料实际累计金额",
+				money:0,
+				earliest_accumulative_amount:0,  //最早开始计划累计金额
+				latest_accumulative_amount:0,	//最晚开始计划累计金额
+				earliest_deviation:0,  //最早偏差
+				latest_deviation:0	//最晚偏差
+			 }
+		 ]
 	},
 	created() {
 		// let data=[]
@@ -156,7 +193,7 @@ new Vue({
 	},
 	mounted() {
 		var myChart = echarts.init(document.getElementById("costOverviewCharts"))
-		myChart.setOption(this.option2)
+		myChart.setOption(this.option)
 	},
 	methods: {
 		refreshData() {

@@ -164,6 +164,27 @@
       </div>
     </div>
   </div>
+  <div class="message-box" v-show="messageBoxShow">
+    <div class="message-content">
+      <div class="message-title">
+        <span>提醒</span>
+      </div>
+      <div class="message-info" v-if="messageData.length>0">
+        <div class="message-item" v-for="(item, index) in messageData" :key="index">
+          <span v-show="item.task_status==='1'">${item.task_name}任务已完成，请注意后续任务的安排！</span>
+          <span v-show="item.task_status==='2'">${item.task_name}任务已滞后，请注意该任务的管控！</span>
+        </div>
+      </div>
+      <div class="message-info-empty" v-else>
+        暂无数据!
+      </div>
+      <div class="message-btn-list">
+        <button class="btn-item" @click="messageConfirm">
+          确定
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 <script src="../js/lodash.js"></script>
     <script src="../js/vue.min.js"></script>

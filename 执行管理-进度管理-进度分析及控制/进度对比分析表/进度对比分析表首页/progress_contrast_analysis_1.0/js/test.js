@@ -81,7 +81,23 @@ new Vue({
         }
       ]
     },
-    tableWidth:'100%'
+    tableWidth:'100%',
+    messageBoxShow:true,
+    messageData:[
+      {
+        task_name:"p4挖土",
+        task_status:'1'  //1 已完成  2 已滞后
+      },
+      {
+        task_name:"p5挖土",
+        task_status:'2'  //1 已完成  2 已滞后
+      },
+      {
+        task_name:"p6挖土",
+        task_status:'2'  //1 已完成  2 已滞后
+      },
+      
+    ]
   },
   created() {
    
@@ -126,6 +142,9 @@ new Vue({
     },
     iconArrowClick4(data){
       data.open=!data.open
+    },
+    messageConfirm(){
+      this.messageBoxShow=false
     }
   }
 }).$mount("#progressCAApp")
