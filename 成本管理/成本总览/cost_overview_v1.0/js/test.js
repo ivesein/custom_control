@@ -74,11 +74,17 @@ new Vue({
 			// },
 			xAxis: {
 				type: "category",
-				boundaryGap: false,
+				boundaryGap: ['40%', '40%'],
 				step: "1",
-				// axisTick: {
-				// 	alignWithLabel: false
-				// },
+				axisTick: {
+					alignWithLabel: true,
+					show:true,
+					inside:true
+				},
+				axisLabel:{
+					rotate:45,
+					verticalAlign:"top"
+				},
 				data: [
 					"2020/03/01",
 					"2020/03/02",
