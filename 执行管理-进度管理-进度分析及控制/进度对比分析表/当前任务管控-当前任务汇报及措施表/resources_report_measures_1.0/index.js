@@ -39,14 +39,13 @@
     KDApi.loadFile("./css/element.css", model.schemaId, function() {
       KDApi.loadFile("./css/main.css", model.schemaId, function() {
         KDApi.loadFile("./js/vue.min.js", model.schemaId, function() {
-          KDApi.loadFile("./js/vue.js", model.schemaId, function() {
             KDApi.loadFile("./js/lodash.js", model.schemaId, function() {
               KDApi.loadFile(
                 "./js/element.js",
                 model.schemaId,
                 function() {
                   KDApi.templateFilePath(
-                    "./html/resouces_report_measures.html",
+                    "./html/resources_report_measures.html",
                     model.schemaId, {
                       path: KDApi.nameSpace(
                         model.schemaId
@@ -81,12 +80,11 @@
                           }
                         },
                       }
-                    }).$mount($("#resoucesRMApp", model.dom).get(0))
+                    }).$mount($("#resourcesRMApp", model.dom).get(0))
                   })
                 }
               )
             })
-          })
         })
       })
     })

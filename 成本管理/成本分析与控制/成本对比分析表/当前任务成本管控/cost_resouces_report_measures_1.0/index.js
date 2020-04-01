@@ -45,7 +45,7 @@
                 model.schemaId,
                 function() {
                   KDApi.templateFilePath(
-                    "./html/resouces_report_measures.html",
+                    "./html/cost_resources_report_measures.html",
                     model.schemaId, {
                       path: KDApi.nameSpace(
                         model.schemaId
