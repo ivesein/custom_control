@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="../css/element.css" />
+    <link rel="stylesheet" href="../css/main.css" />
+
+    <title>Document</title>
+  </head>
+
+<body>
+<div id="ctaskCostControlApp">
+  <div class="item-wrap">
+    <div class="title-info-box">
+      <div class="drop-btn">
+        <i class="el-icon-caret-bottom" @click="iconArrowClick1()" v-if="ifTableOneShow"></i>
+        <i class="el-icon-caret-right" @click="iconArrowClick1()" v-else></i>
+      </div>
+      <span class="title-text">任务计划资源列表</span>
+    </div>
+    <div class="table-content" v-show="ifTableOneShow">
+      <el-table ref="taskPlanResourcesTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="tableData1" style="width:100%;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true">
+        <el-table-column prop="plan_total_quantities" label="计划总工程量" width="200" ></el-table-column>
+        <el-table-column prop="plan_total_duration" label="计划总工期" width="200"></el-table-column>
+          <el-table-column  label="资源名称" >
+            <template slot-scope="scope">
+              <div class="check-man" v-for="(item,index) in scope.row.resource_info_data" :key="index">
+                ${item.resource_name}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="" label="资源型号" width="200">
+            <template slot-scope="scope">
+              <div class="check-man" v-for="(item,index) in scope.row.resource_info_data" :key="index">
+                ${item.resource_model}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="" label="资源计划总消耗量" width="200">
+            <template slot-scope="scope">
+              <div class="check-man" v-for="(item,index) in scope.row.resource_info_data" :key="index">
+                ${item.resource_plan_total_consumption}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="" label="消耗量单位" width="200">
+            <template slot-scope="scope">
+              <div class="check-man" v-for="(item,index) in scope.row.resource_info_data" :key="index">
+                ${item.resource_consumption_unit}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="" label="资源计划单价" width="200">
+            <template slot-scope="scope">
+              <div class="check-man" v-for="(item,index) in scope.row.resource_info_data" :key="index">
+                ${item.resource_plan_price}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="" label="单价单位" width="200">
+            <template slot-scope="scope">
+              <div class="check-man" v-for="(item,index) in scope.row.resource_info_data" :key="index">
+                ${item.resource_price_unit}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="" label="计划单位工程量资源消耗量" width="200">
+            <template slot-scope="scope">
+              <div class="check-man" v-for="(item,index) in scope.row.resource_info_data" :key="index">
+                ${item.plan_unit_consumption}
+              </div>
+            </template>
+          </el-table-column>
+        </el-table-column>
+      </el-table>
+    </div>
+  </div>
+  <div class="item-wrap">
+    <div class="title-info-box">
+      <div class="drop-btn">
+        <i class="el-icon-caret-bottom" @click="iconArrowClick2()" v-if="ifTableTwoShow"></i>
+        <i class="el-icon-caret-right" @click="iconArrowClick2()" v-else></i>
+      </div>
+      <span class="title-text">任务资源汇报详情及措施</span>
+    </div>
+    <div class="table-content" v-show="ifTableTwoShow">
+      <el-table ref="currentTaskTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="tableData2" style="width:100%;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true">
+        <el-table-column prop="report_date" label="本次汇报日期" width="100" ></el-table-column>
+        <el-table-column prop="report_completed_quantities" label="本次汇报完成工程量" width="100"></el-table-column>
+        <el-table-column prop="actual_cumulative_completed_quantities" label="实际累计完成工程量" width="100"></el-table-column>
+        <el-table-column prop="this_report_cq_duration" label="本次汇报完成工程量使用工期" width="120"></el-table-column>
+        <el-table-column prop="actual_cumulative_duration" label="实际累计使用工期" width="100"></el-table-column>
+        <el-table-column label="资源汇报情况" align="center">
+          <el-table-column  label="资源名称" width="80">
+            <template slot-scope="scope">
+              <div class="check-man" v-for="(item,index) in scope.row.resource_info_data" :key="index">
+                ${item.resource_name}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="" label="资源型号" width="100">
+            <template slot-scope="scope">
+              <div class="check-man" v-for="(item,index) in scope.row.resource_info_data" :key="index">
+                ${item.resource_model}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="" label="本次消耗量" width="100">
+            <template slot-scope="scope">
+              <div class="check-man" v-for="(item,index) in scope.row.resource_info_data" :key="index">
+                ${item.resource_consumption}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="" label="本次实际单位工程量资源耗用量" width="120">
+            <template slot-scope="scope">
+              <div class="check-man" v-for="(item,index) in scope.row.resource_info_data" :key="index">
+                ${item.resource_actual_unit_consumption}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="" label="实际累计耗用量" width="80">
+            <template slot-scope="scope">
+              <div class="check-man" v-for="(item,index) in scope.row.resource_info_data" :key="index">
+                ${item.resource_actual_cumulative_consumption}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="" label="实际单价" width="80">
+            <template slot-scope="scope">
+              <div class="check-man" v-for="(item,index) in scope.row.resource_info_data" :key="index">
+                ${item.resource_price}
+              </div>
+            </template>
+          </el-table-column>
+        </el-table-column>
+        <el-table-column prop="predicted_value" label="单价影响后单位工程资源耗用量预测值" width="130"></el-table-column>
+        <el-table-column prop="suggestions_comparative_treatment" label="根据基准值与实际单位工程量资源消耗量对比处理建议" width="180"></el-table-column>
+        <el-table-column prop="rectification_measures" label="纠偏措施" ></el-table-column>
+      </el-table>
+    </div>
+  </div>
+</div>
+<script src="../js/lodash.js"></script>
+    <script src="../js/vue.min.js"></script>
+    <script src="../js/element.js"></script>
+    <script src="../js/test.js"></script>
+  </body>
+</html>
