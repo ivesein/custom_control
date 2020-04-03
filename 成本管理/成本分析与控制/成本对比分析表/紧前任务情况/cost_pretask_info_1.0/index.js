@@ -8,7 +8,7 @@
       // 内部函数不推荐修改
       _setModel: function(model) {
         this.model = model // 内部变量挂载
-        this.model.ctaskCostControlVue = null
+        this.model.costPretaskInfoVue = null
       },
       init: function(props) {
         console.log("init---", this.model, props)
@@ -17,17 +17,17 @@
       update: function(props) {
         console.log("-----update", this.model, props)
         if (props.data && props.data.isInit) {
-          this.model.ctaskCostControlVue = null
+          this.model.costPretaskInfoVue = null
           setHtml(this.model, props)
         }
-        console.log(this.model.ctaskCostControlVue)
-        if (this.model.ctaskCostControlVue) {
-          this.model.ctaskCostControlVue.handleUpdata(this.model, props)
+        console.log(this.model.costPretaskInfoVue)
+        if (this.model.costPretaskInfoVue) {
+          this.model.costPretaskInfoVue.handleUpdata(this.model, props)
         }
       },
       destoryed: function() {
         console.log("-----destoryed", this.model)
-        this.model.ctaskCostControlVue = null
+        this.model.costPretaskInfoVue = null
       }
     }
     /**
@@ -45,7 +45,7 @@
                 model.schemaId,
                 function() {
                   KDApi.templateFilePath(
-                    "./html/cost_resources_report_measures.html",
+                    "./html/cost_pretask_info.html",
                     model.schemaId, {
                       path: KDApi.nameSpace(
                         model.schemaId
@@ -55,7 +55,7 @@
                     model.dom.innerHTML = ""
                     model.dom.innerHTML = result
 
-                    model.ctaskCostControlVue = new Vue({
+                    model.costPretaskInfoVue = new Vue({
                       delimiters: ["${", "}"],
                       data: {
 
@@ -80,7 +80,7 @@
                           }
                         },
                       }
-                    }).$mount($("#ctaskCostControlApp", model.dom).get(0))
+                    }).$mount($("#costPretaskInfoApp", model.dom).get(0))
                   })
                 }
               )
@@ -91,5 +91,5 @@
   }
 
   // 注册自定义控件
-  KDApi.register("ctask_cost_control_v1.0", MyComponent)
+  KDApi.register("cost_ca_v1.0", MyComponent)
 })(window.KDApi, jQuery)

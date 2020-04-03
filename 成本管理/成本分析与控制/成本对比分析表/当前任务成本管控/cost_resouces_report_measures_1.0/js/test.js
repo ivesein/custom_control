@@ -1,7 +1,36 @@
 new Vue({
   delimiters: ["${", "}"],
   data: {
-    tableData:[
+    ifTableOneShow:true,
+    ifTableTwoShow:true,
+    tableData1:[
+      {
+        plan_total_quantities:"5km",   //计划总工程量
+        plan_total_duration:"5",   //计划总工期
+        resource_info_data:[
+          {
+            resource_name:"XXX设计员",   //资源名称
+            resource_model:"-",  //资源型号
+            resource_plan_total_consumption:"10",   //资源计划总消耗量
+            resource_consumption_unit:"工日",   //消耗量单位
+            resource_plan_price:"300",   //资源计划单价
+            resource_price_unit:"元/工日",   //单价单位
+            plan_unit_consumption:"2"  //计划单位工程量资源消耗量
+          },
+          {
+            resource_name:"XXX材料",   //资源名称
+            resource_model:"#10",  //资源型号
+            resource_plan_total_consumption:"30",   //资源计划总消耗量
+            resource_consumption_unit:"吨",   //消耗量单位
+            resource_plan_price:"500",   //资源计划单价
+            resource_price_unit:"元/吨",   //单价单位
+            plan_unit_consumption:"6"  //计划单位工程量资源消耗量
+          }
+        ]
+      }
+
+    ],
+    tableData2:[
       {
         report_date:"2020/10/01", //上报日期
         report_completed_quantities:"20", //本次汇报完成工程量
@@ -64,7 +93,12 @@ new Vue({
         // console.log(column)
         return "padding: 0px!important;"
       }
-
+    },
+    iconArrowClick1(){
+      this.ifTableOneShow=!this.ifTableOneShow
+    },
+    iconArrowClick2(){
+      this.ifTableTwoShow=!this.ifTableTwoShow
     },
   }
-}).$mount("#costResoucesRMApp")
+}).$mount("#ctaskCostControlApp")
