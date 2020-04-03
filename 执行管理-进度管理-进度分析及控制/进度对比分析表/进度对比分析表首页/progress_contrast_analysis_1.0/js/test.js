@@ -103,12 +103,12 @@ new Vue({
    
   },
   mounted() {
+    let self = this;
     this.$nextTick(function() {
       // this.tableHeight = window.innerHeight - this.$refs.qualityPlanTable.$el.offsetTop - 10
-      this.tableWidth=this.$refs.projectTable.$el.clientWidth+'px'
-      console.log(this.tableWidth)
+      self.tableWidth=self.$refs.projectTable.$el.clientWidth+'px'
+      console.log(self.tableWidth)
       // 监听窗口大小变化
-      let self = this;
       window.onresize = function() {
         self.tableWidth=self.$refs.projectTable.$el.clientWidth+'px'
       }
