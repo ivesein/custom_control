@@ -1,0 +1,160 @@
+$primary:#3170f6; //主题色
+$primaryTitle:#263659; //主标题，标题颜色
+$subTitle:#b4b4b4;//副标题，补充提示性说名文字颜色
+$footerColor:#6c7489;//footer字体颜色,用处少
+$footerBgColor:#20293e;//footer背景色，用处极少
+$white:#fff;
+$introBgColor:#F3F7FE;
+
+// 产品介绍类文字
+@mixin introTitle(){
+  color: $primaryTitle;
+  font-size: 24px;
+  font-family: SourceHanSansCN-Bold;
+  font-weight: bold;
+  padding:30px 0;
+}
+
+// 背景图片地址和大小
+@mixin bis($url) {
+  background-image: url($url);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+@mixin borderRadius($radius) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  -ms-border-radius: $radius;
+  -o-border-radius: $radius;
+  border-radius: $radius;
+}
+
+// 标签点击而不被选中
+@mixin selectNo(){
+  -webkit-user-select:none;/*谷歌 /Chrome*/
+  -moz-user-select:none; /*火狐/Firefox*/
+  -ms-user-select:none;    /*IE 10+*/
+  user-select:none;
+}
+
+// primarybtn
+@mixin primarybtn1(){
+  cursor: pointer;
+  color:$white;
+  border:1px solid $primary;
+  background-color: $primary;
+}
+
+@mixin primarybtn2(){
+  cursor: pointer;
+  color:$primary;
+  border:1px solid $primary;
+  background-color: $white;
+}
+
+@mixin primarybtn3($color,$borderColor,$bgColor){
+  cursor: pointer;
+  color:$color;
+  border:1px solid $borderColor;
+  background-color: $bgColor;
+  font-size: 12px;
+  padding: 7px 13px;
+  @include selectNo();
+}
+
+// 底部边框
+@mixin borderBottom{
+  border-bottom: 1px solid $lightgray;
+}
+
+//定位全屏
+@mixin allcover {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+//定位上下左右居中
+@mixin center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+//定位上下居中
+@mixin ct {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+//定位到右边 上下居中
+@mixin centerRight($right) {
+  position: absolute;
+  top: 50%;
+  right: $right;
+  transform: translateY(-50%);
+}
+
+//定位到左边 上下居中
+@mixin centerLeft($left) {
+  position: absolute;
+  top: 50%;
+  left: $left;
+  transform: translateY(-50%);
+}
+
+//定位左右居中
+@mixin cl {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+//宽高
+@mixin wh($width, $height) {
+  width: $width;
+  height: $height;
+}
+
+//字体大小、行高、字体
+@mixin font($size, $line-height,$family: 'Microsoft YaHei') {
+  font: #{$size}/#{$line-height} $family;
+}
+
+//字体大小，颜色
+@mixin sc($size, $color) {
+  font-size: $size;
+  color: $color;
+}
+
+//flex 布局和 子元素 对齐方式
+@mixin fj($type: space-between) {
+  display: flex;
+  justify-content: $type;
+}
+
+//flex 布局 各种居中
+@mixin flexJA($type1,$type2){
+  display: flex;
+  justify-content: $type1;
+  align-items: $type2
+}
+
+//placehoder
+@mixin placeholder($white) {
+  ::-webkit-input-placeholder { /* WebKit browsers */
+    color: $white;
+  }
+  :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: $white;
+  }
+  ::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: $white;
+  }
+  :-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: $white;
+  }
+}
