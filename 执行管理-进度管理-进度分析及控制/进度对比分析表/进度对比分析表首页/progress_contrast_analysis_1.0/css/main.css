@@ -8,7 +8,7 @@ html,body{
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
+  align-items: stretch;
   width: 100%;
   height: 100%;
   background: #f2f5fe;
@@ -125,25 +125,65 @@ html,body{
 }
 
 .select-box{
-  width: 100%;
-  height: 200px;
+  /* box-sizing: border-box; */
+  /* width: 100%; */
+  margin: 10px;
+  margin-bottom: 0px;
+  /* height: 200px; */
 }
 
 .select-options{
+  /* width: 100%; */
   height: 100%;
   border: 1px solid #eee;
-  border-radius: 5px;
-  margin: 10px;
+  /* border-radius: 5px; */
+
+  /* margin: 10px; */
   background-color: #fff;
 }
+
+.sel-item{
+  /* width: 100%; */
+  height: 40px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 20px;
+}
+
+.sel-item-title{
+  line-height: 40px;
+  font-size: 16px;
+}
+
+.el-range-editor--mini.el-input__inner{
+  width: 240px;
+  margin-left: 10px;
+}
+
+/* .el-radio-group{
+  height: 40px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.el-radio{
+  height: 40px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+} */
 
 .table-content{
   display: flex;
   justify-content: flex-start;
   align-items: stretch;
   flex-grow: 1;
-  width: 100%;
-  height: 100%;
+  margin: 10px;
+  /* margin-top: 0px; */
+  /* width: 100%; */
+  /* height: 100%; */
 }
 
 .table-box{

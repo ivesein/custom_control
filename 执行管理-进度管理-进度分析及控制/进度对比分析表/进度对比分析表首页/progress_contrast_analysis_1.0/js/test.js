@@ -97,7 +97,11 @@ new Vue({
         task_status:'2'  //1 已完成  2 已滞后
       },
       
-    ]
+    ],
+    displayOption:1,  //显示选项
+    timeRange:1,  // 时间范围
+    taskStatus:1,  //任务状态
+    timeRangeValue:"", //日期范围 值
   },
   created() {
    
@@ -119,7 +123,7 @@ new Vue({
     goExit(){},
     goBeforeTaskDetail(){},
     goCurrentTaskControl(){},
-    goTaskRTeportDetail(){},
+    goTaskReportDetail(){},
     goProgress(){},
     showSelectBox(){
       this.ifSelectBoxShow=!this.ifSelectBoxShow
@@ -145,6 +149,9 @@ new Vue({
     },
     messageConfirm(){
       this.messageBoxShow=false
+    },
+    timeRangeChange(value){
+      console.log(value)
     }
   }
 }).$mount("#progressCAApp")
