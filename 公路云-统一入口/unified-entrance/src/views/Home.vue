@@ -11,6 +11,14 @@
       </div>
       <div class="content">
         <div class="content-left">
+          <!-- <el-carousel height="100">
+            <el-carousel-item v-for="(item,index) in carouselData" :key="index">
+              <div class="carousel-bg" :style="{backgroundImage: 'url(' + item.bgUrl + ')', backgroundSize:'cover'}">
+                <span>{{item.title}}</span>
+                <span>{{item.subTitle}}</span>
+              </div>
+            </el-carousel-item>
+          </el-carousel> -->
           <span>公路云</span>
           <span>智慧交通工程管理的专业平台</span>
         </div>
@@ -23,7 +31,7 @@
                <span class="text-info">工程全生命周期管理系统</span>
              </div>
              <div class="btn-item" v-for="(item,index) in btnItems" :key="index" :style="{'left':item.left,'top':item.top,'background':item.bgColor}">
-               {{item.title}}
+               <p>{{item.title}}</p>
              </div>
           </div>
         </div>
@@ -38,6 +46,24 @@ export default {
           phoneSrc:require('assets/phone.png'),
           logo:require('assets/logo.png'),
           earthImg:require('assets/earth.jpg'),
+          rgb:["#444693","#2a5caa","#003a6c","#426ab3","#46485f","#2b4490","#009ad6","#2585a6","#005344"],
+          // carouselData:[
+          //   {
+          //     bgUrl:require('assets/bg1.jpg'),
+          //     title:"成为引领智慧交通工程管理的专业平台",
+          //     subTitle:"让交通工程更智慧更高效"
+          //   },
+          //   {
+          //     bgUrl:require('assets/bg2.jpg'),
+          //     title:"为客户提供卓越的技术服务",
+          //     subTitle:"让建筑更加关爱生命"
+          //   },
+          //   {
+          //     bgUrl:require('assets/bg3.jpg'),
+          //     title:"聚行业精英 | 幸福的铸造精品建筑 ",
+          //     subTitle:"携项目业主 | 向社会交出满意答卷"
+          //   }
+          // ],
           btnItems:[
             {
               title:"数据使用方",
@@ -116,7 +142,8 @@ export default {
         this.btnItems.forEach((v,k)=>{
           v.top=temp[k][1]+'px'
           v.left=temp[k][0]+'px'
-          v.bgColor=this.getRandomColor()
+          // v.bgColor=this.getRandomColor()
+          v.bgColor=this.rgb[k]
         })
         console.log(temp)
       },
@@ -184,6 +211,15 @@ export default {
         justify-content: center;
         align-items: center;
         flex: 1;
+
+        .carousel-bg{
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+        }
 
         span{
           font-size: 26px;
@@ -258,11 +294,30 @@ export default {
             color: #fff;
             font-size: 16px;
             background: #ccc;
-            box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+            box-shadow: 6px 6px 12px 0px rgba(0, 0, 0, 0.6);
+            cursor: pointer;
+            
+            p{
+              width: 40%;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
           }
         }
       }
     }
   }
   
+</style>
+<style>
+  .el-carousel{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .el-carousel__container {
+    height: 100% !important;
+  }
 </style>
