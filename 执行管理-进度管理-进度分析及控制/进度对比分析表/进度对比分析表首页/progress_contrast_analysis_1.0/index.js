@@ -16,13 +16,10 @@
       },
       update: function(props) {
         console.log("-----update", this.model, props)
-        if (props.data && props.data.isInit) {
-          this.model.progressCAVue = null
-          setHtml(this.model, props)
-        }
-        console.log(this.model.progressCAVue)
         if (this.model.progressCAVue) {
           this.model.progressCAVue.handleUpdata(this.model, props)
+        }else{
+          setHtml(this.model, props)
         }
       },
       destoryed: function() {
@@ -55,73 +52,53 @@
                     model.dom.innerHTML = ""
                     model.dom.innerHTML = result
 
-                    model.processCAVue = new Vue({
+                    model.progressCAVue = new Vue({
                       delimiters: ["${", "}"],
                       data: {
                         ifSelectBoxShow:false,
                         proTableData:[
-                          {
-                            wbs:"G",
-                            task_name:"工作5",
-                            owner:"张三",
-                            is_certical_task:true,
-                            task_status:"1",  //1 未开始  2 进行中  3 已完成
-                            handle_status:"0"  // 0 待处理  1 已处理
-                          },
-                          {
-                            wbs:"H",
-                            task_name:"工作6",
-                            owner:"李四",
-                            is_certical_task:true,
-                            task_status:"2",
-                            handle_status:"0"
-                          },
-                          {
-                            wbs:"L",
-                            task_name:"工作7",
-                            owner:"王五",
-                            is_certical_task:false,
-                            task_status:"3",
-                            handle_status:"1"   
-                          },
-                          {
-                            wbs:"I",
-                            task_name:"工作8",
-                            owner:"马六",
-                            is_certical_task:true,
-                            task_status:"3",
-                            handle_status:"1"   
-                          }
+                          // {
+                          //   wbs:"G",
+                          //   task_name:"工作5",
+                          //   owner:"张三",
+                          //   is_certical_task:true,
+                          //   task_status:"1",  //1 未开始  2 进行中  3 已完成
+                          //   handle_status:"0"  // 0 待处理  1 已处理
+                          // },
+                          // {
+                          //   wbs:"H",
+                          //   task_name:"工作6",
+                          //   owner:"李四",
+                          //   is_certical_task:true,
+                          //   task_status:"2",
+                          //   handle_status:"0"
+                          // },
+                          // {
+                          //   wbs:"L",
+                          //   task_name:"工作7",
+                          //   owner:"王五",
+                          //   is_certical_task:false,
+                          //   task_status:"3",
+                          //   handle_status:"1"   
+                          // },
+                          // {
+                          //   wbs:"I",
+                          //   task_name:"工作8",
+                          //   owner:"马六",
+                          //   is_certical_task:true,
+                          //   task_status:"3",
+                          //   handle_status:"1"   
+                          // }
                         ],
                         beforeTaskInfo:{
                           open:true,
                           title:"紧前任务对当前任务影响情况",
-                          data:[
-                            {before_task_name:"工作4",handling_measures:"成本压缩100元"}
-                          ]
+                          data:[]
                         },
                         currentTaskInfo:{
                           title:"当前任务情况",
-                          task_status:"1",
                           open:true,
-                          data:[
-                            {
-                              plan_duration:"10", //计划工期
-                              plan_quantities:"150", //计划工程量
-                              duration_after_adjustment:"12", //调整后工期
-                              actual_duration:"15",  //实际工期
-                              actual_quantities:"170",  //实际工程量
-                              free_time:0,  //自由时差
-                              free_time_exceed:0, //超出自由时差
-                              free_time_analysis_conclusion:"自由时差分析结论", //自由时差分析结论 
-                              total_time:0, //总时差
-                              // plan_cost:250,
-                              // cost_after_adjustment:150,
-                              // actual_cost:100
-                              total_time_exceed:0, //超出总时差
-                              total_time_analysis_conclusion:"总时差分析结论", //总时差分析结论 
-                            }
-                          ]
+                          data:[]
                         },
                         earnedValueAnalysisSuggestions:{
                           title:"挣值分析及建议",
@@ -131,32 +108,27 @@
                         followTaskProcessing:{
                           title:"后续任务处理",
                           open:true,
-                          data:[
-                            {
-                              follow_task_name:"",
-                              handling_measures:"请输入处理措施"
-                            }
-                          ]
+                          data:[]
                         },
                         tableWidth:'100%',
                         messageBoxShow:true,
-                        messageData:[
-                          {
-                            task_name:"p4挖土",
-                            task_status:'1'  //1 已完成  2 已滞后
-                          },
-                          {
-                            task_name:"p5挖土",
-                            task_status:'2'  //1 已完成  2 已滞后
-                          },
-                          {
-                            task_name:"p6挖土",
-                            task_status:'2'  //1 已完成  2 已滞后
-                          },
-                          
-                        ]
+                        messageData:[],
+                        taskReportDetailShow:false,
+                        currentDate:"",
+                        filterCondition:{
+                          conditionOne:1,  //显示选项  1 全部  2 仅显示差异
+                          conditionTwo:1,  //时间范围  1 全部  2 范围  时间为timeRange值 ["2020-03-01","2020-03-15"]
+                          conditionThree:1, //任务状态 1 全部  2 未开始  3 进行中  4 已完成
+                          timeRange:[]  //时间范围 为2时 日期范围所选值 数组["2020-03-01","2020-03-15"]
+                        },
+                        ifFollowTaskShow:false,  //是否显示后续任务处理表
+                        taskReportDetailData:[],
+                        currentClickedTask:null
                       },
-                      created() {},
+                      created() {
+                        this.getCurrentDate()
+                        this.handleUpdata(model,props)
+                      },
                       mounted() {
                         let self = this;
                         this.$nextTick(function() {
@@ -170,26 +142,88 @@
                         })
                       },
                       methods: {
-                        handleUpdata(model, props) {
-                          if (props.data) {
-                          
+                        // 根据接口方法名 处理后台返回参数
+                        handleUpdata(model,props){
+                          if(props.data!==undefined){
+                            switch(props.data.method){
+                              case "init":
+                                this.messageData=props.data.data
+                                break;
+                              case "getTaskListData":
+                                this.proTableData=props.data.data
+                                break;
+                              case "getFilterData":
+                                this.proTableData=props.data.data
+                                break;
+                              case "getClickedTaskDetailData":
+                                this.beforeTaskInfo.data=props.data.data.beforeTaskInfo
+                                this.currentTaskInfo.data=props.data.data.currentTaskInfo
+                                break;
+                              case "pickFollowTasks":
+                                props.data.data.forEach(v=>{
+                                  v.handling_measures=""
+                                })
+                                this.followTaskProcessing.data=props.data.data.push({
+                                  follow_task_name:"",
+                                  handling_measures:"请输入处理措施"
+                                })
+                                break;
+                              case "getReportDetailData":
+                                this.taskReportDetailData=props.data.data
+                                break;
+                              default:
+                                this.$message.error("数据获取失败，请稍后重试..")
+                            }
                           }
+                        },
+                        // 重置右侧表格数据
+                        resetData(){
+                          this.beforeTaskInfo.data=[]
+                          this.currentTaskInfo.data=[]
+                          this.followTaskProcessing.data=[]
+                        },
+                        getCurrentDate(){
+                          let cDate=new Date()
+                          this.currentDate=cDate.getFullYear()+'年'+Number(cDate.getMonth()+1)+'月'+cDate.getDate()+'日'
                         },
                         refreshData(){},
                         goExit(){},
                         goBeforeTaskDetail(){},
                         goCurrentTaskControl(){},
-                        goTaskRTeportDetail(){},
-                        goProgress(){},
+                        //调接口 打开任务汇报详情表格弹出
+                        goTaskReportDetail(){
+                          if(this.currentClickedTask!==null){
+                            // TODO 发送当前任务id到后台获取任务汇报详情数据并展示
+                            model.invoke("getReportDetailData",this.currentClickedTask.id)
+                            this.taskReportDetailShow=true
+                          }else{
+                            this.$message.error("请先选择任务")
+                          }
+                        },
+                        //处理后续任务同步到进度维护功能 判断是否选择了后续任务且所有已选后续任务都输入了决策措施
+                        goProgress(){
+                          let tempData=[]
+                          if(this.followTaskProcessing.data.length>1){
+                            for(let i=0;i<=this.followTaskProcessing.data.length-1;i++){
+                              tempData.push(this.followTaskProcessing.data[i])
+                            }
+                            let flag=tempData.every(v=>{
+                              return v.handling_measures!==""
+                            })
+                            if(flag){
+                              model.invoke("getReportDetailData",this.followTaskProcessing.data)
+                            }else{
+                              this.$message.error("所有已选后续任务决策措施不能为空")
+                            }
+                          }
+                        },
                         showSelectBox(){
                           this.ifSelectBoxShow=!this.ifSelectBoxShow
                         },
                         cellStyle({ row, column, rowIndex, columnIndex }) {
                           if (columnIndex === 0) {
-                            // console.log(column)
                             return "padding: 0px!important;"
                           }
-
                         },
                         iconArrowClick1(data){
                           data.open=!data.open
@@ -204,7 +238,85 @@
                           data.open=!data.open
                         },
                         messageConfirm(){
+                          model.invoke("getTaskListData","")
                           this.messageBoxShow=false
+                        },
+                        // 三个筛选条件各自改变时 判断时间范围是否为2 且所选日期范围不为空 组合筛选条件发送到后台
+                        conditionOneChange(val){
+                          if(this.filterCondition.conditionTwo===2){
+                            if(this.filterCondition.timeRange.length===0){
+                              this.$message.error("请选择日期范围")
+                            }else{
+                              // TODO 发送filterCondition
+                              model.invoke("getFilterData",this.filterCondition)
+                            }
+                          }else{
+                            // TODO 发送filterCondition
+                            model.invoke("getFilterData",this.filterCondition)
+                          }
+                        },
+                        conditionTwoChange(val){
+                          console.log(val)
+                          if(val===2){
+                            this.$refs.timeRangePicker.focus()
+                          }else{
+                            // TODO 发送filterCondition
+                            model.invoke("getFilterData",this.filterCondition)
+                          }
+                        },
+                        conditionThreeChange(val){
+                          if(this.filterCondition.conditionTwo===2){
+                            if(this.filterCondition.timeRange.length===0){
+                              this.$message.error("请选择日期范围")
+                            }else{
+                              // TODO 发送filterCondition
+                              model.invoke("getFilterData",this.filterCondition)
+                            }
+                          }else{
+                            // TODO 发送filterCondition
+                            model.invoke("getFilterData",this.filterCondition)
+                          }
+                        },
+                        timeRangeChange(value){
+                          console.log(value)
+                          console.log(this.filterCondition)
+                        },
+                        timeRangeBlur(val){
+                          console.log(val)
+                          if(this.filterCondition.conditionTwo===2){
+                            if(val.value.length===0){
+                              this.$message.error("请选择日期范围")
+                            }else{
+                              // TODO 发送filterCondition
+                              model.invoke("getFilterData",this.filterCondition)
+                              console.log("发送filterCondition",this.filterCondition)
+                            }
+                          }
+                        },
+                        //获取当前点击的任务
+                        rowDblclick(row){
+                          if(row.task_status==="3"){
+                            this.ifFollowTaskShow=true
+                          }else{
+                            this.ifFollowTaskShow=false
+                          }
+                          this.resetData()
+                          this.currentClickedTask =row
+                          // TODO 发送当前点击的任务id到后台 获取相关数据
+                          model.invoke(
+                            "getClickedTaskDetailData", row.id
+                          )
+                        },
+                        goSelectFollowTask(){
+                          console.log("打开选择后续任务弹窗")
+                          model.invoke("pickFollowTasks",this.currentClickedTask.id)
+                        },
+                        closeTaskReportDetail(){
+                          this.taskReportDetailShow=false
+                        },
+                        goTaskReportListDetail(){
+                          console.log("跳转到任务列表详情")
+                          model.invoke("goTaskReportDetailListPage",this.currentClickedTask.id)
                         }
                       }
                     }).$mount($("#progressCAVue", model.dom).get(0))

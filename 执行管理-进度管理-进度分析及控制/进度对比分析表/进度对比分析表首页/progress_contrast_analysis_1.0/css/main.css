@@ -129,7 +129,7 @@ html,body{
   background: #779bf5;
 }
 
-.task-report-detail-box{
+#progressCAApp .task-report-detail-box{
   width: 100%;
   height: 100%;
   position: absolute;
@@ -140,7 +140,7 @@ html,body{
   background: rgba(0, 0, 0, .4);
 }
 
-.report-detail-content{
+#progressCAApp .report-detail-content{
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -150,7 +150,7 @@ html,body{
   background: #fff;
 }
 
-.detail-title{
+#progressCAApp .detail-title{
   height: 50px;
   display: flex;
   justify-content: space-between;
@@ -162,23 +162,23 @@ html,body{
   color: #333;
 }
 
-.el-icon-close{
+#progressCAApp .el-icon-close{
   font-size: 22px;
   cursor: pointer;
 }
 
-.detail-table{
+#progressCAApp .detail-table{
   display: flex;
   flex-direction: column;
   flex: 1;
   padding: 10px;
 }
 
-.detail-table span{
+#progressCAApp .detail-table span{
   font-size: 18px;
 }
 
-.select-box{
+#progressCAApp .select-box{
   /* box-sizing: border-box; */
   /* width: 100%; */
   margin: 10px;
@@ -186,7 +186,7 @@ html,body{
   /* height: 200px; */
 }
 
-.select-options{
+#progressCAApp .select-options{
   /* width: 100%; */
   height: 100%;
   border: 1px solid #eee;
@@ -196,7 +196,7 @@ html,body{
   background-color: #fff;
 }
 
-.sel-item{
+#progressCAApp .sel-item{
   /* width: 100%; */
   height: 40px;
   display: flex;
@@ -205,7 +205,7 @@ html,body{
   padding-left: 20px;
 }
 
-.sel-item-title{
+#progressCAApp .sel-item-title{
   line-height: 40px;
   font-size: 16px;
 }
@@ -229,7 +229,7 @@ html,body{
   align-items: center;
 } */
 
-.table-content{
+#progressCAApp .table-content{
   display: flex;
   justify-content: flex-start;
   align-items: stretch;
@@ -240,7 +240,7 @@ html,body{
   /* height: 100%; */
 }
 
-.table-box{
+#progressCAApp .table-box{
   border: 1px solid #eee;
   flex: 1;
   background-color: #fff;
@@ -249,18 +249,18 @@ html,body{
   /* height: 100%; */
 }
 
-.table-left{
+#progressCAApp .table-left{
   margin-right: 10px;
 }
 
-.table-right{
+#progressCAApp .table-right{
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
   flex-grow: 1;
 }
 
-.detail-info-box{
+#progressCAApp .detail-info-box{
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
@@ -268,22 +268,22 @@ html,body{
   margin-bottom: 20px;
 }
 
-.title-info-box{
+#progressCAApp .title-info-box{
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
 
-.drop-btn{
+#progressCAApp .drop-btn{
   font-size: 24px;
   color: #5582f4;
 }
 
-.title-text{
+#progressCAApp .title-text{
   font-size: 18px;
   color:  #5582f4;
 }
-.search-icon{
+#progressCAApp .search-icon{
   display: flex;
   width: 100%;
   justify-content: space-between;
@@ -291,11 +291,11 @@ html,body{
   font-size: 20px;
   cursor: pointer;
 }
-#progressCAApp .el-table__body tr.current-row > td {
+.el-table__body tr.current-row > td {
   background-color: #eff3fd   !important;
   /* color: #f19944; */ /* 设置文字颜色，可以选择不设置 */
 }
-#progressCAApp .el-table--enable-row-hover .el-table__body tr:hover > td {
+.el-table--enable-row-hover .el-table__body tr:hover > td {
   background-color: #eff3fd  ;
   /* color: #f19944; */ /* 设置文字颜色，可以选择不设置 */
 }
