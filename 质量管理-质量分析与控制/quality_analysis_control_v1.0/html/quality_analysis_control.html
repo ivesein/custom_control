@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="../css/element.css" />
+    <link rel="stylesheet" href="../css/main.css" />
+
+    <title>Document</title>
+  </head>
+
+<body>
+<div id="qualityACApp">
+  <!-- <div class="btn-lsit">
+    <div class="btn-box-left">
+      <button class="btn-itme" @click="refreshData">刷新</button>
+      <button class="btn-itme" @click="goExit">
+        退出
+      </button>
+      <button class="btn-itme" @click="goBeforeTaskDetail">
+        紧前任务情况
+      </button>
+      <button class="btn-itme" @click="goCurrentTaskControl">
+        当前任务管控
+      </button>
+      <button class="btn-itme" @click="goTaskRTeportDetail">
+        任务汇报详情
+      </button>
+      <button class="btn-itme" @click="goProgress">
+        进度维护
+      </button>
+      <button class="btn-itme" @click="gotaskReportDetail">
+        导出excel文件
+      </button>
+    </div>
+    <div class="btn-box-right">
+      <button class="btn-itme" @click="showSelectBox">筛选</button>
+    </div>
+  </div>
+  <div class="select-box" v-show="ifSelectBoxShow">
+    <div class="select-options">
+      
+    </div>
+  </div> -->
+  <div class="table-content">
+    <div class="table-box table-left">
+      <el-table ref="projectTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="proTableData" style="margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true"  default-expand-all
+      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+      @row-dblclick="currentTaskClick"
+      >
+      <el-table-column prop="wbs" label="任务代码" width="100" ></el-table-column>
+      <el-table-column prop="task_name" label="WBS任务名称"></el-table-column>
+      <el-table-column prop="is_certical_task" label="是否关键任务" width="180" >
+        <template slot-scope="scope">
+          ${scope.row.is_certical_task?"是":"否"}
+        </template>
+      </el-table-column>
+      <el-table-column label="任务状态" width="180" >
+        <template slot-scope="scope">
+          <div v-show="scope.row.task_schedule_status==='000'">未开始</div>
+          <div v-show="scope.row.task_schedule_status==='100'">进行中</div>
+          <div v-show="scope.row.task_schedule_status==='200'">已完成</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="处理状态" width="180" >
+        <template slot-scope="scope">
+          ${scope.row.quality_handle_status?"待处理":"已处理"}
+        </template>
+      </el-table-column>
+    </el-table>
+    </div>
+    <div class="table-box table-right">
+      <el-table 
+        ref="TableRight" 
+        :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" 
+        :data="currentTask" 
+        style="margin:10px 0 10px 0;" 
+        :style="{width:tableWidth}" 
+        :cell-style="cellStyle" 
+        row-key="task_id" 
+        :border="true"
+        @row-click="currentTaskClick"
+      >
+        <el-table-column prop="owner" label="承担人" width="100" ></el-table-column>
+        <el-table-column prop="plan_endtime" label="计划完成并提交时间" width="160"></el-table-column>
+        <el-table-column prop="end_time" label="实际完成并提交时间" width="160" ></el-table-column>
+        <el-table-column prop="handling_measures" label="偏差值"  width="80" ></el-table-column>
+        <el-table-column prop="quality_reason" label="偏差原因" width="200" ></el-table-column>
+        <el-table-column prop="quality_action" label="纠偏措施"></el-table-column>
+      </el-table>
+      <!-- 紧前任务对当前任务影响情况 -->
+      <!-- <div class="detail-info-box">
+        <div class="title-info-box">
+          <div class="drop-btn">
+            <i class="el-icon-caret-bottom" @click="iconArrowClick1(beforeTaskInfo)" v-if="beforeTaskInfo.open"></i>
+            <i class="el-icon-caret-right" @click="iconArrowClick1(beforeTaskInfo)" v-else></i>
+          </div>
+          <span class="title-text">${beforeTaskInfo.title}</span>
+        </div>
+        <div class="table-info-box" v-if="beforeTaskInfo.open">
+          <el-table ref="TableRight" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="beforeTaskInfo.data" style="margin:10px 0 10px 0;" :style="{width:tableWidth}" :cell-style="cellStyle" row-key="task_id" :border="true">
+            <el-table-column prop="before_task_name" label="紧前任务名称" width="200" ></el-table-column>
+            <el-table-column prop="handling_measures" label="当前任务处理措施"></el-table-column>
+          </el-table>
+        </div>
+      </div> -->
+      <!-- 当前任务情况 -->
+      <!-- <div class="detail-info-box">
+        <div class="title-info-box">
+          <div class="drop-btn">
+            <i class="el-icon-caret-bottom" @click="iconArrowClick2(currentTaskInfo)" v-if="currentTaskInfo.open"></i>
+            <i class="el-icon-caret-right" @click="iconArrowClick2(currentTaskInfo)" v-else></i>
+          </div>
+          <span class="title-text">${currentTaskInfo.title}</span>
+        </div>
+        <div class="table-info-box" v-if="currentTaskInfo.open">
+          <el-table ref="TableRight" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="currentTaskInfo.data" style="margin:10px 0 10px 0;" :style="{width:tableWidth}" :cell-style="cellStyle" row-key="task_id" :border="true">
+            <el-table-column prop="plan_duration" label="计划工期(工日)" width="100"></el-table-column>
+            <el-table-column prop="plan_quantities" label="计划工程量" width="100"></el-table-column>
+            <el-table-column prop="plan_cost" label="计划总费用" width="100"></el-table-column>
+            <el-table-column prop="Adjusted_cost" label="调整后总费用" width="100"></el-table-column>
+            <el-table-column prop="actual_duration" label="实际工期(工日)" width="100"></el-table-column>
+            <el-table-column prop="actual_quantities" label="实际工程量" width="100"></el-table-column>
+            <el-table-column prop="actual_cost" label="实际总费用" width="100"></el-table-column>
+            <el-table-column prop="deviation_reason" label="偏差原因" ></el-table-column>
+          </el-table>
+        </div>
+      </div> -->
+      <!-- 当前任务挣值数据分析 -->
+      <!-- <div class="detail-info-box" v-show="currentTask&&currentTask.task_status==='3'">
+        <div class="title-info-box">
+          <div class="drop-btn">
+            <i class="el-icon-caret-bottom" @click="iconArrowClick3(earnedValueAnalysisSuggestions)" v-if="earnedValueAnalysisSuggestions.open"></i>
+            <i class="el-icon-caret-right" @click="iconArrowClick3(earnedValueAnalysisSuggestions)" v-else></i>
+          </div>
+          <span class="title-text">${earnedValueAnalysisSuggestions.title}</span>
+        </div>
+        <div class="table-info-box" v-if="earnedValueAnalysisSuggestions.open">
+          <el-table ref="currentTaskInfoTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="earnedValueAnalysisSuggestions.data" style="margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true">
+            <el-table-column prop="bcws" label="BCWS(已完成工作预算)" ></el-table-column>
+            <el-table-column prop="bcwp" label="BCWP(计划工作预算)"></el-table-column>
+            <el-table-column prop="acwp" label="ACWP(已完成实际费用)" ></el-table-column>
+            <el-table-column prop="sv" label="SV(进度偏差)"></el-table-column>
+            <el-table-column prop="spi" label="SPI(进度偏差)"></el-table-column>
+            <el-table-column prop="cv" label="CV(成本偏差)"></el-table-column>
+            <el-table-column prop="cpi" label="CPI(成本绩效指数)" ></el-table-column>
+            <el-table-column prop="deviation_type" label="偏差类型"></el-table-column>
+            <el-table-column prop="deviation_reason" label="偏差原因"></el-table-column>
+          </el-table>
+        </div>
+      </div> -->
+      <!-- 后续任务处理 -->
+      <!-- <div class="detail-info-box" v-show="currentTask&&currentTask.task_status==='3'">
+        <div class="title-info-box">
+          <div class="drop-btn">
+            <i class="el-icon-caret-bottom" @click="iconArrowClick4(followTaskProcessing)" v-if="followTaskProcessing.open"></i>
+            <i class="el-icon-caret-right" @click="iconArrowClick4(followTaskProcessing)" v-else></i>
+          </div>
+          <span class="title-text">${followTaskProcessing.title}</span>
+        </div>
+        <div class="table-info-box" v-if="followTaskProcessing.open">
+          <el-table ref="TableRight" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="followTaskProcessing.data" style="margin:10px 0 10px 0;" :style="{width:tableWidth}" :cell-style="cellStyle" row-key="task_id" :border="true">
+            <el-table-column prop="follow_task_name" label="后续任务名称" >
+              <template slot-scope="scope">
+                <div class="search-icon">
+                  <span style="font-size: 14px;">请选择后续任务</span>
+                  <i class="el-icon-search"></i>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="handling_measures" label="后续任务处理措施"></el-table-column>
+          </el-table>
+        </div>
+      </div> -->
+    </div>
+  </div>
+  <div class="message-box" v-show="messageBoxShow">
+    <div class="message-content">
+      <div class="message-title">
+        <span>提醒</span>
+      </div>
+      <div class="message-info" v-if="messageData.length>0">
+        <div class="message-item" v-for="(item, index) in messageData" :key="index">
+          <span v-show="item.task_status==='1'">${item.task_name}任务已完成，请注意后续任务的安排！</span>
+          <span v-show="item.task_status==='2'">${item.task_name}任务已滞后，请注意该任务的管控！</span>
+        </div>
+      </div>
+      <div class="message-info-empty" v-else>
+        暂无数据!
+      </div>
+      <div class="message-btn-list">
+        <button class="btn-item" @click="messageConfirm">
+          确定
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../js/lodash.js"></script>
+    <script src="../js/vue.min.js"></script>
+    <script src="../js/element.js"></script>
+    <script src="../js/test.js"></script>
+  </body>
+</html>
