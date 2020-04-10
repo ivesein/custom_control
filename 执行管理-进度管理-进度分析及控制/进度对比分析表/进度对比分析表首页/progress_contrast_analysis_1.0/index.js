@@ -123,7 +123,9 @@
                         },
                         ifFollowTaskShow:false,  //是否显示后续任务处理表
                         taskReportDetailData:[],
-                        currentClickedTask:null
+                        currentClickedTask:{
+                          index:0
+                        }
                       },
                       created() {
                         this.getCurrentDate()
@@ -163,10 +165,14 @@
                                 props.data.data.forEach(v=>{
                                   v.handling_measures=""
                                 })
-                                this.followTaskProcessing.data=props.data.data.push({
-                                  follow_task_name:"",
-                                  handling_measures:"请输入处理措施"
-                                })
+                                // this.followTaskProcessing.data=props.data.data.push({
+                                //   follow_task_name:"",
+                                //   handling_measures:"请输入处理措施"
+                                // })
+                                this.proTableData[this.currentClickedTask.index].follow_task=props.data.data.push({
+                                    follow_task_name:"",
+                                    handling_measures:"请输入处理措施"
+                                  })
                                 break;
                               case "getReportDetailData":
                                 this.taskReportDetailData=props.data.data
@@ -180,7 +186,7 @@
                         resetData(){
                           this.beforeTaskInfo.data=[]
                           this.currentTaskInfo.data=[]
-                          this.followTaskProcessing.data=[]
+                          // this.followTaskProcessing.data=[]
                         },
                         getCurrentDate(){
                           let cDate=new Date()
@@ -202,19 +208,49 @@
                         },
                         //处理后续任务同步到进度维护功能 判断是否选择了后续任务且所有已选后续任务都输入了决策措施
                         goProgress(){
-                          let tempData=[]
-                          if(this.followTaskProcessing.data.length>1){
-                            for(let i=0;i<=this.followTaskProcessing.data.length-1;i++){
-                              tempData.push(this.followTaskProcessing.data[i])
+                          // let tempData=[]
+                          // if(this.followTaskProcessing.data.length>1){
+                          //   for(let i=0;i<this.followTaskProcessing.data.length-1;i++){
+                          //     tempData.push(this.followTaskProcessing.data[i])
+                          //   }
+                          //   let flag=tempData.every(v=>{
+                          //     return v.handling_measures!==""
+                          //   })
+                          //   if(flag){
+                          //     model.invoke("getReportDetailData",this.followTaskProcessing.data)
+                          //   }else{
+                          //     this.$message.error("所有已选后续任务决策措施不能为空")
+                          //   }
+                          // }
+                          // 同步到进度维护差异化数据处理  
+                          // 标记选取了后续任务的任务，并判断这些后续任务的决策措施是否都已输入
+                          let finalData=[]
+                          let taskId=[]
+                          this.proTableData.forEach(v=>{
+                            if(v.task_status==='3'&& v.follow_task.length>1){
+                              let temp=[]
+                              for(let i=0;i<v.follow_task.length-1;i++){
+                                temp.push(v.follow_task[i])
+                              }
+                              let flag=temp.every(j=>{
+                                return j.handling_measures!==""
+                              })
+                              if(flag){
+                                finalData.push(...temp)
+                              }else{
+                                taskId.push(v.task_name)
+                              }
                             }
-                            let flag=tempData.every(v=>{
-                              return v.handling_measures!==""
+                          })
+                          if(taskId.length===0){
+                            model.invoke("getReportDetailData",finalData)
+                          }else{
+                            let str=""
+                            taskId.forEach(v=>{
+                              str+=v+","
                             })
-                            if(flag){
-                              model.invoke("getReportDetailData",this.followTaskProcessing.data)
-                            }else{
-                              this.$message.error("所有已选后续任务决策措施不能为空")
-                            }
+                            str = str.slice(0, str.length - 1);
+                            this.$message.error("任务:"+str+"的后续任务决策措施未输入！")
                           }
                         },
                         showSelectBox(){
@@ -293,14 +329,21 @@
                             }
                           }
                         },
+                        // 给左侧任务添加行索引
+                        tableRowClassName({row, rowIndex}){
+                          row.index = rowIndex;
+                          row.follow_task=[]
+                        },
                         //获取当前点击的任务
                         rowDblclick(row){
+                          this.resetData()
+                          this.proTableData[this.currentClickedTask.index].follow_task=this.followTaskProcessing.data
                           if(row.task_status==="3"){
                             this.ifFollowTaskShow=true
+                            this.followTaskProcessing.data=row.follow_task
                           }else{
                             this.ifFollowTaskShow=false
                           }
-                          this.resetData()
                           this.currentClickedTask =row
                           // TODO 发送当前点击的任务id到后台 获取相关数据
                           model.invoke(

@@ -14,9 +14,9 @@ new Vue({
         "duration": "5",
         "plan_starttime": "",
         "start_time": "2019-10-03 00:00:00",
-        "plan_endtime": "",
+        "plan_endtime": "2019-10-20 00:00:00",
         "quality_action": "",
-        "quality_handle_status": "",
+        "quality_handle_status": "0",
         "quality_reason": "",
         "owner":"张三"
       }, {
@@ -26,13 +26,47 @@ new Vue({
         "wbs": "1.1.2",
         "task_id": "74624160865714180",
         "is_certical_task":false,
-        "task_schedule_status": "000",
+        "task_schedule_status": "200",
         "duration": "5",
         "plan_starttime": "",
         "start_time": "2019-10-03 00:00:00",
-        "plan_endtime": "",
+        "plan_endtime": "2019-10-02 00:00:00",
         "quality_action": "",
-        "quality_handle_status": "",
+        "quality_handle_status": "1",
+        "quality_reason": "",
+        "owner":"李四"
+      },
+      {
+        "task_name": "P5挖土复核",
+        "tasktype": "3",
+        "end_time": "2019-10-10 00:00:00",
+        "wbs": "1.1.2",
+        "task_id": "74624160865714181",
+        "is_certical_task":false,
+        "task_schedule_status": "200",
+        "duration": "5",
+        "plan_starttime": "",
+        "start_time": "2019-10-03 00:00:00",
+        "plan_endtime": "2019-10-02 00:00:00",
+        "quality_action": "",
+        "quality_handle_status": "1",
+        "quality_reason": "",
+        "owner":"李四"
+      },
+      {
+        "task_name": "P5挖土复核",
+        "tasktype": "3",
+        "end_time": "2019-10-10 00:00:00",
+        "wbs": "1.1.2",
+        "task_id": "74624160865714182",
+        "is_certical_task":false,
+        "task_schedule_status": "200",
+        "duration": "5",
+        "plan_starttime": "",
+        "start_time": "2019-10-03 00:00:00",
+        "plan_endtime": "2019-10-02 00:00:00",
+        "quality_action": "",
+        "quality_handle_status": "1",
         "quality_reason": "",
         "owner":"李四"
       }
@@ -56,25 +90,30 @@ new Vue({
       //   task_status:'2'  //1 已完成  2 已滞后
       // },
     ],
-    currentTask:[]
+    currentTask:[],
+    diffData:[],  //差异化数据
   },
   created() {
    
   },
   mounted() {
+    let self = this;
     this.$nextTick(function() {
       // this.tableHeight = window.innerHeight - this.$refs.qualityPlanTable.$el.offsetTop - 10
-      this.tableWidth=this.$refs.projectTable.$el.clientWidth+'px'
-      console.log(this.tableWidth)
+      self.tableWidth=self.$refs.projectTable.$el.clientWidth+'px'
+      console.log(self.tableWidth)
       // 监听窗口大小变化
-      let self = this;
+      
       window.onresize = function() {
         self.tableWidth=self.$refs.projectTable.$el.clientWidth+'px'
       }
     })
   },
   methods: {
-    // refreshData(){},
+    
+    refreshData(){
+      console.log(this.diffData)
+    },
     // goExit(){},
     // goBeforeTaskDetail(){},
     // goCurrentTaskControl(){},
@@ -107,8 +146,38 @@ new Vue({
     },
     currentTaskClick(row){
       console.log(row)
+      row.DValue=this.getDaysBetween(row.end_time,row.plan_endtime)
       this.currentTask=[]
       this.currentTask.push(row)
     },
+    // 计算两个日期的差值
+    getDaysBetween(dateString1,dateString2){
+      var  startDate = Date.parse(dateString1);
+      var  endDate = Date.parse(dateString2);
+      var days=(endDate - startDate)/(1*24*60*60*1000);
+      return  days;
+    },
+    reasonChange(val){
+      console.log("reasonChange>>>",val)
+      this.setDiffData()
+    },
+    actionChange(val){
+      console.log("actionChange>>>",val)
+      this.setDiffData()
+    },
+    // 存储差异化值 判断如果已存了该条任务差异化数据  则替换  没有则增加
+    setDiffData(){
+      let index=null
+      this.diffData.forEach((v,k)=>{
+        if(v.task_id===this.currentTask[0].task_id){
+          index=k
+        }
+      })
+      if(index!==null){
+        this.diffData[index]=this.currentTask[0]
+      }else{
+        this.diffData.push(this.currentTask[0])
+      }
+    }
   }
 }).$mount("#qualityACApp")

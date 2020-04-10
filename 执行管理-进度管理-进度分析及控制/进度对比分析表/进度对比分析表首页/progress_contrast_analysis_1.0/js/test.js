@@ -82,14 +82,14 @@ new Vue({
       title:"后续任务处理",
       open:true,
       data:[
-        {
-          follow_task_name:"后续任务1",
-          handling_measures:""
-        },
-        {
-          follow_task_name:"",
-          handling_measures:"请输入处理措施"
-        }
+        // {
+        //   follow_task_name:"后续任务1",
+        //   handling_measures:""
+        // },
+        // {
+        //   follow_task_name:"",
+        //   handling_measures:"请输入处理措施"
+        // }
       ]
     },
     tableWidth:'100%',
@@ -130,7 +130,9 @@ new Vue({
         remaining_duration:"5"  //剩余工期
       }
     ],
-    currentClickedTask:null
+    currentClickedTask:{
+      index:0
+    }
   },
   created() {
     this.getCurrentDate()
@@ -164,7 +166,9 @@ new Vue({
         this.$message.error("请先选择任务")
       }
     },
-    goProgress(){},
+    goProgress(){
+      
+    },
     showSelectBox(){
       this.ifSelectBoxShow=!this.ifSelectBoxShow
     },
@@ -242,10 +246,33 @@ new Vue({
         }
       }
     },
+    tableRowClassName({row, rowIndex}){
+      row.index = rowIndex;
+      row.follow_task=[]
+    },
     //获取当前点击的任务
     rowDblclick(row){
+      console.log(row)
       if(row.task_status==="3"){
+        this.proTableData[this.currentClickedTask.index].follow_task=this.followTaskProcessing.data
+        debugger
+        let arr=[
+          {
+            follow_task_name:"测试后续任务"+Math.ceil(Math.random()*10),
+            handling_measures:""
+          },
+          {
+            follow_task_name:"测试后续任务"+Math.ceil(Math.random()*10),
+            handling_measures:""
+          }
+        ]
+        arr.push({follow_task_name:"",
+        handling_measures:"请输入处理措施"})
+        row.follow_task=arr
+        this.followTaskProcessing.data=row.follow_task
+        debugger
         this.ifFollowTaskShow=true
+
       }else{
         this.ifFollowTaskShow=false
       }
@@ -253,7 +280,7 @@ new Vue({
       // TODO 发送当前点击的任务id到后台 获取相关数据
     },
     goSelectFollowTask(){
-      console.log("打开选择后续任务弹窗")
+     
     },
     closeTaskReportDetail(){
       this.taskReportDetailShow=false

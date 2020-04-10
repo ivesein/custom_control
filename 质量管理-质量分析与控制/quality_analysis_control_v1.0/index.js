@@ -8,7 +8,7 @@
       // 内部函数不推荐修改
       _setModel: function(model) {
         this.model = model // 内部变量挂载
-        this.model.qualityACVue = null
+        this.model.qualityACApp = null
       },
       init: function(props) {
         console.log("init---", this.model, props)
@@ -16,13 +16,15 @@
       },
       update: function(props) {
         console.log("-----update", this.model, props)
-        if (props.data && props.data.isInit) {
-          this.model.qualityACVue = null
-          setHtml(this.model, props)
-        }
-        console.log(this.model.qualityACVue)
+        // if (props.data && props.data.isInit) {
+        //   this.model.qualityACVue = null
+        //   setHtml(this.model, props)
+        // }
+        // console.log(this.model.qualityACVue)
         if (this.model.qualityACVue) {
           this.model.qualityACVue.handleUpdata(this.model, props)
+        }else{
+          setHtml(this.model, props)
         }
       },
       destoryed: function() {
@@ -58,27 +60,79 @@
                     model.qualityACVue = new Vue({
                       delimiters: ["${", "}"],
                       data: {
-
+                        proTableData:[],
+                        tableWidth:'100%',
+                        currentTask:[],
+                        diffData:[],  //差异化数据
                       },
-                      created() {},
+                      created() {
+                        this.handleUpdata(model,props)
+                      },
                       mounted() {
-                        // 固定表格表头 设置表格高度自适应填满剩余高度
-                        // this.$nextTick(function() {
-                        //   this.tableHeight = window.innerHeight - this.$refs.qualityPlanTable.$el.offsetTop - 60
-
-                        //   // 监听窗口大小变化
-                        //   let self = this;
-                        //   window.onresize = function() {
-                        //     self.tableHeight = window.innerHeight - self.$refs.qualityPlanTable.$el.offsetTop - 60
-                        //   }
-                        // })
+                        let self = this;
+                        this.$nextTick(function() {
+                          // this.tableHeight = window.innerHeight - this.$refs.qualityPlanTable.$el.offsetTop - 10
+                          self.tableWidth=self.$refs.projectTable.$el.clientWidth+'px'
+                          console.log(self.tableWidth)
+                          // 监听窗口大小变化
+                          
+                          window.onresize = function() {
+                            self.tableWidth=self.$refs.projectTable.$el.clientWidth+'px'
+                          }
+                        })
                       },
                       methods: {
                         handleUpdata(model, props) {
-                          if (props.data) {
-                          
+                          if (props.data!==undefined) {
+                            if(props.data.method==="initqualityAnalysisData"){
+                              // 获取左侧表格任务列表数据
+                              this.proTableData=props.data.data
+                            }else if(props.data.method==="getSyschronizeData"){
+                              // 发送差异化数据到后台
+                              model.invoke("getSyschronizeData",this.diffData)
+                            }
                           }
                         },
+                        cellStyle({ row, column, rowIndex, columnIndex }) {
+                          if (columnIndex === 0) {
+                            // console.log(column)
+                            return "padding: 0px!important;"
+                          }
+                    
+                        },
+                        currentTaskClick(row){
+                          console.log(row)
+                          row.DValue=this.getDaysBetween(row.end_time,row.plan_endtime)
+                          this.currentTask=[]
+                          this.currentTask.push(row)
+                        },
+                        // 计算两个日期的差值
+                        getDaysBetween(dateString1,dateString2){
+                          var  startDate = Date.parse(dateString1);
+                          var  endDate = Date.parse(dateString2);
+                          var days=(endDate - startDate)/(1*24*60*60*1000);
+                          return  days;
+                        },
+                        reasonChange(val){
+                          this.setDiffData()
+                        },
+                        actionChange(val){
+                          this.setDiffData()
+                        },
+                        // 存储差异化值 判断如果已存了该条任务差异化数据  则替换  没有则增加
+                        setDiffData(){
+                          let index=null
+                          this.diffData.forEach((v,k)=>{
+                            if(v.task_id===this.currentTask[0].task_id){
+                              index=k
+                            }
+                          })
+                          if(index!==null){
+                            this.diffData[index]=this.currentTask[0]
+                          }else{
+                            this.diffData.push(this.currentTask[0])
+                          }
+                        }
                       }
                     }).$mount($("#qualityACApp", model.dom).get(0))
                   })
