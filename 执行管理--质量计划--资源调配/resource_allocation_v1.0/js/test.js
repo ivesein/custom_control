@@ -23,6 +23,7 @@ new Vue({
         "project_id": "7d89067b-5a1a-4736-be72-396ee0e5753a",
         "position": "1",
         "task_type": "",
+        "quality_action":"",
         "subArray": [{
           "owner": "",
           "plan_starttime": "",
@@ -48,6 +49,7 @@ new Vue({
         "type": "project",
         "audit_task_id": "",
         "duration": "112",
+        "quality_action":"",
         "project_id": "7d89067b-5a1a-4736-be72-396ee0e5753a",
         "position": "2",
         "task_type": "2",
@@ -76,6 +78,7 @@ new Vue({
         "type": "project",
         "audit_task_id": "",
         "duration": "5",
+        "quality_action":"",
         "project_id": "7d89067b-5a1a-4736-be72-396ee0e5753a",
         "position": "3",
         "task_type": "4",
@@ -104,6 +107,7 @@ new Vue({
         "type": "task",
         "audit_task_id": "",
         "duration": "5",
+        "quality_action":"压缩工期5天",
         "project_id": "7d89067b-5a1a-4736-be72-396ee0e5753a",
         "position": "4",
         "task_type": "1",
@@ -162,6 +166,7 @@ new Vue({
         "type": "task",
         "audit_task_id": "",
         "duration": "5",
+        "quality_action":"压缩工期5天",
         "project_id": "7d89067b-5a1a-4736-be72-396ee0e5753a",
         "position": "5",
         "task_type": "3",
@@ -204,6 +209,7 @@ new Vue({
         "task_id": "71723713902411776",
         "audit_task_id": "",
         "duration": "",
+        "quality_action":"",
         "project_id": "7d89067b-5a1a-4736-be72-396ee0e5753a",
         "position": "6",
         "subArray": [{
@@ -245,6 +251,7 @@ new Vue({
         "task_id": "71723713902411777",
         "audit_task_id": "",
         "duration": "",
+        "quality_action":"压缩工期2天",
         "project_id": "7d89067b-5a1a-4736-be72-396ee0e5753a",
         "position": "7",
         "subArray": [{
@@ -286,6 +293,7 @@ new Vue({
         "task_id": "71723713902411778",
         "audit_task_id": "",
         "duration": "",
+        "quality_action":"压缩工期2天",
         "project_id": "7d89067b-5a1a-4736-be72-396ee0e5753a",
         "position": "8",
         "subArray": [{
@@ -327,6 +335,7 @@ new Vue({
         "task_id": "71723713902411779",
         "audit_task_id": "",
         "duration": "",
+        "quality_action":"",
         "project_id": "7d89067b-5a1a-4736-be72-396ee0e5753a",
         "position": "9",
         "subArray": [{
@@ -394,6 +403,7 @@ new Vue({
         "task_id": "71724119627923457",
         "audit_task_id": "",
         "duration": "",
+        "quality_action":"延长工期3天",
         "project_id": "7d89067b-5a1a-4736-be72-396ee0e5753a",
         "position": "",
         "subArray": [{
@@ -420,6 +430,7 @@ new Vue({
         "task_id": "71724119627923458",
         "audit_task_id": "",
         "duration": "",
+        "quality_action":"延长工期3天",
         "project_id": "7d89067b-5a1a-4736-be72-396ee0e5753a",
         "position": "",
         "subArray": [{
