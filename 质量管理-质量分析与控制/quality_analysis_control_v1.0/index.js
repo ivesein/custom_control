@@ -47,7 +47,7 @@
                 model.schemaId,
                 function() {
                   KDApi.templateFilePath(
-                    "./html/cost_contrast_analysis.html",
+                    "./html/quality_analysis_control.html",
                     model.schemaId, {
                       path: KDApi.nameSpace(
                         model.schemaId
