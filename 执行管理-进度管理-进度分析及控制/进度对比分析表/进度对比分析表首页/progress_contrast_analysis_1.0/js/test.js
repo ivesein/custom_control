@@ -82,14 +82,14 @@ new Vue({
       title:"后续任务处理",
       open:true,
       data:[
-        // {
-        //   follow_task_name:"后续任务1",
-        //   handling_measures:""
-        // },
-        // {
-        //   follow_task_name:"",
-        //   handling_measures:"请输入处理措施"
-        // }
+        {
+          task_name:"后续任务1",
+          id:"220"
+        },
+        {
+          task_name:"后续任务2",
+          id:"221"
+        }
       ]
     },
     tableWidth:'100%',
@@ -258,15 +258,15 @@ new Vue({
         debugger
         let arr=[
           {
-            follow_task_name:"测试后续任务"+Math.ceil(Math.random()*10),
+            task_name:"测试后续任务"+Math.ceil(Math.random()*10),
             handling_measures:""
           },
           {
-            follow_task_name:"测试后续任务"+Math.ceil(Math.random()*10),
+            task_name:"测试后续任务"+Math.ceil(Math.random()*10),
             handling_measures:""
           }
         ]
-        arr.push({follow_task_name:"",
+        arr.push({task_name:"",
         handling_measures:"请输入处理措施"})
         row.follow_task=arr
         this.followTaskProcessing.data=row.follow_task

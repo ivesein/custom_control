@@ -169,10 +169,12 @@
                                 //   follow_task_name:"",
                                 //   handling_measures:"请输入处理措施"
                                 // })
-                                this.proTableData[this.currentClickedTask.index].follow_task=props.data.data.push({
-                                    follow_task_name:"",
-                                    handling_measures:"请输入处理措施"
-                                  })
+                                props.data.data.push({
+                                  follow_task_name:"",
+                                  handling_measures:"请输入处理措施"
+                                })
+                                this.proTableData[this.currentClickedTask.index].follow_task=props.data.data
+                                this.followTaskProcessing.data=props.data.data
                                 break;
                               case "getReportDetailData":
                                 this.taskReportDetailData=props.data.data
@@ -198,7 +200,7 @@
                         goCurrentTaskControl(){},
                         //调接口 打开任务汇报详情表格弹出
                         goTaskReportDetail(){
-                          if(this.currentClickedTask!==null){
+                          if(this.currentClickedTask.id){
                             // TODO 发送当前任务id到后台获取任务汇报详情数据并展示
                             model.invoke("getReportDetailData",this.currentClickedTask.id)
                             this.taskReportDetailShow=true
@@ -340,6 +342,12 @@
                           this.proTableData[this.currentClickedTask.index].follow_task=this.followTaskProcessing.data
                           if(row.task_status==="3"){
                             this.ifFollowTaskShow=true
+                            if(row.follow_task.length===0){
+                              row.follow_task.push({
+                                follow_task_name:"",
+                                handling_measures:"请输入处理措施"  
+                              })
+                            }
                             this.followTaskProcessing.data=row.follow_task
                           }else{
                             this.ifFollowTaskShow=false
@@ -360,9 +368,13 @@
                         goTaskReportListDetail(){
                           console.log("跳转到任务列表详情")
                           model.invoke("goTaskReportDetailListPage",this.currentClickedTask.id)
+                        },
+                        // 监听决策输入 ，如有输入或修改 同步到左侧当前点击的任务数据
+                        hmChange(){
+                          this.proTableData[this.currentClickedTask.index].follow_task=this.followTaskProcessing.data
                         }
                       }
-                    }).$mount($("#progressCAVue", model.dom).get(0))
+                    }).$mount($("#progressCAApp", model.dom).get(0))
                   })
                 }
               )

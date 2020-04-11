@@ -111,6 +111,9 @@
                           var  startDate = Date.parse(dateString1);
                           var  endDate = Date.parse(dateString2);
                           var days=(endDate - startDate)/(1*24*60*60*1000);
+                          if(Number.isNaN(days)){
+                            days=""
+                          }
                           return  days;
                         },
                         reasonChange(val){
