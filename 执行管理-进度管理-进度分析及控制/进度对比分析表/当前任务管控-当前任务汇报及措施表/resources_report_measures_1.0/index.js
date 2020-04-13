@@ -58,25 +58,83 @@
                     model.resourcesRMVue = new Vue({
                       delimiters: ["${", "}"],
                       data: {
-
-                      },
-                      created() {},
-                      mounted() {
-                        // 固定表格表头 设置表格高度自适应填满剩余高度
-                        this.$nextTick(function() {
-                          this.tableHeight = window.innerHeight - this.$refs.qualityPlanTable.$el.offsetTop - 60
-
-                          // 监听窗口大小变化
-                          let self = this;
-                          window.onresize = function() {
-                            self.tableHeight = window.innerHeight - self.$refs.qualityPlanTable.$el.offsetTop - 60
+                        tabalData:[],
+                        sendData:[],  //最终发送的差异化数据
+                        changedIndex:[], //记录值变更的资源index 
+                        decision_making_options:[
+                          {
+                              measures:"不处理",
+                              value:"0",
+                          },
+                          {
+                              measures:"通知加班",
+                              value:"1",
+                          },
+                          {
+                              measures:"增加资源",
+                              value:"2",
+                          },
+                          {
+                              measures:"减少资源",
+                              value:"3",
                           }
-                        })
+                      ],
+                      },
+                      created() {
+                        this.handleUpdata(model,props)
+                      },
+                      mounted() {
+                        
                       },
                       methods: {
                         handleUpdata(model, props) {
-                          if (props.data) {
-                          
+                          if (props.data!==undefined) {
+                            if(props.data.method==="init"){
+                              // 处理禁用状态  添加字段判断
+                              props.data.data.forEach(v => {
+                                v.disabled=v.decision_making_operation
+                                v.index=k
+                              });
+                              this.tabalData=props.data.data
+                            }else if(props.data.method==="syncToScheduleMaintenance"){
+                              this.syncToSM()
+                            }
+                          }
+                        },
+                        // 同步到进度维护，决策操作和措施决策输入判空  差异化处理 接口调用发送数据
+                        syncToSM(){
+                          // 判断是否每条都做了选择操作和措施输入
+                          let flag=this.tabalData.every(v => {
+                            return v.decision_making_operation!==''&&v.measures_decision!==''
+                          });
+                          if(flag){
+                            //取出差异化的数据
+                            this.changedIndex.forEach(v=>{
+                              this.sendData.push(this.tabalData[v])
+                            })
+                            // 发送差异化数据
+                            model.invoke("syncToScheduleMaintenance",this.sendData)
+                          }else{
+                            this.$message.error("请确保每一条都选择了决策操作并输入措了施决策！")
+                          }
+                        },
+                        // 当下拉选项变更时记录变更的索引值 用于差异化数据处理
+                        selectChange(row){
+                            if(!this.changedIndex.includes(row.index)){
+                                this.changedIndex.push(row.index)
+                            }
+                        },  
+                        // 当输入框的值变更时记录变更的索引值 用于差异化数据处理
+                        inputChange(row){
+                            console.log(row)
+                            if(!this.changedIndex.includes(row.index)){
+                                this.changedIndex.push(row.index)
+                            }
+                        },
+                        cellStyle({ row, column, rowIndex, columnIndex }) {
+                          if (columnIndex === 0) {
+                            // console.log(column)
+                            return "padding: 0px!important;"
                           }
                         },
                       }
