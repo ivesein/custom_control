@@ -16,13 +16,10 @@
       },
       update: function(props) {
         console.log("-----update", this.model, props)
-        if (props.data && props.data.isInit) {
-          this.model.resourcesRMVue = null
-          setHtml(this.model, props)
-        }
-        console.log(this.model.resourcesRMVue)
         if (this.model.resourcesRMVue) {
           this.model.resourcesRMVue.handleUpdata(this.model, props)
+        }else{
+          setHtml(this.model, props)
         }
       },
       destoryed: function() {
@@ -58,7 +55,7 @@
                     model.resourcesRMVue = new Vue({
                       delimiters: ["${", "}"],
                       data: {
-                        tabalData:[],
+                        tableData:[],
                         sendData:[],  //最终发送的差异化数据
                         changedIndex:[], //记录值变更的资源index 
                         decision_making_options:[
@@ -91,11 +88,11 @@
                           if (props.data!==undefined) {
                             if(props.data.method==="init"){
                               // 处理禁用状态  添加字段判断
-                              props.data.data.forEach(v => {
+                              props.data.data.forEach((v,k) => {
                                 v.disabled=v.decision_making_operation
                                 v.index=k
                               });
-                              this.tabalData=props.data.data
+                              this.tableData=props.data.data
                             }else if(props.data.method==="syncToScheduleMaintenance"){
                               this.syncToSM()
                             }
@@ -104,13 +101,13 @@
                         // 同步到进度维护，决策操作和措施决策输入判空  差异化处理 接口调用发送数据
                         syncToSM(){
                           // 判断是否每条都做了选择操作和措施输入
-                          let flag=this.tabalData.every(v => {
+                          let flag=this.tableData.every(v => {
                             return v.decision_making_operation!==''&&v.measures_decision!==''
                           });
                           if(flag){
                             //取出差异化的数据
                             this.changedIndex.forEach(v=>{
-                              this.sendData.push(this.tabalData[v])
+                              this.sendData.push(this.tableData[v])
                             })
                             // 发送差异化数据
                             model.invoke("syncToScheduleMaintenance",this.sendData)
