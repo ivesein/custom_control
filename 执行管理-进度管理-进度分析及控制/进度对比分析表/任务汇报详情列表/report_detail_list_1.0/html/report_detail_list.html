@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="../css/element.css" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="reportDLApp">
+      <div class="table-content">
+        <el-table ref="currentTaskTable"  :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="tableData" style="width:100%;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true">
+          <el-table-column prop="report_date" label="汇报日期" width="160" align="center"></el-table-column>
+          <el-table-column prop="task_start_time" label="任务时间开始时间" width="160" align="center"></el-table-column>
+          <el-table-column prop="report_type" label="填报方式" align="center"  width="100" ></el-table-column>
+          <el-table-column prop="this_report_start_time" label="本次填报开始时间" width="160" align="center"></el-table-column>
+          <el-table-column prop="this_report_end_time" label="本次填报结束时间" width="200" align="center"></el-table-column>
+          <el-table-column prop="this_report_completes_workdays_quantities" label="本次填报完成工时/本次填报完成工程量" width="200" align="center"></el-table-column>
+          <el-table-column prop="remaining_workdays_quantities" label="剩余工时/剩余工程量" width="200" align="center"></el-table-column>
+          <el-table-column prop="accumulated_completed_workdays_quantities" label="累计完成工时/累计完成工程量" width="200" align="center"></el-table-column>
+          <el-table-column prop="task_execution_status" label="任务执行状态" width="160" align="center"></el-table-column>
+          <el-table-column prop="delay_reason" label="延期原因" align="center"></el-table-column>
+        </el-table>
+      </div>
+    </div>
+    <script src="../js/lodash.js"></script>
+    <script src="../js/vue.min.js"></script>
+    <script src="../js/element.js"></script>
+    <script src="../js/test.js"></script>
+  </body>
+</html>
