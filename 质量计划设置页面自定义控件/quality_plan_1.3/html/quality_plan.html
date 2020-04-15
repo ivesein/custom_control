@@ -1,4 +1,4 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="en">
   <head>
@@ -11,7 +11,7 @@
     <title>Document</title>
   </head>
 
-<body> -->
+<body>
 <div id="qualityPlanApp">
   <div class="btn-lsit">
     <button class="btn-itme" id="setBtn4" @click="SetRole">
@@ -25,7 +25,7 @@
     </button>
     <button class="btn-itme" id="refresh" @click="refreshData">刷新</button>
   </div>
-  <el-table ref="thequalityPlanTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="tableData" style="width:1600px;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true" :height="tableHeight" default-expand-all
+  <el-table ref="thequalityPlanTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="tableData" style="width:100%;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true" :height="tableHeight" default-expand-all
     :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
     <el-table-column type="select" width="40" align="center">
       <template slot="header" slot-scope="scope">
@@ -169,11 +169,11 @@
     </el-table-column>
   </el-table>
 </div>
-<!-- <script src="../js/lodash.js"></script>
+<script src="../js/lodash.js"></script>
     <script src="../js/vue.min.js"></script>
     <script src="../js/vue.js"></script>
     <script src="../js/element.js"></script>
     <script src="../js/test.js"></script>
   </body>
 
-</html> -->
+</html>

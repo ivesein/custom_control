@@ -1,7 +1,69 @@
 new Vue({
   delimiters: ["${", "}"],
   data: {
-    // bgColors: ['#909399', '#E6A23C', '#67C23A', '#F56C6C'],
+    activeName: 'first',
+    showPannal:true,
+    tabData:[
+      {
+        id:1,
+        text:"设计校审任务",
+        focus:true
+      },
+      {
+        id:2,
+        text:"提资任务",
+        focus:false
+      }
+    ],
+    // 提资任务概览数据
+    summarDataTZ:[
+      {
+        title: "总任务",
+        focus: true,
+        number: 6
+      },
+      {
+        title: "待完成任务",
+        focus: false,
+        number: 4
+      },
+      {
+        title: "已完成任务",
+        focus: false,
+        number: 2
+      }
+    ],
+    // 提资任务列表数据
+    tzTaskInfos:[
+      {
+        task_status: "0",
+        task_name: "平纵数据自检修改完成提资",
+        project_name: "陕西汉中项目",
+        taskid:"1",
+        projectid:"123"
+      },
+      {
+        task_status: "1",   //显示
+        task_name: "p3挖土提资",
+        project_name: "陕西汉中项目",
+        taskid:"2",
+        projectid:"123"
+      },
+      {
+        task_status: "2",
+        task_name: "p4挖土提资",
+        project_name: "陕西汉中项目",
+        taskid:"3",
+        projectid:"123"
+      },
+      {
+        task_status: "3",
+        task_name: "p4挖土提资",
+        project_name: "陕西汉中项目",
+        taskid:"4",
+        projectid:"123"
+      }
+    ],
     summarData: [{
         title: "总任务",
         focus: true,
@@ -23,17 +85,21 @@ new Vue({
         number: 1
       }
     ],
-    responsibleTaskInfos: [{
+    responsibleTaskInfos: [
+      {
         task_status: "toBeComplected",
         task_name: "平纵数据自检修改完成",
         project_name: "陕西汉中项目",
-        check_status:"check_in"
+        check_status:"check_in",
+        beforeTaskStatus:true
+
       },
       {
         task_status: "complected",
         task_name: "p3挖土",
         project_name: "陕西汉中项目",
-        check_status:"check_in"
+        check_status:"check_in",
+        beforeTaskStatus:true
       },
       {
         task_status: "inProgress",
@@ -92,8 +158,8 @@ new Vue({
         task_status: "toBeComplected",
         task_name: "平纵数据自检修改完成",
         project_name: "陕西汉中项目",
-        taskScheduleStatus: false,
-        check_status:"check_out"
+        taskScheduleStatus: true,
+        check_status:"check_in"
       },
       {
         task_status: "complected",
@@ -183,10 +249,25 @@ new Vue({
 
   },
   methods: {
-    handleUpdata(model, props) {},
+    // 处理标签按钮点击 加载焦点样式 展示相应面版
+    handleTabClick(item) {
+      console.log(item);
+      this.tabData.forEach(function(fk) {
+        fk.focus = false
+      })
+      item.focus = true
+      this.showPannal=item.id===1?true:false
+    },
+    // 处理提资面板 概览数据 按钮 显示相应状态的任务
+    handleSummaryTZItemClicked(item){
+      this.summarDataTZ.forEach(function(fk) {
+        fk.focus = false
+      })
+      item.focus = true
+    },
     handleSummaryItemClicked(item) {
-      this.summarData.forEach(function(fuck) {
-        fuck.focus = false
+      this.summarData.forEach(function(fk) {
+        fk.focus = false
       })
       item.focus = true
       let sendData = {
@@ -196,10 +277,18 @@ new Vue({
       }
       console.log("发送参数", sendData)
       console.log("item>>>", item)
-      console.log("info>>>", info)
+      // console.log("info>>>", info)
     },
     handleTaskNameClicked(item) {
       console.log(item)
+    },
+    handleTZTaskNameClicked(item){
+      console.log(item)
+      model.invoke("taskNameClick",item.taskid)
+    },
+    tzClickAccept(item){
+      console.log(item)
+      model.invoke("taskAccept",item.taskid)
     },
     designClickAccept(item) {
       this.$confirm('确认接受指定的任务?', '接受', {
