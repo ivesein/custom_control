@@ -90,7 +90,7 @@
                               // 处理禁用状态  添加字段判断
                               props.data.data.forEach((v,k) => {
                                 v.disabled=v.decision_making_operation
-                                v.index=k
+                                v.theIndex=k
                               });
                               this.tableData=props.data.data
                             }else if(props.data.method==="syncToScheduleMaintenance"){
@@ -112,20 +112,20 @@
                             // 发送差异化数据
                             model.invoke("syncToScheduleMaintenance",this.sendData)
                           }else{
-                            this.$message.error("请确保每一条都选择了决策操作并输入措了施决策！")
+                            this.$message.error("请确保每一条都选择了决策操作并输入了措施决策！")
                           }
                         },
                         // 当下拉选项变更时记录变更的索引值 用于差异化数据处理
                         selectChange(row){
-                            if(!this.changedIndex.includes(row.index)){
-                                this.changedIndex.push(row.index)
+                            if(!this.changedIndex.includes(row.theIndex)){
+                                this.changedIndex.push(row.theIndex)
                             }
                         },  
                         // 当输入框的值变更时记录变更的索引值 用于差异化数据处理
                         inputChange(row){
                             console.log(row)
-                            if(!this.changedIndex.includes(row.index)){
-                                this.changedIndex.push(row.index)
+                            if(!this.changedIndex.includes(row.theIndex)){
+                                this.changedIndex.push(row.theIndex)
                             }
                         },
                         cellStyle({ row, column, rowIndex, columnIndex }) {
