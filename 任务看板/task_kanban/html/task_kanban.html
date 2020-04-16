@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -11,7 +11,7 @@
   <title>Document</title>
 </head>
 
-<body>
+<body> -->
   <div id="taskKanbanApp">
     <!-- tab标签 切换设计审核任务和提资任务面板 -->
     <div class="tab-box">
@@ -140,7 +140,7 @@
         <div class="bottom-part responsible-box">
           <div class="bottom-part-title label-text">我负责的</div>
           <div class="bottom-part-content">
-            <div class="task-detail task-detail-tz" v-for="(item,index) in tzTaskInfos" :key="index">
+            <div class="task-detail task-detail-tz" v-for="(item,index) in currentTzTaskData" :key="index">
               <div v-show="item.task_status==='0'||item.task_status==='1'" class="task-detail-left-toBeComplected"></div>
               <div v-show="item.task_status==='2'" class="task-detail-left-inProgress"></div>
               <div v-show="item.task_status==='3'" class="task-detail-left-complected"></div>
@@ -162,10 +162,9 @@
       </div>
     </div>
   </div>
+  <!-- <script src="../js/lodash.js"></script>
   <script src="../js/vue.min.js"></script>
-  <script src="../js/vue.js"></script>
   <script src="../js/element.js"></script>
   <script src="../js/test.js"></script>
 </body>
-
-</html>
+</html> -->

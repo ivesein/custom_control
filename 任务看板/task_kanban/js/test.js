@@ -20,20 +20,20 @@ new Vue({
       {
         title: "总任务",
         focus: true,
-        number: 6
+        number: 4
       },
       {
         title: "待完成任务",
         focus: false,
-        number: 4
+        number: 1
       },
       {
         title: "已完成任务",
         focus: false,
-        number: 2
+        number: 1
       }
     ],
-    // 提资任务列表数据
+    // 提资任务数据  
     tzTaskInfos:[
       {
         task_status: "0",
@@ -64,6 +64,8 @@ new Vue({
         projectid:"123"
       }
     ],
+    //当前类型的提资任务数据列表数据
+    currentTzTaskData:[],
     summarData: [{
         title: "总任务",
         focus: true,
@@ -264,6 +266,32 @@ new Vue({
         fk.focus = false
       })
       item.focus = true
+      this.handleCurrentTypeTaskDisplay(item.title)
+    },
+    handleCurrentTypeTaskDisplay(type){
+      var _this=this
+      this.currentTzTaskData=[]
+      switch(type){
+        case "总任务":
+          _this.currentTzTaskData=_.cloneDeep(_this.tzTaskInfos)
+          break;
+        case "待完成任务":
+          _this.tzTaskInfos.forEach(function(v){
+            if(v.task_status==='2'){
+              _this.currentTzTaskData.push(v)
+            }
+          })
+          break;
+        case "已完成任务":
+          _this.tzTaskInfos.forEach(function(v){
+            if(v.task_status==='3'){
+              _this.currentTzTaskData.push(v)
+            }
+          })
+          break;
+        default:
+          _this.currentTzTaskData=_.deepClone(_this.tzTaskInfos)
+      }
     },
     handleSummaryItemClicked(item) {
       this.summarData.forEach(function(fk) {
