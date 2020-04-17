@@ -75,15 +75,15 @@ new Vue({
       open:true,
       data:[
         {
-          bcws:"150",
-          bcwp:"150",
-          acwp:"105",
-          sv:"-20",
-          spi:"0.87",
-          cv:"-20",
-          cpi:"0.87",
-          deviation_type:"",
-          deviation_reason:""
+          bcws:"150",   //BCWS(已完成工作预算)
+          bcwp:"150",   //BCWP(计划工作预算)
+          acwp:"105",   //ACWP(已完成实际费用)
+          sv:"-20",   //SV(进度偏差)
+          spi:"0.87",   //SPI(进度偏差)
+          cv:"-20",   //CV(成本偏差)
+          cpi:"0.87",   //CPI(成本绩效指数)
+          deviation_type:"",    //偏差类型
+          deviation_reason:""   //偏差原因
         }
       ],
     },
@@ -92,7 +92,31 @@ new Vue({
       open:true,
       data:[
         {
-          follow_task_name:"",
+          task_name:"123",
+          handling_measures:"请输入处理措施"
+        },
+        {
+          task_name:"321",
+          handling_measures:"请输入处理措施"
+        },
+        {
+          task_name:"1234",
+          handling_measures:"请输入处理措施"
+        },
+        {
+          task_name:"123",
+          handling_measures:"请输入处理措施"
+        },
+        {
+          task_name:"321",
+          handling_measures:"请输入处理措施"
+        },
+        {
+          task_name:"1234",
+          handling_measures:"请输入处理措施"
+        },
+        {
+          task_name:"",
           handling_measures:"请输入处理措施"
         }
       ]
@@ -113,32 +137,56 @@ new Vue({
       //   task_status:'2'  //1 已完成  2 已滞后
       // },
     ],
-    currentTask:null
+    currentTask:null,
+    filterCondition:{
+      conditionOne:1,  //显示选项  1 全部  2 仅显示差异
+      conditionTwo:1,  //时间范围  1 全部  2 范围  时间为timeRange值 ["2020-03-01","2020-03-15"]
+      // conditionThree:1, //任务状态 1 全部  2 未开始  3 进行中  4 已完成
+      // timeRange:[]  //时间范围 为2时 日期范围所选值 数组["2020-03-01","2020-03-15"]
+    },
+    ifFollowTaskShow:false,
+    currentClickedTask: {
+      index: 0
+    }
   },
   created() {
    
   },
   mounted() {
-    this.$nextTick(function() {
-      // this.tableHeight = window.innerHeight - this.$refs.qualityPlanTable.$el.offsetTop - 10
-      this.tableWidth=this.$refs.projectTable.$el.clientWidth+'px'
-      console.log(this.tableWidth)
-      // 监听窗口大小变化
-      let self = this;
-      window.onresize = function() {
-        self.tableWidth=self.$refs.projectTable.$el.clientWidth+'px'
-      }
-    })
+    // this.$nextTick(function() {
+    //   // this.tableHeight = window.innerHeight - this.$refs.qualityPlanTable.$el.offsetTop - 10
+    //   this.tableWidth=this.$refs.projectTable.$el.clientWidth+'px'
+    //   console.log(this.tableWidth)
+    //   // 监听窗口大小变化
+    //   let self = this;
+    //   window.onresize = function() {
+    //     self.tableWidth=self.$refs.projectTable.$el.clientWidth+'px'
+    //   }
+    // })
   },
   methods: {
+    hmChange() {
+      this.proTableData[this.currentClickedTask.index].follow_task = this.followTaskProcessing.data
+    },
     // refreshData(){},
     // goExit(){},
     // goBeforeTaskDetail(){},
     // goCurrentTaskControl(){},
-    // goTaskRTeportDetail(){},
+    // goTaskReportDetail(){},
     // goProgress(){},
+    //同步到成本维护
+    syncCostMaintenance(){},
+    //跳转到任务挣值分析图
+    goEarnedValueAnalysisChart(){},
+    //显示筛选框
     showSelectBox(){
       this.ifSelectBoxShow=!this.ifSelectBoxShow
+    },
+    conditionOneChange(val){
+      console.log(this.filterCondition)
+    },
+    conditionTwoChange(val){
+      console.log(this.filterCondition)
     },
     cellStyle({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 0) {
@@ -162,9 +210,39 @@ new Vue({
     messageConfirm(){
       this.messageBoxShow=false
     },
+    // 重置右侧表格数据
+    resetData() {
+      this.beforeTaskInfo.data = []
+      this.currentTaskInfo.data = []
+      this.earnedValueAnalysisSuggestions.data = []
+      // this.followTaskProcessing.data=[]
+    },
     currentTaskClick(row){
-      console.log(row)
-      this.currentTask=row
-    }
+      // this.resetData()
+      this.proTableData[this.currentClickedTask.index].follow_task = this.followTaskProcessing.data
+      if (row.task_status === "3") {
+        this.ifFollowTaskShow = true
+        if (row.follow_task.length === 0) {
+          row.follow_task.push({
+            follow_task_name: "",
+            handling_measures: "请输入处理措施"
+          })
+        }
+        // this.followTaskProcessing.data = row.follow_task
+      } else {
+        this.ifFollowTaskShow = false
+      }
+      this.currentClickedTask = row
+      // TODO 调用接口发送 taks_id到后台 获取该任务的其他信息
+    },
+    // 给左侧任务添加行索引
+    tableRowClassName({row, rowIndex}){
+      row.index = rowIndex;
+      row.follow_task=[]
+    },
+    goSelectFollowTask(){
+      console.log("打开选择后续任务弹窗")
+      // model.invoke("pickFollowTasks",this.currentClickedTask.id)
+    },
   }
 }).$mount("#costCAApp")

@@ -56,40 +56,7 @@
                       delimiters: ["${", "}"],
                       data: {
                         ifSelectBoxShow:false,
-                        proTableData:[
-                          // {
-                          //   wbs:"G",
-                          //   task_name:"工作5",
-                          //   owner:"张三",
-                          //   is_certical_task:true,
-                          //   task_status:"1",  //1 未开始  2 进行中  3 已完成
-                          //   handle_status:"0"  // 0 待处理  1 已处理
-                          // },
-                          // {
-                          //   wbs:"H",
-                          //   task_name:"工作6",
-                          //   owner:"李四",
-                          //   is_certical_task:true,
-                          //   task_status:"2",
-                          //   handle_status:"0"
-                          // },
-                          // {
-                          //   wbs:"L",
-                          //   task_name:"工作7",
-                          //   owner:"王五",
-                          //   is_certical_task:false,
-                          //   task_status:"3",
-                          //   handle_status:"1"   
-                          // },
-                          // {
-                          //   wbs:"I",
-                          //   task_name:"工作8",
-                          //   owner:"马六",
-                          //   is_certical_task:true,
-                          //   task_status:"3",
-                          //   handle_status:"1"   
-                          // }
-                        ],
+                        proTableData:[],
                         beforeTaskInfo:{
                           open:true,
                           title:"紧前任务对当前任务影响情况",
@@ -245,7 +212,7 @@
                             }
                           })
                           if(taskId.length===0){
-                            model.invoke("getReportDetailData",finalData)
+                            model.invoke("syncToScheduleMaintenance",finalData)
                           }else{
                             let str=""
                             taskId.forEach(v=>{
