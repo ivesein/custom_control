@@ -51,26 +51,51 @@ new Vue({
         predicted_value:"20",  //单价影响后单位工程资源耗用量预测值
         suggestions_comparative_treatment:"15", //根据基准值与实际单位工程量资源消耗量对比处理建议
         rectification_measures:"请输入纠偏措施",
+      },
+      {
+        report_date:"2020/10/01", //上报日期
+        report_completed_quantities:"20", //本次汇报完成工程量
+        actual_cumulative_completed_quantities:"60", //实际累计完成工程量
+        this_report_cq_duration:'5', //本次汇报完成工程量使用工期
+        actual_cumulative_duration:"20",  //实际累计使用工期
+        resource_info_data:[ //资源汇报
+          {
+            resource_name:"汽车钻",  //资源名称
+            resource_model:"qcz-01", //资源型号
+            resource_consumption:"1",   //资源消耗量
+            resource_actual_unit_consumption:"2",  //本次实际单位工程量资源耗用量
+            resource_actual_cumulative_consumption:"4",  //实际累计耗用量
+            resource_actual_price:"1000",   //实际单价
+
+          }
+        ],
+        predicted_value:"20",  //单价影响后单位工程资源耗用量预测值
+        suggestions_comparative_treatment:"15", //根据基准值与实际单位工程量资源消耗量对比处理建议
+        rectification_measures:"请输入纠偏措施",
+      },
+      {
+        report_date:"2020/10/01", //上报日期
+        report_completed_quantities:"20", //本次汇报完成工程量
+        actual_cumulative_completed_quantities:"60", //实际累计完成工程量
+        this_report_cq_duration:'5', //本次汇报完成工程量使用工期
+        actual_cumulative_duration:"20",  //实际累计使用工期
+        resource_info_data:[ //资源汇报
+          {
+            resource_name:"汽车钻",  //资源名称
+            resource_model:"qcz-01", //资源型号
+            resource_consumption:"1",   //资源消耗量
+            resource_actual_unit_consumption:"2",  //本次实际单位工程量资源耗用量
+            resource_actual_cumulative_consumption:"4",  //实际累计耗用量
+            resource_actual_price:"1000",   //实际单价
+
+          }
+        ],
+        predicted_value:"20",  //单价影响后单位工程资源耗用量预测值
+        suggestions_comparative_treatment:"15", //根据基准值与实际单位工程量资源消耗量对比处理建议
+        rectification_measures:"",
       }
     ],
-    decision_making_options:[
-      {
-        measures:'通知加班',
-        value:'1'
-      },
-      {
-        measures:'增加资源',
-        value:'2'
-      },
-      {
-        measures:'减少资源',
-        value:'3'
-      },
-      {
-        measures:'不处理',
-        value:'4'
-      }
-    ]
+    currentType:"1"
   },
   created() {
    
@@ -92,6 +117,27 @@ new Vue({
       if (columnIndex === 0) {
         // console.log(column)
         return "padding: 0px!important;"
+      }
+    },
+    syncToCM(){
+      // 判断当前页面状态 已完成不许要同步
+      if(this.currentType==="1"){
+        this.$message.warning("已完成页面的数据不需要同步!")
+      }else{
+        if(this.tableData2.length===0){
+          this.$message.warning("没有可用于同步的数据!")
+        }else{
+          // 判断是否每条资源汇报都填写了纠偏措施
+          let flag=this.tableData2.every(v=>{
+            return v.rectification_measures!==""
+          })
+          if(flag){
+            console.log(this.tableData2)
+            // model.invoke("syncToCostMaintenance",this.tableData2)
+          }else{
+            this.$message.error("请确保每一条任务资源汇报详情都输入了纠偏措施!")
+          }
+        }
       }
     },
     iconArrowClick1(){
