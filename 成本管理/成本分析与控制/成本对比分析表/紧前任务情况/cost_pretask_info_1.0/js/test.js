@@ -40,7 +40,17 @@ new Vue({
       open:true,
       title:"紧前任务对当前任务影响情况",
       data:[
-        {before_task_name:"工作4",handling_measures:"成本压缩100元"}
+        {before_task_name:"工作4",handling_measures:"成本压缩100元"},
+        {before_task_name:"工作4",handling_measures:"成本压缩100元"},
+        {before_task_name:"工作4",handling_measures:"成本压缩100元"},
+        {before_task_name:"工作4",handling_measures:"成本压缩100元"},
+        {before_task_name:"工作4",handling_measures:"成本压缩100元"},
+        {before_task_name:"工作4",handling_measures:"成本压缩100元"},
+        {before_task_name:"工作4",handling_measures:"成本压缩100元"},
+        {before_task_name:"工作4",handling_measures:"成本压缩100元"},
+        {before_task_name:"工作4",handling_measures:"成本压缩100元"},
+        {before_task_name:"工作4",handling_measures:"成本压缩100元"},
+        {before_task_name:"工作4",handling_measures:"成本压缩100元"},
       ]
     },
     currentTaskInfo:{
