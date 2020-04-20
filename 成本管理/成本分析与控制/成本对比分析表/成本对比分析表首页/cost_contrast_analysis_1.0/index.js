@@ -174,7 +174,11 @@
                           }
                         })
                         if (taskId.length === 0) {
-                          model.invoke("syncToCostMaintenance", finalData)
+                          if(finalData.length>0){
+                            model.invoke("syncToCostMaintenance", finalData)
+                          }else{
+                            this.$message.warning("没有需要同步的数据")
+                          }
                         } else {
                           //将所有选取的但没有输入处理措施的后续任务名拼接 提示用户哪些任务没有输入决策措施
                           let str = ""
@@ -186,7 +190,13 @@
                         }
                       },
                       //跳转到任务挣值分析图
-                      goEarnedValueAnalysisChart() { },
+                      goEarnedValueAnalysisChart() { 
+                        if(this.currentClickedTask.id){
+                          model.invoke("goEarnedValueAnalysisChart",this.currentTaskClick.id)
+                        }else{
+                          this.$message.error("请先选择任务")
+                        }
+                      },
                       //显示筛选框
                       showSelectBox() {
                         this.ifSelectBoxShow = !this.ifSelectBoxShow

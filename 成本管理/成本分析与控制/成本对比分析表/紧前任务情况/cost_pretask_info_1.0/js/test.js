@@ -5,6 +5,7 @@ new Vue({
     proTableData:[
       {
         wbs:"G",
+        id:"1",
         task_name:"工作5",
         owner:"张三",
         is_certical_task:true,
@@ -13,6 +14,7 @@ new Vue({
       },
       {
         wbs:"H",
+        id:"2",
         task_name:"工作6",
         owner:"李四",
         is_certical_task:true,
@@ -21,6 +23,7 @@ new Vue({
       },
       {
         wbs:"L",
+        id:"3",
         task_name:"工作7",
         owner:"王五",
         is_certical_task:false,
@@ -29,6 +32,7 @@ new Vue({
       },
       {
         wbs:"I",
+        id:"4",
         task_name:"工作8",
         owner:"马六",
         is_certical_task:true,
@@ -129,16 +133,15 @@ new Vue({
    
   },
   mounted() {
-    // this.$nextTick(function() {
-    //   // this.tableHeight = window.innerHeight - this.$refs.qualityPlanTable.$el.offsetTop - 10
-    //   this.tableWidth=this.$refs.projectTable.$el.clientWidth+'px'
-    //   console.log(this.tableWidth)
-    //   // 监听窗口大小变化
-    //   let self = this;
-    //   window.onresize = function() {
-    //     self.tableWidth=self.$refs.projectTable.$el.clientWidth+'px'
-    //   }
-    // })
+    this.$nextTick(function() {
+      this.tableWidth=this.$refs.projectTable.$el.clientWidth+'px'
+      console.log(this.tableWidth)
+      // 监听窗口大小变化
+      let self = this;
+      window.onresize = function() {
+        self.tableWidth=self.$refs.projectTable.$el.clientWidth+'px'
+      }
+    })
   },
   methods: {
     // refreshData(){},
