@@ -260,7 +260,7 @@ new Vue({
 		// this.option2.series.data=data
 	},
 	mounted() {
-		var myChartOne = echarts.init(document.getElementById("chart1"))
+		var myChartOne = echarts.init(document.getElementById("chart1"),"macarons")
 		myChartOne.setOption(this.optionOne)
 		var myChartTow = echarts.init(document.getElementById("chart2"))
 		myChartTow.setOption(this.optionTwo)
