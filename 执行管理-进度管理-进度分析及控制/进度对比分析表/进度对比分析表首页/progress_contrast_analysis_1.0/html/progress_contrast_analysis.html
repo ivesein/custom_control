@@ -113,14 +113,14 @@
           </el-table-column>
           <el-table-column prop="task_status" label="任务状态" width="100" >
             <template slot-scope="scope">
-              <div v-show="scope.row.task_status==='1'">未开始</div>
-              <div v-show="scope.row.task_status==='2'">进行中</div>
-              <div v-show="scope.row.task_status==='3'">已完成</div>
+              <div v-show="scope.row.task_status==='000'">未开始</div>
+              <div v-show="scope.row.task_status==='100'">进行中</div>
+              <div v-show="scope.row.task_status==='200'">已完成</div>
             </template>
           </el-table-column>
           <el-table-column prop="handle_status" label="处理状态" width="100" >
             <template slot-scope="scope">
-              ${scope.row.handle_status==="0"?"待处理":"已处理"}
+              ${scope.row.handle_status==="1"?"已处理":"待处理"}
             </template>
           </el-table-column>
         </el-table>
@@ -182,7 +182,7 @@
                   <template slot-scope="scope">
                     <span class="status-text" v-if="scope.row.task_status==='1'">未开始</span>
                     <span class="status-text" v-else-if="scope.row.task_status==='2'">进行中</span>
-                    <span v-else>${scope.row.free_time_analysis_conclusion}</span>
+                    <span v-else>造成后续任务工期延长${scope.row.free_time_exceed}天</span>
                   </template>
                 </el-table-column>
                 <el-table-column prop="total_time" label="总时差" width="100"></el-table-column>
@@ -197,7 +197,7 @@
                   <template slot-scope="scope">
                     <span class="status-text" v-if="scope.row.task_status==='1'">未开始</span>
                     <span class="status-text" v-else-if="scope.row.task_status==='2'">进行中</span>
-                    <span v-else>${scope.row.total_time_analysis_conclusion}</span>
+                    <span v-else>造成项目总工期延长${scope.row.total_time_exceed}天</span>
                   </template>
                 </el-table-column>
               </el-table>
@@ -275,6 +275,8 @@
             <div class="message-item" v-for="(item, index) in messageData" :key="index">
               <span v-show="item.task_status==='1'">${item.task_name}任务已完成，请注意后续任务的安排！</span>
               <span v-show="item.task_status==='2'">${item.task_name}任务已滞后，请注意该任务的管控！</span>
+              <span v-show="item.task_status==='0'">${item.task_name}进行中！</span>
+              <span v-show="item.task_status==='4'">${item.task_name}未开始！</span>
             </div>
           </div>
           <div class="message-info-empty" v-else>

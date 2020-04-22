@@ -307,7 +307,7 @@
                         rowDblclick(row){
                           this.resetData()
                           this.proTableData[this.currentClickedTask.index].follow_task=this.followTaskProcessing.data
-                          if(row.task_status==="3"){
+                          if(row.task_status==="200"){
                             this.ifFollowTaskShow=true
                             if(row.follow_task.length===0){
                               row.follow_task.push({

@@ -13,9 +13,49 @@
 	<body>
 <div id="dataStatisticsChartApp">
 	
-	<div class="chart-box" v-for="(item, index) in 4" :key="index">
-		<div :id="'chart'+item" class="chart-container"></div>
-		<div class="chart-title">标题</div>
+	<!-- <div class="chart-box" v-for="(item, index) in summaryData" :key="index">
+		<div :id="'chart'+index" class="chart-container"></div>
+		<div class="chart-title">
+			<span>${item.resTitle}</span>
+		</div>
+	</div> -->
+	<div class="chart-box">
+		<div class="chart-wrap">
+			<!-- 图表1  饼图 -->
+			<div id="chart0" class="chart-container"></div>
+		</div>
+		<div class="chart-title">
+			<span>${summaryData[0].resTitle}</span>
+		</div>
+	</div>
+	<div class="chart-box">
+		<div class="chart-wrap">
+			<!-- 图表2  折线图 -->
+			<div id="chart1" class="chart-container"></div>
+		</div>
+		<div class="chart-title">
+			<span>${summaryData[1].resTitle}</span>
+		</div>
+	</div>
+	<div class="chart-box">
+		<div class="chart-wrap">
+			<!-- 图表3  柱状图 -->
+			<div id="chart2" class="chart-container"></div>
+		</div>
+		<div class="chart-title">
+			<span>${summaryData[2].resTitle}</span>
+		</div>
+	</div>
+	<div class="chart-box">
+		<div class="chart-wrap">
+			<!-- 图表4  仪表图 -->
+			<div id="chart3" class="chart-container chart-container-except"></div>
+			<!-- 图表5  雷达图 -->
+			<div id="chart4" class="chart-container chart-container-except"></div>
+		</div>
+		<div class="chart-title">
+			<span>${summaryData[3].resTitle}</span>
+		</div>
 	</div>
 </div>
 <script src="../js/vue.min.js"></script>
