@@ -298,17 +298,25 @@ var taskKanbanVue = null;
                     // 提资任务名点击接口数据交互
                     handleTZTaskNameClicked(item) {
                       console.log(item);
-                      model.invoke("taskNameClicked", item.taskid);
+                      let data={
+                        taskid:item.taskid,
+                        projectid:item.projectid
+                      }
+                      model.invoke("taskNameClicked", data);
                     },
                     // 提资任务接受按钮点击接口数据交互
                     tzClickAccept(item) {
-					  console.log(item);
-					  this.$confirm("确认接受该任务?", "接受", {
+                      console.log(item);
+                      this.$confirm("确认接受该任务?", "接受", {
                         confirmButtonText: "确定",
                         cancelButtonText: "取消",
                         type: "warning",
                       }).then(() => {
-						model.invoke("taskAccept", item.taskid);
+                        let data={
+                          taskid:item.taskid,
+                          projectid:item.projectid
+                        }
+                        model.invoke("taskAccept", data);
                       });
                     },
                   },

@@ -171,8 +171,8 @@ new Vue({
 				{
 					name: '访问来源',
 					type: 'pie',
-					radius: '55%',
-					center: ['50%', '40%'],
+					radius: '60%',
+					center: ['50%', '50%'],
 					data: [
 						{value: 5, name: '海外'},
 						{value: 32, name: '西北区'},
