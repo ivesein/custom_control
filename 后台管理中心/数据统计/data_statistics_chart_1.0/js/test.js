@@ -3,150 +3,6 @@
 new Vue({
 	delimiters: ["${", "}"],
 	data: {
-		option: {
-			// title: {
-			// 	text: "项目累计金额对比图"
-			// },
-			tooltip: {
-				trigger: "axis",
-				formatter(params) {
-					let date = params[0].axisValue.split("/")
-					let dateStr =
-						date[0] + "年" + date[1] + "月" + date[2] + "日"
-					if (params.length > 1) {
-						return `
-						${dateStr}</br >
-						<span style="display:inline-block;width:10px;height:10px;background:#578bac;border-radius:100%;margin-right:5px"></span>计划累计金额: ${
-							params[0].data
-						}万</br >
-						<span style="display:inline-block;width:10px;height:10px;background:#d70304;border-radius:100%;margin-right:5px"></span>实际累计金额: ${
-							params[1] ? params[1].data : ""
-						}万
-					`
-					} else {
-						return `
-						${dateStr}</br >
-						<span style="display:inline-block;width:10px;height:10px;background:#578bac;border-radius:100%;margin-right:5px"></span>${
-							params[0].seriesName === "fact"
-								? "实际累计金额"
-								: "计划累计金额"
-						}: ${params[0].data}万</br >
-					`
-					}
-				}
-			},
-			legend: {
-				left: "400",
-				data: [
-					{
-						name: "plan",
-						textStyle: {
-							fontSize: 20,
-							color: "#578bac"
-						}
-					},
-					{
-						name: "fact",
-						textStyle: {
-							fontSize: 20,
-							color: "#d70304"
-						}
-					}
-				]
-			},
-			grid: {
-				left: "3%",
-				right: "5%",
-				bottom: "5%",
-				containLabel: true
-			},
-			// toolbox: {
-			// 	feature: {
-			// 		saveAsImage: {}
-			// 	}
-			// },
-			xAxis: {
-				type: "category",
-				boundaryGap: ['40%', '40%'],
-				step: "1",
-				axisTick: {
-					alignWithLabel: true,
-					show:true,
-					inside:true
-				},
-				axisLabel:{
-					rotate:45,
-					verticalAlign:"top"
-				},
-				data: [
-					"2020/03/01",
-					"2020/03/02",
-					"2020/03/03",
-					"2020/03/04",
-					"2020/03/05",
-					"2020/03/06",
-					"2020/03/07",
-					"2020/03/08",
-					"2020/03/09",
-					"2020/03/10",
-					"2020/03/11",
-					"2020/03/12",
-					"2020/03/13",
-					"2020/03/14"
-				]
-			},
-			yAxis: {
-				type: "value",
-				name: "累计金额（万元）",
-				// nameLocation: "middle",
-				nameTextStyle: {
-					fontSize: 14,
-					// padding: [0, 0, 30, 0]
-				}
-			},
-			series: [
-				{
-					name: "最早开始计划累计金额",
-					type: "line",
-					// stack: "总量",
-					data: [1, 2, 3, 4, 5, 6, 7,9,11,10,13,14,16,15],
-					color: "#9e480e"
-				},
-				{
-					name: "实际累计金额",
-					type: "line",
-					// stack: "总量",
-					data: [1, 2, 3, 4, 5, 6, 7,8,9,10,11,12,13,14],
-					color: "#70ad47"
-				},
-				{
-					name: "最晚开始计划累计金额",
-					type: "line",
-					// stack: "总量",
-					data: [1, 2, 3, 4, 5, 6, 7,6,7,9,10,9,12,11],
-					color: "#a6a6a6"
-				},
-				{
-					name: '计划金额',
-					type: 'bar',
-					barWidth: '20%',
-					barMaxWidth: 200,
-					data: [1, 1, 1, 1, 1, 1, 1, 1,1, 1, 1, 1,1, 1],
-					color:"#ffc000"
-				},
-				{
-					name: '累计金额',
-					type: 'bar',
-					barWidth: '20%',
-
-					barMaxWidth: 200,
-					data: [2,3,4,5,6,7,8,9,10,11,12,13,14,15],
-					color:"#ed7d31"
-
-				},
-				
-			]
-		},
 		summaryData:[
 			{
 				title:"客户总数",
@@ -172,10 +28,10 @@ new Vue({
 			// 	subtext: '',
 			// 	left: 'center'
 			// },
-			// tooltip: {
-			// 	trigger: 'item',
-			// 	formatter: '{a} <br/>{b} : {c} ({d}%)'
-			// },
+			tooltip: {
+				trigger: 'item',
+				formatter: '{a} <br/>{b} : {c} ({d}%)'
+			},
 			// legend: {
 			// 	orient: 'vertical',
 			// 	left: 'left',
@@ -183,7 +39,7 @@ new Vue({
 			// },
 			series: [
 				{
-					name: '访问来源',
+					name: '客户来源',
 					type: 'pie',
 					radius: '60%',
 					center: ['50%', '50%'],
@@ -314,7 +170,7 @@ new Vue({
 				pointer:{show:false},
 				startAngle: 220,
 				endAngle: -40,
-				data: [{value: '29', name: ''}],
+				data: [{value: '12', name: ''}],
 				radius: '70%',
 				center: ['50%', '50%'],
 				// min: 0,
@@ -400,7 +256,7 @@ new Vue({
 				pointer:{
 					show:true
 				},
-				data: [{value: '29', name: '满意率'}],
+				data: [{value: '12', name: '满意率'}],
 				radius: '70%',
 				// center: ['50%', '50%'],
 				startAngle: 220,
@@ -431,14 +287,17 @@ new Vue({
 					}
 				},
 				detail: {
-				  formatter:'{value}%',
-				  fontSize: 24,
-				  offsetCenter: [0, '85%']
+				//   formatter:'{value}%',
+					formatter:function(val){
+						return 100-val+"%"
+					},
+					fontSize: 24,
+					offsetCenter: [0, '85%']
 				},
 				title: {
-				  fontSize: 12,
-				  color: '#999',
-				  offsetCenter: [0, '65%']
+					fontSize: 12,
+					color: '#999',
+					offsetCenter: [0, '65%']
 				},
 				pointer: {
 					width:2            // 指针大小
@@ -554,20 +413,23 @@ new Vue({
 		// this.option2.series.data=data
 	},
 	mounted() {
-		var myChartOne = echarts.init(document.getElementById("chart0"),"macarons")
-		myChartOne.setOption(this.optionOne)
-		var myChartTwo = echarts.init(document.getElementById("chart1"))
-		myChartTwo.setOption(this.optionTwo)
-		var myChartThree = echarts.init(document.getElementById("chart2"))
-		myChartThree.setOption(this.optionThree)
-		var myChartFour = echarts.init(document.getElementById("chart3"))
-		myChartFour.setOption(this.optionFour)
-		var myChartFive = echarts.init(document.getElementById("chart4"))
-		myChartFive.setOption(this.optionFive)
+		this.drawCharts()
 	},
 	methods: {
 		cellStyle({ row, column, rowIndex, columnIndex }) {
 			return "padding-left: 0px!important;padding-right: 0px!important;"
+		},
+		drawCharts(){
+			var myChartOne = echarts.init(document.getElementById("chart0"),"macarons")
+			myChartOne.setOption(this.optionOne)
+			var myChartTwo = echarts.init(document.getElementById("chart1"))
+			myChartTwo.setOption(this.optionTwo)
+			var myChartThree = echarts.init(document.getElementById("chart2"))
+			myChartThree.setOption(this.optionThree)
+			var myChartFour = echarts.init(document.getElementById("chart3"))
+			myChartFour.setOption(this.optionFour)
+			var myChartFive = echarts.init(document.getElementById("chart4"))
+			myChartFive.setOption(this.optionFive)
 		}
 	}
 }).$mount("#dataStatisticsChartApp")
