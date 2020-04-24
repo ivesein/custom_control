@@ -30,7 +30,13 @@
                <img class="logo-img" :src="logo" alt="">
                <span class="text-info">工程全生命周期管理系统</span>
              </div>
-             <div class="btn-item" v-for="(item,index) in btnItems" :key="index" :style="{'left':item.left,'top':item.top,'background':item.bgColor}">
+             <div 
+             class="btn-item" 
+             v-for="(item,index) in btnItems" 
+             :key="index" 
+             :style="{'left':item.left,'top':item.top,'background':item.bgColor}"
+             @click="itemClicked(item)"
+             >
                <p>{{item.title}}</p>
              </div>
           </div>
@@ -69,55 +75,64 @@ export default {
               title:"数据使用方",
               left:'',
               right:'',
-              bgColor:''
+              bgColor:'',
+              url:""
             },
             {
               title:"业主",
               left:'',
               right:'',
-              bgColor:''
+              bgColor:'',
+              url:"http://192.168.20.22/ierp/login.html"
             },
             {
               title:"咨询",
               left:'',
               right:'',
-              bgColor:''
+              bgColor:'',
+              url:""
             },
             {
               title:"招标代理",
               left:'',
               right:'',
-              bgColor:''
+              bgColor:'',
+              url:""
             },
             {
               title:"设计",
               left:'',
               right:'',
-              bgColor:''
+              bgColor:'',
+              url:"http://192.168.20.22/ierp/login.html"
             },
             {
               title:"施工",
               left:'',
               right:'',
-              bgColor:''
+              bgColor:'',
+              url:""
             },
             {
               title:"供应商",
               left:'',
               right:'',
-              bgColor:''
+              bgColor:'',
+              url:""
             },
             {
               title:"监理",
               left:'',
               right:'',
-              bgColor:''
+              bgColor:'',
+              url:""
             },
             {
               title:"运维",
               left:'',
               right:'',
-              bgColor:''
+              bgColor:'',
+              url:""
             }
           ]
         };
@@ -155,6 +170,12 @@ export default {
               s+=colorValue[Math.floor(Math.random()*16)];
           }
           return s;
+      },
+      //点击跳转
+      itemClicked(item){
+        if(item.url!==""){
+          window.open(item.url)
+        }
       }
     }
 };
@@ -296,6 +317,11 @@ export default {
             background: #ccc;
             box-shadow: 6px 6px 12px 0px rgba(0, 0, 0, 0.6);
             cursor: pointer;
+            box-sizing: border-box;
+
+            &:hover {
+              background:#222!important;
+            }
             
             p{
               width: 40%;

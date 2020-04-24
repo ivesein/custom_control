@@ -45,11 +45,11 @@ new Vue({
 					center: ['50%', '50%'],
 					data: [
 						{value: 5, name: '海外'},
-						{value: 32, name: '西北区'},
-						{value: 24, name: '西南区'},
-						{value: 23, name: '华北区'},
-						{value: 16, name: '华南区'},
-						{value: 6, name: '东北区'}	
+						// {value: 32, name: '西北区'},
+						// {value: 24, name: '西南区'},
+						// {value: 23, name: '华北区'},
+						// {value: 16, name: '华南区'},
+						// {value: 6, name: '东北区'}	
 					],
 					emphasis: {
 						itemStyle: {
@@ -67,6 +67,7 @@ new Vue({
 				data: ['1月', '2月', '3月', '4月', '5月', '6月']
 			},
 			yAxis: {
+				name:"万",
 				type: 'value'
 			},
 			series: [{
@@ -125,7 +126,8 @@ new Vue({
 				}
 			],
 			yAxis: [
-				{
+				{	
+					name:"个",
 					type: 'value'
 				}
 			],
@@ -161,7 +163,10 @@ new Vue({
 		optionFour : {
 			tooltip: {
 				  trigger: 'item',
-				  formatter: '{a} <br/>{b} : {c} %'
+				//   formatter: '{a} <br/>{b} : {c} %'
+				formatter:function(val){
+					console.log(val)
+				}
 				},
 			series: [
 			  {
@@ -230,7 +235,9 @@ new Vue({
 					}
 				},
 				detail: {
-				  formatter:'{value}%',
+				  formatter:function(val){
+					return 100-val+"%"
+				},
 				  fontSize: 24,
 				  offsetCenter: [0, '85%']
 				},
@@ -360,19 +367,7 @@ new Vue({
 				// },
 				data: [
 					{
-						value: [80, 40, 60, 55, 72],
-						name: '预算分配（Allocated Budget）',
-						lineStyle:{
-							color:"#2B82E4"
-						},
-						symbol:'circle',
-						symbolSize:6,
-						itemStyle:{
-							color:'#2B82E4'
-						}
-					},
-					{
-						value: [20, 70, 30, 75, 92],
+						value: [20],
 						name: '预算分配（Allocated Budget）',
 						lineStyle:{
 							color:"#E6A23C"
@@ -383,18 +378,6 @@ new Vue({
 							color:'#E6A23C'
 						}
 					},
-					{
-						value: [44, 32, 88, 45, 72],
-						name: '预算分配（Allocated Budget）',
-						lineStyle:{
-							color:"#62c87f"
-						},
-						symbol:'circle',
-						symbolSize:6,
-						itemStyle:{
-							color:'#62c87f'
-						}
-					}
 				]
 			}]
 		}
