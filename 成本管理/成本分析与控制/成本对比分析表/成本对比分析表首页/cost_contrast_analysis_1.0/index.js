@@ -261,7 +261,7 @@
                         this.currentClickedTask = row
                         // TODO 调用接口发送 taks_id到后台 获取该任务的其他信息
                         model.invoke(
-                          "getClickedTaskDetailData", row.id
+                          "getClickedTaskDetailData", row
                         )
                       },
                       goSelectFollowTask(){
@@ -271,6 +271,15 @@
                       // 监听决策输入 ，如有输入或修改 同步到左侧当前点击的任务数据
                       hmChange() {
                         this.proTableData[this.currentClickedTask.index].follow_task = this.followTaskProcessing.data
+                      },
+                      // 监听当前任务情况偏差原因输入 ，如有输入或修改 发送到后台
+                      drChange(val){
+                        model.invode("currentTaskInfoDeviationReason",{id:this.currentClickedTask.id,deviation_reason:val})
+                      },
+                      // 监听挣值分析偏差原因输入 ，如有输入或修改 发送到后台
+                      evasChange(val){
+                        console.log(val)
+                        model.invode("earnedAnalysisDeviationReason",{id:this.currentClickedTask.id,deviation_reason:val})
                       }
                     }
                   }).$mount($("#costCAApp", model.dom).get(0))

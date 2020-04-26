@@ -1,4 +1,4 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 
 <body lang="en">
 
@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="../css/main.css" />
 
     <title>Document</title>
-  </head> -->
+  </head>
 <div id="resourceAllocationApp">
   <div class="btn-lsit">
     <button class="btn-itme" @click="SetRole">
@@ -30,7 +30,7 @@
       资源调配
     </button>
   </div>
-  <el-table ref="resourceAllocationTable" :header-cell-style="{background:'#f6f7f9',color:'#333'}" :data="tableData" style="width:1520px;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true" :height="tableHeight" default-expand-all
+  <el-table ref="resourceAllocationTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="tableData" style="width:1520px;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true" :height="tableHeight" default-expand-all
   :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
     <el-table-column width="40" type="select">
       <template slot="header" slot-scope="scope">
@@ -214,11 +214,11 @@
     </el-table-column>
   </el-table>
 </div>
-<!-- <script src="../js/lodash.js"></script>
+<script src="../js/lodash.js"></script>
     <script src="../js/vue.min.js"></script>
     <script src="../js/vue.js"></script>
     <script src="../js/element.js"></script>
     <script src="../js/test.js"></script>
   </body>
 
-</body> -->
+</body>

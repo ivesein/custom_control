@@ -244,5 +244,13 @@ new Vue({
       console.log("打开选择后续任务弹窗")
       // model.invoke("pickFollowTasks",this.currentClickedTask.id)
     },
+    drChange(val){
+      console.log(val)
+      // model.invode("currentTaskInfoDeviationReason",{id:this.currentClickedTask.id,deviation_reason:val})
+    },
+    evasChange(val){
+      console.log(val)
+
+    }
   }
 }).$mount("#costCAApp")

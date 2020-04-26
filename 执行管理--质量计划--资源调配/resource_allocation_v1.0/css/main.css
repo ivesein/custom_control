@@ -162,3 +162,10 @@
 #resourceAllocationApp .type-one .checek-man:nth-last-of-type(1) {
   border: none;
 }
+
+.el-table td, .el-table th.is-leaf,.el-table--border, .el-table--group{
+  border-color: #cecece!important; 
+}
+.el-table--border::after, .el-table--group::after, .el-table::before{
+  background-color: #cecece!important;
+}

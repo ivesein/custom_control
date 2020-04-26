@@ -87,15 +87,18 @@
                         let self = this;
                         // 固定表格表头 设置表格高度自适应填满剩余高度
                         this.$nextTick(function() {
+                          // console.log($("#qualityPlanApp").innerHeight())
+                          // console.log($("#qualityPlanApp", model.dom).get(0).clientHeight)
+                          let height=$("#qualityPlanApp", model.dom).get(0).clientHeight
                           if(self.$refs.thequalityPlanTable.$el!==undefined){
-                            self.tableHeight = window.innerHeight - self.$refs.thequalityPlanTable.$el.offsetTop - 60
+                            self.tableHeight = height - self.$refs.thequalityPlanTable.$el.offsetTop - 80
                           }else{
                             // 处理偶发性初始化加载不出来的bug
                             setHtml(model, props)
                           }
                           // 监听窗口大小变化
                           window.onresize = function() {
-                            self.tableHeight = window.innerHeight - self.$refs.qualityPlanTable.$el.offsetTop - 60
+                            self.tableHeight = height - self.$refs.qualityPlanTable.$el.offsetTop - 80
                           }
                         })
                       },
