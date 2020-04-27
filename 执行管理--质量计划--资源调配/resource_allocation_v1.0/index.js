@@ -87,13 +87,14 @@
                       created() {},
                       mounted() {
                         // 固定表格表头 设置表格高度自适应填满剩余高度
+                        let self = this;
+                        let height=$("#resourceAllocationApp", model.dom).get(0).clientHeight
                         this.$nextTick(function() {
-                          this.tableHeight = window.innerHeight - this.$refs.resourceAllocationTable.$el.offsetTop - 60
+                          self.tableHeight = height - self.$refs.resourceAllocationTable.$el.offsetTop - 80
 
                           // 监听窗口大小变化
-                          let self = this;
                           window.onresize = function() {
-                            self.tableHeight = window.innerHeight - self.$refs.resourceAllocationTable.$el.offsetTop - 60
+                            self.tableHeight = height - self.$refs.resourceAllocationTable.$el.offsetTop - 80
                           }
                         })
                       },
@@ -309,7 +310,7 @@
                           tempArr.forEach(function(v) {
                             if(v.checked){
                               resData.selected.push(v)
-                              if(v.type == "task" && v.task_type !== "4"){
+                              if(v.type=="task" && v.task_type !== "4"){
                                 that.currentSelectedIds.push(v.task_id)
                                 resData.idArr.push(v)
                               }

@@ -20,10 +20,23 @@
 .el-table__body th {
 	padding: 1px;
 } */
-
+html,body{
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
 #resourceAllocationApp {
   width: 100%;
-  background: #f3f3f3;
+  background: #f2f5fe;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+#resourceAllocationApp .table-box{
+  padding: 10px;
 }
 
 #resourceAllocationApp .btn-lsit {

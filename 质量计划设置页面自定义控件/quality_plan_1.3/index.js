@@ -294,7 +294,7 @@
                           tempArr.forEach(function(v) {
                             if(v.checked&&v.type!=='project'){
                               resData.selected.push(v)
-                              if(v.type == "task" && v.task_type !== "4"){
+                              if(v.type=="task" && v.task_type !== "4"){
                                 that.currentSelectedIds.push(v.task_id)
                                 resData.idArr.push(v)
                                 // resData.idArr.push({

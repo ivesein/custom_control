@@ -266,7 +266,7 @@
                       },
                       goSelectFollowTask(){
                         console.log("打开选择后续任务弹窗")
-                        model.invoke("pickFollowTasks",this.currentClickedTask.id)
+                        model.invoke("pickFollowTasks",this.currentClickedTask)
                       },
                       // 监听决策输入 ，如有输入或修改 同步到左侧当前点击的任务数据
                       hmChange() {

@@ -327,7 +327,7 @@
                         },
                         goSelectFollowTask(){
                           console.log("打开选择后续任务弹窗")
-                          model.invoke("pickFollowTasks",this.currentClickedTask.id)
+                          model.invoke("pickFollowTasks",this.currentClickedTask)
                         },
                         closeTaskReportDetail(){
                           this.taskReportDetailShow=false

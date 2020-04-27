@@ -461,13 +461,14 @@ new Vue({
     console.log("this.tableData>>>", this.tableData)
   },
   mounted() {
+    let self = this;
+    let height=$("#resourceAllocationApp", model.dom).get(0).clientHeight
     this.$nextTick(function() {
-      this.tableHeight = window.innerHeight - this.$refs.qualityPlanTable.$el.offsetTop - 10
+      self.tableHeight = height - self.$refs.resourceAllocationTable.$el.offsetTop - 80
 
       // 监听窗口大小变化
-      let self = this;
       window.onresize = function() {
-        self.tableHeight = window.innerHeight - self.$refs.qualityPlanTable.$el.offsetTop - 10
+        self.tableHeight = height - self.$refs.resourceAllocationTable.$el.offsetTop - 80
       }
     })
   },
