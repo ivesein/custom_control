@@ -80,7 +80,7 @@
                         tableData: theData,
                         allChecked: false,
                         currentSelectedIds: [],
-                        tableHeight: 800
+                        tableHeight: 720
                       },
                       created() {},
                       mounted() {
@@ -89,7 +89,7 @@
                         this.$nextTick(function() {
                           // console.log($("#qualityPlanApp").innerHeight())
                           // console.log($("#qualityPlanApp", model.dom).get(0).clientHeight)
-                          let height=$("#qualityPlanApp", model.dom).get(0).clientHeight
+                          let height=$("#iframeap").height()
                           if(self.$refs.thequalityPlanTable.$el!==undefined){
                             self.tableHeight = height - self.$refs.thequalityPlanTable.$el.offsetTop - 80
                           }else{

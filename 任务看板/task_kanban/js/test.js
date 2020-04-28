@@ -115,46 +115,46 @@ new Vue({
         project_name: "陕西汉中项目",
         check_status:"check_out"
       },
-      {
-        task_status: "complected",
-        task_name: "p3挖土",
-        project_name: "陕西汉中项目"
-      },
-      {
-        task_status: "inProgress",
-        task_name: "p4挖土",
-        project_name: "陕西汉中项目"
-      },
-      {
-        task_status: "toBeComplected",
-        task_name: "平纵数据自检修改完成",
-        project_name: "陕西汉中项目"
-      },
-      {
-        task_status: "complected",
-        task_name: "p3挖土",
-        project_name: "陕西汉中项目"
-      },
-      {
-        task_status: "inProgress",
-        task_name: "p4挖土",
-        project_name: "陕西汉中项目"
-      },
-      {
-        task_status: "toBeComplected",
-        task_name: "平纵数据自检修改完成",
-        project_name: "陕西汉中项目"
-      },
-      {
-        task_status: "complected",
-        task_name: "p3挖土",
-        project_name: "陕西汉中项目"
-      },
-      {
-        task_status: "inProgress",
-        task_name: "p4挖土",
-        project_name: "陕西汉中项目"
-      }
+      // {
+      //   task_status: "complected",
+      //   task_name: "p3挖土",
+      //   project_name: "陕西汉中项目"
+      // },
+      // {
+      //   task_status: "inProgress",
+      //   task_name: "p4挖土",
+      //   project_name: "陕西汉中项目"
+      // },
+      // {
+      //   task_status: "toBeComplected",
+      //   task_name: "平纵数据自检修改完成",
+      //   project_name: "陕西汉中项目"
+      // },
+      // {
+      //   task_status: "complected",
+      //   task_name: "p3挖土",
+      //   project_name: "陕西汉中项目"
+      // },
+      // {
+      //   task_status: "inProgress",
+      //   task_name: "p4挖土",
+      //   project_name: "陕西汉中项目"
+      // },
+      // {
+      //   task_status: "toBeComplected",
+      //   task_name: "平纵数据自检修改完成",
+      //   project_name: "陕西汉中项目"
+      // },
+      // {
+      //   task_status: "complected",
+      //   task_name: "p3挖土",
+      //   project_name: "陕西汉中项目"
+      // },
+      // {
+      //   task_status: "inProgress",
+      //   task_name: "p4挖土",
+      //   project_name: "陕西汉中项目"
+      // }
     ],
     participtionTaskInfos: [{
         task_status: "toBeComplected",

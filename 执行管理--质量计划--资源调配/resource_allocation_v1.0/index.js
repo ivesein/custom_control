@@ -82,14 +82,14 @@
                         tableData: theData,
                         allChecked: false,
                         currentSelectedIds: [],
-                        tableHeight: 800
+                        tableHeight: 720
                       },
                       created() {},
                       mounted() {
                         // 固定表格表头 设置表格高度自适应填满剩余高度
                         let self = this;
-                        let height=$("#resourceAllocationApp", model.dom).get(0).clientHeight
                         this.$nextTick(function() {
+                          let height=$("#iframeap").height()
                           self.tableHeight = height - self.$refs.resourceAllocationTable.$el.offsetTop - 80
 
                           // 监听窗口大小变化
