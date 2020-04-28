@@ -89,7 +89,10 @@
                       taskReportDetailData: [],
                       currentClickedTask: {
                         index: 0
-                      }
+                      },
+                      followTaskListTableData:[],
+                      multipleSelection:[],
+                      followTaskListShow:false
                     },
                     created() {
                       this.handleUpdata(model, props)
@@ -101,7 +104,7 @@
                         console.log(self.tableWidth)
                         // 监听窗口大小变化
                         window.onresize = function () {
-                          self.tableWidth = self.$refs.projectTable.$el.clientWidth + 'px'
+                          self.tableWidth = self.$refs.projectTable.$el.clientWidth-1 + 'px'
                         }
                       })
                     },
@@ -134,17 +137,19 @@
                               this.earnedValueAnalysisSuggestions.data = props.data.data.earnedValueAnalysisSuggestions  //挣值分析数据
                               break;
                             case "pickFollowTasks":
-                            //获取选取的后续任务列表数据
-                              props.data.data.forEach(v => {
-                                v.handling_measures = ""
-                              })
-                              //在列表尾部添加选取后续任务按钮行
-                              props.data.data.push({
-                                follow_task_name: "",
-                                handling_measures: "请输入处理措施"
-                              })
-                              this.proTableData[this.currentClickedTask.index].follow_task = props.data.data
-                              this.followTaskProcessing.data = props.data.data
+                              // 获取后续任务列表数据
+                              this.followTaskListTableData=props.data.data
+                              this.followTaskListShow=true
+                              // props.data.data.forEach(v => {
+                              //   v.handling_measures = ""
+                              // })
+                              // //在列表尾部添加选取后续任务按钮行
+                              // props.data.data.push({
+                              //   follow_task_name: "",
+                              //   handling_measures: "请输入处理措施"
+                              // })
+                              // this.proTableData[this.currentClickedTask.index].follow_task = props.data.data
+                              // this.followTaskProcessing.data = props.data.data
                               break;
                             default:
                               this.$message.error("数据获取失败，请稍后重试..")
@@ -280,6 +285,30 @@
                       evasChange(val){
                         console.log(val)
                         model.invode("earnedAnalysisDeviationReason",{id:this.currentClickedTask.id,deviation_reason:val})
+                      },
+                      followTaskcancel(){
+                        this.multipleSelection=[]
+                        this.followTaskListShow=false
+                      },
+                      // 后续任务列表 确定按钮 处理选择的后续任务回填
+                      followTaskConfirm(){
+                        let arr=_.cloneDeep(this.multipleSelection)
+                        this.multipleSelection=[]
+                        arr.forEach(v=>{
+                          v.handling_measures=""
+                        })
+                        arr.push({
+                          follow_task_name: "",
+                          handling_measures: "请输入处理措施"
+                        })
+                        this.proTableData[this.currentClickedTask.index].follow_task = arr
+                        this.followTaskProcessing.data = arr
+                        this.followTaskListShow=false
+                      },
+                      // 后续任务多选功能 获取选择的任务
+                      handleSelectionChange(val){
+                        this.multipleSelection = val;
+                        console.log(this.multipleSelection)
                       }
                     }
                   }).$mount($("#costCAApp", model.dom).get(0))

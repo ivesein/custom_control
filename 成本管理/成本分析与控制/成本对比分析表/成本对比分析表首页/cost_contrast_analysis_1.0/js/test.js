@@ -2,6 +2,7 @@ new Vue({
   delimiters: ["${", "}"],
   data: {
     ifSelectBoxShow:false,
+    followTaskListShow:true,
     proTableData:[
       {
         wbs:"G",
@@ -147,7 +148,23 @@ new Vue({
     ifFollowTaskShow:false,
     currentClickedTask: {
       index: 0
-    }
+    },
+    followTaskListTableData:[
+      {
+        wbs:"1.1.1",
+        id:"1",
+        task_name:"后续任务1",
+        day:"4",
+        plan_starttime:"2020-04-25",
+        plan_endtime:"2020-04-29",
+        artificialAggregate:"10",
+        materialCombined:"20",
+        internalManualSummation:"30",
+        externalManualSummation:"40",
+        combined:"100"
+      },
+    ],
+    multipleSelection:[]
   },
   created() {
    
@@ -250,7 +267,17 @@ new Vue({
     },
     evasChange(val){
       console.log(val)
+    },
+    followTaskcancel(){
+      this.multipleSelection=[]
+      this.followTaskListShow=false
+    },
+    followTaskConfirm(){
 
+    },
+    handleSelectionChange(val){
+      this.multipleSelection = val;
+      console.log(this.multipleSelection)
     }
   }
 }).$mount("#costCAApp")

@@ -169,15 +169,15 @@
           <span class="title-text">${earnedValueAnalysisSuggestions.title}</span>
         </div>
         <div class="table-info-box" v-if="earnedValueAnalysisSuggestions.open">
-          <el-table ref="currentTaskInfoTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="earnedValueAnalysisSuggestions.data" style="margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true">
-            <el-table-column prop="bcws" label="BCWS(已完成工作预算)" ></el-table-column>
-            <el-table-column prop="bcwp" label="BCWP(计划工作预算)"></el-table-column>
-            <el-table-column prop="acwp" label="ACWP(已完成实际费用)" ></el-table-column>
-            <el-table-column prop="sv" label="SV(进度偏差)"></el-table-column>
-            <el-table-column prop="spi" label="SPI(进度偏差)"></el-table-column>
-            <el-table-column prop="cv" label="CV(成本偏差)"></el-table-column>
-            <el-table-column prop="cpi" label="CPI(成本绩效指数)" ></el-table-column>
-            <el-table-column prop="deviation_type" label="偏差类型"></el-table-column>
+          <el-table ref="currentTaskInfoTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="earnedValueAnalysisSuggestions.data" style="margin:10px 0 10px 0;" :style="{width:tableWidth}" :cell-style="cellStyle" row-key="task_id" :border="true">
+            <el-table-column prop="bcws" label="BCWS(已完成工作预算)" width="100"></el-table-column>
+            <el-table-column prop="bcwp" label="BCWP(计划工作预算)" width="100"></el-table-column>
+            <el-table-column prop="acwp" label="ACWP(已完成实际费用)" width="100"></el-table-column>
+            <el-table-column prop="sv" label="SV(进度偏差)" width="100"></el-table-column>
+            <el-table-column prop="spi" label="SPI(进度偏差)" width="100"></el-table-column>
+            <el-table-column prop="cv" label="CV(成本偏差)" width="100"></el-table-column>
+            <el-table-column prop="cpi" label="CPI(成本绩效指数)" width="100"></el-table-column>
+            <el-table-column prop="deviation_type" label="偏差类型" width="100"></el-table-column>
             <el-table-column prop="deviation_reason" label="偏差原因">
               <template slot-scope="scope">
                 <el-input 
@@ -202,8 +202,8 @@
           <span class="title-text">${followTaskProcessing.title}</span>
         </div>
         <div class="table-info-box" v-if="followTaskProcessing.open">
-          <el-table ref="TableRight" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="followTaskProcessing.data" style="margin:10px 0 10px 0;" :style="{width:tableWidth}" :cell-style="cellStyle" row-key="task_id" :border="true">
-            <el-table-column label="后续任务名称" >
+          <el-table ref="TableRight" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="followTaskProcessing.data" style="margin:12px 0 10px 0;" :style="{width:tableWidth}" :cell-style="cellStyle" row-key="task_id" :border="true">
+            <el-table-column label="后续任务名称" width="300">
               <template slot-scope="scope">
                 <div class="search-icon" v-if="scope.$index===(followTaskProcessing.data.length-1)" @click="goSelectFollowTask">
                   <span style="font-size: 14px;">请选择后续任务</span>
@@ -251,6 +251,42 @@
       </div>
       <div class="message-btn-list">
         <button class="btn-item" @click="messageConfirm">
+          确定
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="follow-task-list-box" v-show="followTaskListShow">
+    <div class="follow-task-list-content">
+      <div class="follow-task-list-title">
+        <span>任务列表</span>
+      </div>
+      <div class="follow-task-table-box">
+        <el-table ref="followTaskListTable"  @selection-change="handleSelectionChange" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="followTaskListTableData" height="600" style="margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="id" :border="true">
+          <el-table-column
+          type="selection"
+          width="55"
+          align="center">
+        </el-table-column>
+          <el-table-column type="index" label="序号" width="55" align="center"></el-table-column>
+          <el-table-column prop="wbs" label="任务代码" width="120"></el-table-column>
+          <el-table-column prop="task_name" label="wbs任务名称"></el-table-column>
+          <el-table-column prop="day" label="工期(工日)" width="100"></el-table-column>
+          <el-table-column prop="plan_starttime" label="计划开始时间" width="200"></el-table-column>
+          <el-table-column prop="plan_endtime" label="计划完成时间" width="200"></el-table-column>
+          <el-table-column prop="artificialAggregate" label="物料合计" width="200"></el-table-column>
+          <el-table-column prop="materialCombined" label="材料合计" width="200"></el-table-column>
+          <el-table-column prop="internalManualSummation" label="内部人工合计" width="200"></el-table-column>
+          <el-table-column prop="externalManualSummation" label="外部人工合计" width="200"></el-table-column>
+          <el-table-column prop="combined" label="合计" width="200"></el-table-column>
+          </el-table-column>
+        </el-table>
+      </div>
+      <div class="follow-task-btn-box">
+        <button class="btn-item" @click="followTaskcancel">
+          取消
+        </button>
+        <button class="btn-item" @click="followTaskConfirm">
           确定
         </button>
       </div>
