@@ -87,9 +87,13 @@
                         let self = this;
                         // 固定表格表头 设置表格高度自适应填满剩余高度
                         this.$nextTick(function() {
-                          // console.log($("#qualityPlanApp").innerHeight())
-                          // console.log($("#qualityPlanApp", model.dom).get(0).clientHeight)
-                          let height=$("#iframeap").height()
+                          let heightArr=[]
+                          let iframeArr=$("iframe")
+                          for(let i=0;i<iframeArr.length;i++){
+                            heightArr.push(iframeArr[i].clientHeight)
+                          }
+                          let height=Math.max(...heightArr)
+                          // let height=$("#iframeap").height()<=0?720:$("#iframeap").height()
                           if(self.$refs.thequalityPlanTable.$el!==undefined){
                             self.tableHeight = height - self.$refs.thequalityPlanTable.$el.offsetTop - 80
                           }else{

@@ -89,8 +89,19 @@
                         // 固定表格表头 设置表格高度自适应填满剩余高度
                         let self = this;
                         this.$nextTick(function() {
-                          let height=$("#iframeap").height()
-                          self.tableHeight = height - self.$refs.resourceAllocationTable.$el.offsetTop - 80
+                          let heightArr=[]
+                          let iframeArr=$("iframe")
+                          for(let i=0;i<iframeArr.length;i++){
+                            heightArr.push(iframeArr[i].clientHeight)
+                          }
+                          let height=Math.max(...heightArr)
+                          // let height=$("#iframeap").height()<=0?720:$("#iframeap").height()
+                          if(self.$refs.resourceAllocationTable.$el!==undefined){
+                            self.tableHeight = height - self.$refs.resourceAllocationTable.$el.offsetTop - 80
+                          }else{
+                            // 处理偶发性初始化加载不出来的bug
+                            setHtml(model, props)
+                          }
 
                           // 监听窗口大小变化
                           window.onresize = function() {

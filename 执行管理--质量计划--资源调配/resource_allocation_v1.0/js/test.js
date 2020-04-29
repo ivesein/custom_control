@@ -23,6 +23,8 @@ new Vue({
         "project_id": "7d89067b-5a1a-4736-be72-396ee0e5753a",
         "position": "1",
         "task_type": "",
+        "plan_starttime": "2020-02-02 10:00:00",
+        "plan_endtime": "2020-02-05 10:00:00",
         "quality_action":"",
         "subArray": [{
           "owner": "",
@@ -53,10 +55,12 @@ new Vue({
         "project_id": "7d89067b-5a1a-4736-be72-396ee0e5753a",
         "position": "2",
         "task_type": "2",
+        "plan_starttime": "2020-02-02 10:00:00",
+        "plan_endtime": "2020-02-05 10:00:00",
         "subArray": [{
           "owner": "李华",
-          "plan_starttime": "2020-02-02",
-          "plan_endtime": "2020-02-05",
+          "plan_starttime": "2020-02-02 10:00:00",
+          "plan_endtime": "2020-02-05 10:00:00",
           "task_status": "",
           "confirm_duration": "",
           "owner_role": "设计员1",
@@ -82,6 +86,8 @@ new Vue({
         "project_id": "7d89067b-5a1a-4736-be72-396ee0e5753a",
         "position": "3",
         "task_type": "4",
+        "plan_starttime": "2020-02-02 10:00:00",
+        "plan_endtime": "2020-02-05 10:00:00",
         "subArray": [{
           "owner": "",
           "plan_starttime": "",
@@ -111,10 +117,12 @@ new Vue({
         "project_id": "7d89067b-5a1a-4736-be72-396ee0e5753a",
         "position": "4",
         "task_type": "1",
+        "plan_starttime": "2020-02-02 10:00:00",
+        "plan_endtime": "2020-02-05 10:00:00",
         "subArray": [{
           "owner": "荆晓雯",
-          "plan_starttime": "2020-02-01",
-          "plan_endtime":  "2020-02-01",
+          "res_plan_starttime": "2020-02-01 10:00:00",
+          "res_plan_endtime":  "2020-02-05 10:00:00",
           "task_status": "000",
           "confirm_duration": "",
           "owner_role": "设计员",
@@ -128,8 +136,8 @@ new Vue({
           "isreply":'2'
         }, {
           "owner": "yxx100",
-          "plan_starttime":  "2020-02-01",
-          "plan_endtime":  "2020-02-01",
+          "res_plan_starttime":  "2020-02-05 10:00:00",
+          "res_plan_endtime":  "2020-02-11 10:00:00",
           "task_status": "",
           "confirm_duration": "",
           "owner_role": "设计员",
@@ -143,8 +151,8 @@ new Vue({
           "isreply":'2'
         }, {
           "owner": "yxx101",
-          "plan_starttime":  "2020-02-01",
-          "plan_endtime":  "2020-02-01",
+          "res_plan_starttime":  "2020-02-11 10:00:00",
+          "res_plan_endtime":  "2020-02-13 10:00:00",
           "task_status": "",
           "confirm_duration": "",
           "owner_role": "设计员",
@@ -170,6 +178,8 @@ new Vue({
         "project_id": "7d89067b-5a1a-4736-be72-396ee0e5753a",
         "position": "5",
         "task_type": "3",
+        "plan_starttime": "2020-02-02 10:00:00",
+        "plan_endtime": "2020-02-05 10:00:00",
         "subArray": [{
           "owner": "卢峰",
           "plan_starttime": 1570118400000,
@@ -212,6 +222,8 @@ new Vue({
         "quality_action":"",
         "project_id": "7d89067b-5a1a-4736-be72-396ee0e5753a",
         "position": "6",
+        "plan_starttime": "2020-02-02 10:00:00",
+        "plan_endtime": "2020-02-05 10:00:00",
         "subArray": [{
           "owner": "",
           "plan_starttime": "",
@@ -254,6 +266,8 @@ new Vue({
         "quality_action":"压缩工期2天",
         "project_id": "7d89067b-5a1a-4736-be72-396ee0e5753a",
         "position": "7",
+        "plan_starttime": "2020-02-02 10:00:00",
+        "plan_endtime": "2020-02-05 10:00:00",
         "subArray": [{
           "owner": "",
           "plan_starttime": "",
