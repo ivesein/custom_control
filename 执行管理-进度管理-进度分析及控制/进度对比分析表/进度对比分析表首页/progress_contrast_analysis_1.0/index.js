@@ -113,7 +113,7 @@
                       methods: {
                         // 根据接口方法名 处理后台返回参数
                         handleUpdata(model,props){
-                          if(props.data!==undefined){
+                          if(props.data!==undefined&&props.data!==null&&props.data!==""){
                             switch(props.data.method){
                               case "init":
                                 this.messageData=props.data.data
