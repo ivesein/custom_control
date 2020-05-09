@@ -138,28 +138,32 @@ var taskKanbanVue = null;
                       // 处理设计校审任务面板初始化数据显示
                       if (props.data) {
                         this.allDatas = props.data;
-                        this.summarData = this.allDatas.summarData;
-                        for (let i = 0; i < this.summarData.length; i++) {
-                          if (this.summarData[i].focus) {
-                            this.currentType = this.summarData[i].title;
-                            break;
+                        if(props.data.summarData){
+                          this.summarData = this.allDatas.summarData;
+                          for (let i = 0; i < this.summarData.length; i++) {
+                            if (this.summarData[i].focus) {
+                              this.currentType = this.summarData[i].title;
+                              break;
+                            }
                           }
+                          this.handleCurrentTypeToDisplay(
+                            this.currentType,
+                            this.allDatas
+                          );
                         }
-                        this.handleCurrentTypeToDisplay(
-                          this.currentType,
-                          this.allDatas
-                        );
                         // 处理提资面板初始化数据显示
-                        this.tzTaskInfos = props.data.tzTaskData||[];
-                        this.summarDataTZ = props.data.summarDataTZ||[];
-                        let type = "";
-                        for (let i = 0; i < this.summarDataTZ.length; i++) {
-                          if (this.summarDataTZ[i].focus) {
-                            type = this.summarDataTZ[i].title;
-                            break;
+                        if(props.data.tzTaskData){
+                          this.tzTaskInfos = props.data.tzTaskData;
+                          this.summarDataTZ = props.data.summarDataTZ;
+                          let type = "";
+                          for (let i = 0; i < this.summarDataTZ.length; i++) {
+                            if (this.summarDataTZ[i].focus) {
+                              type = this.summarDataTZ[i].title;
+                              break;
+                            }
                           }
+                          this.handleCurrentTypeTzTaskDisplay(type);
                         }
-                        this.handleCurrentTypeTzTaskDisplay(type);
                       }
                     },
                     handleSummaryItemClicked(item) {
