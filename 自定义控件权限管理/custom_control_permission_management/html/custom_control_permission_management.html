@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="stylesheet" href="../css/element.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="ccPermissionManagementApp">
+    <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tab-pane label="功能权限" name="first">
+        <div class="first-tab-content">
+          <div class="first-tree-box">
+            <div class="search-box">
+              <i class="el-icon-search"></i>
+              <input placeholder="请搜索业务对象" class="search-input" v-model="searchText">
+            </div>
+            <div class="tree-box">
+              <el-tree
+                :data="data"
+                show-checkbox
+                node-key="id"
+                :default-expanded-keys="[2, 3]"
+                :default-checked-keys="[5]"
+                :props="defaultProps">
+              </el-tree>
+            </div>
+          </div>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="字段权限" name="second"></el-tab-pane>
+      <el-tab-pane label="数据规则" name="third"></el-tab-pane>
+    </el-tabs>
+  </div>
+  <script src="../js/lodash.js"></script>
+  <script src="../js/vue.min.js"></script>
+  <script src="../js/element.js"></script>
+  <script src="../js/test.js"></script>
+</body>
+</html>

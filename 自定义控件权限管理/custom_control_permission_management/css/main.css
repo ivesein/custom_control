@@ -1,0 +1,99 @@
+
+html,body {
+  width: 100%;
+  height:100%;
+  margin: 0;
+  padding: 0;
+}
+
+#ccPermissionManagementApp{
+  display: flex;
+  height: 100%;
+  justify-content: flex-start;
+  align-items: stretch;
+  box-sizing: border-box;
+  padding: 20px 40px;
+
+}
+
+.el-tabs{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.el-tabs__content{
+  flex: 1;
+}
+
+.el-tab-pane{
+  width: 100%;
+  height: 100%;
+}
+
+.first-tab-content{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+
+.first-tab-content .first-tree-box{
+  width: 350px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  border:1px solid rgb(229, 229, 229);
+  box-sizing: border-box;
+}
+
+.search-box{
+  width: 100%;
+  height: 28px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom: 1px solid rgb(229, 229, 229);
+  flex-shrink: 0;
+
+}
+
+.el-icon-search{
+  font-size: 18px;
+  color: #333;
+  margin-right: 5px;
+}
+input:focus {
+  outline: none;
+}
+.search-input{
+  border: none;
+  flex: 1;
+  text-indent: 5px;
+}
+
+.search-box:hover{
+  border-bottom: 1px solid #5582f3;
+}
+
+.search-box:hover .el-icon-search{
+  color:#5582f3;
+}
+
+.tree-box{
+  display: flex;
+  /* flex-grow: 1;  */
+  /* flex-shrink: 0;*/
+  overflow-y: auto;
+}
+
+.el-tree{
+  width: 100%;
+}
