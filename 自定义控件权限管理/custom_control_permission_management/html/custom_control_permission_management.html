@@ -26,8 +26,30 @@
                 :data="data"
                 show-checkbox
                 node-key="id"
-                :default-expanded-keys="[2, 3]"
-                :default-checked-keys="[5]"
+                ref="treeLeft"
+                :default-expanded-keys="defaultExpandedArr"
+                :props="defaultProps">
+              </el-tree>
+            </div>
+          </div>
+          <div class="first-tree-box btn-box">
+            <button class="btn-itme" id="setBtn4" @click="add">
+              添加＞
+            </button>
+            <button class="btn-itme" id="setBtn4" @click="remove">
+              ＜移除
+            </button>
+          </div>
+          <div class="first-tree-box">
+            <div class="search-box empty-box">
+            </div>
+            <div class="tree-box">
+              <el-tree
+                :data="assignedData"
+                show-checkbox
+                node-key="id"
+                :default-expanded-keys="[]"
+                :default-checked-keys="[]"
                 :props="defaultProps">
               </el-tree>
             </div>
