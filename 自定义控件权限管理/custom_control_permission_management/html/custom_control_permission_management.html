@@ -15,7 +15,7 @@
   <div id="ccPermissionManagementApp">
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="功能权限" name="first">
-        <div class="first-tab-content">
+        <div class="tab-content">
           <div class="first-tree-box">
             <div class="search-box">
               <i class="el-icon-search"></i>
@@ -46,9 +46,10 @@
             <div class="tree-box">
               <el-tree
                 :data="assignedData"
+                ref="treeRight"
                 show-checkbox
                 node-key="id"
-                :default-expanded-keys="[]"
+                :default-expanded-keys="['0']"
                 :default-checked-keys="[]"
                 :props="defaultProps">
               </el-tree>
@@ -56,8 +57,51 @@
           </div>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="字段权限" name="second"></el-tab-pane>
-      <el-tab-pane label="数据规则" name="third"></el-tab-pane>
+      <el-tab-pane label="字段权限" name="second">
+        <div class="tab-content field-content">
+          <div class="first-tree-box">
+            <div class="search-box empty-box">
+            </div>
+            <div class="tree-box">
+              <el-tree
+                :data="assignedData"
+                ref="fieldTree"
+                node-key="id"
+                @node-click="fieldTreeNodeClick"
+                :default-expanded-keys="['0']"
+                :default-checked-keys="[]"
+                :props="defaultProps">
+              </el-tree>
+            </div>
+          </div>
+          <div class="field-box">
+
+          </div>
+          <div class="text-btn" @click="choseField">选择字段</div>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="数据规则" name="third">
+        <div class="tab-content field-content">
+          <div class="first-tree-box">
+            <div class="search-box empty-box">
+            </div>
+            <div class="tree-box">
+              <el-tree
+                :data="assignedData"
+                ref="fieldTree"
+                node-key="id"
+                @node-click="fieldTreeNodeClick"
+                :default-expanded-keys="['0']"
+                :default-checked-keys="[]"
+                :props="defaultProps">
+              </el-tree>
+            </div>
+          </div>
+          <div class="field-box">
+            
+          </div>
+        </div>
+      </el-tab-pane>
     </el-tabs>
   </div>
   <script src="../js/lodash.js"></script>

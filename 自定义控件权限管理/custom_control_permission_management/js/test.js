@@ -9,9 +9,9 @@ new Vue({
         label: "功能权限",
         children: [
           {
-            id:"1",
-            label:"测试云",
-            children:[]
+            id: "1",
+            label: "测试云",
+            children: [],
           },
           {
             id: "2",
@@ -89,6 +89,10 @@ new Vue({
                     id: "6-1-1",
                     label: "手机注册",
                   },
+                  {
+                    id: "6-1-2",
+                    label: "密码找回",
+                  },
                 ],
               },
             ],
@@ -124,6 +128,7 @@ new Vue({
                   {
                     id: "7-4-3",
                     label: "成本管理（自定义）",
+                    biz_id: "",
                     children: [
                       {
                         id: "7-4-3-1",
@@ -162,25 +167,25 @@ new Vue({
         ],
       },
     ],
-    assignedData:[
+    assignedData: [
       {
         id: "0",
         label: "已分配",
-        children:[
-          {
-            id: "4",
-            label: "系统云",
-            children: [
-              {
-                id: "4-1",
-                label: "企业管理",
-              },
-              {
-                id: "4-2",
-                label: "基础资料",
-              },
-            ],
-          },
+        children: [
+          // {
+          //   id: "4",
+          //   label: "系统云",
+          //   children: [
+          //     {
+          //       id: "4-1",
+          //       label: "企业管理",
+          //     },
+          //     {
+          //       id: "4-2",
+          //       label: "基础资料",
+          //     },
+          //   ],
+          // },
           {
             id: "5",
             label: "公司管理",
@@ -219,67 +224,143 @@ new Vue({
               },
             ],
           },
-        ]
-      }
+        ],
+      },
     ],
     defaultProps: {
       children: "children",
       label: "label",
     },
-    defaultExpandedArr:["0"]
+    defaultExpandedArr: ["0"],
+    currendFieldTreeNodeClicked: null, //当前点击的字段树的节点对象
   },
   created() {},
   mounted() {
     // this.defaultExpandedArr=this.getDefaultExpandedKeys(this.data[0].children)
   },
   methods: {
-    getDefaultExpandedKeys(arr){
-      let res=[]
-      if(Array.isArray(arr)){
-        if(arr.length>0){
-          arr.forEach(v=>{
-            res.push(v.id)
-          })
+    getDefaultExpandedKeys(arr) {
+      let res = [];
+      if (Array.isArray(arr)) {
+        if (arr.length > 0) {
+          arr.forEach((v) => {
+            res.push(v.id);
+          });
         }
       }
-      return res
+      return res;
     },
     handleClick(val) {
       console.log(val);
     },
-    add(){
-      // console.log(this.$refs.treeLeft.getCheckedNodes())
-      console.log(this.$refs.treeLeft.getCheckedKeys());
+    add() {
       // 获取勾选的所有节点的id
-      let checked=this.$refs.treeLeft.getCheckedKeys()
-      let filterArr=_.cloneDeep(checked)
-      console.log(filterArr)
-      // 第一层过滤  从勾选的节点中取出根节点被选中的  直接将根节点连其所有子节点一同插入右侧树
-      let rootKeys=checked.filter(v=>{
-        let arrTemp=v.split("-")
-        if(arrTemp.length===1){
-          return v
+      let checked = this.$refs.treeLeft.getCheckedKeys();
+      console.log("checked>>", checked);
+      // 从勾选节点中获取被包含的子节点的下标
+      let filterArr = _.cloneDeep(checked);
+      let tempNode = checked[0];
+      let indexSplice = [];
+      for (let i = 1; i < checked.length; i++) {
+        if (checked[i].indexOf(tempNode) == 0) {
+          indexSplice.push(i);
+        } else {
+          tempNode = checked[i];
         }
-      })
-      // 第二次过滤  去除所有重复包含的子节点 
-      while(filterArr.length>0){
-        let target=filterArr.shift()
-        checked.forEach((v,k)=>{
-          if(v.indexOf(target)==0){
-            checked.splice(k,1)
-          }
-        })
       }
-      // 获取过滤后的剩余key对应的节点 插入到右侧树数据中
-      checked.forEach(v=>{
-        let node=this.$refs.treeLeft.getNode(v)
-        this.assignedData[0].children.push(node)
-      })
-      // console.log(checked)
-      // console.log(rootKeys)
+      console.log("indexSplice>>", indexSplice);
+      // 根据包含子节点下标过滤出父节点id
+      indexSplice.forEach((v, k) => {
+        if (k === 0) {
+          filterArr.splice(v, 1);
+        } else {
+          filterArr.splice(v - k, 1);
+        }
+      });
+      let resPArr = [];
+      let rootCheckedArr = []; //存放 从根节点就全选的节点id
+      console.log("filterArr>>", filterArr);
+      filterArr.forEach((v) => {
+        //获取当前父节点
+        let tempRootNode = this.$refs.treeLeft.getNode(v);
+        // 根据当前父节点获取所有上层节点
+        let arrParent = v.split("-"); //["7-4-3-1-1-1"]=>["7", "4", "3", "1", "1", "1"]
+        console.log(tempRootNode);
+        console.log(arrParent);
+        // 过滤从根节点就全选的节点 直接取出 跳出遍历
+        if (arrParent.length === 1) {
+          rootCheckedArr.push(v);
+        } else {
+          // 递归找到该节点的所有父节点
+          let len = arrParent.length - 1;
+          let pSliceArr = [];
+          while (len > 0) {
+            pSliceArr.push(arrParent.slice(0, len));
+            len -= 1;
+          }
+          console.log(pSliceArr);
+          let pJoin = pSliceArr.map((pv) => {
+            return pv.join("-");
+          });
+          resPArr.push(...pJoin);
+          console.log(pJoin);
+        }
+      });
+      console.log("resPArr>>", resPArr);
+      // 数组去重
+      let set = new Set(resPArr);
+      let arr = Array.from(set);
+      arr.sort();
+      console.log(arr);
     },
-    remove(){
+    /**
+     * Author: zhang fq
+     * Date: 2020-05-13
+     * Description: 权限分配标签页 右侧树结构 选中移除方法
+     */
+    // 移除按钮功能
+    remove() {
+      // 获取选中的要删除的节点id
+      let removeNode = this.$refs.treeRight.getCheckedKeys();
+      console.log(removeNode);
+      // 根据选中的节点id 循环删除每一个选中的节点
+      removeNode.forEach((v) => {
+        this.$refs.treeRight.remove(v);
+      });
+      this.$nextTick(function () {
+        //取消勾选状态的方法需要配合setCheckedKeys使用。直接改变数组数据无法取消勾选状态
+        this.$refs.treeRight.setCheckedKeys([], true);
+      });
+      console.log("this.assignedData", this.assignedData);
+      if (this.assignedData.length === 0) {
+        this.assignedData.push({
+          id: "0",
+          label: "已分配",
+          children: [],
+        });
+      }
+    },
+    /**
+     * Author: zhang fq
+     * Date: 2020-05-13
+     * Description: 字段权限标签页 选择字段按钮功能 以及是否点击业务对象节点判断
+     */
 
-    }
+    // 选择字段按钮功能
+    choseField() {
+      // 判断点击的当前节点是否为业务对象节点
+      if (
+        this.currendFieldTreeNodeClicked.children &&
+        this.currendFieldTreeNodeClicked.children.length > 0
+      ) {
+        this.$message.error("请先选择业务对象节点!");
+      } else {
+        // TODO 将节点id发送到后台 获取该节点id的所有字段
+      }
+    },
+    // 获取当前点击的字段树节点
+    fieldTreeNodeClick(data, node, tree) {
+      this.currendFieldTreeNodeClicked = data;
+    },
   },
 }).$mount("#ccPermissionManagementApp");
