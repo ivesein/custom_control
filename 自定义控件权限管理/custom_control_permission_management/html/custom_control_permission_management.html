@@ -75,7 +75,36 @@
             </div>
           </div>
           <div class="field-box">
-
+            <div class="field-box-header">
+              <div class="id-field"></div>
+              <div class="field-container">
+                <div class="field-item name-field">字段</div>
+                <div class="field-item switch-btn-field">禁止查看</div>
+                <div class="field-item switch-btn-field">禁止编辑</div>
+              </div>
+            </div>
+            <div class="field-list-box">
+              <div class="field-list-item" v-for="(item, index) in fieldListData" :key="index">
+                <div class="id-field">${index+1}</div>
+                <div class="field-container">
+                  <div class="field-item name-field">${item.field_name}</div>
+                  <div class="field-item switch-btn-field">
+                    <el-switch
+                      v-model="item.can_check"
+                      active-color="#13ce66"
+                    >
+                    </el-switch>
+                  </div>
+                  <div class="field-item switch-btn-field">
+                    <el-switch
+                      v-model="item.can_edit"
+                      active-color="#13ce66"
+                    >
+                    </el-switch>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="text-btn" @click="choseField">选择字段</div>
         </div>
@@ -103,6 +132,52 @@
         </div>
       </el-tab-pane>
     </el-tabs>
+    <div class="field-select-model" v-show="ifFieldSelectShow">
+      <div class="field-select-container">
+        <div class="field-select-header">
+          <span>选择需要的字段列表</span>
+          <i class="el-icon-close" @click="cancel"></i>
+        </div>
+        <div class="field-select-content">
+          <div class="field-select-content-left">
+            <div class="content-left-header">
+              <el-checkbox :indeterminate="isIndeterminate" v-model="fieldSelectCheckAll" @change="handleCheckAllChange">全选</el-checkbox>
+            </div>
+            <div class="content-left-table-box">
+              <div class="table-box-header">
+                <div class="id-filed">
+                  <i class="el-icon-setting"></i>
+                </div>
+                <div class="field-item">字段标识</div>
+                <div class="field-item">字段名称</div>
+              </div>
+              <div class="table-list">
+                <div class="table-list-item" v-for="(item, index) in alternative_fields" :key="index">
+                  <div class="id-field">
+                    <el-checkbox v-model="item.checked" @change="handleCheckAllChange"></el-checkbox>
+                  </div>
+                  <div class="field-item">${item.field_code}</div>
+                  <div class="field-item">${item.field_name}</div>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+          <div class="field-select-content-right">
+            
+          </div>
+        </div>
+        <div class="field-select-footer">
+          <button class="btn-item btn-item-cancel" @click="cancel">
+            取消
+          </button>
+          <button class="btn-item" @click="confirm">
+            确定
+          </button>
+        </div>
+
+      </div>
+    </div>
   </div>
   <script src="../js/lodash.js"></script>
   <script src="../js/vue.min.js"></script>
