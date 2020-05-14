@@ -431,15 +431,18 @@ new Vue({
     fieldTreeNodeClick(data, node, tree) {
       this.currendFieldTreeNodeClicked = data;
     },
-    //
+    
+    // 字段选择弹出框 取消按钮功能
     cancel(){
       this.ifFieldSelectShow=false
     },
+    // 字段选择弹出框 确认按钮功能
     confirm(){
       this.ifFieldSelectShow=false
     },
+    // 字段选择弹出框 全选按钮功能
     handleCheckAllChange(){
-      
+      this.fieldSelectCheckAll=true
     }
   },
 }).$mount("#ccPermissionManagementApp");
