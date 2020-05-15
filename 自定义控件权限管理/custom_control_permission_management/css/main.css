@@ -297,7 +297,7 @@ input:focus {
 }
 
 .field-select-content .field-select-content-left{
-  width: 70%;
+  width: 80%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -331,6 +331,7 @@ input:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-left: 24px;
 }
 
 .table-box-header .id-filed{
@@ -355,10 +356,12 @@ input:focus {
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
-  flex: 1;
+  flex-grow: 1;
+  flex-shrink: 0;
   overflow-y: auto;
   font-size: 12px;
   color: #333;
+  height: 0;
 }
 
 .table-list .table-list-item{
@@ -369,6 +372,10 @@ input:focus {
   border-bottom: 1px solid #ccc;
   flex-shrink: 0;
   background: #fff;
+}
+
+.table-list .list-item-line-focused{
+  background-color: #eff3fd;
 }
 
 .table-list .table-list-item:hover{
@@ -393,8 +400,74 @@ input:focus {
 }
 
 .field-select-content .field-select-content-right{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
   border-left: 1px solid #e9e9e9;
   flex: 1;
+}
+
+.field-select-content-right .content-right-header{
+  height: 50px;
+  display: flex;
+  padding: 0 15px;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #999;
+}
+
+.field-select-content-right .content-right-header .clear-all-text-btn{
+  cursor: pointer;
+  color: #5e80eb;
+}
+
+.field-select-content-right .content-right-checked-field-list{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-grow: 1;
+  flex-shrink: 0;
+  overflow-y: auto;
+  padding: 0 10px;
+  height: 0;
+}
+
+.content-right-checked-field-list .checked-field-list-item{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 26px;
+  padding-left:4px;
+  font-size: 12px;
+  margin: 5px;
+  color: #333;
+  flex-shrink: 0;
+}
+
+.checked-field-list-item .checked-field-item-x{
+  width: 26px;
+  height: 26px;
+  background-color: #5582f3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  display: none;
+}
+
+.checked-field-list-item .checked-field-item-x .el-icon-close{
+  font-size: 16px;
+  color: #fff;
+}
+
+.content-right-checked-field-list .checked-field-list-item:hover{
+  outline: 1px solid #7a9afd;
+}
+
+.content-right-checked-field-list .checked-field-list-item:hover .checked-field-item-x{
+  display: flex;
 }
 
 .field-select-footer .btn-item{
@@ -426,4 +499,8 @@ input:focus {
 .field-select-footer .btn-item-cancel:hover{
   color: #eee;
   background: #fff;
+}
+
+#ccPermissionManagementApp .el-checkbox__inner{
+  border-radius: 100%;
 }

@@ -45,6 +45,7 @@
             </div>
             <div class="tree-box">
               <el-tree
+                highlight-current="true"
                 :data="assignedData"
                 ref="treeRight"
                 show-checkbox
@@ -64,6 +65,7 @@
             </div>
             <div class="tree-box">
               <el-tree
+                highlight-current="true"
                 :data="assignedData"
                 ref="fieldTree"
                 node-key="id"
@@ -90,14 +92,14 @@
                   <div class="field-item name-field">${item.field_name}</div>
                   <div class="field-item switch-btn-field">
                     <el-switch
-                      v-model="item.can_check"
+                      v-model="item.field_check"
                       active-color="#13ce66"
                     >
                     </el-switch>
                   </div>
                   <div class="field-item switch-btn-field">
                     <el-switch
-                      v-model="item.can_edit"
+                      v-model="item.field_edit"
                       active-color="#13ce66"
                     >
                     </el-switch>
@@ -116,6 +118,7 @@
             </div>
             <div class="tree-box">
               <el-tree
+                highlight-current="true"
                 :data="assignedData"
                 ref="fieldTree"
                 node-key="id"
@@ -152,19 +155,29 @@
                 <div class="field-item">字段名称</div>
               </div>
               <div class="table-list">
-                <div class="table-list-item" v-for="(item, index) in alternative_fields" :key="index">
+                <div class="table-list-item" :class="{'list-item-line-focused':item.checked}" v-for="(item, index) in alternative_fields" :key="index">
                   <div class="id-field">
-                    <el-checkbox v-model="item.checked" @change="handleCheckAllChange"></el-checkbox>
+                    <el-checkbox v-model="item.checked" @change="handleTableListItemCheckChange(item,index)"></el-checkbox>
                   </div>
                   <div class="field-item">${item.field_code}</div>
                   <div class="field-item">${item.field_name}</div>
                 </div>
-                
               </div>
             </div>
           </div>
           <div class="field-select-content-right">
-            
+            <div class="content-right-header">
+              <span class="checked-field-num">已选（${fieldCheckedList.length}）</span>
+              <span class="clear-all-text-btn" @click="fieldCheckedListClearAll">清空</span>
+            </div>
+            <div class="content-right-checked-field-list">
+              <div class="checked-field-list-item" v-for="(item,index) in fieldCheckedList" :key="index">
+                <div class="checked-field-item-name">${item.field_name}</div>
+                <div class="checked-field-item-x">
+                  <i class="el-icon-close" @click="deleteCheckedFieldItem(item,index)"></i>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="field-select-footer">

@@ -2,8 +2,9 @@ new Vue({
   delimiters: ["${", "}"],
   data: {
     activeName: "first",
-    searchText: "",
+    searchText: "", //搜索字段
     data: [
+      //默认树数据结构
       {
         id: "0",
         label: "功能权限",
@@ -168,6 +169,7 @@ new Vue({
       },
     ],
     assignedData: [
+      //已分配树 数据结构
       {
         id: "0",
         label: "已分配",
@@ -231,74 +233,60 @@ new Vue({
       children: "children",
       label: "label",
     },
-    defaultExpandedArr: ["0"],
+    defaultExpandedArr: ["0"], //默认展开节点
     currendFieldTreeNodeClicked: null, //当前点击的字段树的节点对象
-    value:true,
-    fieldListData:[
+    value: true,
+    fieldListData: [], //字段权限 树节点映射的字段列表数据显示区域
+    ifFieldSelectShow: false, //是否显示选择字段弹出框
+    isIndeterminate: false, //是否半选
+    fieldSelectCheckAll: false, //全选
+    alternative_fields: [
+      // 字段选择弹出框 备选字段列表数据
       {
-        field_name:"创建人",
-        can_check:true,
-        can_edit:true
+        field_name: "创建人",
+        field_code: "creater",
+        field_check: true,
+        field_edit: true,
+        checked: false,
       },
       {
-        field_name:"创建时间",
-        can_check:true,
-        can_edit:true
+        field_name: "创建时间",
+        field_code: "creater_time",
+        field_check: true,
+        field_edit: true,
+        checked: false,
       },
       {
-        field_name:"创建组织",
-        can_check:true,
-        can_edit:true
+        field_name: "创建组织",
+        field_code: "creater_org",
+        field_check: true,
+        field_edit: true,
+        checked: false,
       },
       {
-        field_name:"修改时间",
-        can_check:true,
-        can_edit:true
-      },{
-        field_name:"修改人",
-        can_check:true,
-        can_edit:true
+        field_name: "修改时间",
+        field_code: "modify_time",
+        field_check: true,
+        field_edit: true,
+        checked: false,
       },
       {
-        field_name:"禁用时间",
-        can_check:true,
-        can_edit:true
-      }
+        field_name: "修改人",
+        field_code: "modify_owner",
+        field_check: true,
+        field_edit: true,
+        checked: false,
+      },
+      {
+        field_name: "禁用时间",
+        field_code: "disabled_time",
+        field_check: true,
+        field_edit: true,
+        checked: false,
+      },
     ],
-    ifFieldSelectShow:false,
-    isIndeterminate:false,
-    fieldSelectCheckAll:false,
-    alternative_fields:[
-      {
-        field_name:"创建人",
-        field_code:"creater",
-        checked:false
-      },
-      {
-        field_name:"创建时间",
-        field_code:"creater_time",
-        checked:false
-      },
-      {
-        field_name:"创建组织",
-        field_code:"creater_org",
-        checked:false
-      },
-      {
-        field_name:"修改时间",
-        field_code:"modify_time",
-        checked:false
-      },{
-        field_name:"修改人",
-        field_code:"modify_owner",
-        checked:false
-      },
-      {
-        field_name:"禁用时间",
-        field_code:"disabled_time",
-        checked:false
-      }
-    ]
+    fieldCheckedList: [], //已选择的字段列表
+    selectedFieldDataMaptoTreeItem: [], //树节点和已选字段映射
   },
   created() {},
   mounted() {
@@ -430,35 +418,145 @@ new Vue({
 
     // 选择字段按钮功能
     choseField() {
-      this.ifFieldSelectShow=true
-
-      // 判断点击的当前节点是否为业务对象节点
-      // if (
-      //   this.currendFieldTreeNodeClicked.children &&
-      //   this.currendFieldTreeNodeClicked.children.length > 0
-      // ) {
-      //   this.$message.error("请先选择业务对象节点!");
-      // } else {
-      //   // TODO 将节点id发送到后台 获取该节点id的所有字段
-      //   this.ifFieldSelectShow=true
-      // }
+      //判断点击的当前节点是否为业务对象节点;
+      if (this.currendFieldTreeNodeClicked === null) return;
+      if (
+        this.currendFieldTreeNodeClicked.children &&
+        this.currendFieldTreeNodeClicked.children.length > 0
+      ) {
+        this.$message.error("请先选择业务对象节点!");
+      } else {
+        // TODO 将节点id发送到后台 获取该节点id的所有字段
+        this.ifFieldSelectShow = true;
+      }
     },
-    // 获取当前点击的字段树节点
+    /**
+     * Author: zhang fq
+     * Date: 2020-05-15
+     * Description: 字段权限 获取当前点击的字段树节点
+     */
     fieldTreeNodeClick(data, node, tree) {
       this.currendFieldTreeNodeClicked = data;
+      // 从存储的映射数据中拿到当前节点的已选字段集
+      if (this.selectedFieldDataMaptoTreeItem.length === 0) {
+        this.fieldListData = [];
+      } else {
+        let dataTemp = this.selectedFieldDataMaptoTreeItem.filter((v) => {
+          return v.id === data.id;
+        });
+        // 从映射数据中取匹配
+        this.fieldListData = dataTemp.length === 0 ? [] : dataTemp[0].listData;
+      }
     },
-    
     // 字段选择弹出框 取消按钮功能
-    cancel(){
-      this.ifFieldSelectShow=false
+    cancel() {
+      this.ifFieldSelectShow = false;
     },
-    // 字段选择弹出框 确认按钮功能
-    confirm(){
-      this.ifFieldSelectShow=false
+    /**
+     * Author: zhang fq
+     * Date: 2020-05-15
+     * Description: 字段选择弹出框 确认按钮功能
+     */
+    confirm() {
+      this.ifFieldSelectShow = false;
+      if (this.fieldCheckedList.length === 0) {
+        this.$message.error("没有选中行");
+      } else {
+        //将已选择字段集赋值给显示列表
+        this.fieldListData = _.cloneDeep(this.fieldCheckedList);
+        // 将已选择字段和当前选择的业务对象 terrItem映射并存储 用于切换直接显示 避免多次从后台获取
+        this.selectedFieldDataMaptoTreeItem.push({
+          id: this.currendFieldTreeNodeClicked.id,
+          listData: _.cloneDeep(this.fieldCheckedList),
+        });
+      }
     },
-    // 字段选择弹出框 全选按钮功能
-    handleCheckAllChange(){
-      this.fieldSelectCheckAll=true
-    }
+    /**
+     * Author: zhang fq
+     * Date: 2020-05-15
+     * Description: 字段选择弹出框 全选按钮功能
+     */
+    handleCheckAllChange(val) {
+      if (val === true) {
+        // 先将右侧已选清空 再将每一项都push进右侧已选数据 避免重复
+        this.fieldCheckedList = [];
+        this.fieldCheckedList.length = 0;
+        this.alternative_fields.forEach((v, k) => {
+          // 将备选字段列表的每一项都勾选
+          v.checked = true;
+          let tempData = _.cloneDeep(v);
+          tempData.index = k;
+          this.fieldCheckedList.push(tempData);
+        });
+      } else {
+        this.alternative_fields.forEach((v) => {
+          v.checked = false;
+        });
+        this.fieldCheckedList = [];
+        this.fieldCheckedList.length = 0;
+      }
+    },
+    /**
+     * Author: zhang fq
+     * Date: 2020-05-15
+     * Description: 从右侧已选列表 删除某个已选择的字段
+     */
+    deleteCheckedFieldItem(item, index) {
+      // 1.从右侧已选删除该字段
+      this.fieldCheckedList.splice(index, 1);
+      // 2.将左侧字段列表对应的该字段 checked置为false
+      let itemIndex = item.index;
+      this.alternative_fields[itemIndex].checked = false;
+      this.fieldSelectCheckAll = false;
+    },
+    /**
+     * Author: zhang fq
+     * Date: 2020-05-15
+     * Description: 右侧已选列表按钮  清空所有已选  左右列表要同步
+     */
+    fieldCheckedListClearAll() {
+      this.fieldCheckedList = [];
+      this.fieldCheckedList.length = 0;
+      this.alternative_fields.forEach((v) => {
+        v.checked = false;
+      });
+      //将全选按钮置为false
+      this.fieldSelectCheckAll = false;
+    },
+    /**
+     * Author: zhang fq
+     * Date: 2020-05-15
+     * Description: 处理选择字段弹出框 备选字段列表每项的选择按钮
+     */
+    handleTableListItemCheckChange(item, index) {
+      // 完成左列表勾选和右侧已选列表数据同步
+      // 如果是勾选 将勾选的item 存入右侧已选列表数据中
+      if (item.checked === true) {
+        let tempData = _.cloneDeep(item);
+        tempData.index = index;
+        console.log(tempData);
+        this.fieldCheckedList.push(tempData);
+        // 如果是一个一个 全都勾选的  将全选按钮置为true
+        let flag = this.alternative_fields.every((v) => {
+          return v.checked === true;
+        });
+        this.fieldSelectCheckAll = flag === true ? true : false;
+      } else {
+        // 如果是取消勾选 从已选数据中删除该条
+        if (this.fieldCheckedList.length === 0) return;
+        let index = null;
+        for (let i = 0; i < this.fieldCheckedList.length; i++) {
+          if (item.field_code === this.fieldCheckedList[i].field_code) {
+            index = i;
+            break;
+          }
+        }
+        if (index !== null) {
+          this.fieldCheckedList.splice(index, 1);
+        }
+        // 将全选按钮置为false
+        this.fieldSelectCheckAll = false;
+      }
+    },
   },
 }).$mount("#ccPermissionManagementApp");
