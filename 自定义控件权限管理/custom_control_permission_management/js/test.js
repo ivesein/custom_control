@@ -233,6 +233,72 @@ new Vue({
     },
     defaultExpandedArr: ["0"],
     currendFieldTreeNodeClicked: null, //当前点击的字段树的节点对象
+    value:true,
+    fieldListData:[
+      {
+        field_name:"创建人",
+        can_check:true,
+        can_edit:true
+      },
+      {
+        field_name:"创建时间",
+        can_check:true,
+        can_edit:true
+      },
+      {
+        field_name:"创建组织",
+        can_check:true,
+        can_edit:true
+      },
+      {
+        field_name:"修改时间",
+        can_check:true,
+        can_edit:true
+      },{
+        field_name:"修改人",
+        can_check:true,
+        can_edit:true
+      },
+      {
+        field_name:"禁用时间",
+        can_check:true,
+        can_edit:true
+      }
+    ],
+    ifFieldSelectShow:false,
+    isIndeterminate:false,
+    fieldSelectCheckAll:false,
+    alternative_fields:[
+      {
+        field_name:"创建人",
+        field_code:"creater",
+        checked:false
+      },
+      {
+        field_name:"创建时间",
+        field_code:"creater_time",
+        checked:false
+      },
+      {
+        field_name:"创建组织",
+        field_code:"creater_org",
+        checked:false
+      },
+      {
+        field_name:"修改时间",
+        field_code:"modify_time",
+        checked:false
+      },{
+        field_name:"修改人",
+        field_code:"modify_owner",
+        checked:false
+      },
+      {
+        field_name:"禁用时间",
+        field_code:"disabled_time",
+        checked:false
+      }
+    ]
   },
   created() {},
   mounted() {
@@ -364,19 +430,35 @@ new Vue({
 
     // 选择字段按钮功能
     choseField() {
+      this.ifFieldSelectShow=true
+
       // 判断点击的当前节点是否为业务对象节点
-      if (
-        this.currendFieldTreeNodeClicked.children &&
-        this.currendFieldTreeNodeClicked.children.length > 0
-      ) {
-        this.$message.error("请先选择业务对象节点!");
-      } else {
-        // TODO 将节点id发送到后台 获取该节点id的所有字段
-      }
+      // if (
+      //   this.currendFieldTreeNodeClicked.children &&
+      //   this.currendFieldTreeNodeClicked.children.length > 0
+      // ) {
+      //   this.$message.error("请先选择业务对象节点!");
+      // } else {
+      //   // TODO 将节点id发送到后台 获取该节点id的所有字段
+      //   this.ifFieldSelectShow=true
+      // }
     },
     // 获取当前点击的字段树节点
     fieldTreeNodeClick(data, node, tree) {
       this.currendFieldTreeNodeClicked = data;
     },
+    
+    // 字段选择弹出框 取消按钮功能
+    cancel(){
+      this.ifFieldSelectShow=false
+    },
+    // 字段选择弹出框 确认按钮功能
+    confirm(){
+      this.ifFieldSelectShow=false
+    },
+    // 字段选择弹出框 全选按钮功能
+    handleCheckAllChange(){
+      this.fieldSelectCheckAll=true
+    }
   },
 }).$mount("#ccPermissionManagementApp");
