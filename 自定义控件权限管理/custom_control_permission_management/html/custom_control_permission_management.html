@@ -112,7 +112,7 @@
         </div>
       </el-tab-pane>
       <el-tab-pane label="数据规则" name="third">
-        <div class="tab-content field-content">
+        <div class="tab-content field-content data-rule-content">
           <div class="first-tree-box">
             <div class="search-box empty-box">
             </div>
@@ -130,7 +130,23 @@
             </div>
           </div>
           <div class="field-box">
-            
+            <div class="field-box-header">
+              <div class="field-box-header-item left-parenthesis"></div>
+              <div class="field-box-header-item filed-select">字段</div>
+              <div class="field-box-header-item condition-select">条件</div>
+              <div class="field-box-header-item value-input">值</div>
+              <div class="field-box-header-item parenthesis-item right-parenthesis"></div>
+              <div class="field-box-header-item logic-select">逻辑</div>
+            </div>
+            <div class="field-box-content">
+              <div class="data-rule-list-item" v-for="(item, index) in dataRuleList" :key="index">
+
+              </div>
+              <div class="add-data-rule-btn">
+                <i class="el-icon-plus"></i>
+                <p>添加条件</p>
+              </div>
+            </div>
           </div>
         </div>
       </el-tab-pane>
