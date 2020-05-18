@@ -188,44 +188,44 @@ new Vue({
           //     },
           //   ],
           // },
-          {
-            id: "5",
-            label: "公司管理",
-            children: [
-              {
-                id: "5-1",
-                label: "经营管理（建筑业）",
-              },
-              {
-                id: "5-2",
-                label: "人力管理",
-              },
-              {
-                id: "5-3",
-                label: "采购管理",
-              },
-              {
-                id: "5-4",
-                label: "库存管理",
-              },
-            ],
-          },
-          {
-            id: "6",
-            label: "公路云",
-            children: [
-              {
-                id: "6-1",
-                label: "公路云（建筑业）",
-                children: [
-                  {
-                    id: "6-1-1",
-                    label: "手机注册",
-                  },
-                ],
-              },
-            ],
-          },
+          // {
+          //   id: "5",
+          //   label: "公司管理",
+          //   children: [
+          //     {
+          //       id: "5-1",
+          //       label: "经营管理（建筑业）",
+          //     },
+          //     {
+          //       id: "5-2",
+          //       label: "人力管理",
+          //     },
+          //     {
+          //       id: "5-3",
+          //       label: "采购管理",
+          //     },
+          //     {
+          //       id: "5-4",
+          //       label: "库存管理",
+          //     },
+          //   ],
+          // },
+          // {
+          //   id: "6",
+          //   label: "公路云",
+          //   children: [
+          //     {
+          //       id: "6-1",
+          //       label: "公路云（建筑业）",
+          //       children: [
+          //         {
+          //           id: "6-1-1",
+          //           label: "手机注册",
+          //         },
+          //       ],
+          //     },
+          //   ],
+          // },
         ],
       },
     ],
@@ -287,6 +287,7 @@ new Vue({
     ],
     fieldCheckedList: [], //已选择的字段列表
     selectedFieldDataMaptoTreeItem: [], //树节点和已选字段映射
+    dataRuleList:[],  //数据规则
   },
   created() {},
   mounted() {
@@ -307,10 +308,23 @@ new Vue({
     handleClick(val) {
       console.log(val);
     },
+    /**
+     * Author: zhang fq
+     * Date: 2020-05-16
+     * Description: 权限分配标签页 添加按钮
+     * 完成 左侧勾选层层抽取父子结构重组树结构插入右侧树算法
+     */
     add() {
       // 获取勾选的所有节点的id
       let checked = this.$refs.treeLeft.getCheckedKeys();
       console.log("checked>>", checked);
+      //判断是否有勾选
+      if(checked.length===0){
+        return
+      }
+      //如果有勾选  清空右树  从左树组织勾选的数据结构插入右数  避免重复插入
+      // this.$set(this.assignedData[0].children,[])
+      this.assignedData[0].children=[]
       // 从勾选节点中获取被包含的子节点的下标
       let filterArr = _.cloneDeep(checked);
       let tempNode = checked[0];
@@ -336,10 +350,8 @@ new Vue({
       console.log("filterArr>>", filterArr);
       filterArr.forEach((v) => {
         //获取当前父节点
-        let tempRootNode = this.$refs.treeLeft.getNode(v);
         // 根据当前父节点获取所有上层节点
         let arrParent = v.split("-"); //["7-4-3-1-1-1"]=>["7", "4", "3", "1", "1", "1"]
-        console.log(tempRootNode);
         console.log(arrParent);
         // 过滤从根节点就全选的节点 直接取出 跳出遍历
         if (arrParent.length === 1) {
@@ -367,21 +379,33 @@ new Vue({
       let arr = Array.from(set);
       arr.sort(); //["6", "6-1", "7", "7-4", "7-4-3", "7-4-3-1", "7-4-3-1-1"]
       console.log(arr);
-      // 将arr按同一父节点规律分组  ["6","6-1"],["7", "7-4", "7-4-3", "7-4-3-1", "7-4-3-1-1"]
-      // 按规律分组后 开始构造层级关系
-      /**
-       * {
-       *    id:"6",
-       *    label: "公路云",
-       *    children:[
-       *      {
-       *        id:"6-1",
-       *        label:"公路云（建筑业）"
-       *        children:[]
-       *       }
-       *    ]
-       * }
-       */
+      arr.forEach(v=>{
+        if(v.length===1){
+          let node=_.cloneDeep(this.$refs.treeLeft.getNode(v).data)
+          delete node.children
+          console.log(node);
+          this.$refs.treeRight.append(node,"0")
+        }else{
+          let parentKey=v.slice(0,v.length-2)
+          console.log("parentKey>>>",parentKey)
+          let cNode=_.cloneDeep(this.$refs.treeLeft.getNode(v).data)
+          delete cNode.children
+          this.$refs.treeRight.append(cNode,parentKey)
+        }
+      })
+      // 循环 过滤后的最终子节点  将该节点插入到右侧对应的父节点下
+      filterArr.forEach((v) => {
+        //如果当前循环的最终子节点id只有以为("7") 则说明该节点为根节点 将该节点及其子节点一起插入右侧树
+        if(v.length===1){
+          let node=_.cloneDeep(this.$refs.treeLeft.getNode(v).data)
+          this.$refs.treeRight.append(node,"0")
+        }else{
+          //如果该节点key长度不为1 则找到该节点的父节点id 插入到右侧
+          let parentKey=v.slice(0,v.length-2)
+          let cNode=_.cloneDeep(this.$refs.treeLeft.getNode(v).data)
+          this.$refs.treeRight.append(cNode,parentKey)
+        }
+      })
     },
     /**
      * Author: zhang fq
@@ -397,7 +421,7 @@ new Vue({
       removeNode.forEach((v) => {
         this.$refs.treeRight.remove(v);
       });
-      this.$nextTick(function () {
+      this.$nextTick( () =>{
         //取消勾选状态的方法需要配合setCheckedKeys使用。直接改变数组数据无法取消勾选状态
         this.$refs.treeRight.setCheckedKeys([], true);
       });
@@ -415,7 +439,6 @@ new Vue({
      * Date: 2020-05-13
      * Description: 字段权限标签页 选择字段按钮功能 以及是否点击业务对象节点判断
      */
-
     // 选择字段按钮功能
     choseField() {
       //判断点击的当前节点是否为业务对象节点;
