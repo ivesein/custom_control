@@ -13,7 +13,7 @@
 
 <body>
   <div id="ccPermissionManagementApp">
-    <el-tabs v-model="activeName" @tab-click="handleClick">
+    <el-tabs v-model="activeName" @tab-click="handleTabClick">
       <el-tab-pane label="功能权限" name="first">
         <div class="tab-content">
           <div class="first-tree-box">
@@ -23,7 +23,7 @@
             </div>
             <div class="tree-box">
               <el-tree
-                :data="data"
+                :data="defaultTreeData"
                 show-checkbox
                 node-key="id"
                 ref="treeLeft"
@@ -81,26 +81,28 @@
               <div class="id-field"></div>
               <div class="field-container">
                 <div class="field-item name-field">字段</div>
-                <div class="field-item switch-btn-field">禁止查看</div>
-                <div class="field-item switch-btn-field">禁止编辑</div>
+                <div class="field-item switch-btn-field">是否可查看</div>
+                <div class="field-item switch-btn-field">是否可编辑</div>
               </div>
             </div>
             <div class="field-list-box">
               <div class="field-list-item" v-for="(item, index) in fieldListData" :key="index">
                 <div class="id-field">${index+1}</div>
                 <div class="field-container">
-                  <div class="field-item name-field">${item.field_name}</div>
+                  <div class="field-item name-field">${item.elementname}</div>
                   <div class="field-item switch-btn-field">
                     <el-switch
-                      v-model="item.field_check"
+                      v-model="item.isvisible===1?true:false"
                       active-color="#13ce66"
+                      @change="(val)=>{isvisibleChange(val,item)}"
                     >
                     </el-switch>
                   </div>
                   <div class="field-item switch-btn-field">
                     <el-switch
-                      v-model="item.field_edit"
+                      v-model="item.iseditable===1?true:false"
                       active-color="#13ce66"
+                      @change="(val)=>{iseditableChange(val,item)}"
                     >
                     </el-switch>
                   </div>
@@ -175,8 +177,8 @@
                   <div class="id-field">
                     <el-checkbox v-model="item.checked" @change="handleTableListItemCheckChange(item,index)"></el-checkbox>
                   </div>
-                  <div class="field-item">${item.field_code}</div>
-                  <div class="field-item">${item.field_name}</div>
+                  <div class="field-item">${item.elementid}</div>
+                  <div class="field-item">${item.elementname}</div>
                 </div>
               </div>
             </div>
@@ -188,7 +190,7 @@
             </div>
             <div class="content-right-checked-field-list">
               <div class="checked-field-list-item" v-for="(item,index) in fieldCheckedList" :key="index">
-                <div class="checked-field-item-name">${item.field_name}</div>
+                <div class="checked-field-item-name">${item.elementname}</div>
                 <div class="checked-field-item-x">
                   <i class="el-icon-close" @click="deleteCheckedFieldItem(item,index)"></i>
                 </div>

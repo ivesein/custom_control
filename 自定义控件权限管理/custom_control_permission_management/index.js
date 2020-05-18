@@ -1,4 +1,3 @@
-var taskKanbanVue = null;
 (function (KDApi, $) {
   function MyComponent(model) {
     this._setModel(model);
@@ -7,6 +6,7 @@ var taskKanbanVue = null;
     // 内部函数不推荐修改
     _setModel: function (model) {
       this.model = model; // 内部变量挂载
+      this.model.ccpermissionControlVue = null;
     },
     init: function (props) {
       console.log("init---", this.model, props);
@@ -17,15 +17,15 @@ var taskKanbanVue = null;
       console.log("-----update", this.model, props);
       // firstInit(props, this.model)
       // setHtml(this.model, props)
-      if (taskKanbanVue && props.data) {
-        taskKanbanVue.handleUpdata(this.model, props);
+      if (this.model.ccpermissionControlVue && props.data) {
+        this.model.ccpermissionControlVue.handleUpdata(this.model, props);
       } else {
         setHtml(this.model, props);
       }
     },
     destoryed: function () {
       console.log("-----destoryed", this.model);
-      taskKanbanVue = null;
+      this.model.ccpermissionControlVue = null;
     },
   };
   /**
@@ -40,294 +40,445 @@ var taskKanbanVue = null;
           KDApi.loadFile("./js/vue.min.js", model.schemaId, function () {
             KDApi.loadFile("./js/element.js", model.schemaId, function () {
               KDApi.templateFilePath(
-                "./html/task_kanban.html",
+                "./html/custom_control_permission_management.html",
                 model.schemaId,
                 {
                   path: KDApi.nameSpace(model.schemaId) + "./img/lock.png",
                 }
               ).then(function (result) {
                 model.dom.innerHTML = result;
-                // model.invoke("initData", '') //初始化
-                console.log(props.data);
-                // if (props.data === undefined || props.data === null) {
-                // 	return
-                // }
-                taskKanbanVue = new Vue({
+                model.ccpermissionControlVue = new Vue({
                   delimiters: ["${", "}"],
                   data: {
                     activeName: "first",
-                    showPannal: true,
-                    tabData: [
-                      {
-                        id: 1,
-                        text: "设计校审任务",
-                        focus: true,
-                      },
-                      {
-                        id: 2,
-                        text: "提资任务",
-                        focus: false,
-                      },
-                    ],
-                    // 提资任务概览数据
-                    summarDataTZ: [],
-                    // 提资任务数据
-                    tzTaskInfos: [],
-                    //当前类型的提资任务数据列表数据
-                    currentTzTaskData: [],
-                    allDatas: null,
-                    currentType: "",
-                    summarData: [],
-                    responsibleTaskInfos: [],
-                    participtionTaskInfos: [],
-                    professionalAuditTaskInfos: [],
-                    toBeComplected:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAADnElEQVRIS7WWXWwUVRTH/+duu1sSFNHuR/kwgh8lMZC4ggTF0CfA6MwdS0YT4wMKT77xAKJPfeLrRV54kwQTYwKTtDszJgJPQAkIjSSQkKgpwSjS2W5lNfaB2e7OMXd3pg7sUlq6vW937j3nd++Zc+75Ex4zGKCSrr/NwLsAvQXgJQBLQ7MygFEAlwj8fdpxhgngmVzSoxZ5YECUrl3byaAvQsjjzqbWRwl8MJ3Pn6CBgaCVQUugp2mrBCVOMnjDbCgP7yHQSMC1D3Oue7t57aEvY4bRJwK2AHRHSwyUCfiOCWeCWu16edEiL+P7KWJeXhXiZWJsY+Aj+j/UynSCwDsyjnMhjnjghsX3jK0Q7AJIhpvuA3SAUp1fZSxrcqbbjpvmYvan9gD8JYCucG8FBD1r22ci22lgSdd7A9AIgKfCxd8AllnHuTGXsHpSriWGA+CF0G5SgNenHecXNa8D2TQTJX/qcuyf3enoSGx6bnDwzlxg0d6/+vtXVKu1ywBWNCA0kk51biLLqtWB47r+KYOOR2FkQl/Otq88CSyy8aTcSIxzUXiZaXfOLRwnVWfjuvw1Sn1mHMq5tiqFeY+ilIfA+Dx0NJpx7FeopL2/JaBAnURVbDmZSq561rL+mTcNwD3TXFLxK7ej7BUs+qio64cB2tcA0DdZp7CzHbDIR1HKY2B81pjzEQUcBmhzg4f+rG0PtRPoSamFWavcDlNRlx6ArJpVCc8vt+0/2gn8U8qVHYzfQ59FBfSjQp9IJVOvWlYlDvSk3E1MW2dzCCY+m7Ptr+N7b5pmstuvKIYalQeAAvx02nH+XWjgdEhFQvSmh4ZUibRttAhpLGnAO7KOM9g2GoBWSXMEwN4wS09kbfuTdgKbyiJe+GDc6+xKrl7Qwl/Ip83T5EEi7A8jNprJv9Zbf7w9zdhFxFE63w8EbekpFK7OJ7RjhvGGCPh80+Ndf3BMM1H0Kz8SsD6EtLU9MeOnbFdy43R7UpAJTVtTI6Ea8OIQ2rYGnOBgQ7fr/tx4PWNjXDPeYeJCXGIw42gqQYeXFgp/zxTismE84wfYR+A9cYlBTEbGLfwQ2TapthB6KnbTetuqiygWpwOeutGzbNmYcjB2926PoM51RMH2FiJqkpg+iMOabhidQoW3CvEtEV5/ksRR/6wDwcdRGOM+ZiOElQp7cZbgWwQ+MGchHHceKvDNTKSB8WYIj0v9WyBcImY3nc9ffJTijnz+B+dRqkNbeDgFAAAAAElFTkSuQmCC",
-                    inProgress:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAADwklEQVRIS62WXWwUVRTH/2fu7BYT/GgiGAMaUWsJBl8ACYihT35EUMLuXY3xAZUn33iQlt0lmdjdacuLvvgmCSbGyE6LBDDCm1qDH40Pkkj8KNEoCZAYFmMf2p25c8ydzizT7ezO1ux92z0fv7nnnnPvn5CymEFetfA0gBeI+CkAjwLoD8PqAGYZuAimc2apNk0E7pSS2hnZsgyVuXwA4CMhJO3btH0WoDHhbjpBluUnBSQCeVRuUAZOAtjWDSXBZ0b4eJmOOr+32pYB3dH8EBnkALg35lwH+GOwcUGY/CPmcR13LPRBZdYpXwyA/GcBejVWah36NzPlMuXaV3HoEqA7ln+GfDoLIBs6zRPINlx+lyxnrtNu2ZKr/QwdYnARwKrQt8GgFzOl2oUotgnkUTmoDMwAuDM0/qHgv9RXmrq0krIuvCM3C4EzAB4K4+aEj6101PlF/w6AXJNC/YZvYmd2VZhqBw2fupoEU7Yc0f+LojOeZOeJ/euVJ3S+9aF9RgxgBxUcFQC9auENgI9HZfTJH8oWp75rtzOvKs9pm1ly9rTzadi57QYbXzTLSzhoFp3jpOdM2fLXqPWZMZ4pO3oU2q5ugDrYrebHCTQcJpoVRecxcm25mxj6S/SqC4ENNOL80wsgj8u7lYIejeCiYMIQuZXCBBEfDgDMH5rlyQNpTdLtDsPjeh/gtxbT0zHyqnIawK5FIPabZefTngIrhb0g1l2r17QGXgdwX9B1LB6k8id/9RLIlVceUKT+DHPe0MCFaNCFiz6ynEZPgZbMqgw0Q6/GUqC5cBcNn/k3FWjLG2CsbeO3xyw5n0U2TgDeLikZg1Q8qUek41J2vuwDawymn1odDYHzNOJEJURSSW83DXHOLE6eSgOuxO61No1blccIeDtMcsIsOa+vJGGar1ctLB2LlsG/KQQeThv8NEjz/JIG//9cbd0C3YocI0Jw0Ws1INzHBxcvb1u+CcYHoWHeZ+zOlp3vu02c5NeoyCcNwpfLLm/tHD5P3wLYGgZ3fJ7SPqT1eSLgB2MA25vPUwC1cxsVG/oBXh0m7N0DTP42Kk79rPMukRheNf88QKfjEoMZ75meO0HW6VuddsbWvnu8TPYwgQ/FJQbA+8zS5OdR7DIRFUJrsZ1q30URRTgvDLqE/v5rQYJ6/X7l8xNgPJcgouYALsRhy3bYbGc7t9Fn4yMGtqSdV5I9ODPyX4vKGPfpRghrFfZIl+ArANkrFsLx5FqBe+blXYC/l4h2hvC41L/CzBcB46zpbfq6neKOcv4HagK2XKPQC3gAAAAASUVORK5CYII=",
-                    complected:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAETklEQVRIS7VWbWxTZRR+zr11WxOmCCNDBRQBZyQaE0EyaXvXH37FTI2EaQSSCWa2BRP5gSBx9O1GxiAmkkg/WMRAYoxuCRoxUTSxtHcBkRAjZsaPEYgSnVqtxiX7oPcec2/vrbdb130A748mve95znM+33MIkxxmUCS92QvSHgNoNYiWgvlGE0aUBXM/gJNg6aOwL6oSgcuppIkuBQsJvQPNYHoFwNLJDLPu+0G8B575hwUJvRSmJGF7asviHGnvEbByikRFYgyccbH8dKty4MJY/DhCoQYawNQDoMYWZiBLhHcIdFxH7muakx1wZ6srhy67biGXaxmDH2bGswTkQ50/GbC0RijRtJO0iDCcCj1ExMcAVFhCwwTuYE16Xfhjg+W8FcnQLJL1rQzaCaDKkh0l8ONhX+K4jS0QtvcG6zQdZwBUW5cXATwhfPFz0wlrW2rL3TppHwK4zcINyhJWtHri35t1Zvx0d6+V++bXnPo/Z3wJ2nX1wv/GpemQ2bIi+eICyJdPAbTA+GbkdPlApr6pqUczCYUa2AimQ3YYJZIadnmjp2dCZmPa1M2rdNZP2OElpufDSuwQmX2mBn8olD5Rp/DGjFa44iNSwU4QtluK+sPe+B3Ulg4qOmBYYriedY9oi3c82PXPFbMB6Pys5YahSvmCXb0S0EAiHdgL0MsWwRHhizfPlKw99cKyVuXgj068SAWiIArlv/E+EumgCsBjVhDxU2Fv4v3pEopkcxVc7tfAaBS++K1OfEQNNTKzUbVGiaok1NAAmGuN/y6mRa8qsZ+dgLDasogkaVisTvxeyhCznTS8y4SFxNgolHheuXV2p0ILc8Q/5QnpN8PDkUKjz81UiuU9o7awabnsPs1AtSxJjbs80b5i6wMbmCkGwlcundaNNdaQFX1rK/BnjcFhnNEiQrc0cv12z1v/FuXg5KY5yFUcZeBeMDVFlNinxqsCmQ8A2ABCB3K1EeEXuVIRGE/oCClIqhPeqNEiRScPmnsQoPVEvJshPQPm2WBeJ5TE5+VyXiqkhaIB0xqhxI5OpCCSDm5joBPARchcP1FeyxdNOrgPwLa8EB8WvsRz5SyOnAj5mXPfCH9XppxcoQ7GtoWz8QH8VTWi3X5NG/+aPm1qaA+Yd1je9sNbW2c+3pFUaBMTv2ldDAOsCF/iy6mEbCIZkQ7cD1Bq3ONtAIzx9G3tvC9AvMLK5VUdTwDO3jWQWVUYT2aDJlvuhCwbA3iWZfVVG8DQtJXC3/Wd+dgUlXBv8FHW8YFzxQDRfuQq9gr//r/LhVgkX5oNecQYAluLVgwJT4Y98Y9t7LglKpIn7XZ4ao4tY4kC+BOGfu5mN341FPwyhJsI0j0APVJiiRokCU1OsnEeFnonH963Adw3w8I5C01bb4fRqWPSRZiZdhKwZCrEDJwn4o5pL8JO5eYGnv7DA9IbATwAoiVjVv3z1qp/DL55vRNt3LbO/wAk8+W4CSAk4QAAAABJRU5ErkJggg==",
+                    searchText: "", //搜索字段
+                    defaultTreeData: [],
+                    assignedData: [],
+                    defaultProps: {
+                      children: "children",
+                      label: "label",
+                    },
+                    defaultExpandedArr: ["0"], //默认展开节点
+                    currendFieldTreeNodeClicked: null, //当前点击的字段树的节点对象
+                    value: true,
+                    fieldListData: [], //字段权限 树节点映射的字段列表数据显示区域
+                    ifFieldSelectShow: false, //是否显示选择字段弹出框
+                    isIndeterminate: false, //是否半选
+                    fieldSelectCheckAll: false, //全选
+                    alternative_fields: [],
+                    fieldCheckedList: [], //已选择的字段列表
+                    selectedFieldDataMaptoTreeItem: [], //树节点和已选字段映射
+                    dataRuleList: [], //数据规则
+                    initData: null,
+                    assArr: [],
                   },
                   created() {
                     this.handleUpdata(model, props);
                   },
                   methods: {
-                    handleCurrentTypeToDisplay(currentType, allData) {
-                      // console.log("currentType>>>", currentType)
-                      // console.log("allData>>>", allData)
-                      switch (currentType) {
-                        case "总任务":
-                          this.responsibleTaskInfos =
-                            allData.all.responsibleTaskInfos;
-                          this.participtionTaskInfos =
-                            allData.all.participtionTaskInfos;
-                          this.professionalAuditTaskInfos =
-                            allData.all.professionalAuditTaskInfos;
-                          break;
-                        case "待完成任务":
-                          this.responsibleTaskInfos =
-                            allData.beCompleted.responsibleTaskInfos;
-                          this.participtionTaskInfos =
-                            allData.beCompleted.participtionTaskInfos;
-                          this.professionalAuditTaskInfos =
-                            allData.beCompleted.professionalAuditTaskInfos;
-                          break;
-                        case "已完成任务":
-                          this.responsibleTaskInfos =
-                            allData.completed.responsibleTaskInfos;
-                          this.participtionTaskInfos =
-                            allData.completed.participtionTaskInfos;
-                          this.professionalAuditTaskInfos =
-                            allData.completed.professionalAuditTaskInfos;
-                          break;
-                        case "已过期任务":
-                          this.responsibleTaskInfos =
-                            allData.overTime.responsibleTaskInfos;
-                          this.participtionTaskInfos =
-                            allData.overTime.participtionTaskInfos;
-                          this.professionalAuditTaskInfos =
-                            allData.overTime.professionalAuditTaskInfos;
-                          break;
-                        default:
-                          this.responsibleTaskInfos =
-                            allData.all.responsibleTaskInfos;
-                          this.participtionTaskInfos =
-                            allData.all.participtionTaskInfos;
-                          this.professionalAuditTaskInfos =
-                            allData.all.professionalAuditTaskInfos;
-                      }
+                    handleTabClick(val) {
+                      console.log(val);
                     },
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-18
+                     * Description: 后台各接口返回数据对应处理方法
+                     */
+
                     handleUpdata(model, props) {
-                      // 处理设计校审任务面板初始化数据显示
+                      // 处理后台返回来的数据
                       if (props.data) {
-                        this.allDatas = props.data;
-                        if(props.data.summarData){
-                          this.summarData = this.allDatas.summarData;
-                          for (let i = 0; i < this.summarData.length; i++) {
-                            if (this.summarData[i].focus) {
-                              this.currentType = this.summarData[i].title;
+                        if (props.data.method) {
+                          switch (props.data.method) {
+                            case "init":
+                              this.pageInit(props.data.data);
                               break;
-                            }
-                          }
-                          this.handleCurrentTypeToDisplay(
-                            this.currentType,
-                            this.allDatas
-                          );
-                        }
-                        // 处理提资面板初始化数据显示
-                        if(props.data.tzTaskData){
-                          this.tzTaskInfos = props.data.tzTaskData;
-                          this.summarDataTZ = props.data.summarDataTZ;
-                          let type = "";
-                          for (let i = 0; i < this.summarDataTZ.length; i++) {
-                            if (this.summarDataTZ[i].focus) {
-                              type = this.summarDataTZ[i].title;
+                            case "save":
+                              this.saveData();
                               break;
-                            }
+                            case "getFields":
+                              this.getFieldsData(props.data.data);
+                              break;
+                            case "getDataRule":
+                              this.getDataRule(props.data.data);
+                              break;
+                            default:
+                              this.$message.error("网络错误，请稍后重试...");
                           }
-                          this.handleCurrentTypeTzTaskDisplay(type);
                         }
                       }
                     },
-                    handleSummaryItemClicked(item) {
-                      this.summarData.forEach(function (fuck) {
-                        fuck.focus = false;
-                      });
-                      item.focus = true;
-                      this.currentType = item.title;
-                      this.handleCurrentTypeToDisplay(
-                        this.currentType,
-                        this.allDatas
-                      );
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-18
+                     * Description: 页面初始化数据处理
+                     */
+                    pageInit(data) {
+                      this.initData = data;
+                      this.defaultTreeData = data.initBasicPermLeftTreeinfo || [
+                        {
+                          id: "0",
+                          label: "功能权限",
+                        },
+                      ];
+                      this.assignedData = data.initAssignedPermLeftTreeinfo || [
+                        {
+                          id: "0",
+                          label: "已分配",
+                        },
+                      ];
                     },
-                    // clickNameOpenTaskDetail
-                    handleTaskNameClicked(item) {
-                      console.log(item);
-                      let sendData = {
-                        data: item,
+                    // 获取字段列表接口数据处理
+                    getFieldsData(data) {
+                      this.alternative_fields = data || [];
+                    },
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-18
+                     * Description: 字段权限-- 是否可查看 是否可编辑 滑块处理
+                     */
+
+                    isvisibleChange(val, item) {
+                      item.isvisible = val ? 1 : 0;
+                    },
+                    iseditableChange(val, item) {
+                      item.iseditable = val ? 1 : 0;
+                    },
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-18
+                     * Description: 获取右侧树的所有已分配节点id
+                     * 用于添加时判断是否已有改节点 避免重复插入
+                     */
+                    getTreeRightNodes(node) {
+                      if (node.id !== "0") {
+                        this.assArr.push(node.id);
+                      }
+                      let children = node.children ? node.children : [];
+                      children.forEach((v) => {
+                        this.getTreeRightNodes(v);
+                      });
+                      // if (node.children && node.children.length > 0) {
+                      //   node.children.forEach((v) => {
+                      //     this.getFinalChildNodes(v);
+                      //   });
+                      // } else {
+                      //   if (node.id !== "0") {
+                      //     this.assArr.push(node.id);
+                      //   }
+                      // }
+                    },
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-16
+                     * Description: 权限分配标签页 添加按钮
+                     * 完成 左侧勾选层层抽取父子结构重组树结构插入右侧树算法
+                     */
+                    add() {
+                      this.assArr = [];
+                      // 获取勾选的所有节点的id
+                      let checked = this.$refs.treeLeft.getCheckedKeys();
+                      console.log("checked>>", checked);
+                      //判断是否有勾选
+                      if (checked.length === 0) {
+                        return;
+                      }
+                      //如果有勾选
+                      // 将右侧已分配的所有最终子节点取出  合并到左侧已勾选  避免重复插入  再清空右树
+                      this.getTreeRightNodes(this.assignedData[0]);
+                      console.log(this.assArr);
+                      // this.$set(this.assignedData[0].children, []);
+                      // this.assignedData[0].children = [];
+                      // 从勾选节点中获取被包含的子节点的下标
+                      let filterArr = _.cloneDeep(checked);
+                      // filterArr.push(...this.assArr);
+                      // filterArr.sort();
+                      let tempNode = checked[0];
+                      let indexSplice = [];
+                      for (let i = 1; i < checked.length; i++) {
+                        if (checked[i].indexOf(tempNode) == 0) {
+                          indexSplice.push(i);
+                        } else {
+                          tempNode = checked[i];
+                        }
+                      }
+                      console.log("indexSplice>>", indexSplice);
+                      // 根据包含子节点下标过滤出父节点id
+                      indexSplice.forEach((v, k) => {
+                        if (k === 0) {
+                          filterArr.splice(v, 1);
+                        } else {
+                          filterArr.splice(v - k, 1);
+                        }
+                      });
+                      let resPArr = [];
+                      let rootCheckedArr = []; //存放 从根节点就全选的节点id
+                      console.log("filterArr>>", filterArr);
+                      filterArr.forEach((v) => {
+                        //获取当前父节点
+                        // 根据当前父节点获取所有上层节点
+                        let arrParent = v.split("-"); //["7-4-3-1-1-1"]=>["7", "4", "3", "1", "1", "1"]
+                        console.log(arrParent);
+                        // 过滤从根节点就全选的节点 直接取出 跳出遍历
+                        if (arrParent.length === 1) {
+                          rootCheckedArr.push(v);
+                        } else {
+                          // 递归找到该节点的所有父节点
+                          let len = arrParent.length - 1;
+                          let pSliceArr = [];
+                          while (len > 0) {
+                            pSliceArr.push(arrParent.slice(0, len));
+                            len -= 1;
+                          }
+                          console.log(pSliceArr);
+                          let pJoin = pSliceArr.map((pv) => {
+                            return pv.join("-");
+                          });
+                          resPArr.push(...pJoin);
+                          console.log(pJoin);
+                        }
+                      });
+                      console.log("resPArr>>", resPArr);
+                      // resPArr>>["6-1", "6", "7-4-3-1-1", "7-4-3-1", "7-4-3", "7-4", "7", "7-4-3-1-1", "7-4-3-1", "7-4-3", "7-4", "7", "7-4-3", "7-4", "7"]
+                      // 数组去重 将有相同父节点的id合并
+                      let set = new Set(resPArr);
+                      let arr = Array.from(set);
+                      arr.sort(); //["6", "6-1", "7", "7-4", "7-4-3", "7-4-3-1", "7-4-3-1-1"]
+                      console.log(arr);
+                      arr.forEach((v) => {
+                        // 先判断右侧树是否已有该父节点  没有再插
+                        if (!this.assArr.includes(v)) {
+                          if (v.length === 1) {
+                            let node = _.cloneDeep(
+                              this.$refs.treeLeft.getNode(v).data
+                            );
+                            delete node.children;
+                            console.log(node);
+                            this.$refs.treeRight.append(node, "0");
+                          } else {
+                            let parentKey = v.slice(0, v.length - 2);
+                            console.log("parentKey>>>", parentKey);
+                            let cNode = _.cloneDeep(
+                              this.$refs.treeLeft.getNode(v).data
+                            );
+                            delete cNode.children;
+                            this.$refs.treeRight.append(cNode, parentKey);
+                          }
+                        }
+                      });
+                      // 循环 过滤后的最终子节点  将该节点插入到右侧对应的父节点下
+                      filterArr.forEach((v) => {
+                        // 判断右侧树是否包含该节点 包含先删再插
+                        if (this.assArr.includes(v)) {
+                          this.$refs.treeRight.remove(v);
+                        }
+                        //如果当前循环的最终子节点id只有以为("7") 则说明该节点为根节点 将该节点及其子节点一起插入右侧树
+                        if (v.length === 1) {
+                          let node = _.cloneDeep(
+                            this.$refs.treeLeft.getNode(v).data
+                          );
+                          this.$refs.treeRight.append(node, "0");
+                        } else {
+                          //如果该节点key长度不为1 则找到该节点的父节点id 插入到右侧
+                          let parentKey = v.slice(0, v.length - 2);
+                          let cNode = _.cloneDeep(
+                            this.$refs.treeLeft.getNode(v).data
+                          );
+                          this.$refs.treeRight.append(cNode, parentKey);
+                        }
+                      });
+                    },
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-13
+                     * Description: 权限分配标签页 右侧树结构 选中移除方法
+                     */
+                    // 移除按钮功能
+                    remove() {
+                      // 获取选中的要删除的节点id
+                      let removeNode = this.$refs.treeRight.getCheckedKeys();
+                      console.log(removeNode);
+                      // 根据选中的节点id 循环删除每一个选中的节点
+                      removeNode.forEach((v) => {
+                        if (v.id !== "0") {
+                          this.$refs.treeRight.remove(v);
+                        }
+                      });
+                      this.$nextTick(() => {
+                        //取消勾选状态的方法需要配合setCheckedKeys使用。直接改变数组数据无法取消勾选状态
+                        this.$refs.treeRight.setCheckedKeys([], true);
+                      });
+                      console.log("this.assignedData", this.assignedData);
+                    },
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-13
+                     * Description: 字段权限标签页 选择字段按钮功能 以及是否点击业务对象节点判断
+                     */
+                    // 选择字段按钮功能
+                    choseField() {
+                      //判断点击的当前节点是否为业务对象节点;
+                      if (this.currendFieldTreeNodeClicked === null) return;
+                      if (
+                        this.currendFieldTreeNodeClicked.children &&
+                        this.currendFieldTreeNodeClicked.children.length > 0
+                      ) {
+                        this.$message.error("请先选择业务对象节点!");
+                      } else {
+                        // TODO 将节点id发送到后台 获取该节点id的所有字段
+                        this.ifFieldSelectShow = true;
+                        model.invoke(
+                          "getFieldsData",
+                          this.currendFieldTreeNodeClicked
+                        );
+                      }
+                    },
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-15
+                     * Description: 字段权限 获取当前点击的字段树节点
+                     */
+                    fieldTreeNodeClick(data, node, tree) {
+                      this.currendFieldTreeNodeClicked = data;
+                      // 从存储的映射数据中拿到当前节点的已选字段集
+                      if (this.selectedFieldDataMaptoTreeItem.length === 0) {
+                        this.fieldListData = [];
+                      } else {
+                        let dataTemp = this.selectedFieldDataMaptoTreeItem.filter(
+                          (v) => {
+                            return v.id === data.id;
+                          }
+                        );
+                        // 从映射数据中取匹配
+                        this.fieldListData =
+                          dataTemp.length === 0 ? [] : dataTemp[0].listData;
+                      }
+                    },
+                    // 字段选择弹出框 取消按钮功能
+                    cancel() {
+                      this.ifFieldSelectShow = false;
+                    },
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-15
+                     * Description: 字段选择弹出框 确认按钮功能
+                     */
+                    confirm() {
+                      this.ifFieldSelectShow = false;
+                      if (this.fieldCheckedList.length === 0) {
+                        this.$message.error("没有选中行");
+                      } else {
+                        //将已选择字段集赋值给显示列表
+                        this.fieldListData = _.cloneDeep(this.fieldCheckedList);
+                        // 将已选择字段和当前选择的业务对象 terrItem映射并存储 用于切换直接显示 避免多次从后台获取
+                        this.selectedFieldDataMaptoTreeItem.push({
+                          id: this.currendFieldTreeNodeClicked.id,
+                          listData: _.cloneDeep(this.fieldCheckedList),
+                        });
+                      }
+                    },
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-15
+                     * Description: 字段选择弹出框 全选按钮功能
+                     */
+                    handleCheckAllChange(val) {
+                      if (val === true) {
+                        // 先将右侧已选清空 再将每一项都push进右侧已选数据 避免重复
+                        this.fieldCheckedList = [];
+                        this.fieldCheckedList.length = 0;
+                        this.alternative_fields.forEach((v, k) => {
+                          // 将备选字段列表的每一项都勾选
+                          v.checked = true;
+                          let tempData = _.cloneDeep(v);
+                          tempData.index = k;
+                          this.fieldCheckedList.push(tempData);
+                        });
+                      } else {
+                        this.alternative_fields.forEach((v) => {
+                          v.checked = false;
+                        });
+                        this.fieldCheckedList = [];
+                        this.fieldCheckedList.length = 0;
+                      }
+                    },
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-15
+                     * Description: 从右侧已选列表 删除某个已选择的字段
+                     */
+                    deleteCheckedFieldItem(item, index) {
+                      // 1.从右侧已选删除该字段
+                      this.fieldCheckedList.splice(index, 1);
+                      // 2.将左侧字段列表对应的该字段 checked置为false
+                      let itemIndex = item.index;
+                      this.alternative_fields[itemIndex].checked = false;
+                      this.fieldSelectCheckAll = false;
+                    },
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-15
+                     * Description: 右侧已选列表按钮  清空所有已选  左右列表要同步
+                     */
+                    fieldCheckedListClearAll() {
+                      this.fieldCheckedList = [];
+                      this.fieldCheckedList.length = 0;
+                      this.alternative_fields.forEach((v) => {
+                        v.checked = false;
+                      });
+                      //将全选按钮置为false
+                      this.fieldSelectCheckAll = false;
+                    },
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-15
+                     * Description: 处理选择字段弹出框 备选字段列表每项的选择按钮
+                     */
+                    handleTableListItemCheckChange(item, index) {
+                      // 完成左列表勾选和右侧已选列表数据同步
+                      // 如果是勾选 将勾选的item 存入右侧已选列表数据中
+                      if (item.checked === true) {
+                        let tempData = _.cloneDeep(item);
+                        tempData.index = index;
+                        console.log(tempData);
+                        this.fieldCheckedList.push(tempData);
+                        // 如果是一个一个 全都勾选的  将全选按钮置为true
+                        let flag = this.alternative_fields.every((v) => {
+                          return v.checked === true;
+                        });
+                        this.fieldSelectCheckAll = flag === true ? true : false;
+                      } else {
+                        // 如果是取消勾选 从已选数据中删除该条
+                        if (this.fieldCheckedList.length === 0) return;
+                        let index = null;
+                        for (let i = 0; i < this.fieldCheckedList.length; i++) {
+                          if (
+                            item.field_code ===
+                            this.fieldCheckedList[i].field_code
+                          ) {
+                            index = i;
+                            break;
+                          }
+                        }
+                        if (index !== null) {
+                          this.fieldCheckedList.splice(index, 1);
+                        }
+                        // 将全选按钮置为false
+                        this.fieldSelectCheckAll = false;
+                      }
+                    },
+
+                    saveData() {
+                      let param = {
+                        functionPermission: this.assignedData,
+                        fieldsPermission: this.selectedFieldDataMaptoTreeItem,
+                        dataRule: [],
                       };
-                      model.invoke("clickNameOpenTaskDetail", sendData);
-                    },
-                    designClickAccept(item) {
-                      // console.log(item)
-                      this.$confirm("确认接受该任务?", "接受", {
-                        confirmButtonText: "确定",
-                        cancelButtonText: "取消",
-                        type: "warning",
-                      }).then(() => {
-                        let sendData = {
-                          type: this.currentType,
-                          data: item,
-                        };
-                        model.invoke("designCliickAcceptTaskButton", sendData);
-                      });
-                    },
-                    auditUrge(item) {
-                      this.$confirm("确定催办该任务?", "催办", {
-                        confirmButtonText: "确定",
-                        cancelButtonText: "取消",
-                        type: "warning",
-                      }).then(() => {
-                        let sendData = {
-                          type: this.currentType,
-                          data: item,
-                        };
-                        model.invoke("auditClickUrgeTaskButton", sendData);
-                      });
-                    },
-                    reviewUrge(item) {
-                      this.$confirm("确定催办该任务?", "催办", {
-                        confirmButtonText: "确定",
-                        cancelButtonText: "取消",
-                        type: "warning",
-                      }).then(() => {
-                        let sendData = {
-                          type: this.currentType,
-                          data: item,
-                        };
-                        model.invoke("reviewClickUrgeTaskButton", sendData);
-                      });
-                    },
-                    iconArrowClick(item) {
-                      item.open = !item.open;
-                    },
-                    auditClickAccept(row) {
-                      this.$confirm("确定接受该任务?", "接受", {
-                        confirmButtonText: "确定",
-                        cancelButtonText: "取消",
-                        type: "warning",
-                      }).then(() => {
-                        let sendData = {
-                          type: this.currentType,
-                          data: row,
-                        };
-                        model.invoke("auditCliickAcceptTaskButton", sendData);
-                      });
-                    },
-                    reviewClickAccept(item) {
-                      this.$confirm("确定接受该任务?", "接受", {
-                        confirmButtonText: "确定",
-                        cancelButtonText: "取消",
-                        type: "warning",
-                      }).then(() => {
-                        let sendData = {
-                          type: this.currentType,
-                          data: item,
-                        };
-                        model.invoke("reviewCliickAcceptTaskButton", sendData);
-                      });
-                    },
-                    // 以下为 提资任务面板相关数据处理方法封装以及点击交互方法
-                    // 处理标签按钮点击 加载焦点样式 展示相应面版
-                    handleTabClick(item) {
-                      console.log(item);
-                      this.tabData.forEach(function (fk) {
-                        fk.focus = false;
-                      });
-                      item.focus = true;
-                      this.showPannal = item.id === 1 ? true : false;
-                    },
-                    // 处理提资面板 概览数据 按钮 显示相应状态的任务
-                    handleSummaryTZItemClicked(item) {
-                      this.summarDataTZ.forEach(function (fk) {
-                        fk.focus = false;
-                      });
-                      item.focus = true;
-                      this.handleCurrentTypeTzTaskDisplay(item.title);
-                    },
-                    // 根据当前所点任务类型 过滤要显示的数据
-                    handleCurrentTypeTzTaskDisplay(type) {
-                      var _this = this;
-                      this.currentTzTaskData = [];
-                      switch (type) {
-                        case "总任务":
-                          _this.currentTzTaskData = _.cloneDeep(
-                            _this.tzTaskInfos
-                          );
-                          break;
-                        case "待完成任务":
-                          _this.tzTaskInfos.forEach(function (v) {
-                            if (v.task_status === "2") {
-                              _this.currentTzTaskData.push(v);
-                            }
-                          });
-                          break;
-                        case "已完成任务":
-                          _this.tzTaskInfos.forEach(function (v) {
-                            if (v.task_status === "3") {
-                              _this.currentTzTaskData.push(v);
-                            }
-                          });
-                          break;
-                        default:
-                          _this.currentTzTaskData = _.deepClone(
-                            _this.tzTaskInfos
-                          );
-                      }
-                    },
-                    // 提资任务名点击接口数据交互
-                    handleTZTaskNameClicked(item) {
-                      console.log(item);
-                      let data={
-                        taskid:item.taskid,
-                        projectid:item.projectid
-                      }
-                      model.invoke("taskNameClicked", data);
-                    },
-                    // 提资任务接受按钮点击接口数据交互
-                    tzClickAccept(item) {
-                      console.log(item);
-                      this.$confirm("确认接受该任务?", "接受", {
-                        confirmButtonText: "确定",
-                        cancelButtonText: "取消",
-                        type: "warning",
-                      }).then(() => {
-                        let data={
-                          taskid:item.taskid,
-                          projectid:item.projectid
-                        }
-                        model.invoke("taskAccept", data);
-                      });
+                      console.log(param);
+                      model.invoke("save", param);
                     },
                   },
-                }).$mount("#taskKanbanApp");
+                }).$mount($("#ccPermissionManagementApp", model.dom).get(0));
               });
             });
           });
@@ -336,5 +487,5 @@ var taskKanbanVue = null;
     });
   };
   // 注册自定义控件
-  KDApi.register("task_kanban_v2.0", MyComponent);
+  KDApi.register("ccPermissionManagement", MyComponent);
 })(window.KDApi, jQuery);

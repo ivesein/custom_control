@@ -553,6 +553,6 @@ input:focus {
   font-weight: 800;
 }
 
-#ccPermissionManagementApp .el-checkbox__inner{
+/* #ccPermissionManagementApp .el-checkbox__inner{
   border-radius: 100%;
-}
+} */
