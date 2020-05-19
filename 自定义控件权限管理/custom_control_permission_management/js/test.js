@@ -633,8 +633,12 @@ new Vue({
     selectedFieldDataMaptoTreeItem: [], //树节点和已选字段映射
     dataRuleList: [], //数据规则
     assArr: [],
+    fieldTreeData:[],
+    fieldListAllChecked:false, //已选字段列表全选
   },
-  created() {},
+  created() {
+    this.handleAssignedData(this.assignedData);
+  },
   mounted() {
     // this.defaultExpandedArr=this.getDefaultExpandedKeys(this.data[0].children)
   },
@@ -801,16 +805,27 @@ new Vue({
           this.$refs.treeRight.append(cNode, parentKey);
         }
       });
-      this.handleAssignedData();
+      this.handleAssignedData(this.assignedData);
     },
     /**
      * Author: zhang fq
      * Date: 2020-05-18
      * Description: 将权限分配页面已分配的数据处理过滤为字段权限和数据规则标签页树结构数据
      */
-    handleAssignedData(data) {
-      let dataTemp = _.cloneDeep(data);
+    handleAssignedData(node) {
+      this.fieldTreeData = _.cloneDeep(node);
       //TODO
+      this.filterChildrenFields(this.fieldTreeData[0])
+    },
+    //过滤掉自定义控件的按钮 形成新的树型数据 同步到 字段权限和数据规则页面
+    filterChildrenFields(node={},field="cstlid"){
+        let children = node.children ? node.children : [];
+        children.forEach((v) => {
+          if(v[field]){
+            v.children=[]
+          }
+          this.filterChildrenFields(v);
+        });
     },
     /**
      * Author: zhang fq
@@ -832,7 +847,8 @@ new Vue({
         //取消勾选状态的方法需要配合setCheckedKeys使用。直接改变数组数据无法取消勾选状态
         this.$refs.treeRight.setCheckedKeys([], true);
       });
-      console.log("this.assignedData", this.assignedData);
+      // console.log("this.assignedData", this.assignedData);
+      this.handleAssignedData(this.assignedData);
     },
     /**
      * Author: zhang fq
@@ -853,6 +869,14 @@ new Vue({
         this.ifFieldSelectShow = true;
       }
     },
+    deleteSelectedField (){
+      //TODO 删除当前点击的节点的已选字段功能
+      let arr = this.fieldListData.filter(v=>{
+        return v.dele_checked===false
+      })
+      if(arr===[]) return
+      this.fieldListData=arr
+    },
     /**
      * Author: zhang fq
      * Date: 2020-05-15
@@ -869,6 +893,9 @@ new Vue({
         });
         // 从映射数据中取匹配
         this.fieldListData = dataTemp.length === 0 ? [] : dataTemp[0].listData;
+        this.fieldListData.forEach(v=>{
+          v.dele_checked=false
+        })
       }
     },
     // 字段选择弹出框 取消按钮功能
@@ -886,11 +913,20 @@ new Vue({
         this.$message.error("没有选中行");
       } else {
         //将已选择字段集赋值给显示列表
-        this.fieldListData = _.cloneDeep(this.fieldCheckedList);
+        let selectedFields = _.cloneDeep(this.fieldCheckedList);
+        selectedFields.forEach(v=>{
+            v.dele_checked=false
+          }
+        )
+        this.fieldListData=selectedFields
+        this.fieldListData.forEach(v=>{
+          v.dele_checked=false
+        })
+        // this.fieldListData = _.cloneDeep(this.fieldCheckedList);
         // 将已选择字段和当前选择的业务对象 terrItem映射并存储 用于切换直接显示 避免多次从后台获取
         this.selectedFieldDataMaptoTreeItem.push({
           id: this.currendFieldTreeNodeClicked.id,
-          listData: _.cloneDeep(this.fieldCheckedList),
+          assignedfields: _.cloneDeep(this.fieldCheckedList),
         });
       }
     },
@@ -987,5 +1023,18 @@ new Vue({
       };
       console.log(param);
     },
+    handlefieldListAllCheckedChange(val){
+      this.fieldListData.forEach(v=>{
+        v.dele_checked=val
+      })
+    },
+    handlefieldListItemCheckChange(val,item,index){
+      console.log(item,index)
+      this.$set(this.fieldListData[index],"dele_checked",val)
+      // item.dele_checked=val
+      if(val===false){
+        this.fieldListAllChecked=false
+      }
+    }
   },
 }).$mount("#ccPermissionManagementApp");

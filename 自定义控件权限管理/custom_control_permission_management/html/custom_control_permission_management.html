@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -11,7 +11,7 @@
   <title>Document</title>
 </head>
 
-<body>
+<body> -->
   <div id="ccPermissionManagementApp">
     <el-tabs v-model="activeName" @tab-click="handleTabClick">
       <el-tab-pane label="功能权限" name="first">
@@ -66,7 +66,7 @@
             <div class="tree-box">
               <el-tree
                 highlight-current="true"
-                :data="assignedData"
+                :data="fieldTreeData"
                 ref="fieldTree"
                 node-key="id"
                 @node-click="fieldTreeNodeClick"
@@ -78,7 +78,9 @@
           </div>
           <div class="field-box">
             <div class="field-box-header">
-              <div class="id-field"></div>
+              <div class="id-field">
+                <el-checkbox v-model="fieldListAllChecked" @change="handlefieldListAllCheckedChange">全选</el-checkbox>
+              </div>
               <div class="field-container">
                 <div class="field-item name-field">字段</div>
                 <div class="field-item switch-btn-field">是否可查看</div>
@@ -87,7 +89,10 @@
             </div>
             <div class="field-list-box">
               <div class="field-list-item" v-for="(item, index) in fieldListData" :key="index">
-                <div class="id-field">${index+1}</div>
+                <div class="id-field">
+                  <el-checkbox v-model="item.dele_checked" @change="(val)=>{handlefieldListItemCheckChange(val,item,index)}"></el-checkbox>
+                  ${index+1}
+                </div>
                 <div class="field-container">
                   <div class="field-item name-field">${item.elementname}</div>
                   <div class="field-item switch-btn-field">
@@ -110,7 +115,10 @@
               </div>
             </div>
           </div>
-          <div class="text-btn" @click="choseField">选择字段</div>
+          <div class="text-btn" >
+            <span @click="choseField">选择字段</span> | 
+            <span @click="deleteSelectedField">删除字段</span>
+          </div>
         </div>
       </el-tab-pane>
       <el-tab-pane label="数据规则" name="third">
@@ -121,7 +129,7 @@
             <div class="tree-box">
               <el-tree
                 highlight-current="true"
-                :data="assignedData"
+                :data="fieldTreeData"
                 ref="fieldTree"
                 node-key="id"
                 @node-click="fieldTreeNodeClick"
@@ -210,9 +218,9 @@
       </div>
     </div>
   </div>
-  <script src="../js/lodash.js"></script>
+  <!-- <script src="../js/lodash.js"></script>
   <script src="../js/vue.min.js"></script>
   <script src="../js/element.js"></script>
   <script src="../js/test.js"></script>
 </body>
-</html>
+</html> -->
