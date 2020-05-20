@@ -105,6 +105,7 @@
                   </div>
                   <div class="field-item switch-btn-field">
                     <el-switch
+                      :disabled="item.isvisible===0?true:false"
                       v-model="item.iseditable===1?true:false"
                       active-color="#13ce66"
                       @change="(val)=>{iseditableChange(val,item)}"

@@ -18,6 +18,16 @@ new Vue({
                         cstlid: "quality_plan_v1.3",
                         id: "1-1-1-1",
                         label: "质量计划",
+                        assignedfields: [
+                          {
+                            elementid: "owner_role",
+                            elementname: "承担人角色field",
+                            isvisible: 1,
+                            checked: true,
+                            iseditable: 1,
+                          },
+                        ],
+                        assigneddatarules: [],
                         children: [
                           {
                             elementid: "btn1",
@@ -357,6 +367,16 @@ new Vue({
                         cstlid: "quality_plan_v1.3",
                         id: "1-1-1-1",
                         label: "质量计划",
+                        assignedfields: [
+                          {
+                            elementid: "owner_role",
+                            elementname: "承担人角色field",
+                            isvisible: 1,
+                            checked: true,
+                            iseditable: 1,
+                          },
+                        ],
+                        assigneddatarules: [],
                         children: [
                           {
                             elementid: "btn1",
@@ -396,6 +416,8 @@ new Vue({
                         cstlid: "resource_allocation_v1.0",
                         id: "1-2-1-1",
                         label: "质量维护",
+                        assignedfields: [],
+                        assigneddatarules: [],
                         children: [
                           {
                             elementid: "btnx",
@@ -433,6 +455,8 @@ new Vue({
                         cstlid: "company_calendar_v1.0",
                         id: "2-1-1-1",
                         label: "企业日历",
+                        assignedfields: [],
+                        assigneddatarules: [],
                         children: [
                           {
                             elementid: "testbbid",
@@ -479,6 +503,8 @@ new Vue({
                         cstlid: "wbs_planning_v1.0",
                         id: "3-1-1-1",
                         label: "模板管理",
+                        assignedfields: [],
+                        assigneddatarules: [],
                         children: [
                           {
                             elementid: "duration",
@@ -633,8 +659,8 @@ new Vue({
     selectedFieldDataMaptoTreeItem: [], //树节点和已选字段映射
     dataRuleList: [], //数据规则
     assArr: [],
-    fieldTreeData:[],
-    fieldListAllChecked:false, //已选字段列表全选
+    fieldTreeData: [],
+    fieldListAllChecked: false, //已选字段列表全选
   },
   created() {
     this.handleAssignedData(this.assignedData);
@@ -647,13 +673,20 @@ new Vue({
      * Author: zhang fq
      * Date: 2020-05-18
      * Description: 字段权限-- 是否可查看 是否可编辑 滑块处理
+     * Date: 2020-05-20
+     * Update: 增加滑块值变更时自动同步到差异化数据映射集
      */
-
     isvisibleChange(val, item) {
       item.isvisible = val ? 1 : 0;
+      let dataTemp = _.cloneDeep(this.currendFieldTreeNodeClicked);
+      dataTemp.assignedfields = _.cloneDeep(this.fieldListData);
+      this.updateSelectedFieldDataMaptoTreeItem(dataTemp);
     },
     iseditableChange(val, item) {
       item.iseditable = val ? 1 : 0;
+      let dataTemp = _.cloneDeep(this.currendFieldTreeNodeClicked);
+      dataTemp.assignedfields = _.cloneDeep(this.fieldListData);
+      this.updateSelectedFieldDataMaptoTreeItem(dataTemp);
     },
     getDefaultExpandedKeys(arr) {
       let res = [];
@@ -815,17 +848,17 @@ new Vue({
     handleAssignedData(node) {
       this.fieldTreeData = _.cloneDeep(node);
       //TODO
-      this.filterChildrenFields(this.fieldTreeData[0])
+      this.filterChildrenFields(this.fieldTreeData[0]);
     },
     //过滤掉自定义控件的按钮 形成新的树型数据 同步到 字段权限和数据规则页面
-    filterChildrenFields(node={},field="cstlid"){
-        let children = node.children ? node.children : [];
-        children.forEach((v) => {
-          if(v[field]){
-            v.children=[]
-          }
-          this.filterChildrenFields(v);
-        });
+    filterChildrenFields(node = {}, field = "cstlid") {
+      let children = node.children ? node.children : [];
+      children.forEach((v) => {
+        if (v[field]) {
+          v.children = [];
+        }
+        this.filterChildrenFields(v);
+      });
     },
     /**
      * Author: zhang fq
@@ -869,34 +902,46 @@ new Vue({
         this.ifFieldSelectShow = true;
       }
     },
-    deleteSelectedField (){
+    deleteSelectedField() {
       //TODO 删除当前点击的节点的已选字段功能
-      let arr = this.fieldListData.filter(v=>{
-        return v.dele_checked===false
-      })
-      if(arr===[]) return
-      this.fieldListData=arr
+      let arr = this.fieldListData.filter((v) => {
+        return v.dele_checked === false;
+      });
+      if (arr === []) return;
+      this.fieldListData = arr;
+      let dataTemp = _.cloneDeep(this.currendFieldTreeNodeClicked);
+      dataTemp.assignedfields = arr;
+      this.updateSelectedFieldDataMaptoTreeItem(dataTemp);
     },
     /**
      * Author: zhang fq
      * Date: 2020-05-15
      * Description: 字段权限 获取当前点击的字段树节点
+     * Date: 2020-05-20
+     * Updata: 点击业务对象节点树时 或取该节点已分配字段（先取映射集，没有再取节点上挂载的）
      */
     fieldTreeNodeClick(data, node, tree) {
+      this.fieldListAllChecked = false;
+
+      if (
+        data.assignedfields === null ||
+        data.assignedfields === undefined ||
+        data.assignedfields === ""
+      ) {
+        data.assignedfields = [];
+      }
       this.currendFieldTreeNodeClicked = data;
       // 从存储的映射数据中拿到当前节点的已选字段集
-      if (this.selectedFieldDataMaptoTreeItem.length === 0) {
-        this.fieldListData = [];
-      } else {
-        let dataTemp = this.selectedFieldDataMaptoTreeItem.filter((v) => {
-          return v.id === data.id;
-        });
-        // 从映射数据中取匹配
-        this.fieldListData = dataTemp.length === 0 ? [] : dataTemp[0].listData;
-        this.fieldListData.forEach(v=>{
-          v.dele_checked=false
-        })
-      }
+      let dataTemp = this.selectedFieldDataMaptoTreeItem.filter((v) => {
+        return v.id === data.id;
+      });
+      this.fieldListData =
+        dataTemp.length === 0
+          ? _.cloneDeep(data.assignedfields)
+          : dataTemp[0].assignedfields;
+      this.fieldListData.forEach((v) => {
+        v.dele_checked = false;
+      });
     },
     // 字段选择弹出框 取消按钮功能
     cancel() {
@@ -914,20 +959,28 @@ new Vue({
       } else {
         //将已选择字段集赋值给显示列表
         let selectedFields = _.cloneDeep(this.fieldCheckedList);
-        selectedFields.forEach(v=>{
-            v.dele_checked=false
-          }
-        )
-        this.fieldListData=selectedFields
-        this.fieldListData.forEach(v=>{
-          v.dele_checked=false
-        })
+        selectedFields.forEach((v) => {
+          v.dele_checked = false;
+        });
+        this.fieldListData = selectedFields;
         // this.fieldListData = _.cloneDeep(this.fieldCheckedList);
         // 将已选择字段和当前选择的业务对象 terrItem映射并存储 用于切换直接显示 避免多次从后台获取
-        this.selectedFieldDataMaptoTreeItem.push({
-          id: this.currendFieldTreeNodeClicked.id,
-          assignedfields: _.cloneDeep(this.fieldCheckedList),
-        });
+        let dataTemp = _.cloneDeep(this.currendFieldTreeNodeClicked);
+        dataTemp.assignedfields = selectedFields;
+        this.updateSelectedFieldDataMaptoTreeItem(dataTemp);
+      }
+    },
+    updateSelectedFieldDataMaptoTreeItem(data) {
+      //判断映射数组里是否有该数据  有则替换 无则push
+      let flag = true;
+      this.selectedFieldDataMaptoTreeItem.forEach((v) => {
+        if (v.id === data.id) {
+          flag = false;
+          v.assignedfields = data.assignedfields;
+        }
+      });
+      if (flag) {
+        this.selectedFieldDataMaptoTreeItem.push(data);
       }
     },
     /**
@@ -1023,18 +1076,18 @@ new Vue({
       };
       console.log(param);
     },
-    handlefieldListAllCheckedChange(val){
-      this.fieldListData.forEach(v=>{
-        v.dele_checked=val
-      })
+    handlefieldListAllCheckedChange(val) {
+      this.fieldListData.forEach((v) => {
+        v.dele_checked = val;
+      });
     },
-    handlefieldListItemCheckChange(val,item,index){
-      console.log(item,index)
-      this.$set(this.fieldListData[index],"dele_checked",val)
-      // item.dele_checked=val
-      if(val===false){
-        this.fieldListAllChecked=false
+    handlefieldListItemCheckChange(val, item, index) {
+      console.log(item, index);
+      this.$set(this.fieldListData, index, item);
+      // item.dele_checked = val;
+      if (val === false) {
+        this.fieldListAllChecked = false;
       }
-    }
+    },
   },
 }).$mount("#ccPermissionManagementApp");

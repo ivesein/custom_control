@@ -171,7 +171,7 @@ input:focus {
 }
 
 .id-field{
-  width: 40px;
+  width: 75px;
   display: flex;
   justify-content: flex-start;
   align-items: center;

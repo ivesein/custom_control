@@ -71,7 +71,7 @@
                     dataRuleList: [], //数据规则
                     initData: null,
                     assArr: [],
-                    fieldListAllChecked:false, //已选字段列表全选
+                    fieldListAllChecked: false, //已选字段列表全选
                   },
                   created() {
                     this.handleUpdata(model, props);
@@ -105,9 +105,9 @@
                             case "getDataRule":
                               this.getDataRule(props.data);
                               break;
-                            case "getNodeAssignedFieldsData":
-                              this.getNodeAssignedFieldsData(props.data);
-                              break;
+                            // case "getNodeAssignedFieldsData":
+                            //   this.getNodeAssignedFieldsData(props.data);
+                            //   break;
                             default:
                               this.$message.error("网络错误，请稍后重试...");
                           }
@@ -122,21 +122,21 @@
                     handleAssignedData(node) {
                       this.fieldTreeData = _.cloneDeep(node);
                       //TODO
-                      this.filterChildrenFields(this.fieldTreeData[0])
+                      this.filterChildrenFields(this.fieldTreeData[0]);
                     },
                     /**
                      * Author: zhang fq
                      * Date: 2020-05-19
                      * Description: 过滤掉自定义控件的按钮 形成新的树型数据 同步到 字段权限和数据规则页面
                      */
-                    filterChildrenFields(node={},field="cstlid"){
-                        let children = node.children ? node.children : [];
-                        children.forEach((v) => {
-                          if(v[field]){
-                            v.children=[]
-                          }
-                          this.filterChildrenFields(v);
-                        });
+                    filterChildrenFields(node = {}, field = "cstlid") {
+                      let children = node.children ? node.children : [];
+                      children.forEach((v) => {
+                        if (v[field]) {
+                          v.children = [];
+                        }
+                        this.filterChildrenFields(v);
+                      });
                     },
                     /**
                      * Author: zhang fq
@@ -159,19 +159,36 @@
                       ];
                       this.handleAssignedData(this.assignedData);
                     },
-                     /**
+                    /**
                      * Author: zhang fq
                      * Date: 2020-05-19
                      * Description: 获取字段列表接口数据处理
+                     * Date: 2020-05-20
+                     * Update: 修复已选列表没有清空会重复插入的bug 以及 全选按钮一直勾选的bug
                      */
                     getFieldsData(data) {
-                      this.alternative_fields = data || [];
+                      this.alternative_fields = data.data || [];
+                      this.fieldCheckedList = [];
+                      this.fieldSelectCheckAll = false;
                       // 循环对比设置 已勾选
-                      this.alternative_fields.forEach(afv=>{
-                        this.fieldListData.forEach(fv=>{
-                          afv.checked=afv.elementid===fv.elementid?true:false
-                        })
-                      })
+                      this.alternative_fields.forEach((afv, afk) => {
+                        this.fieldListData.forEach((fv) => {
+                          if (afv.elementid === fv.elementid) {
+                            afv.checked = true;
+                            // 注意 添加所勾选项在备选列表数据里的索引 用与从右侧点击删除时同步删除
+                            let dataTemp = _.cloneDeep(fv);
+                            dataTemp.index = afk;
+                            this.fieldCheckedList.push(dataTemp);
+                          }
+                        });
+                      });
+                      if (this.alternative_fields.length > 0) {
+                        this.fieldSelectCheckAll = this.alternative_fields.every(
+                          (v) => {
+                            return v.checked;
+                          }
+                        );
+                      }
                     },
                     /**
                      * Author: zhang fq
@@ -181,9 +198,19 @@
 
                     isvisibleChange(val, item) {
                       item.isvisible = val ? 1 : 0;
+                      let dataTemp = _.cloneDeep(
+                        this.currendFieldTreeNodeClicked
+                      );
+                      dataTemp.assignedfields = _.cloneDeep(this.fieldListData);
+                      this.updateSelectedFieldDataMaptoTreeItem(dataTemp);
                     },
                     iseditableChange(val, item) {
                       item.iseditable = val ? 1 : 0;
+                      let dataTemp = _.cloneDeep(
+                        this.currendFieldTreeNodeClicked
+                      );
+                      dataTemp.assignedfields = _.cloneDeep(this.fieldListData);
+                      this.updateSelectedFieldDataMaptoTreeItem(dataTemp);
                     },
                     /**
                      * Author: zhang fq
@@ -334,6 +361,8 @@
                      * Author: zhang fq
                      * Date: 2020-05-13
                      * Description: 权限分配标签页 右侧树结构 选中移除方法
+                     * Date: 2020-05-20
+                     * Update: 修复已分配全选移除时 会连已分配根节点一起移除从而导致无法再插入的bug
                      */
                     // 移除按钮功能
                     remove() {
@@ -342,7 +371,7 @@
                       console.log(removeNode);
                       // 根据选中的节点id 循环删除每一个选中的节点
                       removeNode.forEach((v) => {
-                        if (v.id !== "0") {
+                        if (v !== "0") {
                           this.$refs.treeRight.remove(v);
                         }
                       });
@@ -376,36 +405,38 @@
                         );
                       }
                     },
-                     /**
+                    /**
                      * Author: zhang fq
                      * Date: 2020-05-19
                      * Description: 删除勾选的当前点击的节点的已选字段功能
                      */
-                    deleteSelectedField (){
+                    deleteSelectedField() {
                       //TODO 删除当前点击的节点的已选字段功能
-                      let arr = this.fieldListData.filter(v=>{
-                        return v.dele_checked===false
-                      })
-                      if(arr===[]) return
-                      this.fieldListData=arr
+                      let arr = this.fieldListData.filter((v) => {
+                        return v.dele_checked === false;
+                      });
+                      if (arr === []) return;
+                      this.fieldListData = arr;
                       // 同步映射集数据
-                      let data=_.cloneDeep(this.currendFieldTreeNodeClicked)
-                      data.assignedfields=arr
-                      this.updateSelectedFieldDataMaptoTreeItem(data)
+                      let data = _.cloneDeep(this.currendFieldTreeNodeClicked);
+                      data.assignedfields = arr;
+                      this.updateSelectedFieldDataMaptoTreeItem(data);
                     },
                     /**
                      * Author: zhang fq
                      * Date: 2020-05-19
                      * Description: 获取当前点击的业务对象的已分配字段接口数据处理
                      */
-                    getNodeAssignedFieldsData(data){
-                      if(data.data){
-                        this.fieldListData=data.data||[]
-                        this.fieldListData.forEach(v=>{
-                          v.dele_checked=false
-                        })
+                    getNodeAssignedFieldsData(data) {
+                      if (data.data) {
+                        this.fieldListData = data.data || [];
+                        this.fieldListData.forEach((v) => {
+                          v.dele_checked = false;
+                        });
                         //判断映射数组里是否有该数据  有则替换 无则push
-                        this.updateSelectedFieldDataMaptoTreeItem(_.cloneDeep(this.fieldListData))
+                        this.updateSelectedFieldDataMaptoTreeItem(
+                          _.cloneDeep(this.fieldListData)
+                        );
                       }
                     },
                     /**
@@ -413,17 +444,17 @@
                      * Date: 2020-05-19
                      * Description: 更新保存时要发送的数据映射集
                      */
-                    updateSelectedFieldDataMaptoTreeItem(data){
+                    updateSelectedFieldDataMaptoTreeItem(data) {
                       //判断映射数组里是否有该数据  有则替换 无则push
-                      let flag=true
-                      this.selectedFieldDataMaptoTreeItem.forEach((v)=>{
-                        if(v.id===data.id){
-                          flag=false
-                          v.assignedfields=data.assignedfields
+                      let flag = true;
+                      this.selectedFieldDataMaptoTreeItem.forEach((v) => {
+                        if (v.id === data.id) {
+                          flag = false;
+                          v.assignedfields = data.assignedfields;
                         }
-                      })
-                      if(flag){
-                        this.selectedFieldDataMaptoTreeItem.push(data)
+                      });
+                      if (flag) {
+                        this.selectedFieldDataMaptoTreeItem.push(data);
                       }
                     },
                     /**
@@ -432,34 +463,55 @@
                      * Description: 字段权限 获取当前点击的字段树节点
                      * Data: 2020-05-19
                      * Update: 通知后台发送该业务对象节点已选的字段
+                     * Data: 2020-05-20
+                     * Update: 取消这层接口交互 点击业务对象节点树时获取该节点已分配字段（先取映射集，没有再取节点上挂载的）
                      */
                     fieldTreeNodeClick(data, node, tree) {
-                       //判断点击的当前节点是否为业务对象节点;
-                       if (data === null) return;
-                       if (
-                        data.children &&
-                        data.children.length > 0
-                       ) {
-                        this.fieldListData=[]
-                       } else {
-                        this.currendFieldTreeNodeClicked = data;
-                        // 先判断是否已获取过该节点已选字段并存入映射集中
-                        let dataTemp = this.selectedFieldDataMaptoTreeItem.filter(
-                          (v) => {
-                            return v.id === data.id;
-                          }
-                        );
-                        // 从映射数据中匹配 匹配到赋值  匹配不到 调接口
-                        if(dataTemp.length===0){
-                          // TODO 将节点id发送到后台 获取该业务对象节点已选的字段
-                          model.invoke(
-                            "getNodeAssignedFieldsData",
-                            this.currendFieldTreeNodeClicked
-                          );
-                        }else{
-                          this.fieldListData=dataTemp[0].assignedfields
+                      this.fieldListAllChecked = false;
+                      if (
+                        data.assignedfields === null ||
+                        data.assignedfields === undefined ||
+                        data.assignedfields === ""
+                      ) {
+                        data.assignedfields = [];
+                      }
+                      this.currendFieldTreeNodeClicked = data;
+                      // 从存储的映射数据中拿到当前节点的已选字段集
+                      let dataTemp = this.selectedFieldDataMaptoTreeItem.filter(
+                        (v) => {
+                          return v.id === data.id;
                         }
-                       }
+                      );
+                      this.fieldListData =
+                        dataTemp.length === 0
+                          ? _.cloneDeep(data.assignedfields)
+                          : dataTemp[0].assignedfields;
+                      this.fieldListData.forEach((v) => {
+                        v.dele_checked = false;
+                      });
+                      // //判断点击的当前节点是否为业务对象节点;
+                      // if (data === null) return;
+                      // if (data.children && data.children.length > 0) {
+                      //   this.fieldListData = [];
+                      // } else {
+                      //   this.currendFieldTreeNodeClicked = data;
+                      //   // 先判断是否已获取过该节点已选字段并存入映射集中
+                      //   let dataTemp = this.selectedFieldDataMaptoTreeItem.filter(
+                      //     (v) => {
+                      //       return v.id === data.id;
+                      //     }
+                      //   );
+                      //   // 从映射数据中匹配 匹配到赋值  匹配不到 调接口
+                      //   if (dataTemp.length === 0) {
+                      //     // TODO 将节点id发送到后台 获取该业务对象节点已选的字段
+                      //     model.invoke(
+                      //       "getNodeAssignedFieldsData",
+                      //       this.currendFieldTreeNodeClicked
+                      //     );
+                      //   } else {
+                      //     this.fieldListData = dataTemp[0].assignedfields;
+                      //   }
+                      // }
                     },
                     // 字段选择弹出框 取消按钮功能
                     cancel() {
@@ -469,29 +521,28 @@
                      * Author: zhang fq
                      * Date: 2020-05-15
                      * Description: 字段选择弹出框 确认按钮功能
-                     * Date: 2020-05-19 
+                     * Date: 2020-05-19
                      * Update: 根据新的交互逻辑修改 字段选择弹出框确定按钮功能
+                     * Date: 2020-05-20
+                     * Update: 修改确认时 更新差异化数据映射集
                      */
                     confirm() {
-                      this.ifFieldSelectShow = false;
                       if (this.fieldCheckedList.length === 0) {
                         this.$message.error("没有选中行");
                       } else {
                         //将已选择字段集赋值给显示列表
                         let selectedFields = _.cloneDeep(this.fieldCheckedList);
-                        selectedFields.forEach(v=>{
-                            v.dele_checked=false
-                          }
-                        )
-                        this.fieldListData=selectedFields
-                        let data=_.cloneDeep(this.currendFieldTreeNodeClicked)
-                        data.assignedfields=selectedFields
-                        this.updateSelectedFieldDataMaptoTreeItem(data)
-                        // // 将已选择字段和当前选择的业务对象 treeItem映射并存储 用于切换直接显示 避免多次从后台获取
-                        // this.selectedFieldDataMaptoTreeItem.push({
-                        //   id: this.currendFieldTreeNodeClicked.id,
-                        //   listData: _.cloneDeep(this.fieldCheckedList),
-                        // });
+                        selectedFields.forEach((v) => {
+                          v.dele_checked = false;
+                        });
+                        this.fieldListData = selectedFields;
+                        let data = _.cloneDeep(
+                          this.currendFieldTreeNodeClicked
+                        );
+                        data.assignedfields = selectedFields;
+                        // 更新差异化数据映射集
+                        this.updateSelectedFieldDataMaptoTreeItem(data);
+                        this.ifFieldSelectShow = false;
                       }
                     },
                     /**
@@ -598,23 +649,24 @@
                      * Date: 2020-05-19
                      * Description: 处理字段列表的全选
                      */
-                    handlefieldListAllCheckedChange(val){
-                      this.fieldListData.forEach(v=>{
-                        v.dele_checked=val
-                      })
+                    handlefieldListAllCheckedChange(val) {
+                      this.fieldListData.forEach((v) => {
+                        v.dele_checked = val;
+                      });
                     },
                     /**
                      * Author: zhang fq
                      * Date: 2020-05-19
                      * Description: 处理字段列表项的单选
                      */
-                    handlefieldListItemCheckChange(val,item,index){
-                      console.log(item,index)
-                      this.$set(this.fieldListData[index],"dele_checked",val)
-                      if(val===false){
-                        this.fieldListAllChecked=false
+                    handlefieldListItemCheckChange(val, item, index) {
+                      console.log(item, index);
+                      // this.$set(this.fieldListData[index], "dele_checked", val);
+                      this.$set(this.fieldListData, index, item);
+                      if (val === false) {
+                        this.fieldListAllChecked = false;
                       }
-                    }
+                    },
                   },
                 }).$mount($("#ccPermissionManagementApp", model.dom).get(0));
               });
