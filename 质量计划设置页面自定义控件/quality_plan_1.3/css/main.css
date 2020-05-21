@@ -59,10 +59,16 @@ html,body{
   /* font-weight: bold; */
   padding: 0 15px;
   border-radius: 2px;
+  cursor: pointer;
 }
 
 #qualityPlanApp .btn-lsit button:hover {
   background: #779bf5;
+}
+
+button[disabled]{
+  background: #ccc!important;
+  color: #666!important;
 }
 
 #qualityPlanApp .recheck-box {

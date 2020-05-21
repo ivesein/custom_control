@@ -7,7 +7,63 @@ new Vue({
     allChecked: false,
     allItems: null,
     isIndeterminate: false,
-    tableHeight: 800
+    tableHeight: 800,
+    funcPerm:[
+      {
+        "elementid": "set_role",
+        "cstlid": "quality_plan_v1.3"
+      }, {
+        "elementid": "refresh_data",
+        "cstlid": "quality_plan_v1.3"
+      }
+    ],
+    fieldPerm:[
+      {
+        "elementid": "task_name",
+        "isvisible": 1,
+        "iseditable": 0
+      }, {
+        "elementid": "wbs",
+        "isvisible": 0,
+        "cstlid": "wbs_planning_v1.0",
+        "iseditable": 0
+      },
+      {
+        "elementid": "duration",
+        "isvisible": 1,
+        "iseditable": 0
+      }, {
+        "elementid": "plan_starttime",
+        "isvisible": 0,
+        "cstlid": "wbs_planning_v1.0",
+        "iseditable": 0
+      },
+      {
+        "elementid": "plan_endtime",
+        "isvisible": 1,
+        "iseditable": 0
+      }, {
+        "elementid": "duration_time",
+        "isvisible": 0,
+        "cstlid": "wbs_planning_v1.0",
+        "iseditable": 0
+      },
+      {
+        "elementid": "owner_role",
+        "isvisible": 1,
+        "iseditable": 0
+      }, {
+        "elementid": "owner",
+        "isvisible": 0,
+        "cstlid": "wbs_planning_v1.0",
+        "iseditable": 0
+      },
+      {
+        "elementid": "skill",
+        "isvisible": 1,
+        "iseditable": 0
+      }
+    ]
   },
   created() {
     var tData = [{
@@ -211,6 +267,30 @@ new Vue({
       }
     })
   },
+  computed: {
+    getBtnShow(btnId){
+      var _this=this
+      return function(btnId){
+        let arr=_this.funcPerm.filter(v=>{
+          return v.elementid===btnId
+        })
+        return arr.length>0?false:true
+      }
+    },
+    getFieldShow(fieldId){
+      var _this=this
+      return function(fieldId){
+        let arr=_this.fieldPerm.filter(v=>{
+          return v.elementid===fieldId
+        })
+        if(arr.length>0){
+          return arr[0].isvisible===1?true:false
+        }else{
+          return true
+        }
+      }
+    }
+  },
   methods: {
     // 处理复核任务 整改-修改 承担人和承担人名称
     setAuditTaskUndertaker(originData) {
@@ -259,6 +339,7 @@ new Vue({
       }
     },
     SetRole() {
+      alert(1)
       let ids = this.getSelectedId()
       console.log(
         "SetRole>>>",

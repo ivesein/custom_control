@@ -601,6 +601,8 @@
                      * Author: zhang fq
                      * Date: 2020-05-15
                      * Description: 处理选择字段弹出框 备选字段列表每项的选择按钮
+                     * Date: 2020-05-21
+                     * Update: 修复选择字段弹出框 备选列表勾选多次右侧已选显示错误的bug
                      */
                     handleTableListItemCheckChange(item, index) {
                       // 完成左列表勾选和右侧已选列表数据同步
@@ -621,8 +623,8 @@
                         let index = null;
                         for (let i = 0; i < this.fieldCheckedList.length; i++) {
                           if (
-                            item.field_code ===
-                            this.fieldCheckedList[i].field_code
+                            item.elementid ===
+                            this.fieldCheckedList[i].elementid
                           ) {
                             index = i;
                             break;

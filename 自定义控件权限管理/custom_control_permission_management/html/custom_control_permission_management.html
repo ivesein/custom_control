@@ -97,7 +97,9 @@
                   <div class="field-item name-field">${item.elementname}</div>
                   <div class="field-item switch-btn-field">
                     <el-switch
-                      v-model="item.isvisible===1?true:false"
+                      v-model="item.isvisible"
+                      :active-value="1" 
+                      :inactive-value="0"
                       active-color="#13ce66"
                       @change="(val)=>{isvisibleChange(val,item)}"
                     >
@@ -106,7 +108,9 @@
                   <div class="field-item switch-btn-field">
                     <el-switch
                       :disabled="item.isvisible===0?true:false"
-                      v-model="item.iseditable===1?true:false"
+                      :active-value="1" 
+                      :inactive-value="0"
+                      v-model="item.iseditable"
                       active-color="#13ce66"
                       @change="(val)=>{iseditableChange(val,item)}"
                     >

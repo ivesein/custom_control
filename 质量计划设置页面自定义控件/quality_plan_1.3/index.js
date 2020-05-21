@@ -6,7 +6,8 @@
   var theData = []
   var originData = []
   var changedIds = []
-
+  var cstlRoleFuncPerm=[]
+  var cstlRoleFieldPerm=[]
   function MyComponent(model) {
     this._setModel(model)
   }
@@ -27,6 +28,8 @@
           theData = []
           originData = []
           changedIds = []
+          cstlRoleFuncPerm=[]
+          cstlRoleFieldPerm=[]
           this.model.qualityPlanVue = null
           setHtml(this.model, props)
         }else if (this.model.qualityPlanVue) {
@@ -67,7 +70,8 @@
                       if (props.data.isInit) {
                         // 如果是页面初始化  存储源数据
                         originData = props.data.data.sort(compare('position'))
-
+                        cstlRoleFuncPerm=props.data.cstlRoleFuncPerm||[]
+                        cstlRoleFieldPerm=props.data.cstlRoleFieldPerm||[]
                         // 将源数据处理为页面展示数据
                         originData = setAuditTaskUndertaker(originData)
                           // console.log("处理后的originData>>>", originData)
@@ -80,7 +84,9 @@
                         tableData: theData,
                         allChecked: false,
                         currentSelectedIds: [],
-                        tableHeight: 720
+                        tableHeight: 720,
+                        funcPerm:cstlRoleFuncPerm,
+                        fieldPerm:cstlRoleFieldPerm
                       },
                       created() {},
                       mounted() {
@@ -105,6 +111,35 @@
                             self.tableHeight = height - self.$refs.qualityPlanTable.$el.offsetTop - 80
                           }
                         })
+                      },
+                      /**
+                       * @author: zhang fq
+                       * @date: 2020-05-21
+                       * @description: 获取权限数据 为按钮和字段设置权限
+                       */
+                      computed: {
+                        getBtnShow(btnId){
+                          var _this=this
+                          return function(btnId){
+                            let arr=_this.funcPerm.filter(v=>{
+                              return v.elementid===btnId
+                            })
+                            return arr.length>0?false:true
+                          }
+                        },
+                        getFieldShow(fieldId){
+                          var _this=this
+                          return function(fieldId){
+                            let arr=_this.fieldPerm.filter(v=>{
+                              return v.elementid===fieldId
+                            })
+                            if(arr.length>0){
+                              return arr[0].isvisible===1?true:false
+                            }else{
+                              return true
+                            }
+                          }
+                        }
                       },
                       methods: {
                         handleUpdata(model, props) {

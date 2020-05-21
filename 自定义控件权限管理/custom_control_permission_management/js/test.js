@@ -668,6 +668,18 @@ new Vue({
   mounted() {
     // this.defaultExpandedArr=this.getDefaultExpandedKeys(this.data[0].children)
   },
+  computed: {
+    computeIsvisible(item){
+      return function(item){
+        return item.isvisible===1?true:false
+      }
+    },
+    computeIseditable(item){
+      return function(item){
+        return item.iseditable===1?true:false
+      }
+    }
+  },
   methods: {
     /**
      * Author: zhang fq
@@ -1058,7 +1070,7 @@ new Vue({
         if (this.fieldCheckedList.length === 0) return;
         let index = null;
         for (let i = 0; i < this.fieldCheckedList.length; i++) {
-          if (item.field_code === this.fieldCheckedList[i].field_code) {
+          if (item.elementid === this.fieldCheckedList[i].elementid) {
             index = i;
             break;
           }

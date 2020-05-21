@@ -14,16 +14,16 @@
 <body> -->
 <div id="qualityPlanApp">
   <div class="btn-lsit">
-    <button class="btn-itme" id="setBtn4" @click="SetRole">
+    <button class="btn-itme" :disabled="getBtnShow('set_role')" @click="SetRole">
       设置角色
     </button>
     <!-- <button class="btn-itme" id="setBtn4" @click="SetStaff">
       设置人员
     </button> -->
-    <button class="btn-itme" id="setBtn4" @click="SetDurationTime">
+    <button class="btn-itme" :disabled="getBtnShow('set_duration_time')"  @click="SetDurationTime">
       设置持续时间
     </button>
-    <button class="btn-itme" id="refresh" @click="refreshData">刷新</button>
+    <button class="btn-itme" :disabled="getBtnShow('refresh_data')" id="refresh" @click="refreshData">刷新</button>
   </div>
   <div class="table-box">
     <el-table ref="thequalityPlanTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="tableData" style="width:1640px;" :cell-style="cellStyle" row-key="task_id" :border="true" :height="tableHeight" default-expand-all
@@ -38,24 +38,24 @@
     </el-table-column>
     <el-table-column type="index" label="序号" width="60" align="center">
     </el-table-column>
-    <el-table-column prop="task_name" label="WBS任务名称"></el-table-column>
-    <el-table-column prop="wbs" label="任务代码" width="100" ></el-table-column>
+    <el-table-column v-if="getFieldShow('task_name')" prop="task_name" label="WBS任务名称"></el-table-column>
+    <el-table-column v-if="getFieldShow('wbs')" prop="wbs" label="任务代码" width="100" ></el-table-column>
     
-    <el-table-column label="工时" width="120">
+    <el-table-column v-if="getFieldShow('duration')" label="工时" width="120">
       <template slot-scope="scope">
         <div>
           ${ scope.row.duration }
         </div>
       </template>
     </el-table-column>
-    <el-table-column label="开始日期" width="180">
+    <el-table-column v-if="getFieldShow('plan_starttime')" label="开始时间" width="180">
       <template slot-scope="scope">
         <div>
           ${ scope.row.plan_starttime }
         </div>
       </template>
     </el-table-column>
-    <el-table-column label="结束日期" width="180">
+    <el-table-column v-if="getFieldShow('plan_endtime')" label="结束时间" width="180">
       <template slot-scope="scope">
         <div>
           ${ scope.row.plan_endtime }
@@ -87,7 +87,7 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column label="持续时间" width="120">
+    <el-table-column v-if="getFieldShow('duration_time')" label="持续时间" width="120">
       <template slot-scope="scope">
         <div class="checek-man" v-show="scope.row.task_type === '3'">
           ${ scope.row.first_duration }
@@ -106,7 +106,7 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column label="承担人角色" width="120">
+    <el-table-column v-if="getFieldShow('owner_role')"  label="承担人角色" width="120">
       <template slot-scope="scope">
         <div class="checek-man" v-show="scope.row.task_type === '3'">
           ${ scope.row.owner_role }
@@ -125,7 +125,7 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column label="承担人名称" width="120">
+    <el-table-column v-if="getFieldShow('owner')" label="承担人名称" width="120">
       <template slot-scope="scope">
         <div class="checek-man" v-show="scope.row.task_type === '3'">
           <span v-if="scope.row.isreply==='2'"> ${ scope.row.owner }</span>
@@ -149,7 +149,7 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column label="承担人技能" width="120">
+    <el-table-column v-if="getFieldShow('skill')" label="承担人技能" width="120">
       <template slot-scope="scope">
         <div class="checek-man" v-show="scope.row.task_type === '3'">
           ${ scope.row.skill }
