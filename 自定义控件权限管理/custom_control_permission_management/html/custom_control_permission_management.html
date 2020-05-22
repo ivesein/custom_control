@@ -1,4 +1,4 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -11,7 +11,7 @@
   <title>Document</title>
 </head>
 
-<body> -->
+<body>
   <div id="ccPermissionManagementApp">
     <el-tabs v-model="activeName" @tab-click="handleTabClick">
       <el-tab-pane label="功能权限" name="first">
@@ -137,7 +137,7 @@
                 :data="fieldTreeData"
                 ref="fieldTree"
                 node-key="id"
-                @node-click="fieldTreeNodeClick"
+                @node-click="dataRuleTreeNodeClick"
                 :default-expanded-keys="['0']"
                 :default-checked-keys="[]"
                 :props="defaultProps">
@@ -145,19 +145,113 @@
             </div>
           </div>
           <div class="field-box">
-            <div class="field-box-header">
-              <div class="field-box-header-item left-parenthesis"></div>
+            <div class="field-box-header data-rule-box-header">
+              <!-- <div class="field-box-header-item left-parenthesis"></div> -->
               <div class="field-box-header-item filed-select">字段</div>
               <div class="field-box-header-item condition-select">条件</div>
               <div class="field-box-header-item value-input">值</div>
-              <div class="field-box-header-item parenthesis-item right-parenthesis"></div>
+              <!-- <div class="field-box-header-item parenthesis-item right-parenthesis"></div> -->
               <div class="field-box-header-item logic-select">逻辑</div>
             </div>
             <div class="field-box-content">
               <div class="data-rule-list-item" v-for="(item, index) in dataRuleList" :key="index">
-
+                <div class="field-box-header-item filed-select">
+                  <el-select 
+                  size="mini" 
+                  v-model="item.elementid" 
+                  placeholder="请选择"
+                  @change="(val)=>{handleDRFieldNameChange(val,item,index)}"
+                  >
+                    <el-option
+                      v-for="fn in treeItemDRDefaultData.fieldName"
+                      :key="fn.elementid"
+                      :label="fn.elementname"
+                      :value="fn.elementid">
+                    </el-option>
+                  </el-select>
+                </div>
+                <div class="field-box-header-item condition-select">
+                  <el-select 
+                  size="mini" 
+                  v-model="item.comparetype" 
+                  placeholder="请选择"
+                  @change="(val)=>{handleDRCompareTypeChange(val,item,index)}"
+                  >
+                    <el-option
+                      v-for="ct in getItemCompareType(item)"
+                      :key="ct.value"
+                      :label="ct.label"
+                      :value="ct.value">
+                    </el-option>
+                  </el-select>
+                </div>
+                <div class="field-box-header-item value-input">
+                  <el-input 
+                    v-if="item.valueType===1" 
+                    size="mini" 
+                    placeholder="" 
+                    v-model="item.value" 
+                    class="input-with-select"
+                    @change="(val)=>{handleDRValueChange(val,item,index)}"
+                  >
+                    <!-- <el-button slot="append" icon="el-icon-search"></el-button> -->
+                    <i class="el-icon-search" slot="append" @click="dataRuleToOrg"></i>
+                  </el-input>
+                  <el-input 
+                    v-else-if="item.valueType===2" 
+                    size="mini" 
+                    placeholder="" 
+                    v-model="item.value"
+                    @change="(val)=>{handleDRValueChange(val,item,index)}"
+                  >
+                  </el-input>
+                  <el-input 
+                    v-else-if="item.valueType===3" 
+                    size="mini" 
+                    placeholder="" 
+                    v-model="item.value"
+                    @change="(val)=>{handleDRValueChange(val,item,index)}"
+                  >
+                  </el-input>
+                  <el-date-picker
+                    v-else-if="item.valueType===4"
+                    v-model="item.value"
+                    type="datetime"
+                    size="mini"
+                    :editable="false"
+                    placeholder="选择日期时间"
+                    @change="(val)=>{handleDRValueChange(val,item,index)}"
+                  >
+                  </el-date-picker>
+                  <el-input 
+                    v-else :disabled="true" 
+                    size="mini" 
+                    placeholder="" 
+                    v-model="item.value"
+                  >
+                  </el-input>
+                </div>
+                <!-- <div class="field-box-header-item parenthesis-item right-parenthesis"></div> -->
+                <div class="field-box-header-item logic-select">
+                  <el-select 
+                    size="mini" 
+                    v-model="item.logic" 
+                    placeholder="请选择"
+                    @change="(val)=>{handleDRLogicChange(val,item,index)}"
+                  >
+                    <el-option
+                      v-for="logic in treeItemDRDefaultData.logic"
+                      :key="logic.value"
+                      :label="logic.label"
+                      :value="logic.value">
+                    </el-option>
+                  </el-select>
+                </div>
+                <div class="delete-datarule-icon">
+                  <i class="el-icon-error" @click="deleteDataRuleItem(item,index)"></i>
+                </div>
               </div>
-              <div class="add-data-rule-btn">
+              <div class="add-data-rule-btn" @click="addDataRuleTocCTreeNode">
                 <i class="el-icon-plus"></i>
                 <p>添加条件</p>
               </div>
@@ -223,9 +317,9 @@
       </div>
     </div>
   </div>
-  <!-- <script src="../js/lodash.js"></script>
+  <script src="../js/lodash.js"></script>
   <script src="../js/vue.min.js"></script>
   <script src="../js/element.js"></script>
   <script src="../js/test.js"></script>
 </body>
-</html> -->
+</html>

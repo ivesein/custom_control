@@ -657,10 +657,213 @@ new Vue({
     ],
     fieldCheckedList: [], //已选择的字段列表
     selectedFieldDataMaptoTreeItem: [], //树节点和已选字段映射
-    dataRuleList: [], //数据规则
+    dataRuleList: [
+      {
+        elementid: "wbs_code",
+        comparetype: "=",
+        value: "",
+        logic: "or",
+        valueType: 2,
+      },
+      {
+        elementid: "task_name",
+        comparetype: "!=",
+        value: "",
+        logic: "and",
+        valueType: 3,
+      },
+      {
+        elementid: "owner",
+        comparetype: "=",
+        value: "",
+        logic: "and",
+        valueType: 1,
+      },
+      {
+        elementid: "start_time",
+        comparetype: "=",
+        value: "",
+        logic: "and",
+        valueType: 4,
+      },
+    ], //数据规则
     assArr: [],
     fieldTreeData: [],
     fieldListAllChecked: false, //已选字段列表全选
+    dataRuleDataMaptoTreeItem: [], // 树节点和已添加数据规则映射
+    treeItemDRDefaultData: {
+      // 从接口获取的当前点击的自定义控件树节点 备选数据集
+      fieldName: [
+        {
+          elementname: "wbs编码",
+          elementid: "wbs_code",
+          type: 2, // 1：组织架构  2：普通文本  3：数字  4：时间选择
+          compareType: [
+            {
+              label: "等于",
+              value: "=",
+            },
+            {
+              label: "不等于",
+              value: "!=",
+            },
+            {
+              label: "为空",
+              value: "null",
+            },
+            {
+              label: "不为空",
+              value: "!=null",
+            },
+            {
+              label: "包含",
+              value: "like",
+            },
+            {
+              label: "不包含",
+              value: "not like",
+            },
+          ],
+        },
+        {
+          elementname: "wbs任务名称",
+          elementid: "task_name",
+          type: 2,
+          compareType: [
+            {
+              label: "等于",
+              value: "=",
+            },
+            {
+              label: "不等于",
+              value: "!=",
+            },
+            {
+              label: "为空",
+              value: "null",
+            },
+            {
+              label: "不为空",
+              value: "!=null",
+            },
+            {
+              label: "包含",
+              value: "like",
+            },
+            {
+              label: "不包含",
+              value: "not like",
+            },
+          ],
+        },
+        {
+          elementname: "工时",
+          elementid: "duration",
+          type: 3,
+          compareType: [
+            {
+              label: "等于",
+              value: "=",
+            },
+            {
+              label: "不等于",
+              value: "!=",
+            },
+            {
+              label: "为空",
+              value: "null",
+            },
+            {
+              label: "不为空",
+              value: "!=null",
+            },
+            {
+              label: "包含",
+              value: "like",
+            },
+            {
+              label: "不包含",
+              value: "not like",
+            },
+          ],
+        },
+        {
+          elementname: "开始时间",
+          elementid: "start_time",
+          type: 4,
+          compareType: [
+            {
+              label: "昨天",
+              value: "=",
+            },
+            {
+              label: "今天",
+              value: "!=",
+            },
+            {
+              label: "明天",
+              value: "null",
+            },
+            {
+              label: "一周前",
+              value: "!=null",
+            },
+            {
+              label: "一月前",
+              value: "like",
+            },
+            {
+              label: "一周后",
+              value: "not like",
+            },
+          ],
+        },
+        {
+          elementname: "结束时间",
+          elementid: "end_time",
+          type: 4,
+          compareType: [
+            {
+              label: "等于",
+              value: "=",
+            },
+            {
+              label: "不等于",
+              value: "!=",
+            },
+            {
+              label: "为空",
+              value: "null",
+            },
+            {
+              label: "不为空",
+              value: "!=null",
+            },
+            {
+              label: "包含",
+              value: "like",
+            },
+            {
+              label: "不包含",
+              value: "not like",
+            },
+          ],
+        },
+      ],
+
+      logic: [
+        {
+          label: "或者",
+          value: "or",
+        },
+        {
+          label: "并且",
+          value: "and",
+        },
+      ],
+    },
+    cClickedDRTreeNode: [], // 当前点击的数据规则标签页树item
+    cClickedDRTreeNodeDRData: [], // 当前点击的数据规则标签页树item已添加的数据规则
   },
   created() {
     this.handleAssignedData(this.assignedData);
@@ -669,16 +872,36 @@ new Vue({
     // this.defaultExpandedArr=this.getDefaultExpandedKeys(this.data[0].children)
   },
   computed: {
-    computeIsvisible(item){
-      return function(item){
-        return item.isvisible===1?true:false
-      }
+    computeIsvisible(item) {
+      return function (item) {
+        return item.isvisible === 1 ? true : false;
+      };
     },
-    computeIseditable(item){
-      return function(item){
-        return item.iseditable===1?true:false
-      }
-    }
+    computeIseditable(item) {
+      return function (item) {
+        return item.iseditable === 1 ? true : false;
+      };
+    },
+    /**
+     * Author: zhang fq
+     * Date: 2020-05-22
+     * Description: 根据当前循环出的已分配数据规则item
+     * 从接口获取的备选数据集中筛选出当前item的条件列表数据
+     */
+
+    getItemCompareType(item) {
+      return (item) => {
+        let compareType = _.cloneDeep(this.treeItemDRDefaultData.fieldName);
+        let arr = compareType.filter((v) => {
+          return v.elementid === item.elementid;
+        });
+        if (arr.length > 0) {
+          return arr[0].compareType;
+        } else {
+          return [];
+        }
+      };
+    },
   },
   methods: {
     /**
@@ -1099,6 +1322,95 @@ new Vue({
       // item.dele_checked = val;
       if (val === false) {
         this.fieldListAllChecked = false;
+      }
+    },
+    /**
+     * Author: zhang fq
+     * Date: 2020-05-22
+     * Description: 处理数据规则标签页树item点击事件
+     */
+    dataRuleTreeNodeClick(data, node, tree) {
+      if (
+        data.assigneddatarules === null ||
+        data.assigneddatarules === undefined ||
+        data.assigneddatarules === ""
+      ) {
+        data.assigneddatarules = [];
+      }
+      this.cClickedDRTreeNode = data;
+      // 从存储的映射数据中拿到当前节点已添加的数据规则
+      let dataTemp = this.dataRuleDataMaptoTreeItem.filter((v) => {
+        return v.id === data.id;
+      });
+      this.cClickedDRTreeNodeDRData =
+        dataTemp.length === 0
+          ? _.cloneDeep(data.assigneddatarules)
+          : dataTemp[0].assigneddatarules;
+    },
+    /**
+     * Author: zhang fq
+     * Date: 2020-05-22
+     * Description: 当前点击的业务对象数据规则列表item删除功能
+     */
+    deleteDataRuleItem(item, index) {
+      this.dataRuleList.splice(index, 1);
+      // TODO 更新数据规则差异化数据映射集
+    },
+    /**
+     * Author: zhang fq
+     * Date: 2020-05-22
+     * Description: 当前点击的业务对象数据规则列表item添加功能
+     */
+    addDataRuleTocCTreeNode() {
+      this.dataRuleList.push({
+        elementid: this.treeItemDRDefaultData.fieldName[0].elementid || "",
+        comparetype: this.treeItemDRDefaultData.compareType[0].value || "",
+        value: "",
+        logic: "and",
+        valueType: this.treeItemDRDefaultData.fieldName[0].type || 3,
+      });
+    },
+    /**
+     * Author: zhang fq
+     * Date: 2020-05-22
+     * Description: 处理当前点击的业务对象数据规则列表item
+     * 字段名称选择改变时 从备选数据集获取当前字段名映射的值类型并赋给当前item
+     */
+    handleDRFieldNameChange(val, item, index) {
+      console.log(val);
+      console.log(index);
+      for (let i = 0; i < this.treeItemDRDefaultData.fieldName.length; i++) {
+        if (val === this.treeItemDRDefaultData.fieldName[i].elementid) {
+          item.valueType = this.treeItemDRDefaultData.fieldName[i].type;
+          break;
+        }
+      }
+      // TODO 更新数据规则差异化数据映射集
+    },
+    handleDRCompareTypeChange(val, item, index) {
+      // TODO 更新数据规则差异化数据映射集
+    },
+    handleDRLogicChange(val, item, index) {
+      // TODO 更新数据规则差异化数据映射集
+    },
+    handleDRValueChange(val, item, index) {
+      // TODO 更新数据规则差异化数据映射集
+    },
+    dataRuleToOrg() {
+      //TODO 通知后台 调起组织架构 选择人员
+    },
+    // 更新数据规则映射集
+    updateDataRuleDataMaptoTreeItem(data) {
+      //判断映射数组里是否有该数据  有则替换 无则push
+      let flag = true;
+      this.dataRuleDataMaptoTreeItem.forEach((v) => {
+        if (v.id === data.id) {
+          flag = false;
+          v.assigneddatarules = data.assigneddatarules;
+        }
+      });
+      if (flag) {
+        this.dataRuleDataMaptoTreeItem.push(data);
       }
     },
   },

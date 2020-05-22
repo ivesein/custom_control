@@ -158,8 +158,22 @@ input:focus {
   align-items: center;
   padding-left: 5px;
 }
+
+.delete-datarule-icon{
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  color: rgb(185,196,220);  
+}
+
+.delete-datarule-icon:hover{
+  color: rgb(253,108,106);
+}
+
 .field-box .filed-select{
-  width: 100px;
+  width: 150px;
 }
 
 .field-box .condition-select{
@@ -538,8 +552,22 @@ input:focus {
   padding: 0 10px;
 }
 
+.data-rule-content .field-box .data-rule-box-header{
+  padding-left: 10px;
+}
+
+.data-rule-content .field-box .field-box-content .data-rule-list-item{
+  height: 30px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+  font-size: 12px;
+  /* color: #333; */
+}
+
 .field-box-content .add-data-rule-btn{
   width: 80px;
+  min-width: 80px;
   height: 22px;
   display: flex;
   justify-content: space-between;
@@ -552,6 +580,7 @@ input:focus {
   border: 1px solid #5e80eb;
   color: #5e80eb;
   padding:0 5px;
+  flex-shrink: 0;
   box-sizing: border-box;
 }
 .field-box-content .add-data-rule-btn .el-icon-plus{
@@ -562,3 +591,14 @@ input:focus {
 /* #ccPermissionManagementApp .el-checkbox__inner{
   border-radius: 100%;
 } */
+
+.field-box-header-item .el-input-group__append, .el-input-group__prepend{
+  padding: 0px!important;
+  padding-left: 4px!important;
+  cursor: pointer;
+}
+
+.field-box-header-item .el-input__inner:focus{
+  /* border-right: none!important; */
+  border-color: #DCDFE6!important;
+}
