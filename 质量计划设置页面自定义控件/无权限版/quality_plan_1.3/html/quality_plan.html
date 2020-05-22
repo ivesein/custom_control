@@ -1,0 +1,182 @@
+<!-- <!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="../css/element.css" />
+    <link rel="stylesheet" href="../css/main.css" />
+
+    <title>Document</title>
+  </head>
+
+<body> -->
+<div id="qualityPlanApp">
+  <div class="btn-lsit">
+    <button class="btn-itme" id="setBtn4" @click="SetRole">
+      设置角色
+    </button>
+    <!-- <button class="btn-itme" id="setBtn4" @click="SetStaff">
+      设置人员
+    </button> -->
+    <button class="btn-itme" id="setBtn4" @click="SetDurationTime">
+      设置持续时间
+    </button>
+    <button class="btn-itme" id="refresh" @click="refreshData">刷新</button>
+  </div>
+  <div class="table-box">
+    <el-table ref="thequalityPlanTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="tableData" style="width:1640px;" :cell-style="cellStyle" row-key="task_id" :border="true" :height="tableHeight" default-expand-all
+    :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
+    <el-table-column type="select" width="40" align="center">
+      <template slot="header" slot-scope="scope">
+        <el-checkbox @change="handleCheckAllChange" v-model="allChecked"></el-checkbox>
+      </template>
+      <template slot-scope="scope">
+        <el-checkbox @change="itemChange(scope.row)" v-model="scope.row.checked"></el-checkbox>
+      </template>
+    </el-table-column>
+    <el-table-column type="index" label="序号" width="60" align="center">
+    </el-table-column>
+    <el-table-column prop="task_name" label="WBS任务名称"></el-table-column>
+    <el-table-column prop="wbs" label="任务代码" width="100" ></el-table-column>
+    
+    <el-table-column label="工时" width="120">
+      <template slot-scope="scope">
+        <div>
+          ${ scope.row.duration }
+        </div>
+      </template>
+    </el-table-column>
+    <el-table-column label="开始日期" width="180">
+      <template slot-scope="scope">
+        <div>
+          ${ scope.row.plan_starttime }
+        </div>
+      </template>
+    </el-table-column>
+    <el-table-column label="结束日期" width="180">
+      <template slot-scope="scope">
+        <div>
+          ${ scope.row.plan_endtime }
+        </div>
+      </template>
+    </el-table-column>
+    <el-table-column label="阶段" width="160">
+      <template slot-scope="scope">
+        <div class="recheck-box" v-show="scope.row.task_type === '3'">
+          <div class="recheck-top">
+            首次复核
+          </div>
+          <div class="recheck-mid">
+            <div class="mid-left">
+              整改
+            </div>
+            <div class="mid-right">
+              <div class="mid-right-item mid-right-top">
+                修改
+              </div>
+              <div class="mid-right-item">
+                修改确认
+              </div>
+            </div>
+          </div>
+          <div class="recheck-bot">
+            复核确认
+          </div>
+        </div>
+      </template>
+    </el-table-column>
+    <el-table-column label="持续时间" width="120">
+      <template slot-scope="scope">
+        <div class="checek-man" v-show="scope.row.task_type === '3'">
+          ${ scope.row.first_duration }
+        </div>
+        <div class="checek-man" v-show="scope.row.task_type === '3'">
+          ${scope.row.modify_duration }
+        </div>
+        <div class="checek-man" v-show="scope.row.task_type === '3'">
+          ${ scope.row.mod_con_duration }
+        </div>
+        <div class="checek-man" style="border:none" v-show="scope.row.task_type === '3'">
+          ${ scope.row.confirm_duration }
+        </div>
+        <div v-show="scope.row.task_type === '1'||scope.row.task_type === '2'">
+          ${ scope.row.first_duration }
+        </div>
+      </template>
+    </el-table-column>
+    <el-table-column label="承担人角色" width="120">
+      <template slot-scope="scope">
+        <div class="checek-man" v-show="scope.row.task_type === '3'">
+          ${ scope.row.owner_role }
+        </div>
+        <div class="checek-man" v-show="scope.row.task_type === '3'">
+          ${ scope.row.the_owner_role }
+        </div>
+        <div class="checek-man" v-show="scope.row.task_type === '3'">
+          ${ scope.row.owner_role }
+        </div>
+        <div class="checek-man" style="border:none" v-show="scope.row.task_type === '3'">
+          ${ scope.row.owner_role }
+        </div>
+        <div v-show="scope.row.task_type === '1'||scope.row.task_type === '2'">
+          ${ scope.row.owner_role }
+        </div>
+      </template>
+    </el-table-column>
+    <el-table-column label="承担人名称" width="120">
+      <template slot-scope="scope">
+        <div class="checek-man" v-show="scope.row.task_type === '3'">
+          <span v-if="scope.row.isreply==='2'"> ${ scope.row.owner }</span>
+          <span v-else></span>
+        </div>
+        <div class="checek-man" v-show="scope.row.task_type === '3'">
+          <span v-if="scope.row.the_isreply==='2'"> ${ scope.row.the_owner }</span>
+          <span v-else></span>
+        </div>
+        <div class="checek-man" v-show="scope.row.task_type === '3'">
+          <span v-if="scope.row.isreply==='2'"> ${ scope.row.owner }</span>
+          <span v-else></span>
+        </div>
+        <div class="checek-man" style="border:none" v-show="scope.row.task_type === '3'">
+          <span v-if="scope.row.isreply==='2'"> ${ scope.row.owner }</span>
+          <span v-else></span>
+        </div>
+        <div v-show="scope.row.task_type === '1'||scope.row.task_type === '2'">
+          <span v-if="scope.row.isreply==='2'"> ${ scope.row.owner }</span>
+          <span v-else></span>
+        </div>
+      </template>
+    </el-table-column>
+    <el-table-column label="承担人技能" width="120">
+      <template slot-scope="scope">
+        <div class="checek-man" v-show="scope.row.task_type === '3'">
+          ${ scope.row.skill }
+        </div>
+        <div class="checek-man" v-show="scope.row.task_type === '3'">
+          ${ scope.row.the_skill }
+        </div>
+        <div class="checek-man" v-show="scope.row.task_type === '3'">
+          ${ scope.row.skill }
+        </div>
+        <div class="checek-man" style="border:none" v-show="scope.row.task_type === '3'">
+          ${ scope.row.skill }
+        </div>
+        <div v-show="scope.row.task_type === '1'||scope.row.task_type === '2'">
+          ${ scope.row.skill }
+        </div>
+      </template>
+    </el-table-column>
+  </el-table>
+  </div>
+
+</div>
+<!-- <script src="../js/lodash.js"></script>
+    <script src="../js/vue.min.js"></script>
+    <script src="../js/vue.js"></script>
+    <script src="../js/element.js"></script>
+    <script src="../js/test.js"></script>
+  </body>
+
+</html> -->
