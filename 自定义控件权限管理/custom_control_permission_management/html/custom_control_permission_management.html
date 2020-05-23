@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -11,7 +11,7 @@
   <title>Document</title>
 </head>
 
-<body>
+<body> -->
   <div id="ccPermissionManagementApp">
     <el-tabs v-model="activeName" @tab-click="handleTabClick">
       <el-tab-pane label="功能权限" name="first">
@@ -163,7 +163,7 @@
                   @change="(val)=>{handleDRFieldNameChange(val,item,index)}"
                   >
                     <el-option
-                      v-for="fn in treeItemDRDefaultData.fieldName"
+                      v-for="fn in treeItemDRDefaultData"
                       :key="fn.elementid"
                       :label="fn.elementname"
                       :value="fn.elementid">
@@ -173,7 +173,7 @@
                 <div class="field-box-header-item condition-select">
                   <el-select 
                   size="mini" 
-                  v-model="item.comparetype" 
+                  v-model="item.compareType" 
                   placeholder="请选择"
                   @change="(val)=>{handleDRCompareTypeChange(val,item,index)}"
                   >
@@ -187,7 +187,7 @@
                 </div>
                 <div class="field-box-header-item value-input">
                   <el-input 
-                    v-if="item.valueType===1" 
+                    v-if="item.valueType==='person'" 
                     size="mini" 
                     placeholder="" 
                     v-model="item.value" 
@@ -195,10 +195,10 @@
                     @change="(val)=>{handleDRValueChange(val,item,index)}"
                   >
                     <!-- <el-button slot="append" icon="el-icon-search"></el-button> -->
-                    <i class="el-icon-search" slot="append" @click="dataRuleToOrg"></i>
+                    <i class="el-icon-search" slot="append" @click="dataRuleToOrg(item,index)"></i>
                   </el-input>
                   <el-input 
-                    v-else-if="item.valueType===2" 
+                    v-else-if="item.valueType==='text'" 
                     size="mini" 
                     placeholder="" 
                     v-model="item.value"
@@ -206,7 +206,7 @@
                   >
                   </el-input>
                   <el-input 
-                    v-else-if="item.valueType===3" 
+                    v-else-if="item.valueType==='number'" 
                     size="mini" 
                     placeholder="" 
                     v-model="item.value"
@@ -214,7 +214,7 @@
                   >
                   </el-input>
                   <el-date-picker
-                    v-else-if="item.valueType===4"
+                    v-else-if="item.valueType==='date'"
                     v-model="item.value"
                     type="datetime"
                     size="mini"
@@ -240,7 +240,7 @@
                     @change="(val)=>{handleDRLogicChange(val,item,index)}"
                   >
                     <el-option
-                      v-for="logic in treeItemDRDefaultData.logic"
+                      v-for="logic in DataRuleLogic"
                       :key="logic.value"
                       :label="logic.label"
                       :value="logic.value">
@@ -317,9 +317,9 @@
       </div>
     </div>
   </div>
-  <script src="../js/lodash.js"></script>
+  <!-- <script src="../js/lodash.js"></script>
   <script src="../js/vue.min.js"></script>
   <script src="../js/element.js"></script>
   <script src="../js/test.js"></script>
 </body>
-</html>
+</html> -->

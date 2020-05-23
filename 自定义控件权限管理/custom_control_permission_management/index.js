@@ -41,8 +41,7 @@
             KDApi.loadFile("./js/element.js", model.schemaId, function () {
               KDApi.templateFilePath(
                 "./html/custom_control_permission_management.html",
-                model.schemaId,
-                {
+                model.schemaId, {
                   path: KDApi.nameSpace(model.schemaId) + "./img/lock.png",
                 }
               ).then(function (result) {
@@ -68,13 +67,52 @@
                     alternative_fields: [],
                     fieldCheckedList: [], //已选择的字段列表
                     selectedFieldDataMaptoTreeItem: [], //树节点和已选字段映射
-                    dataRuleList: [], //数据规则
                     initData: null,
                     assArr: [],
                     fieldListAllChecked: false, //已选字段列表全选
+                    dataRuleDataMaptoTreeItem: [], // 树节点和已添加数据规则映射
+                    dataRuleList: [], //当前点击的数据规则标签页树item已添加的数据规则
+                    treeItemDRDefaultData: null,
+                    cClickedDRTreeNode: [], // 当前点击的数据规则标签页树item
+                    currentOrgItem:null,  //当前拉起组织架构的数据规则item
+                    DataRuleLogic:[
+                      {
+                        label: "或者",
+                        value: "or",
+                      },
+                      {
+                        label: "并且",
+                        value: "and",
+                      }
+                    ],
                   },
                   created() {
                     this.handleUpdata(model, props);
+                  },
+                  computed: {
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-22
+                     * Description: 根据当前循环出的已分配数据规则item
+                     * 从接口获取的备选数据集中筛选出当前item的条件列表数据
+                     */
+                    getItemCompareType(item) {
+                      return (item) => {
+                        let compareType = _.cloneDeep(this.treeItemDRDefaultData);
+                        if(compareType){
+                          let arr = compareType.filter((v) => {
+                            return v.elementid === item.elementid;
+                          });
+                          if (arr.length > 0) {
+                            return arr[0].compareType;
+                          } else {
+                            return [];
+                          }
+                        }else{
+                          return []
+                        }
+                      };
+                    },
                   },
                   methods: {
                     handleTabClick(val) {
@@ -87,7 +125,6 @@
                      * Date: 2020-05-19
                      * Update: 更新接口处理函数 添加获取已分配字段接口处理方法
                      */
-
                     handleUpdata(model, props) {
                       // 处理后台返回来的数据
                       if (props.data) {
@@ -105,9 +142,12 @@
                             case "getDataRule":
                               this.getDataRule(props.data);
                               break;
-                            // case "getNodeAssignedFieldsData":
-                            //   this.getNodeAssignedFieldsData(props.data);
-                            //   break;
+                            case "getDataRuleDefaultData":
+                              this.getDataRuleDefaultData(props.data);
+                              break;
+                            case "getPerson":
+                              this.getPerson(props.data);
+                              break;
                             default:
                               this.$message.error("网络错误，请稍后重试...");
                           }
@@ -145,18 +185,14 @@
                      */
                     pageInit(data) {
                       this.initData = data;
-                      this.defaultTreeData = data.initBasicPermLeftTreeinfo || [
-                        {
-                          id: "0",
-                          label: "功能权限",
-                        },
-                      ];
-                      this.assignedData = data.initAssignedPermLeftTreeinfo || [
-                        {
-                          id: "0",
-                          label: "已分配",
-                        },
-                      ];
+                      this.defaultTreeData = data.initBasicPermLeftTreeinfo || [{
+                        id: "0",
+                        label: "功能权限",
+                      }, ];
+                      this.assignedData = data.initAssignedPermLeftTreeinfo || [{
+                        id: "0",
+                        label: "已分配",
+                      }, ];
                       this.handleAssignedData(this.assignedData);
                     },
                     /**
@@ -483,9 +519,9 @@
                         }
                       );
                       this.fieldListData =
-                        dataTemp.length === 0
-                          ? _.cloneDeep(data.assignedfields)
-                          : dataTemp[0].assignedfields;
+                        dataTemp.length === 0 ?
+                        _.cloneDeep(data.assignedfields) :
+                        dataTemp[0].assignedfields;
                       this.fieldListData.forEach((v) => {
                         v.dele_checked = false;
                       });
@@ -637,11 +673,16 @@
                         this.fieldSelectCheckAll = false;
                       }
                     },
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-23
+                     * Description: 完成保存方法 差异化数据封装
+                     */
                     saveData() {
                       let param = {
                         functionPermission: this.assignedData,
                         fieldsPermission: this.selectedFieldDataMaptoTreeItem,
-                        dataRule: [],
+                        dataRule: this.dataRuleDataMaptoTreeItem,
                       };
                       console.log(param);
                       model.invoke("save", param);
@@ -667,6 +708,176 @@
                       this.$set(this.fieldListData, index, item);
                       if (val === false) {
                         this.fieldListAllChecked = false;
+                      }
+                    },
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-22
+                     * Description: 处理数据规则标签页树item点击事件
+                     * Date: 2020-05-23
+                     * Updata: 修改数据规则树业务对象节点点击事件 添加获取该节点备选数据集交互
+                     */
+                    dataRuleTreeNodeClick(data, node, tree) {
+                      if (
+                        data.assigneddatarules === null ||
+                        data.assigneddatarules === undefined ||
+                        data.assigneddatarules === ""
+                      ) {
+                        data.assigneddatarules = [];
+                      }
+                      this.cClickedDRTreeNode = data;
+                      // 发送当前自定义控件业务对象节点到后台获取该节点备选数据集
+                      if(data.cstlid){
+                        model.invoke("getDataRuleDefaultData",data)
+                      }
+                      // 从存储的映射数据中拿到当前节点已添加的数据规则
+                      let dataTemp = this.dataRuleDataMaptoTreeItem.filter((v) => {
+                        return v.id === data.id;
+                      });
+                      this.dataRuleList =
+                        dataTemp.length === 0 ?
+                        _.cloneDeep(data.assigneddatarules) :
+                        dataTemp[0].assigneddatarules;
+                    },
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-23
+                     * Description: 处理获取业务对象节点备选数据集接口数据返回
+                     */
+                    getDataRuleDefaultData(data){
+                      this.treeItemDRDefaultData=data.fieldName||null
+                    },
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-22
+                     * Description: 当前点击的业务对象数据规则列表item删除功能
+                     */
+                    deleteDataRuleItem(item, index) {
+                      this.dataRuleList.splice(index, 1);
+                      // TODO 更新数据规则差异化数据映射集
+                      let dataTemp = _.cloneDeep(this.cClickedDRTreeNode)
+                      dataTemp.assigneddatarules = _.cloneDeep(this.dataRuleList)
+                      this.updateDataRuleDataMaptoTreeItem(dataTemp)
+                    },
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-22
+                     * Description: 当前点击的业务对象数据规则列表item添加功能
+                     * Date: 2020-05-23
+                     * Update: 添加从接口获取备选数据失败处理
+                     */
+                    addDataRuleTocCTreeNode() {
+                      if (this.cClickedDRTreeNode.cstlid) {
+                        if(this.treeItemDRDefaultData!==null&&this.treeItemDRDefaultData!==[]){
+                          this.dataRuleList.push({
+                            elementid: this.treeItemDRDefaultData[0].elementid || "",
+                            elementname:this.treeItemDRDefaultData[0].elementname||"",
+                            source:this.treeItemDRDefaultData[0].source||"",
+                            compareType: this.treeItemDRDefaultData[0].compareType[0].value || "",
+                            value: "",
+                            logic: "and",
+                            valueType: this.treeItemDRDefaultData[0].fieldtype || "text",
+                          });
+                          // TODO 更新数据规则差异化数据映射集
+                          let dataTemp = _.cloneDeep(this.cClickedDRTreeNode)
+                          dataTemp.assigneddatarules = _.cloneDeep(this.dataRuleList)
+                          this.updateDataRuleDataMaptoTreeItem(dataTemp)
+                        }else{
+                          this.$message.error("获取数据失败，请稍后重试")
+                        }
+                      }
+                    },
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-22
+                     * Description: 处理当前点击的业务对象数据规则列表item
+                     * 字段名称选择改变时 从备选数据集获取当前字段名映射的值类型并赋给当前item
+                     * Date: 2020-05-23
+                     * Updata: 在修改的数据中添加后台需要的字段 同步到差异化数据集
+                     */
+                    handleDRFieldNameChange(val, item, index) {
+                      console.log(val);
+                      console.log(index);
+                      for (let i = 0; i < this.treeItemDRDefaultData.length; i++) {
+                        if (val === this.treeItemDRDefaultData[i].elementid) {
+                          item.valueType = this.treeItemDRDefaultData[i].fieldtype;
+                          item.elementname=this.treeItemDRDefaultData[i].elementname
+                          item.source=this.treeItemDRDefaultData[i].source
+                          break;
+                        }
+                      }
+                      // TODO 更新数据规则差异化数据映射集
+                      let dataTemp = _.cloneDeep(this.cClickedDRTreeNode)
+                      dataTemp.assigneddatarules = _.cloneDeep(this.dataRuleList)
+                      this.updateDataRuleDataMaptoTreeItem(dataTemp)
+                    },
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-23
+                     * Description: 处理各下拉框和输入框值改变时 同步到差异化数据集以及更改页面显示
+                     */
+                    handleDRCompareTypeChange(val, item, index) {
+                      // TODO 更新数据规则差异化数据映射集
+                      let dataTemp = _.cloneDeep(this.cClickedDRTreeNode)
+                      dataTemp.assigneddatarules = _.cloneDeep(this.dataRuleList)
+                      this.updateDataRuleDataMaptoTreeItem(dataTemp)
+                    },
+                    handleDRLogicChange(val, item, index) {
+                      // TODO 更新数据规则差异化数据映射集
+                      let dataTemp = _.cloneDeep(this.cClickedDRTreeNode)
+                      dataTemp.assigneddatarules = _.cloneDeep(this.dataRuleList)
+                      this.updateDataRuleDataMaptoTreeItem(dataTemp)
+                    },
+                    handleDRValueChange(val, item, index) {
+                      // TODO 更新数据规则差异化数据映射集
+                      let dataTemp = _.cloneDeep(this.cClickedDRTreeNode)
+                      dataTemp.assigneddatarules = _.cloneDeep(this.dataRuleList)
+                      this.updateDataRuleDataMaptoTreeItem(dataTemp)
+                    },
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-23
+                     * Description: 调起组织架构选择人员
+                     */
+                    dataRuleToOrg(item,index) {
+                      this.currentOrgItem=item
+                      //TODO 通知后台 调起组织架构 选择人员
+                      let dataTemp=_.cloneDeep(this.cClickedDRTreeNode)
+                      let param={
+                        id:dataTemp.id,
+                        cstlid: dataTemp.cstlid,
+                        itemIndex:index
+                      }
+                      model.invoke("getPerson",param)
+                    },
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-23
+                     * Description: 处理调起组织架构选择人员后返回数据
+                     */
+                    getPerson(data){
+                      let dataTemp=data.data||[]
+                      // 更新差异化数据映射集
+                      this.dataRuleDataMaptoTreeItem.forEach(v=>{
+                        if(v.id===dataTemp.id){
+                          v.assigneddatarules[dataTemp.itemIndex].value=dataTemp.person
+                        }
+                      })
+                      //回填值 更新页面显示
+                      this.currentOrgItem.value=dataTemp.person
+                    },
+                    // 更新数据规则映射集
+                    updateDataRuleDataMaptoTreeItem(data) {
+                      //判断映射数组里是否有该数据  有则替换 无则push
+                      let flag = true;
+                      this.dataRuleDataMaptoTreeItem.forEach((v) => {
+                        if (v.id === data.id) {
+                          flag = false;
+                          v.assigneddatarules = data.assigneddatarules;
+                        }
+                      });
+                      if (flag) {
+                        this.dataRuleDataMaptoTreeItem.push(data);
                       }
                     },
                   },

@@ -657,35 +657,35 @@ new Vue({
     ],
     fieldCheckedList: [], //已选择的字段列表
     selectedFieldDataMaptoTreeItem: [], //树节点和已选字段映射
-    dataRuleList: [
-      {
-        elementid: "wbs_code",
-        comparetype: "=",
-        value: "",
-        logic: "or",
-        valueType: 2,
-      },
-      {
-        elementid: "task_name",
-        comparetype: "!=",
-        value: "",
-        logic: "and",
-        valueType: 3,
-      },
-      {
-        elementid: "owner",
-        comparetype: "=",
-        value: "",
-        logic: "and",
-        valueType: 1,
-      },
-      {
-        elementid: "start_time",
-        comparetype: "=",
-        value: "",
-        logic: "and",
-        valueType: 4,
-      },
+    dataRuleList: [ // 当前点击的数据规则标签页树item已添加的数据规则
+      // {
+      //   elementid: "wbs_code",
+      //   comparetype: "=",
+      //   value: "",
+      //   logic: "or",
+      //   valueType: 2,
+      // },
+      // {
+      //   elementid: "task_name",
+      //   comparetype: "!=",
+      //   value: "",
+      //   logic: "and",
+      //   valueType: 3,
+      // },
+      // {
+      //   elementid: "owner",
+      //   comparetype: "=",
+      //   value: "",
+      //   logic: "and",
+      //   valueType: 1,
+      // },
+      // {
+      //   elementid: "start_time",
+      //   comparetype: "=",
+      //   value: "",
+      //   logic: "and",
+      //   valueType: 4,
+      // },
     ], //数据规则
     assArr: [],
     fieldTreeData: [],
@@ -697,7 +697,7 @@ new Vue({
         {
           elementname: "wbs编码",
           elementid: "wbs_code",
-          type: 2, // 1：组织架构  2：普通文本  3：数字  4：时间选择
+          type: "number", // person：组织架构  text：普通文本  number：数字  date：时间选择
           compareType: [
             {
               label: "等于",
@@ -728,7 +728,38 @@ new Vue({
         {
           elementname: "wbs任务名称",
           elementid: "task_name",
-          type: 2,
+          type: "text",
+          compareType: [
+            {
+              label: "等于",
+              value: "=",
+            },
+            {
+              label: "不等于",
+              value: "!=",
+            },
+            {
+              label: "为空",
+              value: "null",
+            },
+            {
+              label: "不为空",
+              value: "!=null",
+            },
+            {
+              label: "包含",
+              value: "like",
+            },
+            {
+              label: "不包含",
+              value: "not like",
+            },
+          ],
+        },
+        {
+          elementname: "员工姓名",
+          elementid: "owner",
+          type: "person",
           compareType: [
             {
               label: "等于",
@@ -759,7 +790,7 @@ new Vue({
         {
           elementname: "工时",
           elementid: "duration",
-          type: 3,
+          type: "number",
           compareType: [
             {
               label: "等于",
@@ -790,7 +821,7 @@ new Vue({
         {
           elementname: "开始时间",
           elementid: "start_time",
-          type: 4,
+          type: "date",
           compareType: [
             {
               label: "昨天",
@@ -821,7 +852,7 @@ new Vue({
         {
           elementname: "结束时间",
           elementid: "end_time",
-          type: 4,
+          type: "date",
           compareType: [
             {
               label: "等于",
@@ -850,20 +881,18 @@ new Vue({
           ],
         },
       ],
-
-      logic: [
-        {
-          label: "或者",
-          value: "or",
-        },
-        {
-          label: "并且",
-          value: "and",
-        },
-      ],
     },
+    DataRuleLogic:[
+      {
+        label: "或者",
+        value: "or",
+      },
+      {
+        label: "并且",
+        value: "and",
+      }
+    ],
     cClickedDRTreeNode: [], // 当前点击的数据规则标签页树item
-    cClickedDRTreeNodeDRData: [], // 当前点击的数据规则标签页树item已添加的数据规则
   },
   created() {
     this.handleAssignedData(this.assignedData);
@@ -888,7 +917,6 @@ new Vue({
      * Description: 根据当前循环出的已分配数据规则item
      * 从接口获取的备选数据集中筛选出当前item的条件列表数据
      */
-
     getItemCompareType(item) {
       return (item) => {
         let compareType = _.cloneDeep(this.treeItemDRDefaultData.fieldName);
@@ -1342,7 +1370,7 @@ new Vue({
       let dataTemp = this.dataRuleDataMaptoTreeItem.filter((v) => {
         return v.id === data.id;
       });
-      this.cClickedDRTreeNodeDRData =
+      this.dataRuleList =
         dataTemp.length === 0
           ? _.cloneDeep(data.assigneddatarules)
           : dataTemp[0].assigneddatarules;
@@ -1355,6 +1383,9 @@ new Vue({
     deleteDataRuleItem(item, index) {
       this.dataRuleList.splice(index, 1);
       // TODO 更新数据规则差异化数据映射集
+      let dataTemp=_.cloneDeep(this.cClickedDRTreeNode)
+      dataTemp.assigneddatarules=_.cloneDeep(this.dataRuleList)
+      this.updateDataRuleDataMaptoTreeItem(dataTemp)
     },
     /**
      * Author: zhang fq
@@ -1362,13 +1393,19 @@ new Vue({
      * Description: 当前点击的业务对象数据规则列表item添加功能
      */
     addDataRuleTocCTreeNode() {
-      this.dataRuleList.push({
-        elementid: this.treeItemDRDefaultData.fieldName[0].elementid || "",
-        comparetype: this.treeItemDRDefaultData.compareType[0].value || "",
-        value: "",
-        logic: "and",
-        valueType: this.treeItemDRDefaultData.fieldName[0].type || 3,
-      });
+      if(this.cClickedDRTreeNode.cstlid){
+        this.dataRuleList.push({
+          elementid: this.treeItemDRDefaultData.fieldName[0].elementid || "",
+          comparetype: this.treeItemDRDefaultData.fieldName[0].compareType[0].value || "",
+          value: "",
+          logic: "and",
+          valueType: this.treeItemDRDefaultData.fieldName[0].type || "text",
+        });
+        // TODO 更新数据规则差异化数据映射集
+        let dataTemp=_.cloneDeep(this.cClickedDRTreeNode)
+        dataTemp.assigneddatarules=_.cloneDeep(this.dataRuleList)
+        this.updateDataRuleDataMaptoTreeItem(dataTemp)
+      }
     },
     /**
      * Author: zhang fq
@@ -1386,18 +1423,33 @@ new Vue({
         }
       }
       // TODO 更新数据规则差异化数据映射集
+      let dataTemp=_.cloneDeep(this.cClickedDRTreeNode)
+      dataTemp.assigneddatarules=_.cloneDeep(this.dataRuleList)
+      this.updateDataRuleDataMaptoTreeItem(dataTemp)
     },
     handleDRCompareTypeChange(val, item, index) {
       // TODO 更新数据规则差异化数据映射集
+      let dataTemp=_.cloneDeep(this.cClickedDRTreeNode)
+      dataTemp.assigneddatarules=_.cloneDeep(this.dataRuleList)
+      this.updateDataRuleDataMaptoTreeItem(dataTemp)
     },
     handleDRLogicChange(val, item, index) {
       // TODO 更新数据规则差异化数据映射集
+      let dataTemp=_.cloneDeep(this.cClickedDRTreeNode)
+      dataTemp.assigneddatarules=_.cloneDeep(this.dataRuleList)
+      this.updateDataRuleDataMaptoTreeItem(dataTemp)
     },
     handleDRValueChange(val, item, index) {
+      // alert(1)
       // TODO 更新数据规则差异化数据映射集
+      let dataTemp=_.cloneDeep(this.cClickedDRTreeNode)
+      dataTemp.assigneddatarules=_.cloneDeep(this.dataRuleList)
+      this.updateDataRuleDataMaptoTreeItem(dataTemp)
     },
-    dataRuleToOrg() {
+    dataRuleToOrg(item,index) {
       //TODO 通知后台 调起组织架构 选择人员
+      // item.value="张富强"
+      console.log(this.cClickedDRTreeNode)
     },
     // 更新数据规则映射集
     updateDataRuleDataMaptoTreeItem(data) {
