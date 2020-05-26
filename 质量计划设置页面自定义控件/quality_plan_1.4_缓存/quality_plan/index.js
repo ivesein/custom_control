@@ -23,39 +23,10 @@
     },
     update: function (props) {
       console.log("-----update", this.model, props);
-      // if (props.data && props.data.isInit) {
-      //   theData = [];
-      //   originData = [];
-      //   changedIds = [];
-      //   cstlRoleFuncPerm = [];
-      //   cstlRoleFieldPerm = [];
-      //   this.model.qualityPlanVue = null;
-      //   setHtml(this.model, props);
-      // } else if (this.model.qualityPlanVue) {
-      //   this.model.qualityPlanVue.handleUpdata(this.model, props);
-      // }
-      /**
-       * Author: zhang fq
-       * Date: 2020-05-25
-       * Description: 判断标签点击 从缓存获取数据 初始化页面
-       */
-      if (
-        props.data !== null ||
-        props.data !== undefined ||
-        props.data !== ""
-      ) {
-        if (props.data.method && props.data.method === "tabClickedYou") {
-          let lsData = JSON.parse(localStorage.getItem("project_plan"));
-          if (data !== null || data !== undefined || data !== "") {
-            theData = [];
-            originData = [];
-            changedIds = [];
-            cstlRoleFuncPerm = [];
-            cstlRoleFieldPerm = [];
-            this.model.qualityPlanVue = null;
-            setHtml({ model: this.model, props: props, lsData: lsData });
-          }
-        }
+      if (this.model.qualityPlanVue) {
+        this.model.qualityPlanVue.handleUpdata(this.model, props)
+      }else{
+        setHtml(this.model, props)
       }
     },
     destoryed: function () {
@@ -84,21 +55,21 @@
               ).then(function (result) {
                 model.dom.innerHTML = "";
                 model.dom.innerHTML = result;
-                if (props.data) {
-                  if (props.data.isInit) {
-                    // 如果是页面初始化  存储源数据
-                    originData = props.data.data.sort(compare("position"));
-                    cstlRoleFuncPerm = props.data.cstlRoleFuncPerm || [];
-                    cstlRoleFieldPerm = props.data.cstlRoleFieldPerm || [];
-                    // 将源数据处理为页面展示数据
-                    originData = setAuditTaskUndertaker(originData);
-                    // console.log("处理后的originData>>>", originData)
-                    theData = formatToTreeData({
-                      arrayList: originData,
-                      idStr: "id",
-                    });
-                  }
-                }
+                // if (props.data) {
+                //   if (props.data.isInit) {
+                //     // 如果是页面初始化  存储源数据
+                //     originData = props.data.data.sort(compare("position"));
+                //     cstlRoleFuncPerm = props.data.cstlRoleFuncPerm || [];
+                //     cstlRoleFieldPerm = props.data.cstlRoleFieldPerm || [];
+                //     // 将源数据处理为页面展示数据
+                //     originData = setAuditTaskUndertaker(originData);
+                //     // console.log("处理后的originData>>>", originData)
+                //     theData = formatToTreeData({
+                //       arrayList: originData,
+                //       idStr: "id",
+                //     });
+                //   }
+                // }
                 model.qualityPlanVue = new Vue({
                   delimiters: ["${", "}"],
                   data: {
@@ -169,25 +140,81 @@
                     },
                   },
                   methods: {
+                    /**
+                   * @author: zhang fq
+                   * @date: 2020-05-26
+                   * @description: 从缓存读取数据
+                   */
+                    getCacheData(keyStr){
+                      if(keyStr==="") return {}
+                      let data=localStorage.getItem(keyStr)
+                      if(data===null||data===undefined||data===""){
+                        return {}
+                      }else{
+                        return JSON.parse(data)
+                      }
+                    },
+                     /**
+                   * @author: zhang fq
+                   * @date: 2020-05-26
+                   * @description: 更新缓存中的数据
+                   */
+                    setCacheData(keyStr="project_plan_cache",data){
+                      localStorage.setItem(keyStr,JSON.stringify(data))
+                    },
+                     /**
+                   * @author: zhang fq
+                   * @date: 2020-05-26
+                   * @description: 处理各按钮功能接口对应的数据返回
+                   */
                     handleUpdata(model, props) {
                       if (props.data) {
-                        // 如果是通知自定义控件执行保存
-                        if (props.data.isSave === true) {
-                          this.saveData();
-                        } else if (props.data.isRefresh === true) {
-                          this.refreshData();
-                        } else if (props.data.method === "isExit") {
-                          this.isExit();
-                        } else if (props.data.method === "isSubmit") {
-                          this.isSubmit();
-                        } else {
-                          // 更新数据
-                          this.updataData(
-                            originData,
-                            this.currentSelectedIds,
-                            props.data.data
-                          );
+                        if(props.data.method){
+                          switch(props.data.method){
+                            case "yourTurn":
+                              // 处理页签点击到当前页面
+                              this.yourTurn();
+                              break;
+                            case "updataData":
+                              this.updataData(originData,this.currentSelectedIds,props.data.data);
+                              break;
+                            default:
+                              this.$message.error("网络繁忙，请稍后再试...")
+                          }
                         }
+                      }
+                    }, 
+                    /**
+                    * @author: zhang fq
+                    * @date: 2020-05-26
+                    * @description: 处理后台通知 标签页点击到当前页面时的逻辑
+                    */
+                    yourTurn(){
+                      let dataTemp={}
+                      let times=5
+                      let myInterval=null
+                      // 轮询5次
+                      while(times>0){
+                        myInterval=setInterval(()=>{
+                          dataTemp=this.getCacheData("project_plan_cache")
+                          times--
+                        },2000)
+                      }
+                      // 5次后清除轮询
+                      if(times===0){
+                        clearInterval(myInterval)
+                      }
+                      if(dataTemp==={}){
+                        // 提示用户去进度计划标签页获取数据
+                        this.$message.info("获取数据失败，请点击进度计划标签页获取数据！")
+                      }else{
+                        originData=dataTemp.data
+                        originData = setAuditTaskUndertaker(originData);
+                        // console.log("处理后的originData>>>", originData)
+                        theData = formatToTreeData({
+                          arrayList: originData,
+                          idStr: "id",
+                        });
                       }
                     },
                     updataData(originData, selectedIds, changeData) {
@@ -214,7 +241,6 @@
                         arrayList: originData,
                         idStr: "id",
                       });
-                      console.log("this.tableData>>>", this.tableData);
                     },
                     isExit() {
                       if (changedIds.length === 0) {

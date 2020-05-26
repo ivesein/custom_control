@@ -38,7 +38,7 @@
     </el-table-column>
     <el-table-column type="index" label="序号" width="60" align="center">
     </el-table-column>
-    <el-table-column v-if="getFieldShow('task_name')" prop="task_name" label="WBS任务名称"></el-table-column>
+    <el-table-column v-if="getFieldShow('text')" prop="task_name" label="WBS任务名称"></el-table-column>
     <el-table-column v-if="getFieldShow('wbs')" prop="wbs" label="任务代码" width="100" ></el-table-column>
     
     <el-table-column v-if="getFieldShow('duration')" label="工时" width="120">
@@ -48,17 +48,17 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column v-if="getFieldShow('plan_starttime')" label="开始时间" width="180">
+    <el-table-column v-if="getFieldShow('start_date')" label="开始时间" width="180">
       <template slot-scope="scope">
         <div>
-          ${ scope.row.plan_starttime }
+          ${ scope.row.start_date }
         </div>
       </template>
     </el-table-column>
-    <el-table-column v-if="getFieldShow('plan_endtime')" label="结束时间" width="180">
+    <el-table-column v-if="getFieldShow('end_date')" label="结束时间" width="180">
       <template slot-scope="scope">
         <div>
-          ${ scope.row.plan_endtime }
+          ${ scope.row.end_date }
         </div>
       </template>
     </el-table-column>
@@ -106,29 +106,29 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column v-if="getFieldShow('owner_role')"  label="承担人角色" width="120">
+    <el-table-column v-if="getFieldShow('qp_owner_role')"  label="承担人角色" width="120">
       <template slot-scope="scope">
         <div class="checek-man" v-show="scope.row.task_type === '3'">
-          ${ scope.row.owner_role }
+          ${ scope.row.qp_owner_role }
         </div>
         <div class="checek-man" v-show="scope.row.task_type === '3'">
           ${ scope.row.the_owner_role }
         </div>
         <div class="checek-man" v-show="scope.row.task_type === '3'">
-          ${ scope.row.owner_role }
+          ${ scope.row.qp_owner_role }
         </div>
         <div class="checek-man" style="border:none" v-show="scope.row.task_type === '3'">
-          ${ scope.row.owner_role }
+          ${ scope.row.qp_owner_role }
         </div>
         <div v-show="scope.row.task_type === '1'||scope.row.task_type === '2'">
-          ${ scope.row.owner_role }
+          ${ scope.row.qp_owner_role }
         </div>
       </template>
     </el-table-column>
     <el-table-column v-if="getFieldShow('owner')" label="承担人名称" width="120">
       <template slot-scope="scope">
         <div class="checek-man" v-show="scope.row.task_type === '3'">
-          <span v-if="scope.row.isreply==='2'"> ${ scope.row.owner }</span>
+          <span v-if="scope.row.isreply==='2'"> ${ scope.row.qp_owner }</span>
           <span v-else></span>
         </div>
         <div class="checek-man" v-show="scope.row.task_type === '3'">
@@ -136,15 +136,15 @@
           <span v-else></span>
         </div>
         <div class="checek-man" v-show="scope.row.task_type === '3'">
-          <span v-if="scope.row.isreply==='2'"> ${ scope.row.owner }</span>
+          <span v-if="scope.row.isreply==='2'"> ${ scope.row.qp_owner }</span>
           <span v-else></span>
         </div>
         <div class="checek-man" style="border:none" v-show="scope.row.task_type === '3'">
-          <span v-if="scope.row.isreply==='2'"> ${ scope.row.owner }</span>
+          <span v-if="scope.row.isreply==='2'"> ${ scope.row.qp_owner }</span>
           <span v-else></span>
         </div>
         <div v-show="scope.row.task_type === '1'||scope.row.task_type === '2'">
-          <span v-if="scope.row.isreply==='2'"> ${ scope.row.owner }</span>
+          <span v-if="scope.row.isreply==='2'"> ${ scope.row.qp_owner }</span>
           <span v-else></span>
         </div>
       </template>
