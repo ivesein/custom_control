@@ -36,13 +36,13 @@ new Vue({
         iseditable: 0,
       },
       {
-        elementid: "plan_starttime",
+        elementid: "start_date",
         isvisible: 0,
         cstlid: "wbs_planning_v1.0",
         iseditable: 0,
       },
       {
-        elementid: "plan_endtime",
+        elementid: "end_date",
         isvisible: 1,
         iseditable: 0,
       },
@@ -86,8 +86,8 @@ new Vue({
         owner_role: "",
         owner_roleid: "",
         duration: "",
-        plan_starttime: "",
-        plan_endtime: "",
+        start_date: "",
+        end_date: "",
         qualityplan_version: "",
         parent: "0",
         type: "project",
@@ -109,8 +109,8 @@ new Vue({
         owner_role: "",
         owner_roleid: "",
         duration: "",
-        plan_starttime: "2019-02-06",
-        plan_endtime: "2019-02-15",
+        start_date: "2019-02-06",
+        end_date: "2019-02-15",
         qualityplan_version: "",
         parent: "1",
         type: "project",
@@ -132,8 +132,8 @@ new Vue({
         owner_role: "设计员",
         owner_roleid: "789577461510730800",
         duration: "",
-        plan_starttime: "2019-02-06",
-        plan_endtime: "2019-02-08",
+        start_date: "2019-02-06",
+        end_date: "2019-02-08",
         qualityplan_version: "",
         parent: "2",
         skill: "挖土",
@@ -157,8 +157,8 @@ new Vue({
         skill: "挖土",
         owner_roleid: "789577577239965700",
         duration: "",
-        plan_starttime: "2019-02-09",
-        plan_endtime: "2019-02-15",
+        start_date: "2019-02-09",
+        end_date: "2019-02-15",
         qualityplan_version: "",
         parent: "2",
         type: "task",
@@ -180,8 +180,8 @@ new Vue({
         owner_role: "",
         owner_roleid: "",
         duration: "",
-        plan_starttime: "2019-02-16",
-        plan_endtime: "2019-02-28",
+        start_date: "2019-02-16",
+        end_date: "2019-02-28",
         qualityplan_version: "",
         parent: "1",
         type: "task",
@@ -203,8 +203,9 @@ new Vue({
         owner_role: "设计员",
         owner_roleid: "789577461510730800",
         duration: "",
-        plan_starttime: "2019-02-16",
-        plan_endtime: "2019-02-24",
+        delegate: "1",
+        start_date: "2019-02-16",
+        end_date: "2019-02-24",
         qualityplan_version: "",
         parent: "5",
         type: "task",
@@ -226,8 +227,8 @@ new Vue({
         owner_role: "审核组长",
         owner_roleid: "55555",
         duration: "",
-        plan_starttime: "2019-03-01",
-        plan_endtime: "2019-03-08",
+        start_date: "2019-03-01",
+        end_date: "2019-03-08",
         qualityplan_version: "",
         parent: "1",
         type: "task",
@@ -249,8 +250,8 @@ new Vue({
         owner_role: "勘查员",
         owner_roleid: "789577577239965700",
         duration: "",
-        plan_starttime: "2019-02-24",
-        plan_endtime: "2019-02-28",
+        start_date: "2019-02-24",
+        end_date: "2019-02-28",
         qualityplan_version: "",
         parent: "5",
         type: "task",
@@ -272,19 +273,17 @@ new Vue({
     console.log("this.tableData>>>", this.tableData);
   },
   mounted() {
-    let self = this;
-    // 固定表格表头 设置表格高度自适应填满剩余高度
-    this.$nextTick(function () {
-      self.tableHeight =
-        window.innerHeight - self.$refs.qualityPlanTable.$el.offsetTop - 60;
-
-      // 监听窗口大小变化
-
-      window.onresize = function () {
-        self.tableHeight =
-          window.innerHeight - self.$refs.qualityPlanTable.$el.offsetTop - 60;
-      };
-    });
+    // let self = this;
+    // // 固定表格表头 设置表格高度自适应填满剩余高度
+    // this.$nextTick(function () {
+    //   self.tableHeight =
+    //     window.innerHeight - self.$refs.qualityPlanTable.$el.offsetTop - 60;
+    //   // 监听窗口大小变化
+    //   window.onresize = function () {
+    //     self.tableHeight =
+    //       window.innerHeight - self.$refs.qualityPlanTable.$el.offsetTop - 60;
+    //   };
+    // });
   },
   computed: {
     getBtnShow(btnId) {
@@ -311,6 +310,18 @@ new Vue({
     },
   },
   methods: {
+    /**
+     * Author: zhang fq
+     * Date: 2020-05-27
+     * Description: bug转需求 已委外的任务 置灰
+     */
+
+    tableRowClassName({ row, rowIndex }) {
+      if (row.delegate === "1") {
+        return "delegate-row";
+      }
+      return "";
+    },
     // 处理复核任务 整改-修改 承担人和承担人名称
     setAuditTaskUndertaker(originData) {
       if (originData.length === 0) return;

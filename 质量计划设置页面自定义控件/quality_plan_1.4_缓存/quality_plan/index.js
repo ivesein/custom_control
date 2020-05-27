@@ -2,9 +2,9 @@
 
 (function (KDApi, $) {
   // 顶层变量声明
-  var theData = [];
-  var originData = [];
-  var changedIds = [];
+  var qpCachedData = {};
+  var qpOriginData = [];
+  var qpChangedIds = [];
   var cstlRoleFuncPerm = [];
   var cstlRoleFieldPerm = [];
   function MyComponent(model) {
@@ -24,9 +24,9 @@
     update: function (props) {
       console.log("-----update", this.model, props);
       if (this.model.qualityPlanVue) {
-        this.model.qualityPlanVue.handleUpdata(this.model, props)
-      }else{
-        setHtml(this.model, props)
+        this.model.qualityPlanVue.handleUpdata(this.model, props);
+      } else {
+        setHtml(this.model, props);
       }
     },
     destoryed: function () {
@@ -58,14 +58,14 @@
                 // if (props.data) {
                 //   if (props.data.isInit) {
                 //     // 如果是页面初始化  存储源数据
-                //     originData = props.data.data.sort(compare("position"));
+                //     qpOriginData = props.data.data.sort(compare("position"));
                 //     cstlRoleFuncPerm = props.data.cstlRoleFuncPerm || [];
                 //     cstlRoleFieldPerm = props.data.cstlRoleFieldPerm || [];
                 //     // 将源数据处理为页面展示数据
-                //     originData = setAuditTaskUndertaker(originData);
-                //     // console.log("处理后的originData>>>", originData)
+                //     qpOriginData = setAuditTaskUndertaker(qpOriginData);
+                //     // console.log("处理后的originData>>>", qpOriginData)
                 //     theData = formatToTreeData({
-                //       arrayList: originData,
+                //       arrayList: qpOriginData,
                 //       idStr: "id",
                 //     });
                 //   }
@@ -73,12 +73,12 @@
                 model.qualityPlanVue = new Vue({
                   delimiters: ["${", "}"],
                   data: {
-                    tableData: theData,
+                    tableData: [],
                     allChecked: false,
                     currentSelectedIds: [],
                     tableHeight: 720,
-                    funcPerm: cstlRoleFuncPerm,
-                    fieldPerm: cstlRoleFieldPerm,
+                    funcPerm: [],
+                    fieldPerm: [],
                   },
                   created() {},
                   mounted() {
@@ -141,87 +141,111 @@
                   },
                   methods: {
                     /**
-                   * @author: zhang fq
-                   * @date: 2020-05-26
-                   * @description: 从缓存读取数据
-                   */
-                    getCacheData(keyStr){
-                      if(keyStr==="") return {}
-                      let data=localStorage.getItem(keyStr)
-                      if(data===null||data===undefined||data===""){
-                        return {}
-                      }else{
-                        return JSON.parse(data)
+                     * Author: zhang fq
+                     * Date: 2020-05-27
+                     * Description: bug转需求 已委外的任务 置灰
+                     */
+
+                    tableRowClassName({ row, rowIndex }) {
+                      if (row.delegate === "1") {
+                        return "delegate-row";
+                      }
+                      return "";
+                    },
+                    /**
+                     * @author: zhang fq
+                     * @date: 2020-05-26
+                     * @description: 从缓存读取数据
+                     */
+                    getCacheData(keyStr) {
+                      if (keyStr === "") return null;
+                      let data = localStorage.getItem(keyStr);
+                      if (data === null || data === undefined || data === "") {
+                        return null;
+                      } else {
+                        return JSON.parse(data);
                       }
                     },
-                     /**
-                   * @author: zhang fq
-                   * @date: 2020-05-26
-                   * @description: 更新缓存中的数据
-                   */
-                    setCacheData(keyStr="project_plan_cache",data){
-                      localStorage.setItem(keyStr,JSON.stringify(data))
+                    /**
+                     * @author: zhang fq
+                     * @date: 2020-05-26
+                     * @description: 更新缓存中的数据
+                     */
+                    setCacheData(keyStr = "project_plan_cache", data) {
+                      localStorage.setItem(keyStr, JSON.stringify(data));
                     },
-                     /**
-                   * @author: zhang fq
-                   * @date: 2020-05-26
-                   * @description: 处理各按钮功能接口对应的数据返回
-                   */
+                    /**
+                     * @author: zhang fq
+                     * @date: 2020-05-26
+                     * @description: 处理各按钮功能接口对应的数据返回
+                     */
                     handleUpdata(model, props) {
                       if (props.data) {
-                        if(props.data.method){
-                          switch(props.data.method){
+                        if (props.data.method) {
+                          switch (props.data.method) {
                             case "yourTurn":
                               // 处理页签点击到当前页面
                               this.yourTurn();
                               break;
                             case "updataData":
-                              this.updataData(originData,this.currentSelectedIds,props.data.data);
+                              this.updataData(
+                                qpOriginData,
+                                this.currentSelectedIds,
+                                props.data.data
+                              );
                               break;
                             default:
-                              this.$message.error("网络繁忙，请稍后再试...")
+                              this.$message.error("网络繁忙，请稍后再试...");
                           }
                         }
                       }
-                    }, 
-                    /**
-                    * @author: zhang fq
-                    * @date: 2020-05-26
-                    * @description: 处理后台通知 标签页点击到当前页面时的逻辑
-                    */
-                    yourTurn(){
-                      let dataTemp={}
-                      let times=5
-                      let myInterval=null
-                      // 轮询5次
-                      while(times>0){
-                        myInterval=setInterval(()=>{
-                          dataTemp=this.getCacheData("project_plan_cache")
-                          times--
-                        },2000)
-                      }
-                      // 5次后清除轮询
-                      if(times===0){
-                        clearInterval(myInterval)
-                      }
-                      if(dataTemp==={}){
-                        // 提示用户去进度计划标签页获取数据
-                        this.$message.info("获取数据失败，请点击进度计划标签页获取数据！")
-                      }else{
-                        originData=dataTemp.data
-                        originData = setAuditTaskUndertaker(originData);
-                        // console.log("处理后的originData>>>", originData)
-                        theData = formatToTreeData({
-                          arrayList: originData,
-                          idStr: "id",
-                        });
-                      }
                     },
+                    /**
+                     * @author: zhang fq
+                     * @date: 2020-05-26
+                     * @description: 处理后台通知 标签页点击到当前页面时的逻辑
+                     * @date: 2020-05-27
+                     * @update: 修改测试出的问题 重写页签切换 缓存读取逻辑 优化轮询
+                     */
+                    yourTurn() {
+                      let _this = this;
+                      qpCachedData = null;
+                      let times = 10;
+                      let myInterval = setInterval(() => {
+                        qpCachedData = _this.getCacheData("project_plan_cache");
+                        times--;
+                        // 5次后清除轮询
+                        if (times === 0 || qpCachedData !== null) {
+                          clearInterval(myInterval);
+                        }
+                        if (times === 0 && qpCachedData === null) {
+                          // 提示用户去进度计划获取数据
+                          _this.$message.warning(
+                            "获取数据失败，请点击进度计划重新获取！"
+                          );
+                        }
+                        if (qpCachedData !== null) {
+                          qpOriginData = _.cloneDeep(qpCachedData.data);
+                          qpOriginData = setAuditTaskUndertaker(qpOriginData);
+                          // console.log("处理后的originData>>>", qpOriginData)
+                          this.tableData = formatToTreeData({
+                            arrayList: qpOriginData,
+                            idStr: "id",
+                          });
+                        }
+                      }, 300);
+                    },
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-27
+                     * Description: 重写页面按钮操作交互逻辑 数据返回处理以及缓存数据更新
+                     */
+
                     updataData(originData, selectedIds, changeData) {
                       this.allChecked = false;
                       console.log("selectedIds>>>", selectedIds);
                       selectedIds.forEach(function (sv) {
-                        // changedIds.push(sv) //将编辑过得id保存
+                        // qpChangedIds.push(sv) //将编辑过得id保存
                         //将源数据中对应的任务字段更新
                         originData.forEach(function (ov) {
                           if (sv === ov.id) {
@@ -241,22 +265,28 @@
                         arrayList: originData,
                         idStr: "id",
                       });
+                      // 更新缓存
+                      qpCachedData.data = _.cloneDeep(originData);
+                      this.setCacheData("project_plan_cache", qpCachedData);
                     },
                     isExit() {
-                      if (changedIds.length === 0) {
+                      if (qpChangedIds.length === 0) {
                         model.invoke("isQualityPlanExit", { data: true });
                       } else {
                         model.invoke("isQualityPlanExit", { data: false });
                       }
                     },
                     isSubmit() {
-                      if (changedIds.length === 0) return;
-                      let saveData = handleDataAtSave(originData, changedIds);
+                      if (qpChangedIds.length === 0) return;
+                      let saveData = handleDataAtSave(
+                        qpOriginData,
+                        qpChangedIds
+                      );
                       let sendData = {
                         data: saveData,
                       };
                       model.invoke("submitQualityPlan", sendData);
-                      changedIds = [];
+                      qpChangedIds = [];
                     },
                     handleCheckAllChange(val) {
                       this.traversalNode(this.tableData[0], this.allChecked);
@@ -388,7 +418,7 @@
                             resData.idArr.push(v);
                             // resData.idArr.push({
                             //   project_id: v.project_id,
-                            //   plan_id: v.plan_id,
+                            //   plan_id: v.plan_id,skill
                             //   id: v.id,
                             //   text: v.text,
                             //   task_type: v.task_type,
@@ -421,14 +451,23 @@
                     },
                     saveData() {
                       console.log("quality-plan-saveData");
-                      let saveData = handleDataAtSave(originData, changedIds);
+                      let saveData = handleDataAtSave(
+                        qpOriginData,
+                        qpChangedIds
+                      );
                       console.log("saveData>>>", saveData);
                       let sendData = {
                         data: saveData,
                       };
                       model.invoke("saveQualityPlanData", sendData);
-                      changedIds = []; // 保存后 将记录变化任务id的数组置空 防止每次保存都会有上次的记录
+                      qpChangedIds = []; // 保存后 将记录变化任务id的数组置空 防止每次保存都会有上次的记录
                     },
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-27
+                     * Description: bug转需求 设置角色判断 已委外的任务无法设置角色
+                     */
+
                     SetRole() {
                       var _this = this;
                       let ids = this.getSelectedId();
@@ -442,8 +481,14 @@
                       if (ids.idArr.length === 0) {
                         this.$message.error("您勾选的任务无法设置角色");
                       } else if (ids.idArr.length === 1) {
-                        changedIds = changedIds.concat(this.currentSelectedIds);
-                        model.invoke("setQualityPlanRole", sendData);
+                        if (ids.idArr[0].delegate === "1") {
+                          this.$message.error("已委外的任务无法设置角色");
+                        } else {
+                          qpChangedIds = qpChangedIds.concat(
+                            this.currentSelectedIds
+                          );
+                          model.invoke("setQualityPlanRole", sendData);
+                        }
                       } else {
                         this.$message.error("设置角色不能多选");
                       }
@@ -469,7 +514,9 @@
                         return;
                       }
                       if (ids.idArr.length > 0) {
-                        changedIds = changedIds.concat(this.currentSelectedIds);
+                        qpChangedIds = qpChangedIds.concat(
+                          this.currentSelectedIds
+                        );
                         model.invoke("setQualityPlanStaff", sendData);
                       } else {
                         this.$message.error("您勾选的任务无法设置人员");
@@ -496,7 +543,9 @@
                       } else if (ids.idArr[0].task_type !== "3") {
                         this.$message.error("只有复核任务可以设置任务持续时间");
                       } else {
-                        changedIds = changedIds.concat(this.currentSelectedIds);
+                        qpChangedIds = qpChangedIds.concat(
+                          this.currentSelectedIds
+                        );
                         model.invoke("SetDurationTime", sendData);
                       }
                       // if (ids.length == 0) {
@@ -506,7 +555,7 @@
                       // } else if (ids[0].task_type !== "3") {
                       //   this.$message.error("只有复核任务可以设置任务持续时间")
                       // } else {
-                      //   changedIds = changedIds.concat(this.currentSelectedIds)
+                      //   qpChangedIds = qpChangedIds.concat(this.currentSelectedIds)
                       //   model.invoke(
                       //     "SetDurationTime",
                       //     sendData
@@ -593,14 +642,14 @@
     };
   }
   // 处理修改后的数据 将修改后的数据映射到 源数据中
-  // function originDataChanged(originData, changeData) {
-  // 	// console.log("originData>>>", originData)
+  // function originDataChanged(qpOriginData, changeData) {
+  // 	// console.log("qpOriginData>>>", qpOriginData)
   // 	// console.log("changeData>>>", changeData)
   // 	changeData.forEach(function (cv) {
-  // 		changedIds.push(cv.id)
+  // 		qpChangedIds.push(cv.id)
   // 	})
   // 	//... 处理方法
-  // 	originData.forEach(function (ov) {
+  // 	qpOriginData.forEach(function (ov) {
   // 		changeData.forEach(function (cv) {
   // 			if (ov.id == cv.id) {
   // 				// console.log("ov>>>", ov)
@@ -611,7 +660,7 @@
   // 			}
   // 		})
   // 	})
-  // 	return originData
+  // 	return qpOriginData
   // }
   // 处理要保存的数据
   function handleDataAtSave(data, ids) {
@@ -631,21 +680,24 @@
     return result;
   }
   // 处理复核任务 整改-修改 承担人和承担人名称
-  function setAuditTaskUndertaker(originData) {
-    if (originData.length === 0) return;
-    originData.forEach(function (fuck) {
-      if (fuck.task_type === "3") {
-        originData.forEach(function (shit) {
-          if (fuck.parent === shit.parent && shit.task_type !== "3") {
-            fuck.the_owner = shit.owner;
-            fuck.the_isreply = shit.isreply;
-            fuck.the_owner_role = shit.owner_role;
-            fuck.the_skill = shit.skill;
-          }
-        });
-      }
-    });
-    return originData;
+  function setAuditTaskUndertaker(qpOriginData) {
+    if (qpOriginData && qpOriginData.length !== 0) {
+      qpOriginData.forEach(function (fuck) {
+        if (fuck.task_type === "3") {
+          qpOriginData.forEach(function (shit) {
+            if (fuck.parent === shit.parent && shit.task_type !== "3") {
+              fuck.the_owner = shit.qp_owner;
+              fuck.the_isreply = shit.isreply;
+              fuck.the_owner_role = shit.qp_owner_role;
+              fuck.the_skill = shit.skill;
+            }
+          });
+        }
+      });
+      return qpOriginData;
+    } else {
+      return [];
+    }
   }
   // 注册自定义控件
   KDApi.register("quality_plan", MyComponent);

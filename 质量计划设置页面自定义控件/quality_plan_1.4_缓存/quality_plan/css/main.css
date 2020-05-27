@@ -165,3 +165,8 @@ button[disabled]{
 .el-table--border::after, .el-table--group::after, .el-table::before{
   background-color: #cecece!important;
 }
+
+
+.el-table .delegate-row {
+  background: #eee;
+}
