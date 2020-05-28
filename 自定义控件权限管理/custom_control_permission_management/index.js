@@ -353,12 +353,14 @@
                         // 先判断右侧树是否已有该父节点  没有再插
                         if (!this.assArr.includes(v)) {
                           if (v.length === 1) {
-                            let node = _.cloneDeep(
-                              this.$refs.treeLeft.getNode(v).data
-                            );
-                            delete node.children;
-                            console.log(node);
-                            this.$refs.treeRight.append(node, "0");
+                            if(v[0]!=="0"){
+                              let node = _.cloneDeep(
+                                this.$refs.treeLeft.getNode(v).data
+                              );
+                              delete node.children;
+                              console.log(node);
+                              this.$refs.treeRight.append(node, "0");
+                            }
                           } else {
                             let parentKey = v.slice(0, v.length - 2);
                             console.log("parentKey>>>", parentKey);
@@ -370,18 +372,26 @@
                           }
                         }
                       });
+                      /**
+                       * @author: zhang fq
+                       * @date: 2020-05-28
+                       * @description: 修复 可全选左侧树 连左侧树最外层跟节点一起插入的bug
+                       */
                       // 循环 过滤后的最终子节点  将该节点插入到右侧对应的父节点下
                       filterArr.forEach((v) => {
                         // 判断右侧树是否包含该节点 包含先删再插
                         if (this.assArr.includes(v)) {
                           this.$refs.treeRight.remove(v);
                         }
-                        //如果当前循环的最终子节点id只有以为("7") 则说明该节点为根节点 将该节点及其子节点一起插入右侧树
+                        //如果当前循环的最终子节点id只有一位("7") 则说明该节点为根节点 将该节点及其子节点一起插入右侧树
                         if (v.length === 1) {
-                          let node = _.cloneDeep(
-                            this.$refs.treeLeft.getNode(v).data
-                          );
-                          this.$refs.treeRight.append(node, "0");
+                          // 修复 可全选左侧树 连左侧树最外层跟节点一起插入的bug
+                          if(v[0]!=='0'){
+                            let node = _.cloneDeep(
+                              this.$refs.treeLeft.getNode(v).data
+                            );
+                            this.$refs.treeRight.append(node, "0");
+                          }
                         } else {
                           //如果该节点key长度不为1 则找到该节点的父节点id 插入到右侧
                           let parentKey = v.slice(0, v.length - 2);

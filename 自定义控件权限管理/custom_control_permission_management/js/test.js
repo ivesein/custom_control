@@ -355,184 +355,184 @@ new Vue({
     assignedData: [
       {
         children: [
-          {
-            cloud: "0M731/HL/PCC",
-            children: [
-              {
-                app: "0CKY+711JQLA",
-                children: [
-                  {
-                    children: [
-                      {
-                        cstlid: "quality_plan_v1.3",
-                        id: "1-1-1-1",
-                        label: "质量计划",
-                        assignedfields: [
-                          {
-                            elementid: "owner_role",
-                            elementname: "承担人角色field",
-                            isvisible: 1,
-                            checked: true,
-                            iseditable: 1,
-                          },
-                        ],
-                        assigneddatarules: [],
-                        children: [
-                          {
-                            elementid: "btn1",
-                            isvisible: "1",
-                            id: "1-1-1-1-1",
-                            label: "设置角色",
-                            source: "sxzd_quality_planv3",
-                            iseditable: "0",
-                            elementtype: "cstl_button",
-                          },
-                          {
-                            elementid: "btn3",
-                            isvisible: "0",
-                            id: "1-1-1-1-3",
-                            label: "刷新",
-                            source: "sxzd_quality_planv3",
-                            iseditable: "1",
-                            elementtype: "cstl_button",
-                          },
-                        ],
-                      },
-                    ],
-                    bill: "sxzd_project_plan",
-                    id: "1-1-1",
-                    label: "项目计划",
-                  },
-                ],
-                id: "1-1",
-                label: "计划编制",
-              },
-              {
-                app: "0DNIEZMAPK0I",
-                children: [
-                  {
-                    children: [
-                      {
-                        cstlid: "resource_allocation_v1.0",
-                        id: "1-2-1-1",
-                        label: "质量维护",
-                        assignedfields: [],
-                        assigneddatarules: [],
-                        children: [
-                          {
-                            elementid: "btnx",
-                            isvisible: "1",
-                            id: "1-2-1-1-1",
-                            label: "资源调配",
-                            source: "sxzd_quality_planv3_save",
-                            iseditable: "1",
-                            elementtype: "cstl_button",
-                          },
-                        ],
-                      },
-                    ],
-                    bill: "sxzd_executive_management",
-                    id: "1-2-1",
-                    label: "计划维护与发布",
-                  },
-                ],
-                id: "1-2",
-                label: "执行管理",
-              },
-            ],
-            id: "1",
-            label: "项目管理",
-          },
-          {
-            cloud: "0M734GP77GFO",
-            children: [
-              {
-                app: "0OSNPZ+G0FRY",
-                children: [
-                  {
-                    children: [
-                      {
-                        cstlid: "company_calendar_v1.0",
-                        id: "2-1-1-1",
-                        label: "企业日历",
-                        assignedfields: [],
-                        assigneddatarules: [],
-                        children: [
-                          {
-                            elementid: "testbbid",
-                            isvisible: "1",
-                            id: "2-1-1-1-1",
-                            label: "testbbname",
-                            source: "",
-                            iseditable: "1",
-                            elementtype: "cstl_button",
-                          },
-                          {
-                            elementid: "testccid",
-                            isvisible: "0",
-                            id: "2-1-1-1-2",
-                            label: "testccname",
-                            source: "",
-                            iseditable: "0",
-                            elementtype: "cstl_button",
-                          },
-                        ],
-                      },
-                    ],
-                    bill: "sxzd_enterprise_calendar",
-                    id: "2-1-1",
-                    label: "企业日历",
-                  },
-                ],
-                id: "2-1",
-                label: "日历管理",
-              },
-            ],
-            id: "2",
-            label: "公司管理",
-          },
-          {
-            cloud: "0MKCCCJPD=43",
-            children: [
-              {
-                app: "0MKCQC0MBGV3",
-                children: [
-                  {
-                    children: [
-                      {
-                        cstlid: "wbs_planning_v1.0",
-                        id: "3-1-1-1",
-                        label: "模板管理",
-                        assignedfields: [],
-                        assigneddatarules: [],
-                        children: [
-                          {
-                            elementid: "duration",
-                            isvisible: "1",
-                            id: "3-1-1-1-1",
-                            iseditable: "0",
-                          },
-                          {
-                            elementid: "owner",
-                            isvisible: "0",
-                            id: "3-1-1-1-2",
-                            iseditable: "0",
-                          },
-                        ],
-                      },
-                    ],
-                    bill: "sxzd_wbs_template_manage",
-                    id: "3-1-1",
-                    label: "公路云WBS模板管理",
-                  },
-                ],
-                id: "3-1",
-                label: "模板管理",
-              },
-            ],
-            id: "3",
-            label: "模板管理",
-          },
+          // {
+          //   cloud: "0M731/HL/PCC",
+          //   children: [
+          //     {
+          //       app: "0CKY+711JQLA",
+          //       children: [
+          //         {
+          //           children: [
+          //             {
+          //               cstlid: "quality_plan_v1.3",
+          //               id: "1-1-1-1",
+          //               label: "质量计划",
+          //               assignedfields: [
+          //                 {
+          //                   elementid: "owner_role",
+          //                   elementname: "承担人角色field",
+          //                   isvisible: 1,
+          //                   checked: true,
+          //                   iseditable: 1,
+          //                 },
+          //               ],
+          //               assigneddatarules: [],
+          //               children: [
+          //                 {
+          //                   elementid: "btn1",
+          //                   isvisible: "1",
+          //                   id: "1-1-1-1-1",
+          //                   label: "设置角色",
+          //                   source: "sxzd_quality_planv3",
+          //                   iseditable: "0",
+          //                   elementtype: "cstl_button",
+          //                 },
+          //                 {
+          //                   elementid: "btn3",
+          //                   isvisible: "0",
+          //                   id: "1-1-1-1-3",
+          //                   label: "刷新",
+          //                   source: "sxzd_quality_planv3",
+          //                   iseditable: "1",
+          //                   elementtype: "cstl_button",
+          //                 },
+          //               ],
+          //             },
+          //           ],
+          //           bill: "sxzd_project_plan",
+          //           id: "1-1-1",
+          //           label: "项目计划",
+          //         },
+          //       ],
+          //       id: "1-1",
+          //       label: "计划编制",
+          //     },
+          //     {
+          //       app: "0DNIEZMAPK0I",
+          //       children: [
+          //         {
+          //           children: [
+          //             {
+          //               cstlid: "resource_allocation_v1.0",
+          //               id: "1-2-1-1",
+          //               label: "质量维护",
+          //               assignedfields: [],
+          //               assigneddatarules: [],
+          //               children: [
+          //                 {
+          //                   elementid: "btnx",
+          //                   isvisible: "1",
+          //                   id: "1-2-1-1-1",
+          //                   label: "资源调配",
+          //                   source: "sxzd_quality_planv3_save",
+          //                   iseditable: "1",
+          //                   elementtype: "cstl_button",
+          //                 },
+          //               ],
+          //             },
+          //           ],
+          //           bill: "sxzd_executive_management",
+          //           id: "1-2-1",
+          //           label: "计划维护与发布",
+          //         },
+          //       ],
+          //       id: "1-2",
+          //       label: "执行管理",
+          //     },
+          //   ],
+          //   id: "1",
+          //   label: "项目管理",
+          // },
+          // {
+          //   cloud: "0M734GP77GFO",
+          //   children: [
+          //     {
+          //       app: "0OSNPZ+G0FRY",
+          //       children: [
+          //         {
+          //           children: [
+          //             {
+          //               cstlid: "company_calendar_v1.0",
+          //               id: "2-1-1-1",
+          //               label: "企业日历",
+          //               assignedfields: [],
+          //               assigneddatarules: [],
+          //               children: [
+          //                 {
+          //                   elementid: "testbbid",
+          //                   isvisible: "1",
+          //                   id: "2-1-1-1-1",
+          //                   label: "testbbname",
+          //                   source: "",
+          //                   iseditable: "1",
+          //                   elementtype: "cstl_button",
+          //                 },
+          //                 {
+          //                   elementid: "testccid",
+          //                   isvisible: "0",
+          //                   id: "2-1-1-1-2",
+          //                   label: "testccname",
+          //                   source: "",
+          //                   iseditable: "0",
+          //                   elementtype: "cstl_button",
+          //                 },
+          //               ],
+          //             },
+          //           ],
+          //           bill: "sxzd_enterprise_calendar",
+          //           id: "2-1-1",
+          //           label: "企业日历",
+          //         },
+          //       ],
+          //       id: "2-1",
+          //       label: "日历管理",
+          //     },
+          //   ],
+          //   id: "2",
+          //   label: "公司管理",
+          // },
+          // {
+          //   cloud: "0MKCCCJPD=43",
+          //   children: [
+          //     {
+          //       app: "0MKCQC0MBGV3",
+          //       children: [
+          //         {
+          //           children: [
+          //             {
+          //               cstlid: "wbs_planning_v1.0",
+          //               id: "3-1-1-1",
+          //               label: "模板管理",
+          //               assignedfields: [],
+          //               assigneddatarules: [],
+          //               children: [
+          //                 {
+          //                   elementid: "duration",
+          //                   isvisible: "1",
+          //                   id: "3-1-1-1-1",
+          //                   iseditable: "0",
+          //                 },
+          //                 {
+          //                   elementid: "owner",
+          //                   isvisible: "0",
+          //                   id: "3-1-1-1-2",
+          //                   iseditable: "0",
+          //                 },
+          //               ],
+          //             },
+          //           ],
+          //           bill: "sxzd_wbs_template_manage",
+          //           id: "3-1-1",
+          //           label: "公路云WBS模板管理",
+          //         },
+          //       ],
+          //       id: "3-1",
+          //       label: "模板管理",
+          //     },
+          //   ],
+          //   id: "3",
+          //   label: "模板管理",
+          // },
         ],
         id: "0",
         label: "已分配",
@@ -1071,10 +1071,12 @@ new Vue({
         // 先判断右侧树是否已有该父节点  没有再插
         if (!this.assArr.includes(v)) {
           if (v.length === 1) {
-            let node = _.cloneDeep(this.$refs.treeLeft.getNode(v).data);
-            delete node.children;
-            console.log(node);
-            this.$refs.treeRight.append(node, "0");
+            if(v[0]!=='0'){
+              let node = _.cloneDeep(this.$refs.treeLeft.getNode(v).data);
+              delete node.children;
+              console.log(node);
+              this.$refs.treeRight.append(node, "0");
+            }
           } else {
             let parentKey = v.slice(0, v.length - 2);
             console.log("parentKey>>>", parentKey);
@@ -1092,8 +1094,10 @@ new Vue({
         }
         //如果当前循环的最终子节点id只有以为("7") 则说明该节点为根节点 将该节点及其子节点一起插入右侧树
         if (v.length === 1) {
-          let node = _.cloneDeep(this.$refs.treeLeft.getNode(v).data);
-          this.$refs.treeRight.append(node, "0");
+          if(v[0]!=='0'){
+            let node = _.cloneDeep(this.$refs.treeLeft.getNode(v).data);
+            this.$refs.treeRight.append(node, "0");
+          }
         } else {
           //如果该节点key长度不为1 则找到该节点的父节点id 插入到右侧
           let parentKey = v.slice(0, v.length - 2);
@@ -1135,7 +1139,7 @@ new Vue({
       console.log(removeNode);
       // 根据选中的节点id 循环删除每一个选中的节点
       removeNode.forEach((v) => {
-        if (v.id !== "0") {
+        if (v !== "0") {
           this.$refs.treeRight.remove(v);
         }
       });

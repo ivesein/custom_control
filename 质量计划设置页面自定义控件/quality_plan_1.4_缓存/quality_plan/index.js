@@ -55,21 +55,6 @@
               ).then(function (result) {
                 model.dom.innerHTML = "";
                 model.dom.innerHTML = result;
-                // if (props.data) {
-                //   if (props.data.isInit) {
-                //     // 如果是页面初始化  存储源数据
-                //     qpOriginData = props.data.data.sort(compare("position"));
-                //     cstlRoleFuncPerm = props.data.cstlRoleFuncPerm || [];
-                //     cstlRoleFieldPerm = props.data.cstlRoleFieldPerm || [];
-                //     // 将源数据处理为页面展示数据
-                //     qpOriginData = setAuditTaskUndertaker(qpOriginData);
-                //     // console.log("处理后的originData>>>", qpOriginData)
-                //     theData = formatToTreeData({
-                //       arrayList: qpOriginData,
-                //       idStr: "id",
-                //     });
-                //   }
-                // }
                 model.qualityPlanVue = new Vue({
                   delimiters: ["${", "}"],
                   data: {
@@ -145,7 +130,6 @@
                      * Date: 2020-05-27
                      * Description: bug转需求 已委外的任务 置灰
                      */
-
                     tableRowClassName({ row, rowIndex }) {
                       if (row.delegate === "1") {
                         return "delegate-row";
@@ -227,7 +211,6 @@
                         if (qpCachedData !== null) {
                           qpOriginData = _.cloneDeep(qpCachedData.data);
                           qpOriginData = setAuditTaskUndertaker(qpOriginData);
-                          // console.log("处理后的originData>>>", qpOriginData)
                           this.tableData = formatToTreeData({
                             arrayList: qpOriginData,
                             idStr: "id",
@@ -240,7 +223,6 @@
                      * Date: 2020-05-27
                      * Description: 重写页面按钮操作交互逻辑 数据返回处理以及缓存数据更新
                      */
-
                     updataData(originData, selectedIds, changeData) {
                       this.allChecked = false;
                       console.log("selectedIds>>>", selectedIds);
@@ -268,25 +250,6 @@
                       // 更新缓存
                       qpCachedData.data = _.cloneDeep(originData);
                       this.setCacheData("project_plan_cache", qpCachedData);
-                    },
-                    isExit() {
-                      if (qpChangedIds.length === 0) {
-                        model.invoke("isQualityPlanExit", { data: true });
-                      } else {
-                        model.invoke("isQualityPlanExit", { data: false });
-                      }
-                    },
-                    isSubmit() {
-                      if (qpChangedIds.length === 0) return;
-                      let saveData = handleDataAtSave(
-                        qpOriginData,
-                        qpChangedIds
-                      );
-                      let sendData = {
-                        data: saveData,
-                      };
-                      model.invoke("submitQualityPlan", sendData);
-                      qpChangedIds = [];
                     },
                     handleCheckAllChange(val) {
                       this.traversalNode(this.tableData[0], this.allChecked);
@@ -449,25 +412,11 @@
                         return "padding: 0px!important;";
                       }
                     },
-                    saveData() {
-                      console.log("quality-plan-saveData");
-                      let saveData = handleDataAtSave(
-                        qpOriginData,
-                        qpChangedIds
-                      );
-                      console.log("saveData>>>", saveData);
-                      let sendData = {
-                        data: saveData,
-                      };
-                      model.invoke("saveQualityPlanData", sendData);
-                      qpChangedIds = []; // 保存后 将记录变化任务id的数组置空 防止每次保存都会有上次的记录
-                    },
                     /**
                      * Author: zhang fq
                      * Date: 2020-05-27
                      * Description: bug转需求 设置角色判断 已委外的任务无法设置角色
                      */
-
                     SetRole() {
                       var _this = this;
                       let ids = this.getSelectedId();
@@ -493,36 +442,11 @@
                         this.$message.error("设置角色不能多选");
                       }
                     },
-                    getTask(tasks, selectedIds) {
-                      let task = [];
-                      if (selectedIds.length > 0) {
-                        selectedIds.forEach(function (sv) {
-                          tasks.forEach(function (tv) {
-                            if (sv === tv.id) task.push(tv);
-                          });
-                        });
-                      }
-                      return task;
-                    },
-                    SetStaff() {
-                      let ids = this.getSelectedId();
-                      let sendData = {
-                        data: ids.idArr,
-                      };
-                      if (ids.selected.length === 0) {
-                        this.$message.error("未勾选任务");
-                        return;
-                      }
-                      if (ids.idArr.length > 0) {
-                        qpChangedIds = qpChangedIds.concat(
-                          this.currentSelectedIds
-                        );
-                        model.invoke("setQualityPlanStaff", sendData);
-                      } else {
-                        this.$message.error("您勾选的任务无法设置人员");
-                      }
-                    },
-
+                    /**
+                     * Author: zhang fq
+                     * Date: 2020-05-28
+                     * Description: bug转需求 设置持续时间判断 已委外的任务无法设置持续时间
+                     */
                     SetDurationTime() {
                       let ids = this.getSelectedId();
                       let sendData = {
@@ -542,29 +466,14 @@
                         this.$message.error("设置任务持续时间不能多选");
                       } else if (ids.idArr[0].task_type !== "3") {
                         this.$message.error("只有复核任务可以设置任务持续时间");
-                      } else {
+                      } else if(ids.idArr[0].delegate==="1"){
+                        this.$message.error("已委外的任务无法设置任务持续时间");
+                      }else {
                         qpChangedIds = qpChangedIds.concat(
                           this.currentSelectedIds
                         );
                         model.invoke("SetDurationTime", sendData);
                       }
-                      // if (ids.length == 0) {
-                      //   this.$message.error("未勾选任务")
-                      // } else if (ids.length > 1) {
-                      //   this.$message.error("设置任务持续时间不能多选")
-                      // } else if (ids[0].task_type !== "3") {
-                      //   this.$message.error("只有复核任务可以设置任务持续时间")
-                      // } else {
-                      //   qpChangedIds = qpChangedIds.concat(this.currentSelectedIds)
-                      //   model.invoke(
-                      //     "SetDurationTime",
-                      //     sendData
-                      //   )
-                      // }
-                    },
-                    refreshData() {
-                      // console.log("refreshData")
-                      model.invoke("refreshQualityPlanData", {});
                     },
                   },
                 }).$mount($("#qualityPlanApp", model.dom).get(0));
@@ -641,31 +550,8 @@
       }
     };
   }
-  // 处理修改后的数据 将修改后的数据映射到 源数据中
-  // function originDataChanged(qpOriginData, changeData) {
-  // 	// console.log("qpOriginData>>>", qpOriginData)
-  // 	// console.log("changeData>>>", changeData)
-  // 	changeData.forEach(function (cv) {
-  // 		qpChangedIds.push(cv.id)
-  // 	})
-  // 	//... 处理方法
-  // 	qpOriginData.forEach(function (ov) {
-  // 		changeData.forEach(function (cv) {
-  // 			if (ov.id == cv.id) {
-  // 				// console.log("ov>>>", ov)
-  // 				// console.log("cv>>>", cv)
-  // 				for (var key in cv) {
-  // 					ov[key] = cv[key]
-  // 				}
-  // 			}
-  // 		})
-  // 	})
-  // 	return qpOriginData
-  // }
   // 处理要保存的数据
   function handleDataAtSave(data, ids) {
-    // console.log("进参 data>>>", data)
-    // console.log("进参 ids>>>", ids)
     var idArr = _.uniq(ids);
     // console.log("去重后的 idArr>>>", idArr)
     var result = [];
@@ -676,7 +562,6 @@
         }
       });
     });
-    // console.log("有改变的 result>>>", result)
     return result;
   }
   // 处理复核任务 整改-修改 承担人和承担人名称
