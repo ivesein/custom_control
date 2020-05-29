@@ -64,6 +64,9 @@
                     tableHeight: 720,
                     funcPerm: [],
                     fieldPerm: [],
+                    loading: true,
+                    loading_text: "数据加载中...",
+                    loading_icon: "el-icon-loading",
                   },
                   created() {},
                   mounted() {
@@ -193,8 +196,12 @@
                      */
                     yourTurn() {
                       let _this = this;
+                      // this.loading = true;
+                      // this.loading_text = "数据加载中...";
+                      // this.loading_icon = "el-icon-loading";
+                      this.tableData = [];
                       qpCachedData = null;
-                      let times = 10;
+                      let times = 5;
                       let myInterval = setInterval(() => {
                         qpCachedData = _this.getCacheData("project_plan_cache");
                         times--;
@@ -204,14 +211,16 @@
                         }
                         if (times === 0 && qpCachedData === null) {
                           // 提示用户去进度计划获取数据
+                          // _this.loading = false;
                           _this.$message.warning(
                             "获取数据失败，请点击进度计划重新获取！"
                           );
                         }
                         if (qpCachedData !== null) {
+                          // _this.loading = false;
                           qpOriginData = _.cloneDeep(qpCachedData.data);
                           qpOriginData = setAuditTaskUndertaker(qpOriginData);
-                          this.tableData = formatToTreeData({
+                          _this.tableData = formatToTreeData({
                             arrayList: qpOriginData,
                             idStr: "id",
                           });
@@ -466,9 +475,9 @@
                         this.$message.error("设置任务持续时间不能多选");
                       } else if (ids.idArr[0].task_type !== "3") {
                         this.$message.error("只有复核任务可以设置任务持续时间");
-                      } else if(ids.idArr[0].delegate==="1"){
+                      } else if (ids.idArr[0].delegate === "1") {
                         this.$message.error("已委外的任务无法设置任务持续时间");
-                      }else {
+                      } else {
                         qpChangedIds = qpChangedIds.concat(
                           this.currentSelectedIds
                         );

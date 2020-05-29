@@ -69,6 +69,9 @@ new Vue({
         iseditable: 0,
       },
     ],
+    loading: true,
+    loading_text: "数据加载中...",
+    loading_icon: "el-icon-loading",
   },
   created() {
     var tData = [

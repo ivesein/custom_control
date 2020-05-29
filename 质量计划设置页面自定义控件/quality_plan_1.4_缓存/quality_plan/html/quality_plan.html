@@ -12,20 +12,31 @@
   </head>
 
 <body> -->
-<div id="qualityPlanApp">
+<!-- <div id="qualityPlanApp"
+v-loading="loading"
+  :element-loading-text="loading_text"
+  :element-loading-spinner="loading_icon"
+  element-loading-background="rgba(0, 0, 0, 0.8)"> -->
+  <div id="qualityPlanApp">
   <div class="btn-lsit">
-    <button class="btn-itme" :disabled="getBtnShow('set_role')" @click="SetRole">
+    <!-- <button class="btn-itme" :disabled="getBtnShow('set_role')" @click="SetRole">
+      设置角色
+    </button> -->
+    <button class="btn-itme"  @click="SetRole">
       设置角色
     </button>
     <!-- <button class="btn-itme" id="setBtn4" @click="SetStaff">
       设置人员
     </button> -->
-    <button class="btn-itme" :disabled="getBtnShow('set_duration_time')"  @click="SetDurationTime">
+    <!-- <button class="btn-itme" :disabled="getBtnShow('set_duration_time')"  @click="SetDurationTime">
+      设置持续时间
+    </button> -->
+    <button class="btn-itme"  @click="SetDurationTime">
       设置持续时间
     </button>
     <!-- <button class="btn-itme" :disabled="getBtnShow('refresh_data')" id="refresh" @click="refreshData">刷新</button> -->
   </div>
-  <div class="table-box">
+  <div class="table-box" >
     <el-table 
     ref="thequalityPlanTable" 
     :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" 
