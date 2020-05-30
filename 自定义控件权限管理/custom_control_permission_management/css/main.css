@@ -36,7 +36,7 @@ html,body {
   height: 100%;
 }
 
-.tab-content{
+#ccPermissionManagementApp .tab-content{
   width: 100%;
   height: 100%;
   display: flex;
@@ -45,7 +45,7 @@ html,body {
 }
 
 
-.tab-content .first-tree-box{
+#ccPermissionManagementApp .tab-content .first-tree-box{
   width: 350px;
   height: 100%;
   display: flex;
@@ -53,10 +53,11 @@ html,body {
   justify-content: flex-start;
   align-items: stretch;
   border:1px solid rgb(229, 229, 229);
+  padding-top: 10px;
   box-sizing: border-box;
 }
 
-.search-box{
+#ccPermissionManagementApp .search-box{
   width: 100%;
   height: 28px;
   display: flex;
@@ -67,31 +68,31 @@ html,body {
 
 }
 
-.el-icon-search{
+#ccPermissionManagementApp .el-icon-search{
   font-size: 18px;
   color: #333;
   margin-right: 5px;
 }
 
-input:focus {
+#ccPermissionManagementApp input:focus {
   outline: none;
 }
 
-.search-input{
+#ccPermissionManagementApp .search-input{
   border: none;
   flex: 1;
   text-indent: 5px;
 }
 
-.search-box:hover{
+#ccPermissionManagementApp .search-box:hover{
   border-bottom: 1px solid #5582f3;
 }
 
-.search-box:hover .el-icon-search{
+#ccPermissionManagementApp .search-box:hover .el-icon-search{
   color:#5582f3;
 }
 
-.tree-box{
+#ccPermissionManagementApp .tree-box{
   display: flex;
   /* flex-grow: 1;  */
   /* flex-shrink: 0;*/
@@ -102,7 +103,7 @@ input:focus {
   width: 100%;
 }
 
-.tab-content .btn-box{
+#ccPermissionManagementApp .tab-content .btn-box{
   width: 200px;
   height: 100%;
   display: flex;
@@ -112,7 +113,7 @@ input:focus {
   border: none;
 }
 
-.tab-content .btn-box button {
+#ccPermissionManagementApp .tab-content .btn-box button {
   border: none;
   font-size: 12px;
   color: #fff;
@@ -124,15 +125,15 @@ input:focus {
   margin-bottom: 20px;
 }
 
-.tab-content .btn-box button:hover {
+#ccPermissionManagementApp .tab-content .btn-box button:hover {
   background: #779bf5;
 }
 
-.tab-content .first-tree-box .empty-box{
+#ccPermissionManagementApp .tab-content .first-tree-box .empty-box{
   border: none;
 }
 
-.field-content .field-box{
+#ccPermissionManagementApp .field-content .field-box{
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -141,7 +142,7 @@ input:focus {
   border:1px solid rgb(229, 229, 229);
 }
 
-.field-box .field-box-header{
+#ccPermissionManagementApp .field-box .field-box-header{
   display: flex;
   justify-content: flex-start;
   align-items: stretch;
@@ -151,7 +152,7 @@ input:focus {
   font-size: 12px;
 }
 
-.field-box .field-box-header-item{
+#ccPermissionManagementApp .field-box .field-box-header-item{
   width: 75px;
   display: flex;
   justify-content: center;
@@ -159,7 +160,7 @@ input:focus {
   padding-left: 5px;
 }
 
-.delete-datarule-icon{
+#ccPermissionManagementApp .delete-datarule-icon{
   width: 40px;
   display: flex;
   justify-content: center;
@@ -168,23 +169,23 @@ input:focus {
   color: rgb(185,196,220);  
 }
 
-.delete-datarule-icon:hover{
+#ccPermissionManagementApp .delete-datarule-icon:hover{
   color: rgb(253,108,106);
 }
 
-.field-box .filed-select{
+#ccPermissionManagementApp .field-box .filed-select{
   width: 150px;
 }
 
-.field-box .condition-select{
+#ccPermissionManagementApp .field-box .condition-select{
   width: 80px;
 }
 
-.field-box .value-input{
+#ccPermissionManagementApp .field-box .value-input{
   width: 200px;
 }
 
-.id-field{
+#ccPermissionManagementApp .id-field{
   width: 75px;
   display: flex;
   justify-content: flex-start;
@@ -193,7 +194,7 @@ input:focus {
   border-right: 1px solid #c7cbd3;
 }
 
-.field-container{
+#ccPermissionManagementApp .field-container{
   display: flex;
   flex: 1;
   justify-content: space-between;
@@ -201,21 +202,21 @@ input:focus {
   padding: 7px 5px 7px 0;
 }
 
-.field-container .field-item{
+#ccPermissionManagementApp .field-container .field-item{
   display: flex;
   justify-content: center;
   align-items: center;
   /* flex: 1; */
   border-right: 1px solid #c7cbd3;
 }
-.field-container .name-field{
+#ccPermissionManagementApp .field-container .name-field{
   flex: 1;
 }
-.field-container .switch-btn-field{
+#ccPermissionManagementApp .field-container .switch-btn-field{
   width: 305px;
 }
 
-.field-list-box{
+#ccPermissionManagementApp .field-list-box{
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -224,13 +225,13 @@ input:focus {
   overflow-y: auto;
 }
 
-.field-list-box .id-field{
+#ccPermissionManagementApp .field-list-box .id-field{
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.field-list-item{
+#ccPermissionManagementApp .field-list-item{
   display: flex;
   justify-content: flex-start;
   align-items: stretch;
@@ -240,18 +241,18 @@ input:focus {
   font-size: 12px;
 }
 
-.field-list-item:hover{
+#ccPermissionManagementApp .field-list-item:hover{
   background-color: #eff3fd;
 }
 
-.field-list-item .field-container{
+#ccPermissionManagementApp .field-list-item .field-container{
   display: flex;
   flex: 1;
   justify-content: space-between;
   align-items: center;
 }
 
-.field-list-item .field-container .field-item{
+#ccPermissionManagementApp .field-list-item .field-container .field-item{
   display: flex;
   justify-content: center;
   align-items: center;
@@ -260,7 +261,7 @@ input:focus {
 }
 
 
-.text-btn{
+#ccPermissionManagementApp .text-btn{
   position: absolute;
   right: 0;
   top: 10px;
@@ -269,11 +270,11 @@ input:focus {
   font-size: 14px;
 }
 
-.text-btn span:hover{
+#ccPermissionManagementApp .text-btn span:hover{
   color: #2240a0;
 }
 
-.field-select-model{
+#ccPermissionManagementApp .field-select-model{
   width: 100%;
   height: 100%;
   position: absolute;
@@ -286,7 +287,7 @@ input:focus {
   background: rgba(0,0,0,.4);
 }
 
-.field-select-container{
+#ccPermissionManagementApp .field-select-container{
   width: 980px;
   height: 640px;
   display: flex;
@@ -298,7 +299,7 @@ input:focus {
   padding: 0 6px;
 }
 
-.field-select-header{
+#ccPermissionManagementApp .field-select-header{
   padding: 10px 30px;
   border-radius: 5px 5px 0 0;
   border-bottom: 1px solid #e9e9e9;
@@ -310,17 +311,17 @@ input:focus {
   box-sizing: border-box;
 }
 
-.el-icon-close{
+#ccPermissionManagementApp .el-icon-close{
   font-size: 20px;
   color: #ccc;
   cursor: pointer;
 }
 
-.el-icon-close:hover{
+#ccPermissionManagementApp .el-icon-close:hover{
   color: #5582f3;
 }
 
-.field-select-footer{
+#ccPermissionManagementApp .field-select-footer{
   height: 54px;
   display: flex;
   justify-content: center;
@@ -328,14 +329,14 @@ input:focus {
   border-top: 1px solid #e9e9e9;
 }
 
-.field-select-content{
+#ccPermissionManagementApp .field-select-content{
   display: flex;
   flex: 1;
   justify-content: flex-start;
   align-items: stretch;
 }
 
-.field-select-content .field-select-content-left{
+#ccPermissionManagementApp .field-select-content .field-select-content-left{
   width: 80%;
   display: flex;
   flex-direction: column;
@@ -343,7 +344,7 @@ input:focus {
   align-items: stretch;
 }
 
-.field-select-content-left .content-left-table-box{
+#ccPermissionManagementApp .field-select-content-left .content-left-table-box{
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -351,7 +352,7 @@ input:focus {
   align-items: stretch;
 }
 
-.content-left-table-box .table-box-header{
+#ccPermissionManagementApp .content-left-table-box .table-box-header{
   display: flex;
   justify-content: flex-start;
   align-items: stretch;
@@ -365,7 +366,7 @@ input:focus {
   box-sizing: border-box;
 }
 
-.field-select-content-left .content-left-header{
+#ccPermissionManagementApp .field-select-content-left .content-left-header{
   height: 40px;
   display: flex;
   justify-content: space-between;
@@ -373,7 +374,7 @@ input:focus {
   padding-left: 24px;
 }
 
-.table-box-header .id-filed{
+#ccPermissionManagementApp .table-box-header .id-filed{
   width: 40px;
   display: flex;
   justify-content: center;
@@ -381,7 +382,7 @@ input:focus {
   padding-right: 10px;
 }
 
-.table-box-header  .field-item{
+#ccPermissionManagementApp .table-box-header  .field-item{
   display: flex;
   flex: 1;
   justify-content: flex-start;
@@ -390,7 +391,7 @@ input:focus {
   padding-left: 10px;
 }
 
-.content-left-table-box .table-list{
+#ccPermissionManagementApp .content-left-table-box .table-list{
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -403,7 +404,7 @@ input:focus {
   height: 0;
 }
 
-.table-list .table-list-item{
+#ccPermissionManagementApp .table-list .table-list-item{
   display: flex;
   justify-content: flex-start;
   align-items: stretch;
@@ -413,15 +414,15 @@ input:focus {
   background: #fff;
 }
 
-.table-list .list-item-line-focused{
+#ccPermissionManagementApp .table-list .list-item-line-focused{
   background-color: #eff3fd;
 }
 
-.table-list .table-list-item:hover{
+#ccPermissionManagementApp .table-list .table-list-item:hover{
   background: #eff3fd;
 }
 
-.table-list-item .id-field{
+#ccPermissionManagementApp .table-list-item .id-field{
   width: 40px;
   display: flex;
   justify-content: center;
@@ -430,7 +431,7 @@ input:focus {
   border: none;
 }
 
-.table-list-item  .field-item{
+#ccPermissionManagementApp .table-list-item  .field-item{
   display: flex;
   flex: 1;
   justify-content: flex-start;
@@ -438,7 +439,7 @@ input:focus {
   padding-left: 10px;
 }
 
-.field-select-content .field-select-content-right{
+#ccPermissionManagementApp .field-select-content .field-select-content-right{
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -447,7 +448,7 @@ input:focus {
   flex: 1;
 }
 
-.field-select-content-right .content-right-header{
+#ccPermissionManagementApp .field-select-content-right .content-right-header{
   height: 50px;
   display: flex;
   padding: 0 15px;
@@ -457,12 +458,12 @@ input:focus {
   color: #999;
 }
 
-.field-select-content-right .content-right-header .clear-all-text-btn{
+#ccPermissionManagementApp .field-select-content-right .content-right-header .clear-all-text-btn{
   cursor: pointer;
   color: #5e80eb;
 }
 
-.field-select-content-right .content-right-checked-field-list{
+#ccPermissionManagementApp .field-select-content-right .content-right-checked-field-list{
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -474,7 +475,7 @@ input:focus {
   height: 0;
 }
 
-.content-right-checked-field-list .checked-field-list-item{
+#ccPermissionManagementApp .content-right-checked-field-list .checked-field-list-item{
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -486,7 +487,7 @@ input:focus {
   flex-shrink: 0;
 }
 
-.checked-field-list-item .checked-field-item-x{
+#ccPermissionManagementApp .checked-field-list-item .checked-field-item-x{
   width: 26px;
   height: 26px;
   background-color: #5582f3;
@@ -496,20 +497,20 @@ input:focus {
   display: none;
 }
 
-.checked-field-list-item .checked-field-item-x .el-icon-close{
+#ccPermissionManagementApp .checked-field-list-item .checked-field-item-x .el-icon-close{
   font-size: 16px;
   color: #fff;
 }
 
-.content-right-checked-field-list .checked-field-list-item:hover{
+#ccPermissionManagementApp .content-right-checked-field-list .checked-field-list-item:hover{
   outline: 1px solid #7a9afd;
 }
 
-.content-right-checked-field-list .checked-field-list-item:hover .checked-field-item-x{
+#ccPermissionManagementApp .content-right-checked-field-list .checked-field-list-item:hover .checked-field-item-x{
   display: flex;
 }
 
-.field-select-footer .btn-item{
+#ccPermissionManagementApp .field-select-footer .btn-item{
   border: none;
   font-size: 12px;
   color: #fff;
@@ -520,27 +521,27 @@ input:focus {
   border-radius: 2px;
 }
 
-.field-select-footer .btn-item:hover{
+#ccPermissionManagementApp .field-select-footer .btn-item:hover{
   background: #779bf5;
 }
 
-.field-select-footer .btn-item-cancel{
+#ccPermissionManagementApp .field-select-footer .btn-item-cancel{
   color: #ccc;
   border: 1px solid #ccc;
   background: #fff;
   margin-right: 30px;
 }
 
-.field-select-footer .btn-item-cancel:focus{
+#ccPermissionManagementApp .field-select-footer .btn-item-cancel:focus{
   outline: none;
 }
 
-.field-select-footer .btn-item-cancel:hover{
+#ccPermissionManagementApp .field-select-footer .btn-item-cancel:hover{
   color: #eee;
   background: #fff;
 }
 
-.data-rule-content .field-box .field-box-content{
+#ccPermissionManagementApp .data-rule-content .field-box .field-box-content{
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -552,11 +553,11 @@ input:focus {
   padding: 0 10px;
 }
 
-.data-rule-content .field-box .data-rule-box-header{
+#ccPermissionManagementApp .data-rule-content .field-box .data-rule-box-header{
   padding-left: 10px;
 }
 
-.data-rule-content .field-box .field-box-content .data-rule-list-item{
+#ccPermissionManagementApp .data-rule-content .field-box .field-box-content .data-rule-list-item{
   height: 30px;
   display: flex;
   justify-content: flex-start;
@@ -565,7 +566,7 @@ input:focus {
   /* color: #333; */
 }
 
-.field-box-content .add-data-rule-btn{
+#ccPermissionManagementApp .field-box-content .add-data-rule-btn{
   width: 80px;
   min-width: 80px;
   height: 22px;
@@ -583,7 +584,7 @@ input:focus {
   flex-shrink: 0;
   box-sizing: border-box;
 }
-.field-box-content .add-data-rule-btn .el-icon-plus{
+#ccPermissionManagementApp .field-box-content .add-data-rule-btn .el-icon-plus{
   font-size: 12px;
   font-weight: 800;
 }
