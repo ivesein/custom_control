@@ -26,7 +26,7 @@ new Vue({
       },
       {
         elementid: "wbs",
-        isvisible: 0,
+        isvisible: 1,
         cstlid: "wbs_planning_v1.0",
         iseditable: 0,
       },
@@ -37,7 +37,7 @@ new Vue({
       },
       {
         elementid: "start_date",
-        isvisible: 0,
+        isvisible: 1,
         cstlid: "wbs_planning_v1.0",
         iseditable: 0,
       },
@@ -48,7 +48,7 @@ new Vue({
       },
       {
         elementid: "duration_time",
-        isvisible: 0,
+        isvisible: 1,
         cstlid: "wbs_planning_v1.0",
         iseditable: 0,
       },
@@ -59,7 +59,7 @@ new Vue({
       },
       {
         elementid: "owner",
-        isvisible: 0,
+        isvisible: 1,
         cstlid: "wbs_planning_v1.0",
         iseditable: 0,
       },
@@ -99,7 +99,7 @@ new Vue({
         isreply: "1",
       },
       {
-        task_id: "2",
+        id: "2",
         position: "2",
         text: " 测设人员名单",
         wbs: "1.1",
@@ -122,7 +122,7 @@ new Vue({
         isreply: "1",
       },
       {
-        task_id: "3",
+        id: "3",
         position: "3",
         text: "测设人员名单设计",
         wbs: "1.1.1",
@@ -146,7 +146,7 @@ new Vue({
         isreply: "2",
       },
       {
-        task_id: "4",
+        id: "4",
         position: "4",
         text: "测设人员名单复核",
         wbs: "1.1.2",
@@ -170,7 +170,7 @@ new Vue({
         isreply: "2",
       },
       {
-        task_id: "5",
+        id: "5",
         position: "5",
         text: "勘察设计大纲编制与审批",
         wbs: "1.2",
@@ -193,7 +193,7 @@ new Vue({
         isreply: "2",
       },
       {
-        task_id: "6",
+        id: "6",
         position: "6",
         text: "勘察设计大纲编制与审批设计",
         wbs: "1.2.1",
@@ -217,7 +217,7 @@ new Vue({
         isreply: "1",
       },
       {
-        task_id: "8",
+        id: "8",
         position: "8",
         text: "专业审核",
         wbs: "1.3",
@@ -240,7 +240,7 @@ new Vue({
         isreply: "2",
       },
       {
-        task_id: "7",
+        id: "7",
         position: "7",
         text: "勘察设计大纲编制与审批复核",
         wbs: "1.2.2",
@@ -270,7 +270,7 @@ new Vue({
 
     this.tableData = this.formatToTreeData({
       arrayList: tData,
-      idStr: "task_id",
+      idStr: "id",
     });
 
     console.log("this.tableData>>>", this.tableData);
@@ -469,7 +469,7 @@ new Vue({
           idArr.push({
             project_id: v.project_id,
             plan_id: v.plan_id,
-            task_id: v.task_id,
+            id: v.id,
             text: v.text,
             task_type: v.task_type,
             duration: v.duration,
@@ -479,10 +479,7 @@ new Vue({
       return idArr;
     },
     cellStyle({ row, column, rowIndex, columnIndex }) {
-      if (columnIndex === 0) {
-        // console.log(column)
-        return "padding: 0px!important;";
-      }
+      return "padding: 0px;line-height:40px;height: 40px";
     },
     // 将源数据格式化为表格树形结构数据
     formatToTreeData({
@@ -537,7 +534,7 @@ new Vue({
     // 递归找到所有父节点设为false
     findYouAndSetFalse(node, pids) {
       var that = this;
-      if (pids.includes(node.task_id)) {
+      if (pids.includes(node.id)) {
         node.checked = false;
       }
       let children = node.children ? node.children : [];
@@ -553,8 +550,8 @@ new Vue({
       if (Array.isArray(arr) && arr.length > 0) {
         while (currentpid != 0) {
           arr.forEach(function (v) {
-            if (v.task_id == currentpid) {
-              pids.push(v.task_id);
+            if (v.id == currentpid) {
+              pids.push(v.id);
               currentpid = v.parent;
             }
           });
@@ -576,7 +573,7 @@ new Vue({
       }
       for (let i = 0, len = pids.length; i < len; i++) {
         for (let j = 0, jlen = flatdata.length; j < jlen; j++) {
-          if (pids[i] == flatdata[j].task_id) {
+          if (pids[i] == flatdata[j].id) {
             let bool = flatdata[j].checked;
             let children = flatdata[j].children ? flatdata[j].children : [];
             for (let k = 0, klen = children.length; k < klen; k++) {
