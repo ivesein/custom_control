@@ -12,7 +12,7 @@
   <body> -->
     <div id="reportDLApp">
       <div class="table-content">
-        <el-table ref="currentTaskTable"  :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="tableData" style="width:100%;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true">
+        <el-table ref="currentTaskTable" highlight-current-row :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="tableData" style="width:100%;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true">
           <el-table-column prop="report_date" label="汇报日期" width="160" align="center"></el-table-column>
           <el-table-column prop="task_start_time" label="任务时间开始时间" width="160" align="center"></el-table-column>
           <el-table-column prop="report_type" label="填报方式" align="center"  width="100" ></el-table-column>

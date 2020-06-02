@@ -92,7 +92,7 @@
       </div>
       <div class="table-content">
         <div class="table-box table-left">
-          <el-table ref="projectTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="proTableData" style="margin:10px 0 10px 0;" :row-class-name="tableRowClassName" :cell-style="cellStyle" row-key="task_id" :border="true" @row-dblclick="rowDblclick">
+          <el-table ref="projectTable" highlight-current-row :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="proTableData" style="margin:10px 0 10px 0;" :row-class-name="tableRowClassName" :cell-style="cellStyle" row-key="task_id" :border="true" @row-dblclick="rowDblclick">
           <!-- <el-table-column type="select" width="40" align="center">
             <template slot="header" slot-scope="scope">
               <el-checkbox @change="handleCheckAllChange" v-model="allChecked"></el-checkbox>
@@ -152,7 +152,7 @@
               <span class="title-text">${currentTaskInfo.title}</span>
             </div>
             <div class="table-info-box" v-if="currentTaskInfo.open">
-              <el-table ref="TableRight" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="currentTaskInfo.data" style="margin:10px 0 10px 0;" :style="{width:tableWidth}" :cell-style="cellStyle" row-key="task_id" :border="true">
+              <el-table ref="TableRight"  :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="currentTaskInfo.data" style="margin:10px 0 10px 0;" :style="{width:tableWidth}" :cell-style="cellStyle" row-key="task_id" :border="true">
                 <el-table-column prop="plan_duration" label="计划工期" width="100"></el-table-column>
                 <el-table-column prop="plan_quantities" label="计划工程量" width="100"></el-table-column>
                 <el-table-column prop="duration_after_adjustment" label="调整后工期" width="100"></el-table-column>
@@ -272,7 +272,7 @@
             <span>提醒</span>
           </div>
           <div class="message-info" v-if="messageData.length>0">
-            <div class="message-item" v-for="(item, index) in messageData" :key="index">
+            <div class="message-item" v-for="(item, index) in filterMessageData" :key="index">
               <span v-show="item.task_status==='1'">${item.task_name}任务已完成，请注意后续任务的安排！</span>
               <span v-show="item.task_status==='2'">${item.task_name}任务已滞后，请注意该任务的管控！</span>
               <span v-show="item.task_status==='0'">${item.task_name}进行中！</span>

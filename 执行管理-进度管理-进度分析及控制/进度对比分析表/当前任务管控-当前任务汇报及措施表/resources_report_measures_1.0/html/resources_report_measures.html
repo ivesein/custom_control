@@ -12,7 +12,7 @@
   <body> -->
     <div id="resourcesRMApp">
       <div class="table-content">
-        <el-table ref="currentTaskTable" max-height="440"  :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="tableData" style="width:100%;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true">
+        <el-table ref="currentTaskTable" highlight-current-row max-height="440"  :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="tableData" style="width:100%;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true">
           <el-table-column prop="plan_effect" label="计划工效" width="80" align="center"></el-table-column>
           <el-table-column prop="report_date" label="上报日期" width="100" align="center"></el-table-column>
           <el-table-column label="资源调整" align="center">

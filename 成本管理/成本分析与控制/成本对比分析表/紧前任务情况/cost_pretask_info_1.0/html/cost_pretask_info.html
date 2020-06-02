@@ -48,7 +48,7 @@
   <div class="table-content">
     <div class="table-box table-left">
       <!-- 左侧任务列表 -->
-      <el-table ref="projectTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="proTableData" style="margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true" @row-dblclick="currentTaskClick">
+      <el-table ref="projectTable" highlight-current-row :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="proTableData" style="margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true" @row-dblclick="currentTaskClick">
         <el-table-column prop="wbs" label="任务代码" width="100" ></el-table-column>
         <el-table-column prop="task_name" label="WBS任务名称"></el-table-column>
         <el-table-column prop="owner" label="承担人" width="100" ></el-table-column>

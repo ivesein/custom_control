@@ -67,7 +67,7 @@
   </div>
   <div class="table-content">
     <div class="table-box table-left">
-      <el-table ref="projectTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="proTableData" :row-class-name="tableRowClassName" style="margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true"  default-expand-all
+      <el-table ref="projectTable" highlight-current-row :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="proTableData" :row-class-name="tableRowClassName" style="margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true"  default-expand-all
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       @row-dblclick="currentTaskClick"
       >
