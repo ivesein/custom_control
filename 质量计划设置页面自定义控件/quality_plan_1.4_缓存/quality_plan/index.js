@@ -67,8 +67,11 @@
                     loading: true,
                     loading_text: "数据加载中...",
                     loading_icon: "el-icon-loading",
+                    project_id: "",
                   },
-                  created() {},
+                  created() {
+                    this.handleUpdata(model, props);
+                  },
                   mounted() {
                     let self = this;
                     // 固定表格表头 设置表格高度自适应填满剩余高度
@@ -143,10 +146,12 @@
                      * @author: zhang fq
                      * @date: 2020-05-26
                      * @description: 从缓存读取数据
+                     * @date: 2020-06-03
+                     * @update: 重写读取缓存逻辑  根据项目id读取相应项目的缓存数据
                      */
-                    getCacheData(keyStr) {
-                      if (keyStr === "") return null;
-                      let data = localStorage.getItem(keyStr);
+                    getCacheData(pId) {
+                      if (pId === "") return null;
+                      let data = localStorage.getItem("plan-" + pId);
                       if (data === null || data === undefined || data === "") {
                         return null;
                       } else {
@@ -157,14 +162,27 @@
                      * @author: zhang fq
                      * @date: 2020-05-26
                      * @description: 更新缓存中的数据
+                     * @date: 2020-06-03
+                     * @update: 重写更新缓存逻辑  根据项目id更新相应项目的缓存数据
                      */
-                    setCacheData(keyStr = "project_plan_cache", data) {
-                      localStorage.setItem(keyStr, JSON.stringify(data));
+                    setCacheData(pId, data) {
+                      if (pId === "") {
+                        this.$message.error(
+                          "获取项目id失败，请刷新页面重试..."
+                        );
+                      } else {
+                        localStorage.setItem(
+                          "plan-" + pId,
+                          JSON.stringify(data)
+                        );
+                      }
                     },
                     /**
                      * @author: zhang fq
                      * @date: 2020-05-26
                      * @description: 处理各按钮功能接口对应的数据返回
+                     * @date: 2020-06-03
+                     * @update: 修改接口 初始化获取项目id 根据项目id读取当前项目缓存的数据
                      */
                     handleUpdata(model, props) {
                       if (props.data) {
@@ -180,6 +198,9 @@
                                 this.currentSelectedIds,
                                 props.data.data
                               );
+                              break;
+                            case "init":
+                              this.project_id = props.data.projectId;
                               break;
                             default:
                               this.$message.error("网络繁忙，请稍后再试...");
@@ -199,11 +220,17 @@
                       // this.loading = true;
                       // this.loading_text = "数据加载中...";
                       // this.loading_icon = "el-icon-loading";
-                      this.tableData = [];
+                      // this.tableData = [];
+                      if (this.project_id === "") {
+                        this.$message.error(
+                          "获取项目id失败，请刷新页面重试..."
+                        );
+                        return;
+                      }
                       qpCachedData = null;
                       let times = 5;
                       let myInterval = setInterval(() => {
-                        qpCachedData = _this.getCacheData("project_plan_cache");
+                        qpCachedData = _this.getCacheData(this.project_id);
                         times--;
                         // 5次后清除轮询
                         if (times === 0 || qpCachedData !== null) {
@@ -231,6 +258,8 @@
                      * Author: zhang fq
                      * Date: 2020-05-27
                      * Description: 重写页面按钮操作交互逻辑 数据返回处理以及缓存数据更新
+                     * Date: 2020-06-03
+                     * Update: 更新分配资源id 判断替换还是新增
                      */
                     updataData(originData, selectedIds, changeData) {
                       this.allChecked = false;
@@ -240,6 +269,24 @@
                         //将源数据中对应的任务字段更新
                         originData.forEach(function (ov) {
                           if (sv === ov.id) {
+                            //如果是设置人员角色按钮接口返回的数据
+                            if (changeData.id) {
+                              // 判断owner_id里是否有当前人员的id
+                              let owner_index = null;
+                              for (let i = 0; i < ov.owner_id.length; i++) {
+                                if (ov.owner_id[i] === ov.qp_owner_id) {
+                                  owner_index = i;
+                                  break;
+                                }
+                              }
+                              // 有则替换 无则push
+                              if (owner_index !== null) {
+                                ov.owner_id[owner_index] =
+                                  changeData.qp_owner_id;
+                              } else {
+                                ov.owner_id.push(changeData.qp_owner_id);
+                              }
+                            }
                             changeData.forEach(function (cv) {
                               if (ov.task_type === cv.task_type) {
                                 for (var key in cv) {
@@ -258,7 +305,7 @@
                       });
                       // 更新缓存
                       qpCachedData.data = _.cloneDeep(originData);
-                      this.setCacheData("project_plan_cache", qpCachedData);
+                      this.setCacheData(this.project_id, qpCachedData);
                     },
                     handleCheckAllChange(val) {
                       this.traversalNode(this.tableData[0], this.allChecked);
