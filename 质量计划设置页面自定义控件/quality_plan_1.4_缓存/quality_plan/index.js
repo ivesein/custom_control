@@ -5,8 +5,7 @@
   var qpCachedData = {};
   var qpOriginData = [];
   var qpChangedIds = [];
-  var cstlRoleFuncPerm = [];
-  var cstlRoleFieldPerm = [];
+  var qpPermission = null;
   function MyComponent(model) {
     this._setModel(model);
   }
@@ -68,6 +67,7 @@
                     loading_text: "数据加载中...",
                     loading_icon: "el-icon-loading",
                     project_id: "",
+                    pageStatus: false, //是否提交
                   },
                   created() {
                     this.handleUpdata(model, props);
@@ -109,12 +109,17 @@
                   computed: {
                     getBtnShow(btnId) {
                       var _this = this;
-                      return function (btnId) {
-                        let arr = _this.funcPerm.filter((v) => {
-                          return v.elementid === btnId;
-                        });
-                        return arr.length > 0 ? false : true;
-                      };
+                      //判断页面是否为提交状态 提交状态所有按钮不可点击
+                      if (this.pageStatus) {
+                        return true;
+                      } else {
+                        return function (btnId) {
+                          let arr = _this.funcPerm.filter((v) => {
+                            return v.elementid === btnId;
+                          });
+                          return arr.length > 0 ? false : true;
+                        };
+                      }
                     },
                     getFieldShow(fieldId) {
                       var _this = this;
@@ -131,6 +136,9 @@
                     },
                   },
                   methods: {
+                    storageChange(e) {
+                      console.log(e);
+                    },
                     /**
                      * Author: zhang fq
                      * Date: 2020-05-27
@@ -181,8 +189,8 @@
                      * @author: zhang fq
                      * @date: 2020-05-26
                      * @description: 处理各按钮功能接口对应的数据返回
-                     * @date: 2020-06-03
-                     * @update: 修改接口 初始化获取项目id 根据项目id读取当前项目缓存的数据
+                     * @date: 2020-06-05
+                     * @update: 修改接口 从后台获取当前页面是否处于提交后状态
                      */
                     handleUpdata(model, props) {
                       if (props.data) {
@@ -201,6 +209,9 @@
                               break;
                             case "init":
                               this.project_id = props.data.projectId;
+                              break;
+                            case "ifSubmit":
+                              this.pageStatus = props.data.pageStatus;
                               break;
                             default:
                               this.$message.error("网络繁忙，请稍后再试...");
@@ -247,6 +258,19 @@
                           // _this.loading = false;
                           qpOriginData = _.cloneDeep(qpCachedData.data);
                           qpOriginData = setAuditTaskUndertaker(qpOriginData);
+                          this.pageStatus = qpOriginData.pageStatus;
+                          if (
+                            qpCachedData.permission &&
+                            qpCachedData.permission.quality_plan
+                          ) {
+                            qpPermission = _.cloneDeep(
+                              qpCachedData.permission.quality_plan
+                            );
+                            this.funcPerm = qpPermission.cstlRoleFuncPerm || [];
+                            this.fieldPerm =
+                              qpPermission.cstlRoleFieldPerm || [];
+                          }
+                          this.pageStatus = qpCachedData.pageStatus;
                           _this.tableData = formatToTreeData({
                             arrayList: qpOriginData,
                             idStr: "id",

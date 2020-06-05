@@ -74,6 +74,9 @@ new Vue({
     loading_icon: "el-icon-loading",
   },
   created() {
+    let a = {};
+    let b = _.cloneDeep(a.cc);
+    console.log(b);
     var tData = [
       {
         id: "1",
