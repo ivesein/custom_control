@@ -105,25 +105,27 @@
                    * @author: zhang fq
                    * @date: 2020-05-21
                    * @description: 获取权限数据 为按钮和字段设置权限
+                   * @date: 2020-06-06
+                   * @update: 处理根据提交后页面状态 动态计算按钮是否显示的方法在金蝶不管用的问题
                    */
                   computed: {
-                    getBtnShow(btnId) {
+                    getBtnShow(btnId,pageStatus) {
                       var _this = this;
-                      //判断页面是否为提交状态 提交状态所有按钮不可点击
-                      if (this.pageStatus) {
-                        return true;
-                      } else {
-                        return function (btnId) {
+                      return function(btnId,pageStatus) {
+                        //判断页面是否为提交状态 提交状态所有按钮不可点击
+                        if(pageStatus==="true"||pageStatus===true){
+                          return true;
+                        }else{
                           let arr = _this.funcPerm.filter((v) => {
                             return v.elementid === btnId;
                           });
                           return arr.length > 0 ? false : true;
-                        };
-                      }
+                        }
+                      };
                     },
                     getFieldShow(fieldId) {
                       var _this = this;
-                      return function (fieldId) {
+                      return function(fieldId) {
                         let arr = _this.fieldPerm.filter((v) => {
                           return v.elementid === fieldId;
                         });
@@ -258,7 +260,6 @@
                           // _this.loading = false;
                           qpOriginData = _.cloneDeep(qpCachedData.data);
                           qpOriginData = setAuditTaskUndertaker(qpOriginData);
-                          this.pageStatus = qpOriginData.pageStatus;
                           if (
                             qpCachedData.permission &&
                             qpCachedData.permission.quality_plan
@@ -266,11 +267,18 @@
                             qpPermission = _.cloneDeep(
                               qpCachedData.permission.quality_plan
                             );
-                            this.funcPerm = qpPermission.cstlRoleFuncPerm || [];
-                            this.fieldPerm =
-                              qpPermission.cstlRoleFieldPerm || [];
+                            // _this.funcPerm=[]
+                            _this.funcPerm=qpPermission.cstlRoleFuncPerm||[]
+                            // qpPermission.cstlRoleFuncPerm.forEach(v=>{
+                            //   _this.funcPerm.push(v)
+                            // })
+                            // _this.fieldPerm=[]
+                            _this.fieldPerm =qpPermission.cstlRoleFieldPerm||[]
+                            // qpPermission.cstlRoleFieldPerm.forEach(v=>{
+                            //   _this.fieldPerm.push(v)
+                            // })
                           }
-                          this.pageStatus = qpCachedData.pageStatus;
+                          _this.pageStatus = qpCachedData.pageStatus;
                           _this.tableData = formatToTreeData({
                             arrayList: qpOriginData,
                             idStr: "id",
@@ -278,13 +286,6 @@
                         }
                       }, 300);
                     },
-                    /**
-                     * Author: zhang fq
-                     * Date: 2020-05-27
-                     * Description: 重写页面按钮操作交互逻辑 数据返回处理以及缓存数据更新
-                     * Date: 2020-06-03
-                     * Update: 更新分配资源id 判断替换还是新增
-                     */
                     updataData(originData, selectedIds, changeData) {
                       this.allChecked = false;
                       console.log("selectedIds>>>", selectedIds);

@@ -19,22 +19,12 @@ v-loading="loading"
   element-loading-background="rgba(0, 0, 0, 0.8)"> -->
   <div id="qualityPlanApp">
   <div class="btn-lsit">
-    <!-- <button class="btn-itme" :disabled="getBtnShow('set_role')" @click="SetRole">
-      设置角色
-    </button> -->
-    <button class="btn-itme"  @click="SetRole">
+    <button class="btn-itme" :disabled="getBtnShow('set_role',pageStatus)" @click="SetRole">
       设置角色
     </button>
-    <!-- <button class="btn-itme" id="setBtn4" @click="SetStaff">
-      设置人员
-    </button> -->
-    <!-- <button class="btn-itme" :disabled="getBtnShow('set_duration_time')"  @click="SetDurationTime">
-      设置持续时间
-    </button> -->
-    <button class="btn-itme"  @click="SetDurationTime">
+    <button class="btn-itme" :disabled="getBtnShow('set_duration_time',pageStatus)"  @click="SetDurationTime">
       设置持续时间
     </button>
-    <!-- <button class="btn-itme" :disabled="getBtnShow('refresh_data')" id="refresh" @click="refreshData">刷新</button> -->
   </div>
   <div class="table-box" >
     <el-table 
