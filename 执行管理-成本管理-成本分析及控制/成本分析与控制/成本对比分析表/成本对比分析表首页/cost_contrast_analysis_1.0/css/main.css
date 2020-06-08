@@ -278,6 +278,10 @@ html,body{
   align-items: center;
   font-size: 20px;
 }
+
+#costCAApp .search-icon .el-icon-search{
+  position: static!important;
+}
 #costCAApp .el-table__body tr.current-row > td {
   background-color: #eff3fd   !important;
   /* color: #f19944; */ /* 设置文字颜色，可以选择不设置 */
