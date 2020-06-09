@@ -294,25 +294,25 @@
                         //将源数据中对应的任务字段更新
                         originData.forEach(function (ov) {
                           if (sv === ov.id) {
-                            //如果是设置人员角色按钮接口返回的数据
-                            if (changeData.id) {
-                              // 判断owner_id里是否有当前人员的id
-                              let owner_index = null;
-                              for (let i = 0; i < ov.owner_id.length; i++) {
-                                if (ov.owner_id[i] === ov.qp_owner_id) {
-                                  owner_index = i;
-                                  break;
+                            changeData.forEach(function (cv) {
+                              //如果是设置人员角色按钮接口返回的数据
+                              if (cv.id) {
+                                // 判断owner_id里是否有当前人员的id
+                                let owner_index = null;
+                                for (let i = 0; i < ov.owner_id.length; i++) {
+                                  if (ov.owner_id[i] === ov.qp_owner_id) {
+                                    owner_index = i;
+                                    break;
+                                  }
+                                }
+                                // 有则替换 无则push
+                                if (owner_index !== null) {
+                                  ov.owner_id[owner_index] =
+                                  cv.qp_owner_id;
+                                } else {
+                                  ov.owner_id.push(cv.qp_owner_id);
                                 }
                               }
-                              // 有则替换 无则push
-                              if (owner_index !== null) {
-                                ov.owner_id[owner_index] =
-                                  changeData.qp_owner_id;
-                              } else {
-                                ov.owner_id.push(changeData.qp_owner_id);
-                              }
-                            }
-                            changeData.forEach(function (cv) {
                               if (ov.task_type === cv.task_type) {
                                 for (var key in cv) {
                                   ov[key] = cv[key];

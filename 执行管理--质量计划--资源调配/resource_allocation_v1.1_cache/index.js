@@ -197,8 +197,8 @@
                                 // 处理页签点击到当前页面
                                 this.yourTurn();
                                 break;
-                              case "updataData":
-                                this.updateData(
+                              case "updateData":
+                                this.updataData(
                                   raOriginData,
                                   this.currentSelectedIds,
                                   props.data.data
@@ -217,6 +217,8 @@
                        * @author: zhang fq
                        * @date: 2020-06-04
                        * @description: 处理按钮点击前后台交互后数据处理以及缓存数据更新
+                       * @date: 2020-06-09
+                       * @update: 根据质量维护设置的数据 更新进度所属字段owner_id和owner_time的值  方便进度维护计算资源时间
                        */
                       updataData(originData, selectedIds, changeData) {
                         this.allChecked = false;
@@ -227,6 +229,29 @@
                           originData.forEach(function (ov) {
                             if (sv === ov.id) {
                               changeData.forEach(function (cv) {
+                                // 根据质量维护设置人员、持续时间、或资源调配接口返回数据
+                                // 修改进度计划 owner_id和owner_time字段值
+                                var owner_id=[]
+                                var owner_time={}
+                                cv.subArray=[
+                                  {
+                                    owner:"田重辉",
+                                    isreply:"2",
+                                    task_status:"000",
+                                    confirm_duration:"",
+                                    owner_id:"841765052464775168",
+                                    task_assign_id:"80685095673921536",
+                                    first_duration:"",
+                                    owner_roleid:"",
+                                    res_plan_starttime:"",
+                                    owner_role:"",
+                                    res_plan_endtime:"",
+                                    skill:"",
+                                    modify_duration:"",
+                                    skill_id:"",
+                                    mod_con_duration:""
+                                  }
+                                ]
                                 for (var key in cv) {
                                   ov[key] = cv[key];
                                 }
