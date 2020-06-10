@@ -109,13 +109,13 @@
                    * @update: 处理根据提交后页面状态 动态计算按钮是否显示的方法在金蝶不管用的问题
                    */
                   computed: {
-                    getBtnShow(btnId,pageStatus) {
+                    getBtnShow(btnId, pageStatus) {
                       var _this = this;
-                      return function(btnId,pageStatus) {
+                      return function (btnId, pageStatus) {
                         //判断页面是否为提交状态 提交状态所有按钮不可点击
-                        if(pageStatus==="true"||pageStatus===true){
+                        if (pageStatus === "true" || pageStatus === true) {
                           return true;
-                        }else{
+                        } else {
                           let arr = _this.funcPerm.filter((v) => {
                             return v.elementid === btnId;
                           });
@@ -125,7 +125,7 @@
                     },
                     getFieldShow(fieldId) {
                       var _this = this;
-                      return function(fieldId) {
+                      return function (fieldId) {
                         let arr = _this.fieldPerm.filter((v) => {
                           return v.elementid === fieldId;
                         });
@@ -268,12 +268,14 @@
                               qpCachedData.permission.quality_plan
                             );
                             // _this.funcPerm=[]
-                            _this.funcPerm=qpPermission.cstlRoleFuncPerm||[]
+                            _this.funcPerm =
+                              qpPermission.cstlRoleFuncPerm || [];
                             // qpPermission.cstlRoleFuncPerm.forEach(v=>{
                             //   _this.funcPerm.push(v)
                             // })
                             // _this.fieldPerm=[]
-                            _this.fieldPerm =qpPermission.cstlRoleFieldPerm||[]
+                            _this.fieldPerm =
+                              qpPermission.cstlRoleFieldPerm || [];
                             // qpPermission.cstlRoleFieldPerm.forEach(v=>{
                             //   _this.fieldPerm.push(v)
                             // })
@@ -307,8 +309,7 @@
                                 }
                                 // 有则替换 无则push
                                 if (owner_index !== null) {
-                                  ov.owner_id[owner_index] =
-                                  cv.qp_owner_id;
+                                  ov.owner_id[owner_index] = cv.qp_owner_id;
                                 } else {
                                   ov.owner_id.push(cv.qp_owner_id);
                                 }
