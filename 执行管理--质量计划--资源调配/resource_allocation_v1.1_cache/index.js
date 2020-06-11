@@ -203,10 +203,9 @@
                           // _this.loading = false;
                           /**
                            * Author: zhang fq
-                           * Date: 2020-06-10
-                           * Description: 添加切换标签读取缓存权限数据 并处理
+                           * Date: 2020-06-11
+                           * Description: 从缓存读取权限数据处理
                            */
-
                           raOriginData = _.cloneDeep(raCachedData.data);
                           raOriginData = setAuditTaskUndertaker(raOriginData);
                           if (

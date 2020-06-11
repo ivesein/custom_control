@@ -13,32 +13,77 @@
   </head> -->
 <div id="resourceAllocationApp">
   <div class="btn-lsit">
-    <button class="btn-itme" :disabled="getBtnShow('set_role')" @click="SetRole">
+    <button
+      class="btn-itme"
+      :disabled="getBtnShow('set_role')"
+      @click="SetRole"
+    >
       设置角色
     </button>
-    <button class="btn-itme" :disabled="getBtnShow('set_duration_time')" @click="SetDurationTime">
+    <button
+      class="btn-itme"
+      :disabled="getBtnShow('set_duration_time')"
+      @click="SetDurationTime"
+    >
       设置持续时间
     </button>
-    <button class="btn-itme" :disabled="getBtnShow('go_allocation')" @click="goAllocation">
+    <button
+      class="btn-itme"
+      :disabled="getBtnShow('go_allocation')"
+      @click="goAllocation"
+    >
       资源调配
     </button>
   </div>
   <div class="table-box">
-    <el-table :row-class-name="tableRowClassName" highlight-current-row ref="resourceAllocationTable" :header-cell-style="{height:'60px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="tableData" style="width:100%;" :cell-style="cellStyle" row-key="id" :border="true" :height="tableHeight" default-expand-all
-    :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
+    <el-table
+      :row-class-name="tableRowClassName"
+      highlight-current-row
+      ref="resourceAllocationTable"
+      :header-cell-style="{height:'60px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
+      :data="tableData"
+      style="width: 100%;"
+      :cell-style="cellStyle"
+      row-key="id"
+      :border="true"
+      :height="tableHeight"
+      default-expand-all
+      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+    >
       <el-table-column width="40" type="select" align="center">
         <template slot="header" slot-scope="scope">
-          <el-checkbox @change="handleCheckAllChange" v-model="allChecked"></el-checkbox>
+          <el-checkbox
+            @change="handleCheckAllChange"
+            v-model="allChecked"
+          ></el-checkbox>
         </template>
         <template slot-scope="scope">
-          <el-checkbox @change="itemChange(scope.row)" v-model="scope.row.checked"></el-checkbox>
+          <el-checkbox
+            @change="itemChange(scope.row)"
+            v-model="scope.row.checked"
+          ></el-checkbox>
         </template>
       </el-table-column>
       <el-table-column type="index" label="序号" width="60" align="center">
       </el-table-column>
-      <el-table-column prop="text" v-if="getFieldShow('text')" label="WBS任务名称" ></el-table-column>
-      <el-table-column prop="wbs" v-if="getFieldShow('wbs')" label="任务代码" width="100"></el-table-column>
-      <el-table-column prop="quality_action" v-if="getFieldShow('quality_action')" label="纠偏措施" width="120"></el-table-column>
+      <el-table-column
+        prop="text"
+        v-if="getFieldShow('text')"
+        label="WBS任务名称"
+      ></el-table-column>
+      <el-table-column
+        prop="wbs"
+        v-if="getFieldShow('wbs')"
+        label="任务代码"
+        width="100"
+      ></el-table-column>
+      <el-table-column
+        prop="quality_action"
+        v-if="getFieldShow('quality_action')"
+        label="纠偏措施"
+        width="120"
+      >
+      </el-table-column>
       <el-table-column label="工时" v-if="getFieldShow('duration')" width="80">
         <template slot-scope="scope">
           <div>
@@ -46,7 +91,11 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="开始时间" v-if="getFieldShow('base_plan_starttime')" width="160">
+      <el-table-column
+        label="开始时间"
+        v-if="getFieldShow('base_plan_starttime')"
+        width="160"
+      >
         <template slot-scope="scope">
           <div>
             ${ scope.row.base_plan_starttime }
@@ -61,7 +110,11 @@
           </div> -->
         </template>
       </el-table-column>
-      <el-table-column label="结束时间" v-if="getFieldShow('base_plan_endtime')" width="160">
+      <el-table-column
+        label="结束时间"
+        v-if="getFieldShow('base_plan_endtime')"
+        width="160"
+      >
         <template slot-scope="scope">
           <!-- <div  v-show="scope.row.task_type==='3'||scope.row.task_type==='2'">
             ${ scope.row.plan_endtime }
@@ -76,19 +129,41 @@
           </div> -->
         </template>
       </el-table-column>
-      <el-table-column label="资源开始时间" v-if="getFieldShow('res_plan_starttime')" width="160">
+      <el-table-column
+        label="资源开始时间"
+        v-if="getFieldShow('res_plan_starttime')"
+        width="160"
+      >
         <template slot-scope="scope">
-          <div class="type-one" v-show="scope.row.task_type==='1'||scope.row.task_type==='2'|scope.row.task_type==='3'">
-            <div class="checek-man" v-for="(item, index) in scope.row.subArray" :key="index">
+          <div
+            class="type-one"
+            v-show="scope.row.task_type==='1'||scope.row.task_type==='2'|scope.row.task_type==='3'"
+          >
+            <div
+              class="checek-man"
+              v-for="(item, index) in scope.row.subArray"
+              :key="index"
+            >
               ${ item.res_plan_starttime }
             </div>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="资源结束时间" v-if="getFieldShow('res_plan_endtime')" width="160">
+      <el-table-column
+        label="资源结束时间"
+        v-if="getFieldShow('res_plan_endtime')"
+        width="160"
+      >
         <template slot-scope="scope">
-          <div class="type-one" v-show="scope.row.task_type==='1'||scope.row.task_type==='2'|scope.row.task_type==='3'">
-            <div class="checek-man" v-for="(item, index) in scope.row.subArray" :key="index">
+          <div
+            class="type-one"
+            v-show="scope.row.task_type==='1'||scope.row.task_type==='2'|scope.row.task_type==='3'"
+          >
+            <div
+              class="checek-man"
+              v-for="(item, index) in scope.row.subArray"
+              :key="index"
+            >
               ${ item.res_plan_endtime }
             </div>
           </div>
@@ -119,7 +194,11 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="持续时间" v-if="getFieldShow('duration_time')" width="100">
+      <el-table-column
+        label="持续时间"
+        v-if="getFieldShow('duration_time')"
+        width="100"
+      >
         <template slot-scope="scope">
           <div class="checek-man" v-show="scope.row.task_type==='3'">
             ${ scope.row.subArray[scope.row.subArray.length-1].first_duration }
@@ -128,22 +207,36 @@
             ${scope.row.subArray[scope.row.subArray.length-1].modify_duration }
           </div>
           <div class="checek-man" v-show="scope.row.task_type==='3'">
-            ${ scope.row.subArray[scope.row.subArray.length-1].mod_con_duration }
+            ${ scope.row.subArray[scope.row.subArray.length-1].mod_con_duration
+            }
           </div>
-          <div class="checek-man" style="border:none" v-show="scope.row.task_type==='3'">
-            ${ scope.row.subArray[scope.row.subArray.length-1].confirm_duration }
+          <div
+            class="checek-man"
+            style="border: none;"
+            v-show="scope.row.task_type==='3'"
+          >
+            ${ scope.row.subArray[scope.row.subArray.length-1].confirm_duration
+            }
           </div>
           <div v-show="scope.row.task_type==='2'">
             ${ scope.row.subArray[0].first_duration }
           </div>
           <div class="type-one" v-show="scope.row.task_type==='1'">
-            <div class="checek-man" v-for="(item, index) in scope.row.subArray" :key="index">
+            <div
+              class="checek-man"
+              v-for="(item, index) in scope.row.subArray"
+              :key="index"
+            >
               ${ item.first_duration }
             </div>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="承担人角色" v-if="getFieldShow('owner_role')" width="100">
+      <el-table-column
+        label="承担人角色"
+        v-if="getFieldShow('owner_role')"
+        width="100"
+      >
         <template slot-scope="scope">
           <div class="checek-man" v-show="scope.row.task_type==='3'">
             ${ scope.row.subArray[scope.row.subArray.length-1].owner_role }
@@ -154,7 +247,11 @@
           <div class="checek-man" v-show="scope.row.task_type==='3'">
             ${ scope.row.subArray[scope.row.subArray.length-1].owner_role }
           </div>
-          <div class="checek-man" style="border:none" v-show="scope.row.task_type==='3'">
+          <div
+            class="checek-man"
+            style="border: none;"
+            v-show="scope.row.task_type==='3'"
+          >
             ${ scope.row.subArray[scope.row.subArray.length-1].owner_role }
           </div>
           <!-- <div v-show="scope.row.task_type==='1' ||scope.row.task_type==='2'">
@@ -164,46 +261,77 @@
             ${ scope.row.subArray[0].owner_role }
           </div>
           <div class="type-one" v-show="scope.row.task_type==='1'">
-            <div class="checek-man" v-for="(item, index) in scope.row.subArray" :key="index">
+            <div
+              class="checek-man"
+              v-for="(item, index) in scope.row.subArray"
+              :key="index"
+            >
               ${ item.owner_role }
             </div>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="承担人名称" v-if="getFieldShow('owner')" width="100">
+      <el-table-column
+        label="承担人名称"
+        v-if="getFieldShow('owner')"
+        width="100"
+      >
         <template slot-scope="scope">
           <div class="checek-man" v-show="scope.row.task_type==='3'">
-            <span v-if="scope.row.subArray[0].isreply==='2'">${ scope.row.subArray[scope.row.subArray.length-1].owner }</span>
+            <span v-if="scope.row.subArray[0].isreply==='2'"
+              >${ scope.row.subArray[scope.row.subArray.length-1].owner }</span
+            >
             <span v-else></span>
           </div>
           <div class="checek-man" v-show="scope.row.task_type==='3'">
-            <span v-if="scope.row.subArray[0].the_isreply==='2'">${ scope.row.subArray[scope.row.subArray.length-1].the_owner }</span>
+            <span v-if="scope.row.subArray[0].the_isreply==='2'"
+              >${ scope.row.subArray[scope.row.subArray.length-1].the_owner
+              }</span
+            >
             <span v-else></span>
           </div>
           <div class="checek-man" v-show="scope.row.task_type==='3'">
-            <span v-if="scope.row.subArray[0].isreply==='2'">${ scope.row.subArray[scope.row.subArray.length-1].owner }</span>
+            <span v-if="scope.row.subArray[0].isreply==='2'"
+              >${ scope.row.subArray[scope.row.subArray.length-1].owner }</span
+            >
             <span v-else></span>
           </div>
-          <div class="checek-man" style="border:none" v-show="scope.row.task_type==='3'">
-            <span v-if="scope.row.subArray[0].isreply==='2'">${ scope.row.subArray[scope.row.subArray.length-1].owner }</span>
+          <div
+            class="checek-man"
+            style="border: none;"
+            v-show="scope.row.task_type==='3'"
+          >
+            <span v-if="scope.row.subArray[0].isreply==='2'"
+              >${ scope.row.subArray[scope.row.subArray.length-1].owner }</span
+            >
             <span v-else></span>
           </div>
           <!-- <div v-show="scope.row.task_type==='1' ||scope.row.task_type==='2'">
             ${ scope.row.owner }
           </div> -->
           <div v-show="scope.row.task_type==='2'">
-            <span v-if="scope.row.subArray[0].isreply==='2'">${ scope.row.subArray[0].owner }</span>
+            <span v-if="scope.row.subArray[0].isreply==='2'"
+              >${ scope.row.subArray[0].owner }</span
+            >
             <span v-else></span>
           </div>
           <div class="type-one" v-show="scope.row.task_type==='1'">
-            <div class="checek-man" v-for="(item, index) in scope.row.subArray" :key="index">
+            <div
+              class="checek-man"
+              v-for="(item, index) in scope.row.subArray"
+              :key="index"
+            >
               <span v-if="item.isreply==='2'">${ item.owner }</span>
               <span v-else></span>
             </div>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="承担人技能" v-if="getFieldShow('skill')" width="120">
+      <el-table-column
+        label="承担人技能"
+        v-if="getFieldShow('skill')"
+        width="120"
+      >
         <template slot-scope="scope">
           <div class="checek-man" v-show="scope.row.task_type==='3'">
             ${ scope.row.subArray[scope.row.subArray.length-1].skill }
@@ -214,7 +342,11 @@
           <div class="checek-man" v-show="scope.row.task_type==='3'">
             ${ scope.row.subArray[scope.row.subArray.length-1].skill }
           </div>
-          <div class="checek-man" style="border:none" v-show="scope.row.task_type==='3'">
+          <div
+            class="checek-man"
+            style="border: none;"
+            v-show="scope.row.task_type==='3'"
+          >
             ${ scope.row.subArray[scope.row.subArray.length-1].skill }
           </div>
           <!-- <div v-show="scope.row.task_type==='1' ||scope.row.task_type==='2'">
@@ -224,7 +356,11 @@
             ${ scope.row.subArray[0].skill }
           </div>
           <div class="type-one" v-show="scope.row.task_type==='1'">
-            <div class="checek-man" v-for="(item, index) in scope.row.subArray" :key="index">
+            <div
+              class="checek-man"
+              v-for="(item, index) in scope.row.subArray"
+              :key="index"
+            >
               ${ item.skill }
             </div>
           </div>
