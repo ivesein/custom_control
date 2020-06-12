@@ -216,7 +216,9 @@
                               this.pageStatus = props.data.pageStatus;
                               break;
                             default:
-                              this.$message.error("网络繁忙，请稍后再试...");
+                              console.log("接口返回错误！");
+                              //   this.$message.error("网络繁忙，请稍后再试...");
+                              break;
                           }
                         }
                       }

@@ -51,7 +51,7 @@ v-loading="loading"
     </el-table-column>
     <el-table-column type="index" label="序号" width="60" align="center">
     </el-table-column>
-    <el-table-column v-if="getFieldShow('text')" prop="text" label="WBS任务名称"></el-table-column>
+    <el-table-column v-if="getFieldShow('text')" prop="text" label="WBS任务名称" min-width="280"></el-table-column>
     <el-table-column v-if="getFieldShow('wbs')" prop="wbs" label="任务代码" width="140" ></el-table-column>
     
     <el-table-column v-if="getFieldShow('duration')" label="工时" width="120">
