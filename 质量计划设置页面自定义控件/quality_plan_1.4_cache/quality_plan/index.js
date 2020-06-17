@@ -491,10 +491,7 @@
                       return resData;
                     },
                     cellStyle({ row, column, rowIndex, columnIndex }) {
-                      if (columnIndex === 0) {
-                        // console.log(column)
-                        return "padding: 0px!important;";
-                      }
+                      return "padding: 0px;line-height:40px;height: 40px";
                     },
                     /**
                      * Author: zhang fq

@@ -95,7 +95,7 @@
                   this.$refs.leftInfoBox.scrollTop = e.target.scrollTop;
                 },
               },
-            }).$mount("#resourceLoadTableApp");
+            }).$mount($("#resourceLoadTableApp", model.dom).get(0));
           });
         });
       });
