@@ -138,27 +138,12 @@
                     },
                   },
                   methods: {
-                    storageChange(e) {
-                      console.log(e);
-                    },
-                    /**
-                     * Author: zhang fq
-                     * Date: 2020-05-27
-                     * Description: bug转需求 已委外的任务 置灰
-                     */
                     tableRowClassName({ row, rowIndex }) {
                       if (row.delegate === "1") {
                         return "delegate-row";
                       }
                       return "";
                     },
-                    /**
-                     * @author: zhang fq
-                     * @date: 2020-05-26
-                     * @description: 从缓存读取数据
-                     * @date: 2020-06-03
-                     * @update: 重写读取缓存逻辑  根据项目id读取相应项目的缓存数据
-                     */
                     getCacheData(pId) {
                       if (pId === "") return null;
                       let data = localStorage.getItem("plan-" + pId);
@@ -168,13 +153,6 @@
                         return JSON.parse(data);
                       }
                     },
-                    /**
-                     * @author: zhang fq
-                     * @date: 2020-05-26
-                     * @description: 更新缓存中的数据
-                     * @date: 2020-06-03
-                     * @update: 重写更新缓存逻辑  根据项目id更新相应项目的缓存数据
-                     */
                     setCacheData(pId, data) {
                       if (pId === "") {
                         this.$message.error(
@@ -187,13 +165,6 @@
                         );
                       }
                     },
-                    /**
-                     * @author: zhang fq
-                     * @date: 2020-05-26
-                     * @description: 处理各按钮功能接口对应的数据返回
-                     * @date: 2020-06-05
-                     * @update: 修改接口 从后台获取当前页面是否处于提交后状态
-                     */
                     handleUpdata(model, props) {
                       if (props.data) {
                         if (props.data.method) {
@@ -201,6 +172,20 @@
                             case "yourTurn":
                               // 处理页签点击到当前页面
                               this.yourTurn();
+                              break;
+                            case "setQualityPlanRole":
+                              this.updateSetRole(
+                                qpOriginData,
+                                this.currentSelectedIds,
+                                props.data
+                              );
+                              break;
+                            case "setQualityPlanDuration":
+                              this.updateSetDuration(
+                                qpOriginData,
+                                this.currentSelectedIds,
+                                props.data
+                              );
                               break;
                             case "updataData":
                               this.updataData(
@@ -289,6 +274,122 @@
                           });
                         }
                       }, 300);
+                    },
+                    /**
+                     * @Author: zhang fq
+                     * @Date: 2020-06-19
+                     * @Description: 配合严孝翔修改质量计划设置角色新增角色接口数据处理
+                     */
+                    updateSetRole(originData, selectedIds, changeData) {
+                      if (
+                        changeData.data === null &&
+                        changeData.setRole === null &&
+                        changeData.setPerson === null
+                      ) {
+                        return;
+                      }
+                      this.allChecked = false;
+                      // 处理setRole
+                      if (changeData.setRole) {
+                        originData.forEach((ov) => {
+                          if (changeData.setRole.qp_task_id === ov.id) {
+                            ov.qp_owner_roleid =
+                              changeData.setRole.qp_owner_roleid;
+                            ov.qp_owner_role = changeData.setRole.qp_owner_role;
+                          }
+                        });
+                      }
+                      // 处理setPerson
+                      if (changeData.setPerson) {
+                        changeData.setPerson.forEach((cv) => {
+                          originData.forEach((ov) => {
+                            if (cv.qp_owner_roleid === ov.qp_owner_roleid) {
+                              ov.qp_owner_role = cv.qp_owner_role;
+                              ov.skill = cv.skill;
+                              ov.skill_id = cv.skill_id;
+                              ov.qp_owner = cv.qp_owner;
+                              ov.qp_owner_id = cv.qp_owner_id;
+                            }
+                          });
+                        });
+                      }
+                      // 处理data
+                      if (changeData.data) {
+                        selectedIds.forEach(function (sv) {
+                          // qpChangedIds.push(sv) //将编辑过得id保存
+                          //将源数据中对应的任务字段更新
+                          originData.forEach(function (ov) {
+                            if (sv === ov.id) {
+                              changeData.data.forEach(function (cv) {
+                                //如果是设置人员角色按钮接口返回的数据
+                                if (cv.id) {
+                                  // 判断owner_id里是否有当前人员的id
+                                  let owner_index = null;
+                                  for (let i = 0; i < ov.owner_id.length; i++) {
+                                    if (ov.owner_id[i] === ov.qp_owner_id) {
+                                      owner_index = i;
+                                      break;
+                                    }
+                                  }
+                                  // 有则替换 无则push
+                                  if (owner_index !== null) {
+                                    ov.owner_id[owner_index] = cv.qp_owner_id;
+                                  } else {
+                                    ov.owner_id.push(cv.qp_owner_id);
+                                  }
+                                }
+                                if (ov.task_type === cv.task_type) {
+                                  for (var key in cv) {
+                                    ov[key] = cv[key];
+                                  }
+                                }
+                              });
+                            }
+                          });
+                        });
+                      }
+                      originData = setAuditTaskUndertaker(originData);
+                      // 处理页面数据更新
+                      this.tableData = formatToTreeData({
+                        arrayList: originData,
+                        idStr: "id",
+                      });
+                      // 更新缓存
+                      qpCachedData.data = _.cloneDeep(originData);
+                      this.setCacheData(this.project_id, qpCachedData);
+                    },
+                    /**
+                     * @Author: zhang fq
+                     * @Date: 2020-06-19
+                     * @Description: 配合严孝翔修改质量计划设置设置持续时间接口数据处理
+                     */
+                    updateSetDuration(originData, selectedIds, changeData) {
+                      this.allChecked = false;
+                      console.log("selectedIds>>>", selectedIds);
+                      selectedIds.forEach(function (sv) {
+                        // qpChangedIds.push(sv) //将编辑过得id保存
+                        //将源数据中对应的任务字段更新
+                        originData.forEach(function (ov) {
+                          if (sv === ov.id) {
+                            changeData.data.forEach(function (cv) {
+                              if (ov.task_type === cv.task_type) {
+                                for (var key in cv) {
+                                  ov[key] = cv[key];
+                                }
+                              }
+                            });
+                          }
+                        });
+                      });
+                      originData = setAuditTaskUndertaker(originData);
+                      // 处理页面数据更新
+                      this.tableData = formatToTreeData({
+                        arrayList: originData,
+                        idStr: "id",
+                      });
+                      // 更新缓存
+                      qpCachedData.data = _.cloneDeep(originData);
+                      this.setCacheData(this.project_id, qpCachedData);
                     },
                     updataData(originData, selectedIds, changeData) {
                       this.allChecked = false;
