@@ -1,4 +1,4 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="en">
   <head>
@@ -11,9 +11,9 @@
     <title>Document</title>
   </head>
 
-<body> -->
-<div id="qualityACApp">
-  <!-- <div class="btn-lsit">
+  <body>
+    <div id="qualityACApp">
+      <!-- <div class="btn-lsit">
     <div class="btn-box-left">
       <button class="btn-itme" @click="refreshData">刷新</button>
       <button class="btn-itme" @click="goExit">
@@ -44,61 +44,117 @@
       
     </div>
   </div> -->
-  <div class="table-content">
-    <div class="table-box table-left">
-      <el-table ref="projectTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="proTableData" style="margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true"  default-expand-all
-      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-      @row-click="currentTaskClick"
-      >
-      <el-table-column prop="wbs" label="任务代码" width="100" ></el-table-column>
-      <el-table-column prop="task_name" label="WBS任务名称" min-width="180"></el-table-column>
-      <el-table-column prop="is_certical_task" label="是否关键任务" width="100" >
-        <template slot-scope="scope">
-          ${scope.row.is_certical_task?"是":"否"}
-        </template>
-      </el-table-column>
-      <el-table-column label="任务状态" width="140" >
-        <template slot-scope="scope">
-          <div v-show="scope.row.task_schedule_status==='000'">未开始</div>
-          <div v-show="scope.row.task_schedule_status==='100'">进行中</div>
-          <div v-show="scope.row.task_schedule_status==='200'">已完成</div>
-        </template>
-      </el-table-column>
-      <el-table-column label="处理状态" width="140" >
-        <template slot-scope="scope">
-          ${scope.row.quality_handle_status==='1'?"已处理":"未处理"}
-        </template>
-      </el-table-column>
-    </el-table>
-    </div>
-    <div class="table-box table-right">
-      <el-table 
-        ref="TableRight" 
-        :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" 
-        :data="currentTask" 
-        style="margin:10px 0 10px 0;" 
-        :style="{width:tableWidth}" 
-        :cell-style="cellStyle" 
-        row-key="task_id" 
-        :border="true"
-      >
-        <el-table-column prop="owner" label="承担人" width="100" ></el-table-column>
-        <el-table-column prop="plan_endtime" label="计划完成并提交时间" width="160"></el-table-column>
-        <el-table-column prop="end_time" label="实际完成并提交时间" width="160" ></el-table-column>
-        <el-table-column prop="DValue" label="偏差值"  width="80" ></el-table-column>
-        <el-table-column label="偏差原因" min-width="200" >
-          <template slot-scope="scope">
-            <el-input @change="reasonChange" size="small" maxlength="50" :disabled="scope.row.task_schedule_status!=='200'" v-model="scope.row.quality_reason" placeholder="请输入内容偏差原因"></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column label="纠偏措施" min-width="200">
-          <template slot-scope="scope">
-            <el-input @change="actionChange" size="small" maxlength="50" :disabled="scope.row.task_schedule_status!=='200'" v-model="scope.row.quality_action" placeholder="请输入纠偏措施"></el-input>
-          </template>
-        </el-table-column>
-      </el-table>
-      <!-- 紧前任务对当前任务影响情况 -->
-      <!-- <div class="detail-info-box">
+      <div class="table-content">
+        <div class="table-box table-left">
+          <el-table
+            ref="projectTable"
+            :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
+            :data="proTableData"
+            style="margin: 10px 0 10px 0;"
+            :cell-style="cellStyle"
+            row-key="task_id"
+            :border="true"
+            default-expand-all
+            :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+            @row-click="currentTaskClick"
+          >
+            <el-table-column
+              prop="wbs"
+              label="任务代码"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="task_name"
+              label="WBS任务名称"
+              min-width="180"
+            ></el-table-column>
+            <el-table-column
+              prop="is_certical_task"
+              label="是否关键任务"
+              width="100"
+            >
+              <template slot-scope="scope">
+                ${scope.row.is_certical_task?"是":"否"}
+              </template>
+            </el-table-column>
+            <el-table-column label="任务状态" width="140">
+              <template slot-scope="scope">
+                <div v-show="scope.row.task_schedule_status==='000'">
+                  未开始
+                </div>
+                <div v-show="scope.row.task_schedule_status==='100'">
+                  进行中
+                </div>
+                <div v-show="scope.row.task_schedule_status==='200'">
+                  已完成
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="处理状态" width="140">
+              <template slot-scope="scope">
+                ${scope.row.quality_handle_status==='1'?"已处理":"未处理"}
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div class="table-box table-right">
+          <el-table
+            ref="TableRight"
+            :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
+            :data="currentTask"
+            style="margin: 10px 0 10px 0;"
+            :style="{width:tableWidth}"
+            :cell-style="cellStyle"
+            row-key="task_id"
+            :border="true"
+          >
+            <el-table-column
+              prop="owner"
+              label="承担人"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="plan_endtime"
+              label="计划完成并提交时间"
+              width="160"
+            ></el-table-column>
+            <el-table-column
+              prop="end_time"
+              label="实际完成并提交时间"
+              width="160"
+            ></el-table-column>
+            <el-table-column
+              prop="DValue"
+              label="偏差值"
+              width="80"
+            ></el-table-column>
+            <el-table-column label="偏差原因" min-width="200">
+              <template slot-scope="scope">
+                <el-input
+                  @change="reasonChange"
+                  size="small"
+                  maxlength="50"
+                  :disabled="scope.row.task_schedule_status!=='200'"
+                  v-model="scope.row.quality_reason"
+                  placeholder="请输入内容偏差原因"
+                ></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column label="纠偏措施" min-width="200">
+              <template slot-scope="scope">
+                <el-input
+                  @change="actionChange"
+                  size="small"
+                  maxlength="50"
+                  :disabled="scope.row.task_schedule_status!=='200'"
+                  v-model="scope.row.quality_action"
+                  placeholder="请输入纠偏措施"
+                ></el-input>
+              </template>
+            </el-table-column>
+          </el-table>
+          <!-- 紧前任务对当前任务影响情况 -->
+          <!-- <div class="detail-info-box">
         <div class="title-info-box">
           <div class="drop-btn">
             <i class="el-icon-caret-bottom" @click="iconArrowClick1(beforeTaskInfo)" v-if="beforeTaskInfo.open"></i>
@@ -113,8 +169,8 @@
           </el-table>
         </div>
       </div> -->
-      <!-- 当前任务情况 -->
-      <!-- <div class="detail-info-box">
+          <!-- 当前任务情况 -->
+          <!-- <div class="detail-info-box">
         <div class="title-info-box">
           <div class="drop-btn">
             <i class="el-icon-caret-bottom" @click="iconArrowClick2(currentTaskInfo)" v-if="currentTaskInfo.open"></i>
@@ -135,8 +191,8 @@
           </el-table>
         </div>
       </div> -->
-      <!-- 当前任务挣值数据分析 -->
-      <!-- <div class="detail-info-box" v-show="currentTask&&currentTask.task_status==='3'">
+          <!-- 当前任务挣值数据分析 -->
+          <!-- <div class="detail-info-box" v-show="currentTask&&currentTask.task_status==='3'">
         <div class="title-info-box">
           <div class="drop-btn">
             <i class="el-icon-caret-bottom" @click="iconArrowClick3(earnedValueAnalysisSuggestions)" v-if="earnedValueAnalysisSuggestions.open"></i>
@@ -158,8 +214,8 @@
           </el-table>
         </div>
       </div> -->
-      <!-- 后续任务处理 -->
-      <!-- <div class="detail-info-box" v-show="currentTask&&currentTask.task_status==='3'">
+          <!-- 后续任务处理 -->
+          <!-- <div class="detail-info-box" v-show="currentTask&&currentTask.task_status==='3'">
         <div class="title-info-box">
           <div class="drop-btn">
             <i class="el-icon-caret-bottom" @click="iconArrowClick4(followTaskProcessing)" v-if="followTaskProcessing.open"></i>
@@ -181,9 +237,9 @@
           </el-table>
         </div>
       </div> -->
-    </div>
-  </div>
-  <!-- <div class="message-box" v-show="messageBoxShow">
+        </div>
+      </div>
+      <!-- <div class="message-box" v-show="messageBoxShow">
     <div class="message-content">
       <div class="message-title">
         <span>提醒</span>
@@ -204,10 +260,10 @@
       </div>
     </div>
   </!-->
-</div>
-<!-- <script src="../js/lodash.js"></script>
+    </div>
+    <script src="../js/lodash.js"></script>
     <script src="../js/vue.min.js"></script>
     <script src="../js/element.js"></script>
     <script src="../js/test.js"></script>
   </body>
-</html> -->
+</html>

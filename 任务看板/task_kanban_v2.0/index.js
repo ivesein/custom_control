@@ -10,12 +10,12 @@ var taskKanbanVue = null;
       this.model.taskKanbanVue = null;
     },
     init: function (props) {
-      console.log("init---", this.model, props);
+      // console.log("init---", this.model, props);
       setHtml(this.model, props);
     },
     update: function (props) {
       // var tData = JSON.parse(props.data)
-      console.log("-----update", this.model, props);
+      // console.log("-----update", this.model, props);
       // firstInit(props, this.model)
       // setHtml(this.model, props)
       if (this.model.taskKanbanVue && props.data) {
@@ -25,7 +25,7 @@ var taskKanbanVue = null;
       }
     },
     destoryed: function () {
-      console.log("-----destoryed", this.model);
+      // console.log("-----destoryed", this.model);
       this.model.taskKanbanVue = null;
     },
   };
@@ -49,7 +49,7 @@ var taskKanbanVue = null;
               ).then(function (result) {
                 model.dom.innerHTML = result;
                 // model.invoke("initData", '') //初始化
-                console.log(props.data);
+                // console.log(props.data);
                 // if (props.data === undefined || props.data === null) {
                 // 	return
                 // }
@@ -140,13 +140,22 @@ var taskKanbanVue = null;
                     },
                     /**
                      * @Author: zhang fq
-                     * @Date: 2020-06-12
+                     * @Date: 2020-06-23
                      * @Description: 修改任务看板接口数据返回处理方法
+                     * 根据接口方法名判断是校审任务数据交互还是提资任务交互
                      */
                     handleUpdata(model, props) {
                       // 判断是初始化哪个标签页的数据
                       if (props.data) {
                         this.allDatas = props.data;
+                        // switch(props.data.method){
+                        //   case "designTaskData":
+                        //     this.handleDTData(props.data.data);
+                        //     break;
+                        //   case "tzTaskData":
+                        //     this.handleTZData(props.data.data)
+                        //     break;
+                        // }
                         // 处理设计校审任务面板初始化数据显示
                         if (props.data.summarData) {
                           this.summarData = this.allDatas.summarData;
@@ -176,6 +185,42 @@ var taskKanbanVue = null;
                         }
                       }
                     },
+                    /**
+                     * @Author: zhang fq
+                     * @Date: 2020-06-23
+                     * @Description: 处理对应的看板标签页接口名返回的数据
+                     */
+                    // 处理method为designTaskData设计校审任务接口返回的数据
+                    // handleDTData(data){
+                    //   if (props.data.summarData) {
+                    //     this.summarData = this.allDatas.summarData;
+                    //     for (let i = 0; i < this.summarData.length; i++) {
+                    //       if (this.summarData[i].focus) {
+                    //         this.currentType = this.summarData[i].title;
+                    //         break;
+                    //       }
+                    //     }
+                    //     this.handleCurrentTypeToDisplay(
+                    //       this.currentType,
+                    //       this.allDatas
+                    //     );
+                    //   }
+                    // },
+                    // 处理method为tzTaskData 提资任务接口返回的数据
+                    // handleTZData(data){
+                    //   if (props.data.tzTaskData) {
+                    //     this.tzTaskInfos = props.data.tzTaskData;
+                    //     this.summarDataTZ = props.data.summarDataTZ;
+                    //     let type = "";
+                    //     for (let i = 0; i < this.summarDataTZ.length; i++) {
+                    //       if (this.summarDataTZ[i].focus) {
+                    //         type = this.summarDataTZ[i].title;
+                    //         break;
+                    //       }
+                    //     }
+                    //     this.handleCurrentTypeTzTaskDisplay(type);
+                    //   }
+                    // },
                     handleSummaryItemClicked(item) {
                       this.summarData.forEach(function (fuck) {
                         fuck.focus = false;
@@ -189,7 +234,7 @@ var taskKanbanVue = null;
                     },
                     // clickNameOpenTaskDetail
                     handleTaskNameClicked(item) {
-                      console.log(item);
+                      // console.log(item);
                       let sendData = {
                         data: item,
                       };
@@ -286,7 +331,7 @@ var taskKanbanVue = null;
                     // 以下为 提资任务面板相关数据处理方法封装以及点击交互方法
                     // 处理标签按钮点击 加载焦点样式 展示相应面版
                     handleTabClick(item) {
-                      console.log(item);
+                      // console.log(item);
                       this.tabData.forEach(function (fk) {
                         fk.focus = false;
                       });
@@ -333,7 +378,7 @@ var taskKanbanVue = null;
                     },
                     // 提资任务名点击接口数据交互
                     handleTZTaskNameClicked(item) {
-                      console.log(item);
+                      // console.log(item);
                       let data = {
                         taskid: item.taskid,
                         projectid: item.projectid,
@@ -342,7 +387,7 @@ var taskKanbanVue = null;
                     },
                     // 提资任务接受按钮点击接口数据交互
                     tzClickAccept(item) {
-                      console.log(item);
+                      // console.log(item);
                       this.$confirm("确认接受该任务?", "接受", {
                         confirmButtonText: "确定",
                         cancelButtonText: "取消",

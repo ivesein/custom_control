@@ -9,12 +9,12 @@
       this.model.ccpermissionControlVue = null;
     },
     init: function (props) {
-      console.log("init---", this.model, props);
+      // console.log("init---", this.model, props);
       setHtml(this.model, props);
     },
     update: function (props) {
       // var tData = JSON.parse(props.data)
-      console.log("-----update", this.model, props);
+      // console.log("-----update", this.model, props);
       // firstInit(props, this.model)
       // setHtml(this.model, props)
       if (this.model.ccpermissionControlVue && props.data) {
@@ -24,7 +24,7 @@
       }
     },
     destoryed: function () {
-      console.log("-----destoryed", this.model);
+      // console.log("-----destoryed", this.model);
       this.model.ccpermissionControlVue = null;
     },
   };
@@ -41,7 +41,8 @@
             KDApi.loadFile("./js/element.js", model.schemaId, function () {
               KDApi.templateFilePath(
                 "./html/custom_control_permission_management.html",
-                model.schemaId, {
+                model.schemaId,
+                {
                   path: KDApi.nameSpace(model.schemaId) + "./img/lock.png",
                 }
               ).then(function (result) {
@@ -74,8 +75,8 @@
                     dataRuleList: [], //当前点击的数据规则标签页树item已添加的数据规则
                     treeItemDRDefaultData: null,
                     cClickedDRTreeNode: [], // 当前点击的数据规则标签页树item
-                    currentOrgItem:null,  //当前拉起组织架构的数据规则item
-                    DataRuleLogic:[
+                    currentOrgItem: null, //当前拉起组织架构的数据规则item
+                    DataRuleLogic: [
                       {
                         label: "或者",
                         value: "or",
@@ -83,7 +84,7 @@
                       {
                         label: "并且",
                         value: "and",
-                      }
+                      },
                     ],
                   },
                   created() {
@@ -98,8 +99,10 @@
                      */
                     getItemCompareType(item) {
                       return (item) => {
-                        let compareType = _.cloneDeep(this.treeItemDRDefaultData);
-                        if(compareType){
+                        let compareType = _.cloneDeep(
+                          this.treeItemDRDefaultData
+                        );
+                        if (compareType) {
                           let arr = compareType.filter((v) => {
                             return v.elementid === item.elementid;
                           });
@@ -108,15 +111,15 @@
                           } else {
                             return [];
                           }
-                        }else{
-                          return []
+                        } else {
+                          return [];
                         }
                       };
                     },
                   },
                   methods: {
                     handleTabClick(val) {
-                      console.log(val);
+                      // console.log(val);
                     },
                     /**
                      * Author: zhang fq
@@ -185,14 +188,18 @@
                      */
                     pageInit(data) {
                       this.initData = data;
-                      this.defaultTreeData = data.initBasicPermLeftTreeinfo || [{
-                        id: "0",
-                        label: "功能权限",
-                      }, ];
-                      this.assignedData = data.initAssignedPermLeftTreeinfo || [{
-                        id: "0",
-                        label: "已分配",
-                      }, ];
+                      this.defaultTreeData = data.initBasicPermLeftTreeinfo || [
+                        {
+                          id: "0",
+                          label: "功能权限",
+                        },
+                      ];
+                      this.assignedData = data.initAssignedPermLeftTreeinfo || [
+                        {
+                          id: "0",
+                          label: "已分配",
+                        },
+                      ];
                       this.handleAssignedData(this.assignedData);
                     },
                     /**
@@ -282,7 +289,7 @@
                       this.assArr = [];
                       // 获取勾选的所有节点的id
                       let checked = this.$refs.treeLeft.getCheckedKeys();
-                      console.log("checked>>", checked);
+                      // console.log("checked>>", checked);
                       //判断是否有勾选
                       if (checked.length === 0) {
                         return;
@@ -290,7 +297,7 @@
                       //如果有勾选
                       // 将右侧已分配的所有最终子节点取出  合并到左侧已勾选  避免重复插入  再清空右树
                       this.getTreeRightNodes(this.assignedData[0]);
-                      console.log(this.assArr);
+                      // console.log(this.assArr);
                       // this.$set(this.assignedData[0].children, []);
                       // this.assignedData[0].children = [];
                       // 从勾选节点中获取被包含的子节点的下标
@@ -306,7 +313,7 @@
                           tempNode = checked[i];
                         }
                       }
-                      console.log("indexSplice>>", indexSplice);
+                      // console.log("indexSplice>>", indexSplice);
                       // 根据包含子节点下标过滤出父节点id
                       indexSplice.forEach((v, k) => {
                         if (k === 0) {
@@ -317,12 +324,12 @@
                       });
                       let resPArr = [];
                       let rootCheckedArr = []; //存放 从根节点就全选的节点id
-                      console.log("filterArr>>", filterArr);
+                      // console.log("filterArr>>", filterArr);
                       filterArr.forEach((v) => {
                         //获取当前父节点
                         // 根据当前父节点获取所有上层节点
                         let arrParent = v.split("-"); //["7-4-3-1-1-1"]=>["7", "4", "3", "1", "1", "1"]
-                        console.log(arrParent);
+                        // console.log(arrParent);
                         // 过滤从根节点就全选的节点 直接取出 跳出遍历
                         if (arrParent.length === 1) {
                           rootCheckedArr.push(v);
@@ -334,36 +341,36 @@
                             pSliceArr.push(arrParent.slice(0, len));
                             len -= 1;
                           }
-                          console.log(pSliceArr);
+                          // console.log(pSliceArr);
                           let pJoin = pSliceArr.map((pv) => {
                             return pv.join("-");
                           });
                           resPArr.push(...pJoin);
-                          console.log(pJoin);
+                          // console.log(pJoin);
                         }
                       });
-                      console.log("resPArr>>", resPArr);
+                      // console.log("resPArr>>", resPArr);
                       // resPArr>>["6-1", "6", "7-4-3-1-1", "7-4-3-1", "7-4-3", "7-4", "7", "7-4-3-1-1", "7-4-3-1", "7-4-3", "7-4", "7", "7-4-3", "7-4", "7"]
                       // 数组去重 将有相同父节点的id合并
                       let set = new Set(resPArr);
                       let arr = Array.from(set);
                       arr.sort(); //["6", "6-1", "7", "7-4", "7-4-3", "7-4-3-1", "7-4-3-1-1"]
-                      console.log(arr);
+                      // console.log(arr);
                       arr.forEach((v) => {
                         // 先判断右侧树是否已有该父节点  没有再插
                         if (!this.assArr.includes(v)) {
                           if (v.length === 1) {
-                            if(v[0]!=="0"){
+                            if (v[0] !== "0") {
                               let node = _.cloneDeep(
                                 this.$refs.treeLeft.getNode(v).data
                               );
                               delete node.children;
-                              console.log(node);
+                              // console.log(node);
                               this.$refs.treeRight.append(node, "0");
                             }
                           } else {
                             let parentKey = v.slice(0, v.length - 2);
-                            console.log("parentKey>>>", parentKey);
+                            // console.log("parentKey>>>", parentKey);
                             let cNode = _.cloneDeep(
                               this.$refs.treeLeft.getNode(v).data
                             );
@@ -386,7 +393,7 @@
                         //如果当前循环的最终子节点id只有一位("7") 则说明该节点为根节点 将该节点及其子节点一起插入右侧树
                         if (v.length === 1) {
                           // 修复 可全选左侧树 连左侧树最外层跟节点一起插入的bug
-                          if(v[0]!=='0'){
+                          if (v[0] !== "0") {
                             let node = _.cloneDeep(
                               this.$refs.treeLeft.getNode(v).data
                             );
@@ -414,7 +421,7 @@
                     remove() {
                       // 获取选中的要删除的节点id
                       let removeNode = this.$refs.treeRight.getCheckedKeys();
-                      console.log(removeNode);
+                      // console.log(removeNode);
                       // 根据选中的节点id 循环删除每一个选中的节点
                       removeNode.forEach((v) => {
                         if (v !== "0") {
@@ -529,9 +536,9 @@
                         }
                       );
                       this.fieldListData =
-                        dataTemp.length === 0 ?
-                        _.cloneDeep(data.assignedfields) :
-                        dataTemp[0].assignedfields;
+                        dataTemp.length === 0
+                          ? _.cloneDeep(data.assignedfields)
+                          : dataTemp[0].assignedfields;
                       this.fieldListData.forEach((v) => {
                         v.dele_checked = false;
                       });
@@ -656,7 +663,7 @@
                       if (item.checked === true) {
                         let tempData = _.cloneDeep(item);
                         tempData.index = index;
-                        console.log(tempData);
+                        // console.log(tempData);
                         this.fieldCheckedList.push(tempData);
                         // 如果是一个一个 全都勾选的  将全选按钮置为true
                         let flag = this.alternative_fields.every((v) => {
@@ -694,7 +701,7 @@
                         fieldsPermission: this.selectedFieldDataMaptoTreeItem,
                         dataRule: this.dataRuleDataMaptoTreeItem,
                       };
-                      console.log(param);
+                      // console.log(param);
                       model.invoke("save", param);
                     },
                     /**
@@ -713,7 +720,7 @@
                      * Description: 处理字段列表项的单选
                      */
                     handlefieldListItemCheckChange(val, item, index) {
-                      console.log(item, index);
+                      // console.log(item, index);
                       // this.$set(this.fieldListData[index], "dele_checked", val);
                       this.$set(this.fieldListData, index, item);
                       if (val === false) {
@@ -737,25 +744,27 @@
                       }
                       this.cClickedDRTreeNode = data;
                       // 发送当前自定义控件业务对象节点到后台获取该节点备选数据集
-                      if(data.cstlid){
-                        model.invoke("getDataRuleDefaultData",data)
+                      if (data.cstlid) {
+                        model.invoke("getDataRuleDefaultData", data);
                       }
                       // 从存储的映射数据中拿到当前节点已添加的数据规则
-                      let dataTemp = this.dataRuleDataMaptoTreeItem.filter((v) => {
-                        return v.id === data.id;
-                      });
+                      let dataTemp = this.dataRuleDataMaptoTreeItem.filter(
+                        (v) => {
+                          return v.id === data.id;
+                        }
+                      );
                       this.dataRuleList =
-                        dataTemp.length === 0 ?
-                        _.cloneDeep(data.assigneddatarules) :
-                        dataTemp[0].assigneddatarules;
+                        dataTemp.length === 0
+                          ? _.cloneDeep(data.assigneddatarules)
+                          : dataTemp[0].assigneddatarules;
                     },
                     /**
                      * Author: zhang fq
                      * Date: 2020-05-23
                      * Description: 处理获取业务对象节点备选数据集接口数据返回
                      */
-                    getDataRuleDefaultData(data){
-                      this.treeItemDRDefaultData=data.fieldName||null
+                    getDataRuleDefaultData(data) {
+                      this.treeItemDRDefaultData = data.fieldName || null;
                     },
                     /**
                      * Author: zhang fq
@@ -765,9 +774,11 @@
                     deleteDataRuleItem(item, index) {
                       this.dataRuleList.splice(index, 1);
                       // TODO 更新数据规则差异化数据映射集
-                      let dataTemp = _.cloneDeep(this.cClickedDRTreeNode)
-                      dataTemp.assigneddatarules = _.cloneDeep(this.dataRuleList)
-                      this.updateDataRuleDataMaptoTreeItem(dataTemp)
+                      let dataTemp = _.cloneDeep(this.cClickedDRTreeNode);
+                      dataTemp.assigneddatarules = _.cloneDeep(
+                        this.dataRuleList
+                      );
+                      this.updateDataRuleDataMaptoTreeItem(dataTemp);
                     },
                     /**
                      * Author: zhang fq
@@ -778,22 +789,32 @@
                      */
                     addDataRuleTocCTreeNode() {
                       if (this.cClickedDRTreeNode.cstlid) {
-                        if(this.treeItemDRDefaultData!==null&&this.treeItemDRDefaultData!==[]){
+                        if (
+                          this.treeItemDRDefaultData !== null &&
+                          this.treeItemDRDefaultData !== []
+                        ) {
                           this.dataRuleList.push({
-                            elementid: this.treeItemDRDefaultData[0].elementid || "",
-                            elementname:this.treeItemDRDefaultData[0].elementname||"",
-                            source:this.treeItemDRDefaultData[0].source||"",
-                            compareType: this.treeItemDRDefaultData[0].compareType[0].value || "",
+                            elementid:
+                              this.treeItemDRDefaultData[0].elementid || "",
+                            elementname:
+                              this.treeItemDRDefaultData[0].elementname || "",
+                            source: this.treeItemDRDefaultData[0].source || "",
+                            compareType:
+                              this.treeItemDRDefaultData[0].compareType[0]
+                                .value || "",
                             value: "",
                             logic: "and",
-                            valueType: this.treeItemDRDefaultData[0].fieldtype || "text",
+                            valueType:
+                              this.treeItemDRDefaultData[0].fieldtype || "text",
                           });
                           // TODO 更新数据规则差异化数据映射集
-                          let dataTemp = _.cloneDeep(this.cClickedDRTreeNode)
-                          dataTemp.assigneddatarules = _.cloneDeep(this.dataRuleList)
-                          this.updateDataRuleDataMaptoTreeItem(dataTemp)
-                        }else{
-                          this.$message.error("获取数据失败，请稍后重试")
+                          let dataTemp = _.cloneDeep(this.cClickedDRTreeNode);
+                          dataTemp.assigneddatarules = _.cloneDeep(
+                            this.dataRuleList
+                          );
+                          this.updateDataRuleDataMaptoTreeItem(dataTemp);
+                        } else {
+                          this.$message.error("获取数据失败，请稍后重试");
                         }
                       }
                     },
@@ -806,20 +827,30 @@
                      * Updata: 在修改的数据中添加后台需要的字段 同步到差异化数据集
                      */
                     handleDRFieldNameChange(val, item, index) {
-                      console.log(val);
-                      console.log(index);
-                      for (let i = 0; i < this.treeItemDRDefaultData.length; i++) {
+                      // console.log(val);
+                      // console.log(index);
+                      for (
+                        let i = 0;
+                        i < this.treeItemDRDefaultData.length;
+                        i++
+                      ) {
                         if (val === this.treeItemDRDefaultData[i].elementid) {
-                          item.valueType = this.treeItemDRDefaultData[i].fieldtype;
-                          item.elementname=this.treeItemDRDefaultData[i].elementname
-                          item.source=this.treeItemDRDefaultData[i].source
+                          item.valueType = this.treeItemDRDefaultData[
+                            i
+                          ].fieldtype;
+                          item.elementname = this.treeItemDRDefaultData[
+                            i
+                          ].elementname;
+                          item.source = this.treeItemDRDefaultData[i].source;
                           break;
                         }
                       }
                       // TODO 更新数据规则差异化数据映射集
-                      let dataTemp = _.cloneDeep(this.cClickedDRTreeNode)
-                      dataTemp.assigneddatarules = _.cloneDeep(this.dataRuleList)
-                      this.updateDataRuleDataMaptoTreeItem(dataTemp)
+                      let dataTemp = _.cloneDeep(this.cClickedDRTreeNode);
+                      dataTemp.assigneddatarules = _.cloneDeep(
+                        this.dataRuleList
+                      );
+                      this.updateDataRuleDataMaptoTreeItem(dataTemp);
                     },
                     /**
                      * Author: zhang fq
@@ -828,53 +859,60 @@
                      */
                     handleDRCompareTypeChange(val, item, index) {
                       // TODO 更新数据规则差异化数据映射集
-                      let dataTemp = _.cloneDeep(this.cClickedDRTreeNode)
-                      dataTemp.assigneddatarules = _.cloneDeep(this.dataRuleList)
-                      this.updateDataRuleDataMaptoTreeItem(dataTemp)
+                      let dataTemp = _.cloneDeep(this.cClickedDRTreeNode);
+                      dataTemp.assigneddatarules = _.cloneDeep(
+                        this.dataRuleList
+                      );
+                      this.updateDataRuleDataMaptoTreeItem(dataTemp);
                     },
                     handleDRLogicChange(val, item, index) {
                       // TODO 更新数据规则差异化数据映射集
-                      let dataTemp = _.cloneDeep(this.cClickedDRTreeNode)
-                      dataTemp.assigneddatarules = _.cloneDeep(this.dataRuleList)
-                      this.updateDataRuleDataMaptoTreeItem(dataTemp)
+                      let dataTemp = _.cloneDeep(this.cClickedDRTreeNode);
+                      dataTemp.assigneddatarules = _.cloneDeep(
+                        this.dataRuleList
+                      );
+                      this.updateDataRuleDataMaptoTreeItem(dataTemp);
                     },
                     handleDRValueChange(val, item, index) {
                       // TODO 更新数据规则差异化数据映射集
-                      let dataTemp = _.cloneDeep(this.cClickedDRTreeNode)
-                      dataTemp.assigneddatarules = _.cloneDeep(this.dataRuleList)
-                      this.updateDataRuleDataMaptoTreeItem(dataTemp)
+                      let dataTemp = _.cloneDeep(this.cClickedDRTreeNode);
+                      dataTemp.assigneddatarules = _.cloneDeep(
+                        this.dataRuleList
+                      );
+                      this.updateDataRuleDataMaptoTreeItem(dataTemp);
                     },
                     /**
                      * Author: zhang fq
                      * Date: 2020-05-23
                      * Description: 调起组织架构选择人员
                      */
-                    dataRuleToOrg(item,index) {
-                      this.currentOrgItem=item
+                    dataRuleToOrg(item, index) {
+                      this.currentOrgItem = item;
                       //TODO 通知后台 调起组织架构 选择人员
-                      let dataTemp=_.cloneDeep(this.cClickedDRTreeNode)
-                      let param={
-                        id:dataTemp.id,
+                      let dataTemp = _.cloneDeep(this.cClickedDRTreeNode);
+                      let param = {
+                        id: dataTemp.id,
                         cstlid: dataTemp.cstlid,
-                        itemIndex:index
-                      }
-                      model.invoke("getPerson",param)
+                        itemIndex: index,
+                      };
+                      model.invoke("getPerson", param);
                     },
                     /**
                      * Author: zhang fq
                      * Date: 2020-05-23
                      * Description: 处理调起组织架构选择人员后返回数据
                      */
-                    getPerson(data){
-                      let dataTemp=data.data||[]
+                    getPerson(data) {
+                      let dataTemp = data.data || [];
                       // 更新差异化数据映射集
-                      this.dataRuleDataMaptoTreeItem.forEach(v=>{
-                        if(v.id===dataTemp.id){
-                          v.assigneddatarules[dataTemp.itemIndex].value=dataTemp.person
+                      this.dataRuleDataMaptoTreeItem.forEach((v) => {
+                        if (v.id === dataTemp.id) {
+                          v.assigneddatarules[dataTemp.itemIndex].value =
+                            dataTemp.person;
                         }
-                      })
+                      });
                       //回填值 更新页面显示
-                      this.currentOrgItem.value=dataTemp.person
+                      this.currentOrgItem.value = dataTemp.person;
                     },
                     // 更新数据规则映射集
                     updateDataRuleDataMaptoTreeItem(data) {

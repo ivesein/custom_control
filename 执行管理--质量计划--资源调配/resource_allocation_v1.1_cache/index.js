@@ -18,11 +18,11 @@
       this.model.resourceAllocationVue = null;
     },
     init: function (props) {
-      console.log("init---", this.model, props);
+      // console.log("init---", this.model, props);
       setHtml(this.model, props);
     },
     update: function (props) {
-      console.log("-----update", this.model, props);
+      // console.log("-----update", this.model, props);
       // if (props.data && props.data.isInit) {
       //   theData = []
       //   raOriginData = []
@@ -30,7 +30,7 @@
       //   this.model.resourceAllocationVue = null
       //   setHtml(this.model, props)
       // }
-      console.log(this.model.resourceAllocationVue);
+      // console.log(this.model.resourceAllocationVue);
       if (this.model.resourceAllocationVue) {
         this.model.resourceAllocationVue.handleUpdata(this.model, props);
       } else {
@@ -38,7 +38,7 @@
       }
     },
     destoryed: function () {
-      console.log("-----destoryed", this.model);
+      // console.log("-----destoryed", this.model);
       this.model.resourceAllocationVue = null;
     },
   };
@@ -228,9 +228,9 @@
                       }, 300);
                     },
                     /**
-                     * @author: zhang fq
-                     * @date: 2020-06-04
-                     * @description: 初始化、页签切换以及各按钮交互接口的数据交互和对应
+                     * @Author: zhang fq
+                     * @Date: 2020-06-24
+                     * @Description: 修改质量维护接口交互 收到后台保存成功或发布成功标识后 重新读取缓存
                      */
                     handleUpdata(model, props) {
                       if (props.data) {
@@ -239,6 +239,12 @@
                           switch (props.data.method) {
                             case "yourTurn":
                               // 处理页签点击到当前页面
+                              this.yourTurn();
+                              break;
+                            case "saveSuccess":
+                              this.yourTurn();
+                              break;
+                            case "publishSuccess":
                               this.yourTurn();
                               break;
                             case "updateData":
@@ -252,7 +258,7 @@
                               this.project_id = props.data.projectId;
                               break;
                             default:
-                              console.log("接口返回错误！");
+                              // console.log("接口返回错误！");
                               break;
                             //   this.$message.error("网络繁忙，请稍后再试...");
                           }
@@ -268,7 +274,7 @@
                      */
                     updataData(originData, selectedIds, changeData) {
                       this.allChecked = false;
-                      console.log("selectedIds>>>", selectedIds);
+                      // console.log("selectedIds>>>", selectedIds);
                       selectedIds.forEach(function (sv) {
                         // raChangedIds.push(sv) //将编辑过得id保存
                         //将源数据中对应的任务字段更新

@@ -10,12 +10,12 @@
       this.model.resourceLoadTableApp = null;
     },
     init: function (props) {
-      console.log("init---", this.model, props);
+      // console.log("init---", this.model, props);
       setHtml(this.model, props);
     },
     update: function (props) {
       // var tData = JSON.parse(props.data)
-      console.log("-----update", this.model, props);
+      // console.log("-----update", this.model, props);
       // firstInit(props, this.model)
       if (this.model.resourceLoadTableApp) {
         this.model.resourceLoadTableApp.handleUpdate(this.model, props);
@@ -24,7 +24,7 @@
       }
     },
     destoryed: function () {
-      console.log("-----destoryed", this.model);
+      // console.log("-----destoryed", this.model);
       this.model.resourceLoadTableApp = null;
     },
   };
@@ -46,7 +46,7 @@
         ).then(function (result) {
           model.dom.innerHTML = result;
           // model.invoke("initData", '') //初始化
-          console.log(props.data);
+          // console.log(props.data);
           model.resourceLoadTableApp = new Vue({
             delimiters: ["${", "}"],
             data: {

@@ -17,11 +17,11 @@
       this.model.qualityPlanVue = null;
     },
     init: function (props) {
-      console.log("init---", this.model, props);
+      // console.log("init---", this.model, props);
       // setHtml(this.model, props)
     },
     update: function (props) {
-      console.log("-----update", this.model, props);
+      // console.log("-----update", this.model, props);
       if (this.model.qualityPlanVue) {
         this.model.qualityPlanVue.handleUpdata(this.model, props);
       } else {
@@ -29,7 +29,7 @@
       }
     },
     destoryed: function () {
-      console.log("-----destoryed", this.model);
+      // console.log("-----destoryed", this.model);
       this.model.qualityPlanVue = null;
     },
   };
@@ -197,11 +197,15 @@
                             case "init":
                               this.project_id = props.data.projectId;
                               break;
+                            case "saveSuccess":
+                              this.yourTurn();
+                              break;
                             case "ifSubmit":
                               this.pageStatus = props.data.pageStatus;
+                              this.yourTurn();
                               break;
                             default:
-                              console.log("接口返回错误！");
+                              // console.log("接口返回错误！");
                               //   this.$message.error("网络繁忙，请稍后再试...");
                               break;
                           }
@@ -365,7 +369,7 @@
                      */
                     updateSetDuration(originData, selectedIds, changeData) {
                       this.allChecked = false;
-                      console.log("selectedIds>>>", selectedIds);
+                      // console.log("selectedIds>>>", selectedIds);
                       selectedIds.forEach(function (sv) {
                         // qpChangedIds.push(sv) //将编辑过得id保存
                         //将源数据中对应的任务字段更新
@@ -393,7 +397,7 @@
                     },
                     updataData(originData, selectedIds, changeData) {
                       this.allChecked = false;
-                      console.log("selectedIds>>>", selectedIds);
+                      // console.log("selectedIds>>>", selectedIds);
                       selectedIds.forEach(function (sv) {
                         // qpChangedIds.push(sv) //将编辑过得id保存
                         //将源数据中对应的任务字段更新

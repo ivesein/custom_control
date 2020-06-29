@@ -332,12 +332,12 @@
       this.model.resourceLoadChartsApp = null;
     },
     init: function (props) {
-      console.log("init---", this.model, props);
+      // console.log("init---", this.model, props);
       setHtml(this.model, props);
     },
     update: function (props) {
       // var tData = JSON.parse(props.data)
-      console.log("-----update", this.model, props);
+      // console.log("-----update", this.model, props);
       if (this.model.resourceLoadChartsApp) {
         this.model.resourceLoadChartsApp.handleUpdate(this.model, props);
       } else {
@@ -345,7 +345,7 @@
       }
     },
     destoryed: function () {
-      console.log("-----destoryed", this.model);
+      // console.log("-----destoryed", this.model);
       this.model.resourceLoadChartsApp = null;
     },
   };
@@ -370,7 +370,7 @@
                 ).then(function (result) {
                   model.dom.innerHTML = result;
                   // model.invoke("initData", '') //初始化
-                  console.log(props.data);
+                  // console.log(props.data);
 
                   model.resourceLoadChartsApp = new Vue({
                     delimiters: ["${", "}"],
