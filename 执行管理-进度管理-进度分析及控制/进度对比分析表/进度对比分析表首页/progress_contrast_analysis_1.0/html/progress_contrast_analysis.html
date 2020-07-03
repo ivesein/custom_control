@@ -9,10 +9,10 @@
     <title>Document</title>
   </head>
   <body> -->
-    <div id="progressCAApp">
-      <div class="btn-lsit">
-        <div class="btn-box-left">
-          <!-- <button class="btn-itme" @click="refreshData">刷新</button>
+<div id="progressCAApp">
+  <div class="btn-lsit">
+    <div class="btn-box-left">
+      <!-- <button class="btn-itme" @click="refreshData">刷新</button>
           <button class="btn-itme" @click="goExit">
             退出
           </button>
@@ -22,78 +22,91 @@
           <button class="btn-itme" @click="goCurrentTaskControl">
             当前任务管控
           </button> -->
-          <button class="btn-itme" @click="goTaskReportDetail">
-            任务汇报详情
-          </button>
-          <button class="btn-itme" @click="goProgress">
-            同步到进度维护
-          </button>
-          <!-- <button class="btn-itme" @click="goTaskReportDetail">
+      <button class="btn-itme" @click="goTaskReportDetail">
+        任务汇报详情
+      </button>
+      <button class="btn-itme" @click="goProgress">
+        同步到进度维护
+      </button>
+      <!-- <button class="btn-itme" @click="goTaskReportDetail">
             导出excel文件
           </button> -->
-          <button class="btn-itme" @click="showSelectBox">筛选</button>
-        </div>
-        <div class="btn-box-right">
-          当前日期：${currentDate}
-        </div>
+      <button class="btn-itme" @click="showSelectBox">筛选</button>
+    </div>
+    <div class="btn-box-right">
+      当前日期：${currentDate}
+    </div>
+  </div>
+  <div class="select-box" v-show="ifSelectBoxShow">
+    <div class="select-options">
+      <div class="sel-item">
+        <span class="sel-item-title">显示选项：</span>
+        <el-radio-group
+          v-model="filterCondition.conditionOne"
+          @change="conditionOneChange"
+        >
+          <el-radio :label="1">全部</el-radio>
+          <el-radio :label="2">仅显示差异</el-radio>
+        </el-radio-group>
       </div>
-      <div class="select-box" v-show="ifSelectBoxShow">
-        <div class="select-options">
-          <div class="sel-item">
-            <span class="sel-item-title">显示选项：</span>
-            <el-radio-group 
-            v-model="filterCondition.conditionOne"
-            @change="conditionOneChange"
-            >
-              <el-radio :label="1">全部</el-radio>
-              <el-radio :label="2">仅显示差异</el-radio>
-            </el-radio-group>
-          </div>
-          <div class="sel-item">
-            <span class="sel-item-title">时间范围：</span>
-            <el-radio-group 
-            v-model="filterCondition.conditionTwo"
-            @change="conditionTwoChange"
-            >
-              <el-radio :label="1">全部</el-radio>
-              <el-radio :label="2">从</el-radio>
-            </el-radio-group>
-            <!-- 日期范围选择器 -->
-            <el-date-picker
-              ref="timeRangePicker"
-              v-model="filterCondition.timeRange"
-              type="daterange"
-              size="mini"
-              format="yyyy-MM-dd"
-              value-format="yyyy-MM-dd"
-              unlink-panels="true"
-              range-separator="~"
-              start-placeholder="开始日期"
-              :editable=false
-              :clearable=false
-              @change="timeRangeChange"
-              @blur="timeRangeBlur"
-              end-placeholder="结束日期">
-            </el-date-picker>
-          </div>
-          <div class="sel-item">
-            <span class="sel-item-title">任务状态：</span>
-            <el-radio-group 
-            v-model="filterCondition.conditionThree"
-            @change="conditionThreeChange"
-            >
-              <el-radio :label="1">全部</el-radio>
-              <el-radio :label="2">未开始</el-radio>
-              <el-radio :label="3">进行中</el-radio>
-              <el-radio :label="4">已完成</el-radio>
-            </el-radio-group>
-          </div>
-        </div>
+      <div class="sel-item">
+        <span class="sel-item-title">时间范围：</span>
+        <el-radio-group
+          v-model="filterCondition.conditionTwo"
+          @change="conditionTwoChange"
+        >
+          <el-radio :label="1">全部</el-radio>
+          <el-radio :label="2">从</el-radio>
+        </el-radio-group>
+        <!-- 日期范围选择器 -->
+        <el-date-picker
+          ref="timeRangePicker"
+          v-model="filterCondition.timeRange"
+          type="daterange"
+          size="mini"
+          format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd"
+          unlink-panels="true"
+          range-separator="~"
+          start-placeholder="开始日期"
+          :editable="false"
+          :clearable="false"
+          @change="timeRangeChange"
+          @blur="timeRangeBlur"
+          end-placeholder="结束日期"
+        >
+        </el-date-picker>
       </div>
-      <div class="table-content">
-        <div class="table-box table-left">
-          <el-table ref="projectTable" highlight-current-row :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="proTableData" style="margin:10px 0 10px 0;" :row-class-name="tableRowClassName" :cell-style="cellStyle" row-key="task_id" :border="true" @row-dblclick="rowDblclick">
-          <!-- <el-table-column type="select" width="40" align="center">
+      <div class="sel-item">
+        <span class="sel-item-title">任务状态：</span>
+        <el-radio-group
+          v-model="filterCondition.conditionThree"
+          @change="conditionThreeChange"
+        >
+          <el-radio :label="1">全部</el-radio>
+          <el-radio :label="2">未开始</el-radio>
+          <el-radio :label="3">进行中</el-radio>
+          <el-radio :label="4">已完成</el-radio>
+        </el-radio-group>
+      </div>
+    </div>
+  </div>
+  <div class="table-content">
+    <div class="table-box table-left">
+      <el-table
+        ref="projectTable"
+        :highlight-current-row="true"
+        :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
+        :data="proTableData"
+        style="margin: 10px 0 10px 0;"
+        :row-class-name="tableRowClassName"
+        :cell-style="cellStyle"
+        row-key="task_id"
+        :border="true"
+        @row-click="rowClick"
+        @row-dblclick="rowDblclick"
+      >
+        <!-- <el-table-column type="select" width="40" align="center">
             <template slot="header" slot-scope="scope">
               <el-checkbox @change="handleCheckAllChange" v-model="allChecked"></el-checkbox>
             </template>
@@ -101,109 +114,222 @@
               <el-checkbox @change="itemChange(scope.row)" v-model="scope.row.checked"></el-checkbox>
             </template>
           </el-table-column> -->
-          <!-- <el-table-column type="index" label="序号" width="60" align="center">
+        <!-- <el-table-column type="index" label="序号" width="60" align="center">
           </el-table-column> -->
-          <el-table-column prop="wbs" label="任务代码" width="100" ></el-table-column>
-          <el-table-column prop="task_name" label="WBS任务名称"></el-table-column>
-          <el-table-column prop="owner" label="承担人" width="100" ></el-table-column>
-          <el-table-column prop="is_certical_task" label="是否关键任务" width="100" >
-            <template slot-scope="scope">
-              ${scope.row.is_certical_task?"是":"否"}
-            </template>
-          </el-table-column>
-          <el-table-column prop="task_status" label="任务状态" width="100" >
-            <template slot-scope="scope">
-              <div v-show="scope.row.task_status==='000'">未开始</div>
-              <div v-show="scope.row.task_status==='100'">进行中</div>
-              <div v-show="scope.row.task_status==='200'">已完成</div>
-            </template>
-          </el-table-column>
-          <el-table-column prop="handle_status" label="处理状态" width="100" >
-            <template slot-scope="scope">
-              ${scope.row.handle_status==="1"?"已处理":"待处理"}
-            </template>
-          </el-table-column>
-        </el-table>
+        <el-table-column
+          prop="wbs"
+          label="任务代码"
+          width="100"
+        ></el-table-column>
+        <el-table-column prop="task_name" label="WBS任务名称"></el-table-column>
+        <el-table-column
+          prop="owner"
+          label="承担人"
+          width="100"
+        ></el-table-column>
+        <el-table-column
+          prop="is_certical_task"
+          label="是否关键任务"
+          width="100"
+        >
+          <template slot-scope="scope">
+            ${scope.row.is_certical_task?"是":"否"}
+          </template>
+        </el-table-column>
+        <el-table-column prop="task_status" label="任务状态" width="100">
+          <template slot-scope="scope">
+            <div v-show="scope.row.task_status==='000'">未开始</div>
+            <div v-show="scope.row.task_status==='100'">进行中</div>
+            <div v-show="scope.row.task_status==='200'">已完成</div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="handle_status" label="处理状态" width="100">
+          <template slot-scope="scope">
+            ${scope.row.handle_status==="1"?"已处理":"待处理"}
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <div class="table-box table-right">
+      <!-- 紧前任务对当前任务影响情况表 -->
+      <div class="detail-info-box">
+        <div class="title-info-box">
+          <div class="drop-btn">
+            <i
+              class="el-icon-caret-bottom"
+              @click="iconArrowClick1(beforeTaskInfo)"
+              v-if="beforeTaskInfo.open"
+            ></i>
+            <i
+              class="el-icon-caret-right"
+              @click="iconArrowClick1(beforeTaskInfo)"
+              v-else
+            ></i>
+          </div>
+          <span class="title-text">${beforeTaskInfo.title}</span>
         </div>
-        <div class="table-box table-right">
-          <!-- 紧前任务对当前任务影响情况表 -->
-          <div class="detail-info-box">
-            <div class="title-info-box">
-              <div class="drop-btn">
-                <i class="el-icon-caret-bottom" @click="iconArrowClick1(beforeTaskInfo)" v-if="beforeTaskInfo.open"></i>
-                <i class="el-icon-caret-right" @click="iconArrowClick1(beforeTaskInfo)" v-else></i>
-              </div>
-              <span class="title-text">${beforeTaskInfo.title}</span>
-            </div>
-            <div class="table-info-box" v-if="beforeTaskInfo.open">
-              <el-table ref="TableRight" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="beforeTaskInfo.data" style="margin:10px 0 10px 0;" :style="{width:tableWidth}" :cell-style="cellStyle" row-key="task_id" :border="true">
-                <el-table-column prop="before_task_name" label="紧前任务名称" width="200" ></el-table-column>
-                <el-table-column prop="handling_measures" label="当前任务处理措施"></el-table-column>
-              </el-table>
-            </div>
+        <div class="table-info-box" v-if="beforeTaskInfo.open">
+          <el-table
+            ref="TableRight"
+            :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
+            :data="beforeTaskInfo.data"
+            style="margin: 10px 0 10px 0;"
+            :style="{width:tableWidth}"
+            :cell-style="cellStyle"
+            row-key="task_id"
+            :border="true"
+          >
+            <el-table-column
+              prop="before_task_name"
+              label="紧前任务名称"
+              width="200"
+            ></el-table-column>
+            <el-table-column
+              prop="handling_measures"
+              label="当前任务处理措施"
+            ></el-table-column>
+          </el-table>
+        </div>
+      </div>
+      <!-- 当前任务情况表 -->
+      <div class="detail-info-box">
+        <div class="title-info-box">
+          <div class="drop-btn">
+            <i
+              class="el-icon-caret-bottom"
+              @click="iconArrowClick2(currentTaskInfo)"
+              v-if="currentTaskInfo.open"
+            ></i>
+            <i
+              class="el-icon-caret-right"
+              @click="iconArrowClick2(currentTaskInfo)"
+              v-else
+            ></i>
           </div>
-          <!-- 当前任务情况表 -->
-          <div class="detail-info-box">
-            <div class="title-info-box">
-              <div class="drop-btn">
-                <i class="el-icon-caret-bottom" @click="iconArrowClick2(currentTaskInfo)" v-if="currentTaskInfo.open"></i>
-                <i class="el-icon-caret-right" @click="iconArrowClick2(currentTaskInfo)" v-else></i>
-              </div>
-              <span class="title-text">${currentTaskInfo.title}</span>
-            </div>
-            <div class="table-info-box" v-if="currentTaskInfo.open">
-              <el-table ref="TableRight"  :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="currentTaskInfo.data" style="margin:10px 0 10px 0;" :style="{width:tableWidth}" :cell-style="cellStyle" row-key="task_id" :border="true">
-                <el-table-column prop="plan_duration" label="计划工期" width="100"></el-table-column>
-                <el-table-column prop="plan_quantities" label="计划工程量" width="100"></el-table-column>
-                <el-table-column prop="duration_after_adjustment" label="调整后工期" width="100"></el-table-column>
-                <el-table-column label="实际工期" width="100">
-                  <template slot-scope="scope">
-                    <span class="status-text" v-if="scope.row.task_status==='000'">未开始</span>
-                    <span class="status-text" v-else-if="scope.row.task_status==='100'">进行中</span>
-                    <span v-else>${scope.row.actual_duration}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column label="实际工程量" width="100">
-                  <template slot-scope="scope">
-                    <span class="status-text" v-if="scope.row.task_status==='000'">未开始</span>
-                    <span class="status-text" v-else-if="scope.row.task_status==='100'">进行中</span>
-                    <span v-else>${scope.row.actual_quantities}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column prop="free_time" label="自由时差" width="100"></el-table-column>
-                <el-table-column label="超出自由时差" width="100">
-                  <template slot-scope="scope">
-                    <span class="status-text" v-if="scope.row.task_status==='000'">未开始</span>
-                    <span class="status-text" v-else-if="scope.row.task_status==='100'">进行中</span>
-                    <span v-else>${scope.row.free_time_exceed}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column label="自由时差分析结论" width="160">
-                  <template slot-scope="scope">
-                    <span class="status-text" v-if="scope.row.task_status==='000'">未开始</span>
-                    <span class="status-text" v-else-if="scope.row.task_status==='100'">进行中</span>
-                    <span v-else>造成后续任务工期延长${scope.row.free_time_exceed}天</span>
-                  </template>
-                </el-table-column>
-                <el-table-column prop="total_time" label="总时差" width="100"></el-table-column>
-                <el-table-column label="超出总时差" width="100">
-                  <template slot-scope="scope">
-                    <span class="status-text" v-if="scope.row.task_status==='000'">未开始</span>
-                    <span class="status-text" v-else-if="scope.row.task_status==='100'">进行中</span>
-                    <span v-else>${scope.row.total_time_exceed}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column label="总时差分析结论" width="160">
-                  <template slot-scope="scope">
-                    <span class="status-text" v-if="scope.row.task_status==='000'">未开始</span>
-                    <span class="status-text" v-else-if="scope.row.task_status==='100'">进行中</span>
-                    <span v-else>造成项目总工期延长${scope.row.total_time_exceed}天</span>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </div>
-          </div>
-          <!-- <div class="detail-info-box">
+          <span class="title-text">${currentTaskInfo.title}</span>
+        </div>
+        <div class="table-info-box" v-if="currentTaskInfo.open">
+          <el-table
+            ref="TableRight"
+            :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
+            :data="currentTaskInfo.data"
+            style="margin: 10px 0 10px 0;"
+            :style="{width:tableWidth}"
+            :cell-style="cellStyle"
+            row-key="task_id"
+            :border="true"
+          >
+            <el-table-column
+              prop="plan_duration"
+              label="计划工期"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="plan_quantities"
+              label="计划工程量"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="duration_after_adjustment"
+              label="调整后工期"
+              width="100"
+            ></el-table-column>
+            <el-table-column label="实际工期" width="100">
+              <template slot-scope="scope">
+                <span class="status-text" v-if="scope.row.task_status==='000'"
+                  >未开始</span
+                >
+                <span
+                  class="status-text"
+                  v-else-if="scope.row.task_status==='100'"
+                  >进行中</span
+                >
+                <span v-else>${scope.row.actual_duration}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="实际工程量" width="100">
+              <template slot-scope="scope">
+                <span class="status-text" v-if="scope.row.task_status==='000'"
+                  >未开始</span
+                >
+                <span
+                  class="status-text"
+                  v-else-if="scope.row.task_status==='100'"
+                  >进行中</span
+                >
+                <span v-else>${scope.row.actual_quantities}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="free_time"
+              label="自由时差"
+              width="100"
+            ></el-table-column>
+            <el-table-column label="超出自由时差" width="100">
+              <template slot-scope="scope">
+                <span class="status-text" v-if="scope.row.task_status==='000'"
+                  >未开始</span
+                >
+                <span
+                  class="status-text"
+                  v-else-if="scope.row.task_status==='100'"
+                  >进行中</span
+                >
+                <span v-else>${scope.row.free_time_exceed}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="自由时差分析结论" width="160">
+              <template slot-scope="scope">
+                <span class="status-text" v-if="scope.row.task_status==='000'"
+                  >未开始</span
+                >
+                <span
+                  class="status-text"
+                  v-else-if="scope.row.task_status==='100'"
+                  >进行中</span
+                >
+                <span v-else
+                  >造成后续任务工期延长${scope.row.free_time_exceed}天</span
+                >
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="total_time"
+              label="总时差"
+              width="100"
+            ></el-table-column>
+            <el-table-column label="超出总时差" width="100">
+              <template slot-scope="scope">
+                <span class="status-text" v-if="scope.row.task_status==='000'"
+                  >未开始</span
+                >
+                <span
+                  class="status-text"
+                  v-else-if="scope.row.task_status==='100'"
+                  >进行中</span
+                >
+                <span v-else>${scope.row.total_time_exceed}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="总时差分析结论" width="160">
+              <template slot-scope="scope">
+                <span class="status-text" v-if="scope.row.task_status==='000'"
+                  >未开始</span
+                >
+                <span
+                  class="status-text"
+                  v-else-if="scope.row.task_status==='100'"
+                  >进行中</span
+                >
+                <span v-else
+                  >造成项目总工期延长${scope.row.total_time_exceed}天</span
+                >
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+      </div>
+      <!-- <div class="detail-info-box">
             <div class="title-info-box">
               <div class="drop-btn">
                 <i class="el-icon-caret-bottom" @click="iconArrowClick3(earnedValueAnalysisSuggestions)" v-if="currentTaskInfo.open"></i>
@@ -223,102 +349,171 @@
               </el-table>
             </div>
           </div> -->
-          <!-- 后续任务处理表 -->
-          <div class="detail-info-box" v-show="ifFollowTaskShow">
-            <div class="title-info-box">
-              <div class="drop-btn">
-                <i class="el-icon-caret-bottom" @click="iconArrowClick4(followTaskProcessing)" v-if="followTaskProcessing.open"></i>
-                <i class="el-icon-caret-right" @click="iconArrowClick4(followTaskProcessing)" v-else></i>
-              </div>
-              <span class="title-text">${followTaskProcessing.title}</span>
-            </div>
-            <div class="table-info-box" v-if="followTaskProcessing.open">
-              <el-table ref="TableRight" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="followTaskProcessing.data" style="margin:10px 0 10px 0;" :style="{width:tableWidth}" :cell-style="cellStyle" row-key="task_id" :border="true">
-                <el-table-column prop="task_name" label="后续任务名称" >
-                  <template slot-scope="scope">
-                    <div class="search-icon" v-if="scope.$index===(followTaskProcessing.data.length-1)" @click="goSelectFollowTask">
-                      <span style="font-size: 14px;">请选择后续任务</span>
-                      <i class="el-icon-search"></i>
-                    </div>
-                    <div  v-else>
-                      <span style="font-size: 14px;">${scope.row.task_name}</span>
-                    </div>
-                  </template>
-                </el-table-column>
-                <el-table-column prop="handling_measures" label="后续任务处理措施">
-                  <template slot-scope="scope">
-                    <div class="search-icon" v-if="scope.$index===(followTaskProcessing.data.length-1)">
-                      <span style="font-size: 14px;">请输入处理措施</span>
-                    </div>
-                    <div  v-else>
-                      <el-input 
-                      v-model="scope.row.handling_measures" 
-                      placeholder="请输入处理措施"
-                      maxlength="50"
-                      size="small"
-                      @change="hmChange"
-                      ></el-input>
-                    </div>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </div>
+      <!-- 后续任务处理表 -->
+      <div class="detail-info-box" v-show="ifFollowTaskShow">
+        <div class="title-info-box">
+          <div class="drop-btn">
+            <i
+              class="el-icon-caret-bottom"
+              @click="iconArrowClick4(followTaskProcessing)"
+              v-if="followTaskProcessing.open"
+            ></i>
+            <i
+              class="el-icon-caret-right"
+              @click="iconArrowClick4(followTaskProcessing)"
+              v-else
+            ></i>
           </div>
+          <span class="title-text">${followTaskProcessing.title}</span>
         </div>
-      </div>
-      <div class="message-box" v-show="messageBoxShow">
-        <div class="message-content">
-          <div class="message-title">
-            <span>提醒</span>
-          </div>
-          <div class="message-info" v-if="messageData.length>0">
-            <div class="message-item" v-for="(item, index) in filterMessageData" :key="index">
-              <span v-show="item.task_status==='1'">${item.task_name}任务已完成，请注意后续任务的安排！</span>
-              <span v-show="item.task_status==='2'">${item.task_name}任务已滞后，请注意该任务的管控！</span>
-              <span v-show="item.task_status==='0'">${item.task_name}进行中！</span>
-              <span v-show="item.task_status==='4'">${item.task_name}未开始！</span>
-            </div>
-          </div>
-          <div class="message-info-empty" v-else>
-            暂无数据!
-          </div>
-          <div class="message-btn-list">
-            <button class="btn-item" @click="messageConfirm">
-              确定
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="task-report-detail-box" v-show="taskReportDetailShow">
-        <div class="report-detail-content">
-          <div class="detail-title">
-            <span>${currentClickedTask?currentClickedTask.task_name:"XXX"}任务汇报详情</span>
-            <i class="el-icon-close" @click="closeTaskReportDetail"></i>
-          </div>
-          <div class="detail-table">
-            <span>截止到${currentDate}为止</span>
-            <el-table ref="taskReportDetailTable" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="taskReportDetailData" style="margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true">
-              <el-table-column prop="plan_duration" label="计划工期" width="140" ></el-table-column>
-              <el-table-column prop="actual_duration" label="实际工期" ></el-table-column>
-              <el-table-column prop="duration_completion_rate" label="工期完成率" width="140" ></el-table-column>
-              <el-table-column prop="plan_quantities" label="计划工程量" width="140" ></el-table-column>
-              <el-table-column prop="actual_quantities" label="实际工程量" width="140" ></el-table-column>
-              <el-table-column prop="quantities_completion_rate" label="工程量完成率" width="140" ></el-table-column>
-              <el-table-column prop="remaining_duration" label="剩余工期" width="140" ></el-table-column>
-            </el-table>
-          </div>
-          <div class="message-btn-list">
-            <button class="btn-item" @click="closeTaskReportDetail">
-              退出
-            </button>
-            <button class="btn-item" @click="goTaskReportListDetail">
-              任务汇报列表详情
-            </button>
-          </div>
+        <div class="table-info-box" v-if="followTaskProcessing.open">
+          <el-table
+            ref="TableRight"
+            :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
+            :data="followTaskProcessing.data"
+            style="margin: 10px 0 10px 0;"
+            :style="{width:tableWidth}"
+            :cell-style="cellStyle"
+            row-key="task_id"
+            :border="true"
+          >
+            <el-table-column prop="task_name" label="后续任务名称">
+              <template slot-scope="scope">
+                <div
+                  class="search-icon"
+                  v-if="scope.$index===(followTaskProcessing.data.length-1)"
+                  @click="goSelectFollowTask"
+                >
+                  <span style="font-size: 14px;">请选择后续任务</span>
+                  <i class="el-icon-search"></i>
+                </div>
+                <div v-else>
+                  <span style="font-size: 14px;">${scope.row.task_name}</span>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="handling_measures" label="后续任务处理措施">
+              <template slot-scope="scope">
+                <div
+                  class="search-icon"
+                  v-if="scope.$index===(followTaskProcessing.data.length-1)"
+                >
+                  <span style="font-size: 14px;">请输入处理措施</span>
+                </div>
+                <div v-else>
+                  <el-input
+                    v-model="scope.row.handling_measures"
+                    placeholder="请输入处理措施"
+                    maxlength="50"
+                    size="small"
+                    @change="hmChange"
+                  ></el-input>
+                </div>
+              </template>
+            </el-table-column>
+          </el-table>
         </div>
       </div>
     </div>
-    <!-- <script src="../js/lodash.js"></script>
+  </div>
+  <div class="message-box" v-show="messageBoxShow">
+    <div class="message-content">
+      <div class="message-title">
+        <span>提醒</span>
+      </div>
+      <div class="message-info" v-if="messageData.length>0">
+        <div
+          class="message-item"
+          v-for="(item, index) in filterMessageData"
+          :key="index"
+        >
+          <span v-show="item.task_status==='1'"
+            >${item.task_name}任务已完成，请注意后续任务的安排！</span
+          >
+          <span v-show="item.task_status==='2'"
+            >${item.task_name}任务已滞后，请注意该任务的管控！</span
+          >
+          <span v-show="item.task_status==='0'">${item.task_name}进行中！</span>
+          <span v-show="item.task_status==='4'">${item.task_name}未开始！</span>
+        </div>
+      </div>
+      <div class="message-info-empty" v-else>
+        暂无数据!
+      </div>
+      <div class="message-btn-list">
+        <button class="btn-item" @click="messageConfirm">
+          确定
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="task-report-detail-box" v-show="taskReportDetailShow">
+    <div class="report-detail-content">
+      <div class="detail-title">
+        <span
+          >${currentClickedTask?currentClickedTask.task_name:"XXX"}任务汇报详情</span
+        >
+        <i class="el-icon-close" @click="closeTaskReportDetail"></i>
+      </div>
+      <div class="detail-table">
+        <span>截止到${currentDate}为止</span>
+        <el-table
+          ref="taskReportDetailTable"
+          :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
+          :data="taskReportDetailData"
+          style="margin: 10px 0 10px 0;"
+          :cell-style="cellStyle"
+          row-key="task_id"
+          :border="true"
+        >
+          <el-table-column
+            prop="plan_duration"
+            label="计划工期"
+            width="140"
+          ></el-table-column>
+          <el-table-column
+            prop="actual_duration"
+            label="实际工期"
+          ></el-table-column>
+          <el-table-column
+            prop="duration_completion_rate"
+            label="工期完成率"
+            width="140"
+          ></el-table-column>
+          <el-table-column
+            prop="plan_quantities"
+            label="计划工程量"
+            width="140"
+          ></el-table-column>
+          <el-table-column
+            prop="actual_quantities"
+            label="实际工程量"
+            width="140"
+          ></el-table-column>
+          <el-table-column
+            prop="quantities_completion_rate"
+            label="工程量完成率"
+            width="140"
+          ></el-table-column>
+          <el-table-column
+            prop="remaining_duration"
+            label="剩余工期"
+            width="140"
+          ></el-table-column>
+        </el-table>
+      </div>
+      <div class="message-btn-list">
+        <button class="btn-item" @click="closeTaskReportDetail">
+          退出
+        </button>
+        <button class="btn-item" @click="goTaskReportListDetail">
+          任务汇报列表详情
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <script src="../js/lodash.js"></script>
     <script src="../js/vue.min.js"></script>
     <script src="../js/element.js"></script>
     <script src="../js/test.js"></script>

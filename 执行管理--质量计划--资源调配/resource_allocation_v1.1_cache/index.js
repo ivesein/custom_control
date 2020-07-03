@@ -271,6 +271,8 @@
                      * @description: 处理按钮点击前后台交互后数据处理以及缓存数据更新
                      * @date: 2020-06-09
                      * @update: 根据质量维护设置的数据 更新进度所属字段owner_id和owner_time的值  方便进度维护计算资源时间
+                     * @date: 2020-06-29
+                     * @update: 根据质量维护设置角色人员或资源调配返回的数据   同步更新成本维护对应字段的值  方便成本维护进行资源计算显示等
                      */
                     updataData(originData, selectedIds, changeData) {
                       this.allChecked = false;
@@ -324,6 +326,8 @@
                           }
                         });
                       });
+                      // 同步更新成本维护对应字段
+                      this.updateCostFields(originData, changeData);
                       // 更新缓存
                       raCachedData.data = _.cloneDeep(originData);
                       this.setCacheData(this.project_id, raCachedData);
@@ -334,6 +338,9 @@
                         idStr: "id",
                       });
                       // console.log("this.tableData>>>", this.tableData)
+                    },
+                    updateCostFields(oData, cData) {
+                      // TODO:同步更新成本维护对应字段的值
                     },
                     pushData() {
                       // if (raChangedIds.length === 0) return

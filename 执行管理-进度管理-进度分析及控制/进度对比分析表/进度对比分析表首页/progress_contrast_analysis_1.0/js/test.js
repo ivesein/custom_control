@@ -132,6 +132,7 @@ new Vue({
     currentClickedTask: {
       index: 0,
     },
+    currentRow: null,
   },
   created() {
     this.getCurrentDate();
@@ -156,6 +157,7 @@ new Vue({
     });
   },
   methods: {
+    hmChange() {},
     getCurrentDate() {
       let cDate = new Date();
       this.currentDate =
@@ -259,9 +261,19 @@ new Vue({
       row.index = rowIndex;
       row.follow_task = [];
     },
+    /**
+     * @Author: zhang fq
+     * @Date: 2020-07-01
+     * @Description: 修复进度对比分析表左侧任务列表 双击选中高亮显示会被单击选中覆盖的bug
+     */
+    rowClick(row) {
+      this.$refs.projectTable.setCurrentRow(this.currentRow);
+    },
     //获取当前点击的任务
     rowDblclick(row) {
       console.log(row);
+      this.currentRow = row;
+      this.$refs.projectTable.setCurrentRow(this.currentRow);
       if (row.task_status === "3") {
         this.proTableData[
           this.currentClickedTask.index

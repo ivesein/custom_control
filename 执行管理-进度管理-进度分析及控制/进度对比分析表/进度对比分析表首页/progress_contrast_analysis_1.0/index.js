@@ -88,6 +88,7 @@
                     currentClickedTask: {
                       index: 0,
                     },
+                    currentRow: null,
                   },
                   created() {
                     this.getCurrentDate();
@@ -335,8 +336,13 @@
                       row.index = rowIndex;
                       row.follow_task = [];
                     },
+                    rowClick(row) {
+                      this.$refs.projectTable.setCurrentRow(this.currentRow);
+                    },
                     //获取当前点击的任务
                     rowDblclick(row) {
+                      this.currentRow = row;
+                      this.$refs.projectTable.setCurrentRow(this.currentRow);
                       this.resetData();
                       this.proTableData[
                         this.currentClickedTask.index
@@ -388,5 +394,5 @@
   };
 
   // 注册自定义控件
-  KDApi.register("progress_ca_v1.0", MyComponent);
+  KDApi.register("progress_ca", MyComponent);
 })(window.KDApi, jQuery);

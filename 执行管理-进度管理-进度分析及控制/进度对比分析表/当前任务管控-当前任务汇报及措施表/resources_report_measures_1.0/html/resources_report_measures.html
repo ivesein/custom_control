@@ -10,97 +10,189 @@
     <title>Document</title>
   </head>
   <body> -->
-    <div id="resourcesRMApp">
-      <div class="table-content">
-        <el-table ref="currentTaskTable" highlight-current-row max-height="440"  :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="tableData" style="width:100%;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true">
-          <el-table-column prop="plan_effect" label="计划工效" width="80" align="center"></el-table-column>
-          <el-table-column prop="report_date" label="上报日期" width="100" align="center"></el-table-column>
-          <el-table-column label="资源调整" align="center">
-            <el-table-column  label="资源类别" width="80" align="center">
-              <template slot-scope="scope">
-                <div class="check-man" v-for="(item,index) in scope.row.resource_adjustment" :key="index">
-                  ${item.resource_type}
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column label="资源名称" width="100" align="center">
-              <template slot-scope="scope">
-                <div class="check-man" v-for="(item,index) in scope.row.resource_adjustment" :key="index">
-                  ${item.resource_name}
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column label="资源型号" width="80" align="center">
-              <template slot-scope="scope">
-                <div class="check-man" v-for="(item,index) in scope.row.resource_adjustment" :key="index">
-                  ${item.resource_model}
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column label="单位" width="80" align="center">
-              <template slot-scope="scope">
-                <div class="check-man" v-for="(item,index) in scope.row.resource_adjustment" :key="index">
-                  ${item.resource_unit}
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column label="消耗量" width="80" align="center">
-              <template slot-scope="scope" >
-                <div class="check-man" v-for="(item,index) in scope.row.resource_adjustment" :key="index">
-                  ${item.resource_consumption}
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column label="单价" width="80" align="center">
-              <template slot-scope="scope">
-                <div class="check-man" v-for="(item,index) in scope.row.resource_adjustment" :key="index">
-                  ${item.resource_price}
-                </div>
-              </template>
-            </el-table-column>
-          </el-table-column>
-          <el-table-column prop="actual_cost_days" label="实际花费工日" width="60" align="center"></el-table-column>
-          <el-table-column prop="report_quantities" label="上报工程量" width="60" align="center"></el-table-column>
-          <el-table-column prop="actual_effect" label="实际功效" width="60" align="center"></el-table-column>
-          <el-table-column prop="remaining_period" label="剩余工期" width="60" align="center"></el-table-column>
-          <el-table-column prop="remaining_quantities" label="剩余工程量" width="60" align="center"></el-table-column>
-          <el-table-column label="处理" align="center">
-            <el-table-column prop="judge_conditions" label="判断条件(计划功效/实际功效)" width="200" align="center"></el-table-column>
-            <el-table-column prop="measures_suggestions" label="措施建议" width="100" align="center"></el-table-column>
-          </el-table-column>
-          <el-table-column label="决策操作" width="120" align="center">
-            <template slot-scope="scope">
-              <el-select v-model="scope.row.decision_making_operation" @change="selectChange(scope.row)" :disabled="scope.row.disabled!==''" placeholder="请选择" size="mini">
-                <el-option
-                  v-for="item in decision_making_options"
-                  :key="item.value"
-                  :label="item.measures"
-                  :value="item.value"
-                  :disabled="item.value===scope.row.disabled"
-                  >
-                </el-option>
-              </el-select>
-            </template>
-          </el-table-column>
-          <el-table-column label="措施决策" align="center">
-            <template slot-scope="scope">
-              <el-input  size="mini" v-model="scope.row.measures_decision" @change="inputChange(scope.row)" :disabled="scope.row.disabled!==''" maxlength=50 placeholder="请输入决策措施"></el-input>
-            </template>
-          </el-table-column>
-          <el-table-column label="状态" width="80" align="center">
-            <template slot-scope="scope">
-              <div v-if="scope.row.decision_making_operation!==''">
-                已处理
-              </div>
-              <div v-else>
-                未处理
-              </div>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-    </div>
-    <!-- <script src="../js/lodash.js"></script>
+<div id="resourcesRMApp">
+  <div class="table-content">
+    <el-table
+      ref="currentTaskTable"
+      highlight-current-row
+      max-height="440"
+      :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
+      :data="tableData"
+      style="width: 100%; margin: 10px 0 10px 0;"
+      :cell-style="cellStyle"
+      row-key="task_id"
+      :border="true"
+    >
+      <el-table-column
+        prop="plan_effect"
+        label="计划工效"
+        width="80"
+        align="center"
+      ></el-table-column>
+      <el-table-column
+        prop="report_date"
+        label="上报日期"
+        width="100"
+        align="center"
+      ></el-table-column>
+      <el-table-column label="资源调整" align="center">
+        <el-table-column label="资源类别" width="80" align="center">
+          <template slot-scope="scope">
+            <div
+              class="check-man"
+              v-for="(item,index) in scope.row.resource_adjustment"
+              :key="index"
+            >
+              ${item.resource_type}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="资源名称" width="100" align="center">
+          <template slot-scope="scope">
+            <div
+              class="check-man"
+              v-for="(item,index) in scope.row.resource_adjustment"
+              :key="index"
+            >
+              ${item.resource_name}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="资源型号" width="80" align="center">
+          <template slot-scope="scope">
+            <div
+              class="check-man"
+              v-for="(item,index) in scope.row.resource_adjustment"
+              :key="index"
+            >
+              ${item.resource_model}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="单位" width="80" align="center">
+          <template slot-scope="scope">
+            <div
+              class="check-man"
+              v-for="(item,index) in scope.row.resource_adjustment"
+              :key="index"
+            >
+              ${item.resource_unit}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="消耗量" width="80" align="center">
+          <template slot-scope="scope">
+            <div
+              class="check-man"
+              v-for="(item,index) in scope.row.resource_adjustment"
+              :key="index"
+            >
+              ${item.resource_consumption}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="单价" width="80" align="center">
+          <template slot-scope="scope">
+            <div
+              class="check-man"
+              v-for="(item,index) in scope.row.resource_adjustment"
+              :key="index"
+            >
+              ${item.resource_price}
+            </div>
+          </template>
+        </el-table-column>
+      </el-table-column>
+      <el-table-column
+        prop="actual_cost_days"
+        label="实际花费工日"
+        width="60"
+        align="center"
+      ></el-table-column>
+      <el-table-column
+        prop="report_quantities"
+        label="上报工程量"
+        width="60"
+        align="center"
+      ></el-table-column>
+      <el-table-column
+        prop="actual_effect"
+        label="实际功效"
+        width="60"
+        align="center"
+      ></el-table-column>
+      <el-table-column
+        prop="remaining_period"
+        label="剩余工期"
+        width="60"
+        align="center"
+      ></el-table-column>
+      <el-table-column
+        prop="remaining_quantities"
+        label="剩余工程量"
+        width="60"
+        align="center"
+      ></el-table-column>
+      <el-table-column label="处理" align="center">
+        <el-table-column
+          prop="judge_conditions"
+          label="判断条件(计划功效/实际功效)"
+          width="200"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="measures_suggestions"
+          label="措施建议"
+          width="100"
+          align="center"
+        ></el-table-column>
+      </el-table-column>
+      <el-table-column label="决策操作" width="120" align="center">
+        <template slot-scope="scope">
+          <el-select
+            v-model="scope.row.decision_making_operation"
+            @change="selectChange(scope.row)"
+            :disabled="scope.row.disabled!==''"
+            placeholder="请选择"
+            size="mini"
+          >
+            <el-option
+              v-for="item in decision_making_options"
+              :key="item.value"
+              :label="item.measures"
+              :value="item.value"
+              :disabled="item.value===scope.row.disabled"
+            >
+            </el-option>
+          </el-select>
+        </template>
+      </el-table-column>
+      <el-table-column label="措施决策" align="center">
+        <template slot-scope="scope">
+          <el-input
+            size="mini"
+            v-model="scope.row.measures_decision"
+            @change="inputChange(scope.row)"
+            :disabled="scope.row.disabled!==''"
+            maxlength="50"
+            placeholder="请输入决策措施"
+          ></el-input>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" width="80" align="center">
+        <template slot-scope="scope">
+          <div v-if="scope.row.decision_making_operation!==''">
+            已处理
+          </div>
+          <div v-else>
+            未处理
+          </div>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
+</div>
+<!-- <script src="../js/lodash.js"></script>
     <script src="../js/vue.min.js"></script>
     <script src="../js/element.js"></script>
     <script src="../js/test.js"></script>

@@ -64,11 +64,11 @@ var taskKanbanVue = null;
                         text: "设计校审任务",
                         focus: true,
                       },
-                      {
-                        id: 2,
-                        text: "提资任务",
-                        focus: false,
-                      },
+                      // {
+                      //   id: 2,
+                      //   text: "提资任务",
+                      //   focus: false,
+                      // },
                     ],
                     // 提资任务概览数据
                     summarDataTZ: [],
