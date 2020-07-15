@@ -17,7 +17,8 @@
 .el-table__body th {
 	padding: 1px;
 } */
-html,body{
+html,
+body {
   width: 100%;
   height: 100%;
   margin: 0;
@@ -115,20 +116,22 @@ html,body{
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  /* border-bottom: 1px solid #ebeef5; */
+  border-bottom: 1px solid #ebeef5;
   margin: 0 -10px;
   text-indent: 10px;
 }
 
-#wbsPlanningApp .checek-man:nth-child(2) {
+/* #wbsPlanningApp .checek-man:nth-child(2) {
   border-top: 1px solid #ebeef5;
 }
 #wbsPlanningApp .checek-man:nth-child(3) {
   border-top: 1px solid #ebeef5;
   border-bottom: 1px solid #ebeef5;
   height: 32px;
+} */
+#wbsPlanningApp .checek-man:last-child {
+  border-bottom: none;
 }
-
 .my-cell {
   padding-left: 0;
   padding-right: 0;
@@ -145,8 +148,7 @@ html,body{
   /* color: #f19944; */ /* 设置文字颜色，可以选择不设置 */
 }
 
-
-#wbsPlanningApp .el-input__inner{
+#wbsPlanningApp .el-input__inner {
   height: 30px;
   line-height: 30px;
   background-color: #5582f4;
@@ -154,11 +156,11 @@ html,body{
   color: #fff;
 }
 
-#wbsPlanningApp .el-input__inner::placeholder{
+#wbsPlanningApp .el-input__inner::placeholder {
   color: #fff;
 }
 
-#wbsPlanningApp .el-input__suffix i{
+#wbsPlanningApp .el-input__suffix i {
   color: #fff;
 }
 /* 
@@ -166,7 +168,7 @@ html,body{
   @date：2020-03-17
   @description：行内容自适应分割样式
 */
-#wbsPlanningApp .checek-man-cost{
+#wbsPlanningApp .checek-man-cost {
   width: 140%;
   height: 30px;
   display: flex;

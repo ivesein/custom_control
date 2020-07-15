@@ -64,11 +64,11 @@ var taskKanbanVue = null;
                         text: "设计校审任务",
                         focus: true,
                       },
-                      // {
-                      //   id: 2,
-                      //   text: "提资任务",
-                      //   focus: false,
-                      // },
+                      {
+                        id: 2,
+                        text: "提资任务",
+                        focus: false,
+                      },
                     ],
                     // 提资任务概览数据
                     summarDataTZ: [],
@@ -91,6 +91,9 @@ var taskKanbanVue = null;
                   },
                   created() {
                     this.handleUpdata(model, props);
+                  },
+                  mounted() {
+                    model.invoke("tzTaskData", "");
                   },
                   methods: {
                     handleCurrentTypeToDisplay(currentType, allData) {
@@ -140,24 +143,30 @@ var taskKanbanVue = null;
                     },
                     /**
                      * @Author: zhang fq
-                     * @Date: 2020-06-23
+                     * @Date: 2020-07-10
                      * @Description: 修改任务看板接口数据返回处理方法
                      * 根据接口方法名判断是校审任务数据交互还是提资任务交互
                      */
                     handleUpdata(model, props) {
                       // 判断是初始化哪个标签页的数据
                       if (props.data) {
-                        this.allDatas = props.data;
-                        // switch(props.data.method){
-                        //   case "designTaskData":
-                        //     this.handleDTData(props.data.data);
-                        //     break;
-                        //   case "tzTaskData":
-                        //     this.handleTZData(props.data.data)
-                        //     break;
-                        // }
-                        // 处理设计校审任务面板初始化数据显示
-                        if (props.data.summarData) {
+                        if (
+                          props.data.method &&
+                          props.data.method === "tzTaskData"
+                        ) {
+                          this.tzTaskInfos = props.data.tzTaskData;
+                          this.summarDataTZ = props.data.summarDataTZ;
+                          let type = "";
+                          for (let i = 0; i < this.summarDataTZ.length; i++) {
+                            if (this.summarDataTZ[i].focus) {
+                              type = this.summarDataTZ[i].title;
+                              break;
+                            }
+                          }
+                          this.handleCurrentTypeTzTaskDisplay(type);
+                        } else if (props.data.summarData) {
+                          // 处理设计校审任务面板初始化数据显示
+                          this.allDatas = props.data;
                           this.summarData = this.allDatas.summarData;
                           for (let i = 0; i < this.summarData.length; i++) {
                             if (this.summarData[i].focus) {
@@ -170,57 +179,9 @@ var taskKanbanVue = null;
                             this.allDatas
                           );
                         }
-                        // 处理提资面板初始化数据显示
-                        if (props.data.tzTaskData) {
-                          this.tzTaskInfos = props.data.tzTaskData;
-                          this.summarDataTZ = props.data.summarDataTZ;
-                          let type = "";
-                          for (let i = 0; i < this.summarDataTZ.length; i++) {
-                            if (this.summarDataTZ[i].focus) {
-                              type = this.summarDataTZ[i].title;
-                              break;
-                            }
-                          }
-                          this.handleCurrentTypeTzTaskDisplay(type);
-                        }
                       }
                     },
-                    /**
-                     * @Author: zhang fq
-                     * @Date: 2020-06-23
-                     * @Description: 处理对应的看板标签页接口名返回的数据
-                     */
-                    // 处理method为designTaskData设计校审任务接口返回的数据
-                    // handleDTData(data){
-                    //   if (props.data.summarData) {
-                    //     this.summarData = this.allDatas.summarData;
-                    //     for (let i = 0; i < this.summarData.length; i++) {
-                    //       if (this.summarData[i].focus) {
-                    //         this.currentType = this.summarData[i].title;
-                    //         break;
-                    //       }
-                    //     }
-                    //     this.handleCurrentTypeToDisplay(
-                    //       this.currentType,
-                    //       this.allDatas
-                    //     );
-                    //   }
-                    // },
-                    // 处理method为tzTaskData 提资任务接口返回的数据
-                    // handleTZData(data){
-                    //   if (props.data.tzTaskData) {
-                    //     this.tzTaskInfos = props.data.tzTaskData;
-                    //     this.summarDataTZ = props.data.summarDataTZ;
-                    //     let type = "";
-                    //     for (let i = 0; i < this.summarDataTZ.length; i++) {
-                    //       if (this.summarDataTZ[i].focus) {
-                    //         type = this.summarDataTZ[i].title;
-                    //         break;
-                    //       }
-                    //     }
-                    //     this.handleCurrentTypeTzTaskDisplay(type);
-                    //   }
-                    // },
+
                     handleSummaryItemClicked(item) {
                       this.summarData.forEach(function (fuck) {
                         fuck.focus = false;
