@@ -157,7 +157,9 @@ new Vue({
     });
   },
   methods: {
-    hmChange() {},
+    hmChange(val) {
+      console.log(val);
+    },
     getCurrentDate() {
       let cDate = new Date();
       this.currentDate =
@@ -278,7 +280,6 @@ new Vue({
         this.proTableData[
           this.currentClickedTask.index
         ].follow_task = this.followTaskProcessing.data;
-        debugger;
         let arr = [
           {
             task_name: "测试后续任务" + Math.ceil(Math.random() * 10),
@@ -292,7 +293,6 @@ new Vue({
         arr.push({ task_name: "", handling_measures: "请输入处理措施" });
         row.follow_task = arr;
         this.followTaskProcessing.data = row.follow_task;
-        debugger;
         this.ifFollowTaskShow = true;
       } else {
         this.ifFollowTaskShow = false;

@@ -73,7 +73,7 @@
                       data: [],
                     },
                     tableWidth: "100%",
-                    messageBoxShow: true,
+                    messageBoxShow: false,
                     messageData: [],
                     taskReportDetailShow: false,
                     currentDate: "",
@@ -117,11 +117,17 @@
                   computed: {
                     filterMessageData() {
                       return this.messageData.filter((v) => {
-                        return v.task_status !== "";
+                        return v.task_status === "1" || v.task_status === "2";
                       });
                     },
                   },
                   methods: {
+                    /**
+                     * @Author: zhang fq
+                     * @Date: 2020-07-21
+                     * @Description: 处理异常状态任务过滤  解决后台返回数据包含其他状态任务问题
+                     * @Update：修复 消息盒子过滤获取到的数据后无符合条件的任务时不调接口的bug
+                     */
                     // 根据接口方法名 处理后台返回参数
                     handleUpdata(model, props) {
                       if (
@@ -131,7 +137,21 @@
                       ) {
                         switch (props.data.method) {
                           case "init":
-                            this.messageData = props.data.data;
+                            let mDate = props.data.data;
+                            if (mDate && mDate.length > 0) {
+                              this.messageData = mDate.filter((v) => {
+                                return (
+                                  v.task_status === "1" || v.task_status === "2"
+                                );
+                              });
+                            }
+                            if (this.messageData.length > 0) {
+                              this.messageBoxShow = true;
+                            } else {
+                              // 没有状态符合条件的任务 不显示messageBox 直接获取taskList数据
+                              this.messageBoxShow = false;
+                              model.invoke("getTaskListData", "");
+                            }
                             break;
                           case "getTaskListData":
                             this.proTableData = props.data.data;

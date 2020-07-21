@@ -221,7 +221,7 @@
           >
             <el-table-column
               prop="plan_duration"
-              label="计划工期"
+              label="计划工时"
               width="100"
             ></el-table-column>
             <el-table-column
@@ -231,10 +231,10 @@
             ></el-table-column>
             <el-table-column
               prop="duration_after_adjustment"
-              label="调整后工期"
+              label="调整后工时"
               width="100"
             ></el-table-column>
-            <el-table-column label="实际工期" width="100">
+            <el-table-column label="实际工时" width="100">
               <template slot-scope="scope">
                 <span class="status-text" v-if="scope.row.task_status==='000'"
                   >未开始</span
@@ -289,7 +289,7 @@
                   >进行中</span
                 >
                 <span v-else
-                  >造成后续任务工期延长${scope.row.free_time_exceed}天</span
+                  >造成后续任务工时延长${scope.row.free_time_exceed}天</span
                 >
               </template>
             </el-table-column>
@@ -322,7 +322,7 @@
                   >进行中</span
                 >
                 <span v-else
-                  >造成项目总工期延长${scope.row.total_time_exceed}天</span
+                  >造成项目总工时延长${scope.row.total_time_exceed}天</span
                 >
               </template>
             </el-table-column>
@@ -401,13 +401,16 @@
                   <span style="font-size: 14px;">请输入处理措施</span>
                 </div>
                 <div v-else>
-                  <el-input
+                  调整工时
+                  <el-input-number
                     v-model="scope.row.handling_measures"
-                    placeholder="请输入处理措施"
-                    maxlength="50"
-                    size="small"
+                    controls-position="right"
                     @change="hmChange"
-                  ></el-input>
+                    :min="0"
+                    :max="10000"
+                    size="small"
+                  ></el-input-number>
+                  小时
                 </div>
               </template>
             </el-table-column>
@@ -424,7 +427,7 @@
       <div class="message-info" v-if="messageData.length>0">
         <div
           class="message-item"
-          v-for="(item, index) in filterMessageData"
+          v-for="(item, index) in messageData"
           :key="index"
         >
           <span v-show="item.task_status==='1'"
@@ -438,7 +441,7 @@
         </div>
       </div>
       <div class="message-info-empty" v-else>
-        暂无数据!
+        暂无状态异常的任务!
       </div>
       <div class="message-btn-list">
         <button class="btn-item" @click="messageConfirm">
@@ -468,16 +471,16 @@
         >
           <el-table-column
             prop="plan_duration"
-            label="计划工期"
+            label="计划工时"
             width="140"
           ></el-table-column>
           <el-table-column
             prop="actual_duration"
-            label="实际工期"
+            label="实际工时"
           ></el-table-column>
           <el-table-column
             prop="duration_completion_rate"
-            label="工期完成率"
+            label="工时完成率"
             width="140"
           ></el-table-column>
           <el-table-column
@@ -497,7 +500,7 @@
           ></el-table-column>
           <el-table-column
             prop="remaining_duration"
-            label="剩余工期"
+            label="剩余工时"
             width="140"
           ></el-table-column>
         </el-table>

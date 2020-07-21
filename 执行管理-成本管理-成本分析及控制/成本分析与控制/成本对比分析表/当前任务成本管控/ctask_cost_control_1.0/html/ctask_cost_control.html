@@ -24,7 +24,7 @@
     <div class="table-content" v-show="ifTableOneShow">
       <el-table ref="taskPlanResourcesTable" highlight-current-row max-height="350" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="tableData1" style="width:100%;margin:10px 0 10px 0;" :cell-style="cellStyle" row-key="task_id" :border="true">
         <el-table-column prop="plan_total_quantities" label="计划总工程量" width="200" ></el-table-column>
-        <el-table-column prop="plan_total_duration" label="计划总工期" width="200"></el-table-column>
+        <el-table-column prop="plan_total_duration" label="计划总工时" width="200"></el-table-column>
           <el-table-column  label="资源名称" >
             <template slot-scope="scope">
               <div class="check-man" v-for="(item,index) in scope.row.resource_info_data" :key="index">
@@ -91,8 +91,8 @@
         <el-table-column prop="report_date" label="本次汇报日期" width="100" ></el-table-column>
         <el-table-column prop="report_completed_quantities" label="本次汇报完成工程量" width="100"></el-table-column>
         <el-table-column prop="actual_cumulative_completed_quantities" label="实际累计完成工程量" width="100"></el-table-column>
-        <el-table-column prop="this_report_cq_duration" label="本次汇报完成工程量使用工期" width="120"></el-table-column>
-        <el-table-column prop="actual_cumulative_duration" label="实际累计使用工期" width="100"></el-table-column>
+        <el-table-column prop="this_report_cq_duration" label="本次汇报完成工程量使用工时" width="120"></el-table-column>
+        <el-table-column prop="actual_cumulative_duration" label="实际累计使用工时" width="100"></el-table-column>
         <el-table-column label="资源汇报情况" align="center">
           <el-table-column  label="资源名称" width="80">
             <template slot-scope="scope">
