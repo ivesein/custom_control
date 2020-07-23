@@ -159,28 +159,68 @@
                           case "getFilterData":
                             this.proTableData = props.data.data;
                             break;
+                          /**
+                           * @Author: zhang fq
+                           * @Date: 2020-07-22
+                           * @Description: 根据需求修改获取当前点击任务的详细信息接口
+                           *  点击左侧已完成任务获取该任务的紧前任务数据并显示
+                           */
                           case "getClickedTaskDetailData":
+                            // 获取紧前任务表格数据
                             this.beforeTaskInfo.data =
                               props.data.data.beforeTaskInfo;
+                            // 获取当前任务表格数据
                             this.currentTaskInfo.data =
                               props.data.data.currentTaskInfo;
+                            // 获取后续任务表格数据的默认紧前任务数据
+                            if (this.currentClickedTask.task_status === "200") {
+                              if (props.data.data.followTaskInfo) {
+                                this.followTaskProcessing.data = [
+                                  ...props.data.data.followTaskInfo,
+                                ];
+                              }
+                              this.followTaskProcessing.data.push({
+                                task_name: "",
+                                handling_measures: "请输入处理措施",
+                              });
+                              // 将 当前后续任务 挂载到当前点击的任务的后续任务字段
+                              this.proTableData[
+                                this.currentClickedTask.index
+                              ].follow_task = this.followTaskProcessing.data;
+                            }
                             break;
+                          /**
+                           * @Author: zhang fq
+                           * @Date: 2020-07-22
+                           * @Description: 根据需求修改 选择后续任务按钮接口返回后的数据处理逻辑
+                           * @Date: 2020-07-23
+                           * @Update: 修改选取后续任务返回接口 数据处理逻辑 添加已有任务过滤
+                           */
                           case "pickFollowTasks":
-                            props.data.data.forEach((v) => {
-                              v.handling_measures = "";
-                            });
-                            // this.followTaskProcessing.data=props.data.data.push({
-                            //   follow_task_name:"",
-                            //   handling_measures:"请输入处理措施"
-                            // })
-                            props.data.data.push({
-                              follow_task_name: "",
-                              handling_measures: "请输入处理措施",
-                            });
-                            this.proTableData[
-                              this.currentClickedTask.index
-                            ].follow_task = props.data.data;
-                            this.followTaskProcessing.data = props.data.data;
+                            if (props.data.data) {
+                              props.data.data.forEach((v) => {
+                                v.handling_measures = "";
+                              });
+                              // 从原数组弹出最后一行点击按钮行
+                              let last = this.followTaskProcessing.data.pop();
+                              // 对返回的 用户选择的所有后续任务进行过滤， 去掉列表里已有的
+                              props.data.data.forEach((v) => {
+                                let flag = this.followTaskProcessing.data.some(
+                                  (s) => {
+                                    return v.id === s.id;
+                                  }
+                                );
+                                if (!flag) {
+                                  this.followTaskProcessing.data.push(v);
+                                }
+                              });
+                              // 最后一行点击按钮行添加到后续任务数据末尾
+                              this.followTaskProcessing.data.push(last);
+                              // 将 当前后续任务 挂载到当前点击的任务的后续任务字段
+                              this.proTableData[
+                                this.currentClickedTask.index
+                              ].follow_task = this.followTaskProcessing.data;
+                            }
                             break;
                           case "getReportDetailData":
                             this.taskReportDetailData = props.data.data;
@@ -360,22 +400,30 @@
                       this.$refs.projectTable.setCurrentRow(this.currentRow);
                     },
                     //获取当前点击的任务
+                    /**
+                     * @Author: zhang fq
+                     * @Date: 2020-07-22
+                     * @Description: 根据需求修改 当前任务点击逻辑
+                     */
                     rowDblclick(row) {
+                      if (this.currentRow && this.currentRow.id == row.id) {
+                        return;
+                      }
                       this.currentRow = row;
                       this.$refs.projectTable.setCurrentRow(this.currentRow);
                       this.resetData();
-                      this.proTableData[
-                        this.currentClickedTask.index
-                      ].follow_task = this.followTaskProcessing.data;
+                      // this.proTableData[
+                      //   this.currentClickedTask.index
+                      // ].follow_task = this.followTaskProcessing.data;
                       if (row.task_status === "200") {
                         this.ifFollowTaskShow = true;
-                        if (row.follow_task.length === 0) {
-                          row.follow_task.push({
-                            follow_task_name: "",
-                            handling_measures: "请输入处理措施",
-                          });
-                        }
-                        this.followTaskProcessing.data = row.follow_task;
+                        // if (row.follow_task.length === 0) {
+                        //   row.follow_task.push({
+                        //     follow_task_name: "",
+                        //     handling_measures: "请输入处理措施",
+                        //   });
+                        // }
+                        // this.followTaskProcessing.data = row.follow_task;
                       } else {
                         this.ifFollowTaskShow = false;
                       }

@@ -6,6 +6,7 @@ new Vue({
     proTableData: [
       {
         wbs: "G", //wbs任务代码
+        id: "1",
         task_name: "工作5", //wbs任务名称
         owner: "张三", //承担人
         is_certical_task: true, //是否关键任务
@@ -14,6 +15,7 @@ new Vue({
       },
       {
         wbs: "H",
+        id: "2",
         task_name: "工作6",
         owner: "李四",
         is_certical_task: true,
@@ -22,6 +24,7 @@ new Vue({
       },
       {
         wbs: "L",
+        id: "3",
         task_name: "工作7",
         owner: "王五",
         is_certical_task: false,
@@ -30,6 +33,7 @@ new Vue({
       },
       {
         wbs: "I",
+        id: "4",
         task_name: "工作8",
         owner: "马六",
         is_certical_task: true,
@@ -273,6 +277,7 @@ new Vue({
     },
     //获取当前点击的任务
     rowDblclick(row) {
+      if (this.currentRow.id === row.id) return;
       console.log(row);
       this.currentRow = row;
       this.$refs.projectTable.setCurrentRow(this.currentRow);

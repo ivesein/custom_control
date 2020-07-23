@@ -40,7 +40,7 @@ new Vue({
       {
         task_name: "P5挖土复核",
         tasktype: "3",
-        end_time: "2019-10-10 00:00:00",
+        end_time: "",
         wbs: "1.1.2",
         task_id: "74624160865714181",
         is_certical_task: false,
@@ -140,7 +140,7 @@ new Vue({
     },
     currentTaskClick(row) {
       console.log(row);
-      row.DValue = this.getDaysBetween(row.end_time, row.plan_endtime);
+      row.DValue = this.getDaysBetween(row.plan_endtime, row.end_time);
       this.currentTask = [];
       this.currentTask.push(row);
     },
@@ -148,11 +148,12 @@ new Vue({
     getDaysBetween(dateString1, dateString2) {
       var startDate = Date.parse(dateString1);
       var endDate = Date.parse(dateString2);
-      var days = (endDate - startDate) / (1 * 24 * 60 * 60 * 1000);
+      var days = (endDate - startDate) / (60 * 60 * 1000);
       if (Number.isNaN(days)) {
-        days = "";
+        return "";
+      } else {
+        return days.toFixed(2);
       }
-      return days;
     },
     reasonChange(val) {
       console.log("reasonChange>>>", val);

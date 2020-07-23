@@ -1,4 +1,5 @@
-html,body{
+html,
+body {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -29,7 +30,7 @@ html,body{
   position: relative;
 }
 
-#resourcesRMApp .btn-lsit .btn-box-right{
+#resourcesRMApp .btn-lsit .btn-box-right {
   padding-right: 20px;
 }
 
@@ -50,11 +51,11 @@ html,body{
 }
 
 #resourcesRMApp .el-table__body tr.current-row > td {
-  background-color: #eff3fd   !important;
+  background-color: #eff3fd !important;
   /* color: #f19944; */ /* 设置文字颜色，可以选择不设置 */
 }
 #resourcesRMApp .el-table--enable-row-hover .el-table__body tr:hover > td {
-  background-color: #eff3fd  ;
+  background-color: #eff3fd;
   /* color: #f19944; */ /* 设置文字颜色，可以选择不设置 */
 }
 
@@ -64,12 +65,12 @@ html,body{
   display: flex;
   justify-content: center;
   align-items: center;
-  text-indent: -10px!important;
+  text-indent: -10px !important;
   /* border-bottom: 1px solid #ebeef5; */
   margin: 0 -10px;
   text-indent: 10px;
 }
-#resourcesRMApp .check-man{
+#resourcesRMApp .check-man {
   border-top: none;
   border-bottom: 1px solid #cecece;
 }
@@ -77,17 +78,25 @@ html,body{
   border: none;
 }
 
-.el-table td, .el-table th.is-leaf,.el-table--border, .el-table--group{
-  border-color: #cecece; 
+#resourcesRMApp .el-table td,
+.el-table th.is-leaf,
+.el-table--border,
+.el-table--group {
+  border-color: #cecece;
 }
-.el-table--border::after, .el-table--group::after, .el-table::before{
+#resourcesRMApp .el-table--border::after,
+.el-table--group::after,
+.el-table::before {
   background-color: #cecece;
 }
 
-.el-table--border th, .el-table__fixed-right-patch{
+#resourcesRMApp .el-table--border th,
+.el-table__fixed-right-patch {
   border-bottom: 1px solid #cecece;
 }
 
-.el-table--border td, .el-table--border th, .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed {
+#resourcesRMApp .el-table--border td,
+.el-table--border th,
+.el-table__body-wrapper .el-table--border.is-scrolling-left ~ .el-table__fixed {
   border-right: 1px solid #cecece;
 }

@@ -198,6 +198,86 @@ body {
   align-items: center;
   font-size: 20px;
 }
+
+#qualityACApp .recheck-box {
+  width: 120%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin: 0 -10px;
+  text-indent: 10px;
+}
+
+#qualityACApp .recheck-box div {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#qualityACApp .recheck-box .recheck-top {
+  width: 100%;
+  height: 30px;
+}
+
+#qualityACApp .recheck-box .recheck-mid {
+  width: 100%;
+  display: flex;
+  border-top: 1px solid #ebeef5;
+  border-bottom: 1px solid #ebeef5;
+}
+
+#qualityACApp .recheck-box .recheck-mid .mid-left {
+  width: 50%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#qualityACApp .recheck-box .recheck-mid .mid-right {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  border-left: 1px solid #ebeef5;
+}
+
+#qualityACApp .mid-right-item {
+  width: 100%;
+  height: 30px;
+}
+
+#qualityACApp .mid-right-top {
+  border-bottom: 1px solid #ebeef5;
+}
+
+#qualityACApp .recheck-bot {
+  width: 100%;
+  height: 30px;
+}
+
+#qualityACApp .checek-man {
+  width: 140%;
+  height: 30px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  /* border-bottom: 1px solid #ebeef5; */
+  margin: 0 -10px;
+  text-indent: 10px;
+}
+
+#qualityACApp .checek-man:nth-child(2) {
+  border-top: 1px solid #ebeef5;
+}
+
+#qualityACApp .checek-man:nth-child(3) {
+  border-top: 1px solid #ebeef5;
+  border-bottom: 1px solid #ebeef5;
+  height: 32px;
+}
+
 #qualityACApp .el-table__body tr.current-row > td {
   background-color: #eff3fd !important;
   /* color: #f19944; */ /* 设置文字颜色，可以选择不设置 */
