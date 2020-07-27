@@ -9,7 +9,7 @@ new Vue({
         task_name: "工作5",
         owner: "张三",
         is_certical_task: true,
-        task_status: "1", //1 未开始  2 进行中  3 已完成
+        task_status: "100", //1 未开始  2 进行中  3 已完成
         handle_status: "0", // 0 待处理  1 已处理
       },
       {
@@ -17,7 +17,7 @@ new Vue({
         task_name: "工作6",
         owner: "李四",
         is_certical_task: true,
-        task_status: "2",
+        task_status: "200",
         handle_status: "0",
       },
       {
@@ -25,7 +25,7 @@ new Vue({
         task_name: "工作7",
         owner: "王五",
         is_certical_task: false,
-        task_status: "3",
+        task_status: "000",
         handle_status: "1",
       },
       {
@@ -33,7 +33,7 @@ new Vue({
         task_name: "工作8",
         owner: "马六",
         is_certical_task: true,
-        task_status: "3",
+        task_status: "100",
         handle_status: "1",
       },
     ],
@@ -92,32 +92,32 @@ new Vue({
       data: [
         {
           task_name: "123",
-          handling_measures: "请输入处理措施",
+          handling_measures: 0,
         },
         {
           task_name: "321",
-          handling_measures: "请输入处理措施",
+          handling_measures: 0,
         },
         {
           task_name: "1234",
-          handling_measures: "请输入处理措施",
+          handling_measures: 0,
         },
-        {
-          task_name: "123",
-          handling_measures: "请输入处理措施",
-        },
-        {
-          task_name: "321",
-          handling_measures: "请输入处理措施",
-        },
-        {
-          task_name: "1234",
-          handling_measures: "请输入处理措施",
-        },
-        {
-          task_name: "",
-          handling_measures: "请输入处理措施",
-        },
+        // {
+        //   task_name: "123",
+        //   handling_measures: "请输入处理措施",
+        // },
+        // {
+        //   task_name: "321",
+        //   handling_measures: "请输入处理措施",
+        // },
+        // {
+        //   task_name: "1234",
+        //   handling_measures: "请输入处理措施",
+        // },
+        // {
+        //   task_name: "",
+        //   handling_measures: "请输入处理措施",
+        // },
       ],
     },
     tableWidth: "100%",
@@ -178,7 +178,15 @@ new Vue({
     // })
   },
   methods: {
-    hmChange() {
+    handleFollowTaskDel(row, index) {
+      console.log(row, index);
+      this.followTaskProcessing.data.splice(index, 1);
+      console.log(this.followTaskProcessing.data);
+      debugger;
+    },
+    hmChange(val) {
+      console.log(val);
+
       this.proTableData[
         this.currentClickedTask.index
       ].follow_task = this.followTaskProcessing.data;
@@ -234,19 +242,19 @@ new Vue({
       // this.followTaskProcessing.data=[]
     },
     currentTaskClick(row) {
-      // this.resetData()
+      this.resetData();
       this.proTableData[
         this.currentClickedTask.index
       ].follow_task = this.followTaskProcessing.data;
-      if (row.task_status === "3") {
+      if (row.task_status === "200") {
         this.ifFollowTaskShow = true;
         if (row.follow_task.length === 0) {
           row.follow_task.push({
             follow_task_name: "",
-            handling_measures: "请输入处理措施",
+            handling_measures: "请输入后续措施",
           });
         }
-        // this.followTaskProcessing.data = row.follow_task
+        // this.followTaskProcessing.data = row.follow_task;
       } else {
         this.ifFollowTaskShow = false;
       }

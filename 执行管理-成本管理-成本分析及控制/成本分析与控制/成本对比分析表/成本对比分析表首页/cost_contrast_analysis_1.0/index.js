@@ -82,9 +82,7 @@
                     },
                     ifFollowTaskShow: false, //是否显示后续任务处理表
                     taskReportDetailData: [],
-                    currentClickedTask: {
-                      index: 0,
-                    },
+                    currentClickedTask: null,
                     followTaskListTableData: [],
                     multipleSelection: [],
                     followTaskListShow: false,
@@ -156,7 +154,12 @@
                         }
                       }
                     },
-                    //处理后续任务同步到成本维护功能 判断是否选择了后续任务且所有已选后续任务都输入了决策措施
+                    /**
+                     * @Author: zhang fq
+                     * @Date: 2020-07-27
+                     * @Description: 处理后续任务同步到成本维护功能
+                     * 重写判断是否选择了后续任务且所有已选后续任务都有默认的或输入的决策措施
+                     */
                     syncCostMaintenance() {
                       // 同步到进度维护差异化数据处理
                       // 标记选取了后续任务的任务，并判断这些后续任务的决策措施是否都已输入
@@ -177,7 +180,7 @@
                             temp.push(v.follow_task[i]);
                           }
                           let flag = temp.every((j) => {
-                            return j.handling_measures !== "";
+                            return j.handling_measures !== undefined;
                           });
                           if (flag) {
                             finalData.push(...temp);
@@ -262,11 +265,27 @@
                       // this.followTaskProcessing.data=[]
                     },
                     //获取当前点击的任务
+                    /**
+                     * @Author: zhang fq
+                     * @Date: 2020-07-27
+                     * @Description: 重写成本对比分析 左侧任务列表双击相关的处理逻辑  处理已完成任务的后续任务
+                     */
                     currentTaskClick(row) {
+                      // 优化 避免重复点击调接口
+                      if (
+                        this.currentClickedTask &&
+                        this.currentClickedTask.id === row.id
+                      )
+                        return;
                       this.resetData();
-                      this.proTableData[
-                        this.currentClickedTask.index
-                      ].follow_task = this.followTaskProcessing.data;
+                      // 判断是否是第一次点击 若不是 将当前后续任务数据挂载到上次点击任务上
+                      if (this.currentClickedTask !== null) {
+                        this.proTableData[
+                          this.currentClickedTask.index
+                        ].follow_task = _.cloneDeep(
+                          this.followTaskProcessing.data
+                        );
+                      }
                       if (row.task_status === "200") {
                         this.ifFollowTaskShow = true;
                         if (row.follow_task.length === 0) {
@@ -275,7 +294,9 @@
                             handling_measures: "请输入处理措施",
                           });
                         }
-                        this.followTaskProcessing.data = row.follow_task;
+                        this.followTaskProcessing.data = _.cloneDeep(
+                          row.follow_task
+                        );
                       } else {
                         this.ifFollowTaskShow = false;
                       }
@@ -291,7 +312,24 @@
                     hmChange() {
                       this.proTableData[
                         this.currentClickedTask.index
-                      ].follow_task = this.followTaskProcessing.data;
+                      ].follow_task = _.cloneDeep(
+                        this.followTaskProcessing.data
+                      );
+                    },
+                    /**
+                     * @Author: zhang fq
+                     * @Date: 2020-07-27
+                     * @Description: 成本对比分析 监听已选后续任务的删除
+                     */
+                    handleFollowTaskDel(row, index) {
+                      // 从后续任务表格数据中一处当前删除行
+                      this.followTaskProcessing.data.splice(index, 1);
+                      // 将移除后的后续任务数据挂载到当前点击的任务上
+                      this.proTableData[
+                        this.currentClickedTask.index
+                      ].follow_task = _.cloneDeep(
+                        this.followTaskProcessing.data
+                      );
                     },
                     // 监听当前任务情况偏差原因输入 ，如有输入或修改 发送到后台
                     drChange(val) {
@@ -312,21 +350,37 @@
                       this.multipleSelection = [];
                       this.followTaskListShow = false;
                     },
-                    // 后续任务列表 确定按钮 处理选择的后续任务回填
+                    /**
+                     * @Author: zhang fq
+                     * @Date: 2020-07-27
+                     * @Description: 成本对比分析  重写选取后续任务逻辑
+                     * 将所选的后续任务追加到后续任务列表 过滤掉重复选择的任务
+                     */
                     followTaskConfirm() {
                       let arr = _.cloneDeep(this.multipleSelection);
                       this.multipleSelection = [];
                       arr.forEach((v) => {
-                        v.handling_measures = "";
+                        v.handling_measures = 0;
                       });
-                      arr.push({
-                        follow_task_name: "",
-                        handling_measures: "请输入处理措施",
+                      // 从原数组弹出最后一行点击按钮行
+                      let last = this.followTaskProcessing.data.pop();
+                      // 对返回的 用户选择的所有后续任务进行过滤， 去掉列表里已有的
+                      arr.forEach((v) => {
+                        let flag = this.followTaskProcessing.data.some((s) => {
+                          return v.id === s.id;
+                        });
+                        if (!flag) {
+                          this.followTaskProcessing.data.push(v);
+                        }
                       });
+                      // 最后一行点击按钮行添加到后续任务数据末尾
+                      this.followTaskProcessing.data.push(last);
+                      // 将 当前后续任务 挂载到当前点击的任务的后续任务字段
                       this.proTableData[
                         this.currentClickedTask.index
-                      ].follow_task = arr;
-                      this.followTaskProcessing.data = arr;
+                      ].follow_task = _.cloneDeep(
+                        this.followTaskProcessing.data
+                      );
                       this.followTaskListShow = false;
                     },
                     // 后续任务多选功能 获取选择的任务

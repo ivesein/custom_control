@@ -204,7 +204,7 @@
         </div>
         <div class="table-info-box" v-if="followTaskProcessing.open">
           <el-table ref="TableRight" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="followTaskProcessing.data" style="margin:12px 0 10px 0;" :style="{width:tableWidth}" :cell-style="cellStyle" row-key="task_id" :border="true">
-            <el-table-column label="后续任务名称" width="300">
+            <el-table-column label="后续任务名称" width="400">
               <template slot-scope="scope">
                 <div class="search-icon" v-if="scope.$index===(followTaskProcessing.data.length-1)" @click="goSelectFollowTask">
                   <span style="font-size: 14px;">请选择后续任务</span>
@@ -220,14 +220,15 @@
                 <div class="search-icon" v-if="scope.$index===(followTaskProcessing.data.length-1)">
                   <span style="font-size: 14px;">请输入处理措施</span>
                 </div>
-                <div  v-else>
-                  <el-input 
-                  v-model="scope.row.handling_measures" 
-                  placeholder="请输入处理措施"
-                  maxlength="50"
-                  size="small"
-                  @change="hmChange"
-                  ></el-input>
+                <div class="follow-task-handle"  v-else>
+                  <div class="follow-task-handle-left">
+                    压缩成本
+                    <el-input-number precision="2" class="custom-elinput-num" v-model="scope.row.handling_measures" controls-position="right" @change="hmChange" :min="0" :max="1000000"></el-input-number>
+                    元
+                  </div>
+                  <div class="follow-task-handle-right" @click="handleFollowTaskDel(scope.row,scope.$index)">
+                    <i class="el-icon-delete"></i>
+                  </div>
                 </div>
               </template>
             </el-table-column>
@@ -271,15 +272,15 @@
         </el-table-column>
           <el-table-column type="index" label="序号" width="55" align="center"></el-table-column>
           <el-table-column prop="wbs" label="任务代码" width="120"></el-table-column>
-          <el-table-column prop="task_name" label="wbs任务名称"></el-table-column>
+          <el-table-column prop="task_name" label="wbs任务名称" min-size="300"></el-table-column>
           <el-table-column prop="day" label="工时" width="100"></el-table-column>
-          <el-table-column prop="plan_starttime" label="计划开始时间" width="100"></el-table-column>
-          <el-table-column prop="plan_endtime" label="计划完成时间" width="100"></el-table-column>
-          <el-table-column prop="artificialAggregate" label="物料合计" width="100"></el-table-column>
-          <el-table-column prop="materialCombined" label="材料合计" width="100"></el-table-column>
-          <el-table-column prop="internalManualSummation" label="内部人工合计" width="100"></el-table-column>
-          <el-table-column prop="externalManualSummation" label="外部人工合计" width="100"></el-table-column>
-          <el-table-column prop="combined" label="合计" width="200"></el-table-column>
+          <el-table-column prop="plan_starttime" label="计划开始时间" width="140"></el-table-column>
+          <el-table-column prop="plan_endtime" label="计划完成时间" width="140"></el-table-column>
+          <el-table-column prop="artificialAggregate" label="绩效合计" width="100"></el-table-column>
+          <el-table-column prop="materialCombined" label="机械合计" width="100"></el-table-column>
+          <el-table-column prop="internalManualSummation" label="材料合计" width="100"></el-table-column>
+          <el-table-column prop="externalManualSummation" label="人工合计" width="100"></el-table-column>
+          <el-table-column prop="combined" label="耗用合计" width="200"></el-table-column>
           </el-table-column>
         </el-table>
       </div>
