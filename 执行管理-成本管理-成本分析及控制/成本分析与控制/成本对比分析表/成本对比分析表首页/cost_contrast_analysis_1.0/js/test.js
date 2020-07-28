@@ -2,7 +2,7 @@ new Vue({
   delimiters: ["${", "}"],
   data: {
     ifSelectBoxShow: false,
-    followTaskListShow: true,
+    followTaskListShow: false,
     proTableData: [
       {
         wbs: "G",
@@ -182,7 +182,6 @@ new Vue({
       console.log(row, index);
       this.followTaskProcessing.data.splice(index, 1);
       console.log(this.followTaskProcessing.data);
-      debugger;
     },
     hmChange(val) {
       console.log(val);
@@ -269,6 +268,7 @@ new Vue({
     goSelectFollowTask() {
       console.log("打开选择后续任务弹窗");
       // model.invoke("pickFollowTasks",this.currentClickedTask.id)
+      this.followTaskListShow = true;
     },
     drChange(val) {
       console.log(val);
@@ -281,7 +281,32 @@ new Vue({
       this.multipleSelection = [];
       this.followTaskListShow = false;
     },
-    followTaskConfirm() {},
+    followTaskConfirm() {
+      let arr = _.cloneDeep(this.multipleSelection);
+      this.multipleSelection = [];
+      this.$refs.followTaskListTable.clearSelection();
+      arr.forEach((v) => {
+        v.handling_measures = 0;
+      });
+      // 从原数组弹出最后一行点击按钮行
+      let last = this.followTaskProcessing.data.pop();
+      // 对返回的 用户选择的所有后续任务进行过滤， 去掉列表里已有的
+      arr.forEach((v) => {
+        let flag = this.followTaskProcessing.data.some((s) => {
+          return v.id === s.id;
+        });
+        if (!flag) {
+          this.followTaskProcessing.data.push(v);
+        }
+      });
+      // 最后一行点击按钮行添加到后续任务数据末尾
+      this.followTaskProcessing.data.push(last);
+      // 将 当前后续任务 挂载到当前点击的任务的后续任务字段
+      this.proTableData[
+        this.currentClickedTask.index
+      ].follow_task = _.cloneDeep(this.followTaskProcessing.data);
+      this.followTaskListShow = false;
+    },
     handleSelectionChange(val) {
       this.multipleSelection = val;
       console.log(this.multipleSelection);

@@ -116,6 +116,12 @@
                               this.messageBoxShow = false;
                             }
                             break;
+                          case "syncToCostMaintenance":
+                            this.syncToCostMaintenance();
+                            break;
+                          case "filterBtnClicked":
+                            this.showSelectBox();
+                            break;
                           case "getFilterData":
                             //获取筛选后的左侧任务列表数据 判断是否为空 为空显示提示弹框
                             this.proTableData = props.data.data;
@@ -359,6 +365,7 @@
                     followTaskConfirm() {
                       let arr = _.cloneDeep(this.multipleSelection);
                       this.multipleSelection = [];
+                      this.$refs.followTaskListTable.clearSelection();
                       arr.forEach((v) => {
                         v.handling_measures = 0;
                       });

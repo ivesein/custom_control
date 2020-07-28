@@ -12,6 +12,44 @@ new Vue({
         is_certical_task: true, //是否关键任务
         task_status: "000", //任务状态  1 未开始  2 进行中  3 已完成
         handle_status: "0", //处理状态  0 待处理  1 已处理
+        beforeTaskInfo: [
+          {
+            before_task_name: "工作5", //前置任务名称
+            handling_measures: "成本压缩200元", //当前任务处理措施
+          },
+        ],
+        currentTaskInfo: [
+          {
+            task_id: "1", //任务id
+            task_name: "p4挖土", //任务名称
+            task_status: "1", //任务状态
+            plan_duration: "10", //计划工期
+            plan_quantities: "150", //计划工程量
+            duration_after_adjustment: "12", //调整后工期
+            actual_duration: "15", //实际工期
+            actual_quantities: "170", //实际工程量
+            free_time: 0, //自由时差
+            free_time_exceed: 0, //超出自由时差
+            free_time_analysis_conclusion: "自由时差分析结论", //自由时差分析结论
+            total_time: 0, //总时差
+            total_time_exceed: 0, //超出总时差
+            total_time_analysis_conclusion: "总时差分析结论", //总时差分析结论
+          },
+        ],
+        followTaskInfo: [
+          {
+            task_name: "后续任务1",
+            id: "220",
+            handling_measures: 2,
+            plan_duration: 10,
+          },
+          {
+            task_name: "后续任务2",
+            id: "221",
+            handling_measures: 3,
+            plan_duration: 20,
+          },
+        ],
       },
       {
         wbs: "H",
@@ -21,6 +59,44 @@ new Vue({
         is_certical_task: true,
         task_status: "200",
         handle_status: "0",
+        beforeTaskInfo: [
+          {
+            before_task_name: "工作6", //前置任务名称
+            handling_measures: "成本压缩300元", //当前任务处理措施
+          },
+        ],
+        currentTaskInfo: [
+          {
+            task_id: "1", //任务id
+            task_name: "p4挖土", //任务名称
+            task_status: "1", //任务状态
+            plan_duration: "10", //计划工期
+            plan_quantities: "150", //计划工程量
+            duration_after_adjustment: "12", //调整后工期
+            actual_duration: "15", //实际工期
+            actual_quantities: "170", //实际工程量
+            free_time: 0, //自由时差
+            free_time_exceed: 0, //超出自由时差
+            free_time_analysis_conclusion: "自由时差分析结论", //自由时差分析结论
+            total_time: 0, //总时差
+            total_time_exceed: 0, //超出总时差
+            total_time_analysis_conclusion: "总时差分析结论", //总时差分析结论
+          },
+        ],
+        followTaskInfo: [
+          {
+            task_name: "后续任务1",
+            id: "220",
+            handling_measures: 2,
+            plan_duration: 10,
+          },
+          {
+            task_name: "后续任务2",
+            id: "221",
+            handling_measures: 3,
+            plan_duration: 20,
+          },
+        ],
       },
       {
         wbs: "L",
@@ -30,6 +106,44 @@ new Vue({
         is_certical_task: false,
         task_status: "100",
         handle_status: "1",
+        beforeTaskInfo: [
+          {
+            before_task_name: "工作7", //前置任务名称
+            handling_measures: "成本压缩400元", //当前任务处理措施
+          },
+        ],
+        currentTaskInfo: [
+          {
+            task_id: "3", //任务id
+            task_name: "工作7", //任务名称
+            task_status: "100", //任务状态
+            plan_duration: 10, //计划工期
+            plan_quantities: "150", //计划工程量
+            duration_after_adjustment: "12", //调整后工期
+            actual_duration: "15", //实际工期
+            actual_quantities: "170", //实际工程量
+            free_time: 0, //自由时差
+            free_time_exceed: 0, //超出自由时差
+            free_time_analysis_conclusion: "自由时差分析结论", //自由时差分析结论
+            total_time: 0, //总时差
+            total_time_exceed: 0, //超出总时差
+            total_time_analysis_conclusion: "总时差分析结论", //总时差分析结论
+          },
+        ],
+        followTaskInfo: [
+          {
+            task_name: "后续任务1",
+            id: "220",
+            handling_measures: 2,
+            plan_duration: 10,
+          },
+          {
+            task_name: "后续任务2",
+            id: "221",
+            handling_measures: 3,
+            plan_duration: 20,
+          },
+        ],
       },
       {
         wbs: "I",
@@ -39,62 +153,65 @@ new Vue({
         is_certical_task: true,
         task_status: "100",
         handle_status: "1",
+        beforeTaskInfo: [
+          {
+            before_task_name: "工作4", //前置任务名称
+            handling_measures: "成本压缩100元", //当前任务处理措施
+          },
+        ],
+        currentTaskInfo: [
+          {
+            task_id: "4", //任务id
+            task_name: "工作8", //任务名称
+            task_status: "100", //任务状态
+            plan_duration: "10", //计划工期
+            plan_quantities: "150", //计划工程量
+            duration_after_adjustment: "12", //调整后工期
+            actual_duration: "15", //实际工期
+            actual_quantities: "170", //实际工程量
+            free_time: 0, //自由时差
+            free_time_exceed: 0, //超出自由时差
+            free_time_analysis_conclusion: "自由时差分析结论", //自由时差分析结论
+            total_time: 0, //总时差
+            total_time_exceed: 0, //超出总时差
+            total_time_analysis_conclusion: "总时差分析结论", //总时差分析结论
+          },
+        ],
+        followTaskInfo: [
+          {
+            task_name: "后续任务1",
+            id: "220",
+            handling_measures: 2,
+            plan_duration: 10,
+          },
+          {
+            task_name: "后续任务2",
+            id: "221",
+            handling_measures: 3,
+            plan_duration: 20,
+          },
+        ],
       },
     ],
     //紧前任务对当前任务影响情况表数据结构
     beforeTaskInfo: {
       open: true,
       title: "紧前任务对当前任务影响情况",
-      data: [
-        {
-          before_task_name: "工作4", //前置任务名称
-          handling_measures: "成本压缩100元", //当前任务处理措施
-        },
-      ],
     },
     //当前任务情况表数据结构
     currentTaskInfo: {
       title: "当前任务情况",
       task_status: "1",
       open: true,
-      data: [
-        {
-          task_id: "1", //任务id
-          task_name: "p4挖土", //任务名称
-          task_status: "1", //任务状态
-          plan_duration: "10", //计划工期
-          plan_quantities: "150", //计划工程量
-          duration_after_adjustment: "12", //调整后工期
-          actual_duration: "15", //实际工期
-          actual_quantities: "170", //实际工程量
-          free_time: 0, //自由时差
-          free_time_exceed: 0, //超出自由时差
-          free_time_analysis_conclusion: "自由时差分析结论", //自由时差分析结论
-          total_time: 0, //总时差
-          total_time_exceed: 0, //超出总时差
-          total_time_analysis_conclusion: "总时差分析结论", //总时差分析结论
-        },
-      ],
     },
     earnedValueAnalysisSuggestions: {
       title: "挣值分析及建议",
       open: true,
-      data: [],
     },
     //后续任务处理情况表数据结构
     followTaskProcessing: {
       title: "后续任务处理",
       open: true,
-      data: [
-        {
-          task_name: "后续任务1",
-          id: "220",
-        },
-        {
-          task_name: "后续任务2",
-          id: "221",
-        },
-      ],
     },
     tableWidth: "100%",
     messageBoxShow: true,
@@ -133,12 +250,12 @@ new Vue({
         remaining_duration: "5", //剩余工期
       },
     ],
-    currentClickedTask: {
-      index: 0,
-    },
+    currentClickedTask: null,
     currentRow: null,
   },
   created() {
+    // 右侧各表格默认显示左侧第一条任务的相关数据
+    this.currentRow = this.proTableData[0];
     this.getCurrentDate();
   },
   computed: {
@@ -159,6 +276,8 @@ new Vue({
         self.tableWidth = self.$refs.projectTable.$el.clientWidth + "px";
       };
     });
+    // 默认高亮左侧任务列表第一条
+    this.$refs.projectTable.setCurrentRow(this.currentRow);
   },
   methods: {
     handleFollowTaskDel(row, index) {
@@ -272,42 +391,35 @@ new Vue({
     },
     /**
      * @Author: zhang fq
-     * @Date: 2020-07-01
-     * @Description: 修复进度对比分析表左侧任务列表 双击选中高亮显示会被单击选中覆盖的bug
+     * @Date: 2020-07-28
+     * @Description: 重构进度对比分析
+     * 优化左侧任务点击处理逻辑  因为去除了多次交互 去掉双击处理逻辑
      */
     rowClick(row) {
-      this.$refs.projectTable.setCurrentRow(this.currentRow);
-    },
-    //获取当前点击的任务
-    rowDblclick(row) {
+      // 避免重复点击，优化
       if (this.currentRow && this.currentRow.id === row.id) return;
       console.log(row);
       this.currentRow = row;
-      this.$refs.projectTable.setCurrentRow(this.currentRow);
       if (row.task_status === "200") {
-        this.proTableData[
-          this.currentClickedTask.index
-        ].follow_task = this.followTaskProcessing.data;
-        let arr = [
-          {
-            task_name: "测试后续任务" + Math.ceil(Math.random() * 10),
-            handling_measures: "",
-          },
-          {
-            task_name: "测试后续任务" + Math.ceil(Math.random() * 10),
-            handling_measures: "",
-          },
-        ];
-        arr.push({ task_name: "", handling_measures: "请输入处理措施" });
-        row.follow_task = arr;
-        this.followTaskProcessing.data = row.follow_task;
         this.ifFollowTaskShow = true;
       } else {
         this.ifFollowTaskShow = false;
       }
-      this.currentClickedTask = row;
-      // TODO 发送当前点击的任务id到后台 获取相关数据
     },
+    //获取当前点击的任务
+    // rowDblclick(row) {
+    //   // 判断是否重复点击
+    //   if (this.currentRow && this.currentRow.id === row.id) return;
+    //   console.log(row);
+    //   this.currentRow = row;
+    //   this.$refs.projectTable.setCurrentRow(this.currentRow);
+    //   if (row.task_status === "200") {
+    //     this.ifFollowTaskShow = true;
+
+    //   } else {
+    //     this.ifFollowTaskShow = false;
+    //   }
+    // },
     goSelectFollowTask() {},
     closeTaskReportDetail() {
       this.taskReportDetailShow = false;

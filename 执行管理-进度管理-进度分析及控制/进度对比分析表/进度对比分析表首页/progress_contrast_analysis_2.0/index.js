@@ -55,22 +55,14 @@
                     beforeTaskInfo: {
                       open: true,
                       title: "紧前任务对当前任务影响情况",
-                      data: [],
                     },
                     currentTaskInfo: {
                       title: "当前任务情况",
                       open: true,
-                      data: [],
-                    },
-                    earnedValueAnalysisSuggestions: {
-                      title: "挣值分析及建议",
-                      open: true,
-                      data: [],
                     },
                     followTaskProcessing: {
                       title: "后续任务处理",
                       open: true,
-                      data: [],
                     },
                     tableWidth: "100%",
                     messageBoxShow: false,
@@ -85,9 +77,6 @@
                     },
                     ifFollowTaskShow: false, //是否显示后续任务处理表
                     taskReportDetailData: [],
-                    currentClickedTask: {
-                      index: 0,
-                    },
                     currentRow: null,
                   },
                   created() {
@@ -113,7 +102,6 @@
                    * Date: 2020-06-02
                    * Description: 过滤进度分析控制-初始化数据-提示信息 不显示task_status为""
                    */
-
                   computed: {
                     filterMessageData() {
                       return this.messageData.filter((v) => {
@@ -154,79 +142,54 @@
                             }
                             break;
                           case "getTaskListData":
-                            this.proTableData = props.data.data;
+                            if (props.data.data) {
+                              this.proTableData = this.handleProTableData(
+                                props.data.data
+                              );
+                              this.currentRow = this.proTableData[0];
+                              // 默认高亮左侧任务列表第一条
+                              this.$refs.projectTable.setCurrentRow(
+                                this.currentRow
+                              );
+                            }
                             break;
                           case "getFilterData":
-                            this.proTableData = props.data.data;
-                            break;
-                          case "getClickedTaskDetailData":
-                            // 获取紧前任务表格数据
-                            this.beforeTaskInfo.data =
-                              props.data.data.beforeTaskInfo;
-                            // 获取当前任务表格数据
-                            this.currentTaskInfo.data =
-                              props.data.data.currentTaskInfo;
-                            /**
-                             * @Author: zhang fq
-                             * @Date: 2020-07-28
-                             * @Description: 修改获取后续任务表格数据的默认紧前任务数据的处理逻辑
-                             * 对默认获取的直接紧后做标价 无法被删除
-                             */
-                            //
-                            if (this.currentClickedTask.task_status === "200") {
-                              if (props.data.data.followTaskInfo) {
-                                this.followTaskProcessing.data = [];
-                                let dataTemp = _.cloneDeep(
-                                  props.data.data.followTaskInfo
-                                );
-                                dataTemp.forEach((v) => {
-                                  v.delFlag = false; //给默认获取的紧前任务添加不可删除标致
-                                  this.followTaskProcessing.data.push(v);
-                                });
-                              }
-                              this.followTaskProcessing.data.push({
-                                task_name: "",
-                                handling_measures: "请输入处理措施",
-                              });
-                              // 将 当前后续任务 挂载到当前点击的任务的后续任务字段
-                              this.proTableData[
-                                this.currentClickedTask.index
-                              ].follow_task = this.followTaskProcessing.data;
+                            if (props.data.data) {
+                              this.proTableData = this.handleProTableData(
+                                props.data.data
+                              );
+                              this.currentRow = this.proTableData[0];
+                              // 默认高亮左侧任务列表第一条
+                              this.$refs.projectTable.setCurrentRow(
+                                this.currentRow
+                              );
                             }
                             break;
                           case "pickFollowTasks":
-                            /**
-                             * @Author: zhang fq
-                             * @Date: 2020-07-28
-                             * @Description: 修改获取后续任务表格数据的默认紧前任务数据的处理逻辑
-                             * 修改每次选择后续任务后全部替换当前的后续任务改为 追加到当前的后续任务中
-                             * 如果有重复的 去重，对默认获取的直接紧后做判断 无法被删除
-                             */
                             if (props.data.data) {
                               let dataTemp = _.cloneDeep(props.data.data);
                               // 从原数组弹出最后一行点击按钮行
-                              let last = this.followTaskProcessing.data.pop();
+                              let last = this.currentRow.followTaskInfo.pop();
                               // 对返回的 用户选择的所有后续任务进行过滤， 去掉列表里已有的
                               dataTemp.forEach((v) => {
                                 v.delFlag = true; // 为选择的后续任务添加可删除标致
-                                v.handling_measures = 0;
                                 // 若选择的后续任务 已存在 将该任务过滤掉
-                                let flag = this.followTaskProcessing.data.some(
+                                let flag = this.currentRow.followTaskInfo.some(
                                   (s) => {
                                     return v.id === s.id;
                                   }
                                 );
                                 if (!flag) {
-                                  this.followTaskProcessing.data.push(v);
+                                  this.currentRow.followTaskInfo.push(v);
                                 }
                               });
                               // 最后一行点击按钮行添加到后续任务数据末尾
-                              this.followTaskProcessing.data.push(last);
+                              this.currentRow.followTaskInfo.push(last);
                               // 将 当前后续任务 挂载到当前点击的任务的后续任务字段
                               this.proTableData[
-                                this.currentClickedTask.index
-                              ].follow_task = _.cloneDeep(
-                                this.followTaskProcessing.data
+                                this.currentRow.index
+                              ].followTaskInfo = _.cloneDeep(
+                                this.currentRow.followTaskInfo
                               );
                             }
                             break;
@@ -247,11 +210,20 @@
                         }
                       }
                     },
-                    // 重置右侧表格数据
-                    resetData() {
-                      this.beforeTaskInfo.data = [];
-                      this.currentTaskInfo.data = [];
-                      // this.followTaskProcessing.data=[]
+                    handleProTableData(data) {
+                      let dataTemp = _.cloneDeep(data);
+                      dataTemp.forEach((v) => {
+                        if (v.task_status === "200") {
+                          v.followTaskInfo.forEach((vf) => {
+                            vf.delFlag = false;
+                          });
+                          v.followTaskInfo.push({
+                            task_name: "",
+                            handling_measures: "请输入处理措施",
+                          });
+                        }
+                      });
+                      return dataTemp;
                     },
                     getCurrentDate() {
                       let cDate = new Date();
@@ -269,12 +241,8 @@
                     goCurrentTaskControl() {},
                     //调接口 打开任务汇报详情表格弹出
                     goTaskReportDetail() {
-                      if (this.currentClickedTask.id) {
-                        // TODO 发送当前任务id到后台获取任务汇报详情数据并展示
-                        model.invoke(
-                          "getReportDetailData",
-                          this.currentClickedTask.id
-                        );
+                      if (this.currentRow.id) {
+                        model.invoke("getReportDetailData", this.currentRow.id);
                         this.taskReportDetailShow = true;
                       } else {
                         this.$message.error("请先选择任务");
@@ -282,32 +250,25 @@
                     },
                     //处理后续任务同步到进度维护功能 判断是否选择了后续任务且所有已选后续任务都输入了决策措施
                     goProgress() {
-                      // let tempData=[]
-                      // if(this.followTaskProcessing.data.length>1){
-                      //   for(let i=0;i<this.followTaskProcessing.data.length-1;i++){
-                      //     tempData.push(this.followTaskProcessing.data[i])
-                      //   }
-                      //   let flag=tempData.every(v=>{
-                      //     return v.handling_measures!==""
-                      //   })
-                      //   if(flag){
-                      //     model.invoke("getReportDetailData",this.followTaskProcessing.data)
-                      //   }else{
-                      //     this.$message.error("所有已选后续任务决策措施不能为空")
-                      //   }
-                      // }
                       // 同步到进度维护差异化数据处理
                       // 标记选取了后续任务的任务，并判断这些后续任务的决策措施是否都已输入
                       let finalData = [];
                       let taskId = [];
                       this.proTableData.forEach((v) => {
-                        if (v.task_status === "3" && v.follow_task.length > 1) {
+                        if (
+                          v.task_status === "200" &&
+                          v.followTaskInfo.length > 1
+                        ) {
                           let temp = [];
-                          for (let i = 0; i < v.follow_task.length - 1; i++) {
-                            temp.push(v.follow_task[i]);
+                          for (
+                            let i = 0;
+                            i < v.followTaskInfo.length - 1;
+                            i++
+                          ) {
+                            temp.push(v.followTaskInfo[i]);
                           }
                           let flag = temp.every((j) => {
-                            return j.handling_measures !== "";
+                            return j.handling_measures !== undefined;
                           });
                           if (flag) {
                             finalData.push(...temp);
@@ -411,46 +372,19 @@
                     // 给左侧任务添加行索引
                     tableRowClassName({ row, rowIndex }) {
                       row.index = rowIndex;
-                      row.follow_task = [];
                     },
                     rowClick(row) {
-                      this.$refs.projectTable.setCurrentRow(this.currentRow);
-                    },
-                    //获取当前点击的任务
-                    /**
-                     * @Author: zhang fq
-                     * @Date: 2020-07-22
-                     * @Description: 根据需求修改 当前任务点击逻辑
-                     */
-                    rowDblclick(row) {
-                      if (this.currentRow && this.currentRow.id == row.id) {
+                      // 避免重复点击，优化不必要的操作
+                      if (this.currentRow && this.currentRow.id === row.id) {
                         return;
                       }
                       this.currentRow = row;
-                      this.$refs.projectTable.setCurrentRow(this.currentRow);
-                      this.resetData();
-                      // this.proTableData[
-                      //   this.currentClickedTask.index
-                      // ].follow_task = this.followTaskProcessing.data;
-                      if (row.task_status === "200") {
-                        this.ifFollowTaskShow = true;
-                        // if (row.follow_task.length === 0) {
-                        //   row.follow_task.push({
-                        //     follow_task_name: "",
-                        //     handling_measures: "请输入处理措施",
-                        //   });
-                        // }
-                        // this.followTaskProcessing.data = row.follow_task;
-                      } else {
-                        this.ifFollowTaskShow = false;
-                      }
-                      this.currentClickedTask = row;
-                      // TODO 发送当前点击的任务id到后台 获取相关数据
-                      model.invoke("getClickedTaskDetailData", row.id);
+                      this.ifFollowTaskShow =
+                        row.task_status === "200" ? true : false;
                     },
                     goSelectFollowTask() {
                       console.log("打开选择后续任务弹窗");
-                      model.invoke("pickFollowTasks", this.currentClickedTask);
+                      model.invoke("pickFollowTasks", this.currentRow);
                     },
                     closeTaskReportDetail() {
                       this.taskReportDetailShow = false;
@@ -459,23 +393,26 @@
                       console.log("跳转到任务列表详情");
                       model.invoke(
                         "goTaskReportDetailListPage",
-                        this.currentClickedTask.id
+                        this.currentRow.id
                       );
                     },
                     // 监听决策输入 ，如有输入或修改 同步到左侧当前点击的任务数据
                     hmChange() {
                       this.proTableData[
-                        this.currentClickedTask.index
-                      ].follow_task = this.followTaskProcessing.data;
+                        this.currentRow.index
+                      ].followTaskInfo = _.cloneDeep(
+                        this.currentRow.followTaskInfo
+                      );
                     },
+                    //  添加后续任务删除功能
                     handleFollowTaskDel(row, index) {
                       // 从后续任务表格数据中一处当前删除行
-                      this.followTaskProcessing.data.splice(index, 1);
+                      this.currentRow.followTaskInfo.splice(index, 1);
                       // 将移除后的后续任务数据挂载到当前点击的任务上
                       this.proTableData[
-                        this.currentClickedTask.index
-                      ].follow_task = _.cloneDeep(
-                        this.followTaskProcessing.data
+                        this.currentRow.index
+                      ].followTaskInfo = _.cloneDeep(
+                        this.currentRow.followTaskInfo
                       );
                     },
                   },
