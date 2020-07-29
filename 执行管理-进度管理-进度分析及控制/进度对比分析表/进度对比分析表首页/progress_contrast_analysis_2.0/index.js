@@ -54,7 +54,7 @@
                     proTableData: [],
                     beforeTaskInfo: {
                       open: true,
-                      title: "紧前任务对当前任务影响情况",
+                      title: "前置任务对当前任务影响情况",
                     },
                     currentTaskInfo: {
                       title: "当前任务情况",
@@ -124,6 +124,7 @@
                         props.data !== ""
                       ) {
                         switch (props.data.method) {
+                          case "getFilterData":
                           case "init":
                             let mDate = props.data.data;
                             if (mDate && mDate.length > 0) {
@@ -142,18 +143,6 @@
                             }
                             break;
                           case "getTaskListData":
-                            if (props.data.data) {
-                              this.proTableData = this.handleProTableData(
-                                props.data.data
-                              );
-                              this.currentRow = this.proTableData[0];
-                              // 默认高亮左侧任务列表第一条
-                              this.$refs.projectTable.setCurrentRow(
-                                this.currentRow
-                              );
-                            }
-                            break;
-                          case "getFilterData":
                             if (props.data.data) {
                               this.proTableData = this.handleProTableData(
                                 props.data.data
@@ -212,7 +201,8 @@
                     },
                     handleProTableData(data) {
                       let dataTemp = _.cloneDeep(data);
-                      dataTemp.forEach((v) => {
+                      dataTemp.forEach((v, k) => {
+                        v.index = k;
                         if (v.task_status === "200") {
                           v.followTaskInfo.forEach((vf) => {
                             vf.delFlag = false;
@@ -369,16 +359,12 @@
                         }
                       }
                     },
-                    // 给左侧任务添加行索引
-                    tableRowClassName({ row, rowIndex }) {
-                      row.index = rowIndex;
-                    },
                     rowClick(row) {
                       // 避免重复点击，优化不必要的操作
                       if (this.currentRow && this.currentRow.id === row.id) {
                         return;
                       }
-                      this.currentRow = row;
+                      this.currentRow = _.cloneDeep(row);
                       this.ifFollowTaskShow =
                         row.task_status === "200" ? true : false;
                     },

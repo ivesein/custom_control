@@ -15,7 +15,7 @@ new Vue({
         beforeTaskInfo: [
           {
             before_task_name: "工作5", //前置任务名称
-            handling_measures: "成本压缩200元", //当前任务处理措施
+            handling_measures: "20", //当前任务处理措施
           },
         ],
         currentTaskInfo: [
@@ -281,6 +281,12 @@ new Vue({
   },
   methods: {
     handleFollowTaskDel(row, index) {
+      // 从后续任务表格数据中一处当前删除行
+      this.currentRow.followTaskInfo.splice(index, 1);
+      // 将移除后的后续任务数据挂载到当前点击的任务上
+      this.proTableData[this.currentRow.index].followTaskInfo = _.cloneDeep(
+        this.currentRow.followTaskInfo
+      );
       console.log(row, index);
     },
     hmChange(val) {
@@ -406,20 +412,6 @@ new Vue({
         this.ifFollowTaskShow = false;
       }
     },
-    //获取当前点击的任务
-    // rowDblclick(row) {
-    //   // 判断是否重复点击
-    //   if (this.currentRow && this.currentRow.id === row.id) return;
-    //   console.log(row);
-    //   this.currentRow = row;
-    //   this.$refs.projectTable.setCurrentRow(this.currentRow);
-    //   if (row.task_status === "200") {
-    //     this.ifFollowTaskShow = true;
-
-    //   } else {
-    //     this.ifFollowTaskShow = false;
-    //   }
-    // },
     goSelectFollowTask() {},
     closeTaskReportDetail() {
       this.taskReportDetailShow = false;
