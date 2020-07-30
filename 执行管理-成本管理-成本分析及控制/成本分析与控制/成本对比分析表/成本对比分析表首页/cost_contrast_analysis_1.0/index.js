@@ -107,12 +107,17 @@
                     handleUpdata(model, props) {
                       if (props.data !== undefined) {
                         switch (props.data.method) {
+                          case "getFilterData":
                           case "init":
                             //初始化获取左侧任务列表数据 判断是否为空 为空显示提示弹框
                             this.proTableData = props.data.data;
                             if (this.proTableData.length === 0) {
                               this.messageBoxShow = true;
                             } else {
+                              this.proTableData.forEach((v, k) => {
+                                v.index = k;
+                                v.feched = false;
+                              });
                               this.messageBoxShow = false;
                             }
                             break;
@@ -122,15 +127,6 @@
                           case "filterBtnClicked":
                             this.showSelectBox();
                             break;
-                          case "getFilterData":
-                            //获取筛选后的左侧任务列表数据 判断是否为空 为空显示提示弹框
-                            this.proTableData = props.data.data;
-                            if (this.proTableData.length === 0) {
-                              this.messageBoxShow = true;
-                            } else {
-                              this.messageBoxShow = false;
-                            }
-                            break;
                           case "getClickedTaskDetailData":
                             //获取当前点击的任务的右侧相关详细信息
                             this.beforeTaskInfo.data =
@@ -139,21 +135,33 @@
                               props.data.data.currentTaskInfo; //当前任务信息
                             this.earnedValueAnalysisSuggestions.data =
                               props.data.data.earnedValueAnalysisSuggestions; //挣值分析数据
+                            if (this.currentClickedTask.task_status === "200") {
+                              this.ifFollowTaskShow = true;
+                              if (this.currentClickedTask.feched === false) {
+                                // 如果该任务没有点击获取过数据  将获取的后续任务挂载到该任务上
+                                this.followTaskProcessing.data =
+                                  props.data.data.followTaskInfo;
+                                this.followTaskProcessing.data.forEach((v) => {
+                                  v.erasable = false; // 默认获取的后续任务添加不可删除标识
+                                });
+                                this.followTaskProcessing.data.push({
+                                  task_name: "",
+                                  handling_measures: "请输入处理措施",
+                                });
+                                this.proTableData[
+                                  this.currentClickedTask.index
+                                ].follow_task = _.cloneDeep(
+                                  this.followTaskProcessing.data
+                                );
+                              }
+                            } else {
+                              this.ifFollowTaskShow = false;
+                            }
                             break;
                           case "pickFollowTasks":
                             // 获取后续任务列表数据
                             this.followTaskListTableData = props.data.data;
                             this.followTaskListShow = true;
-                            // props.data.data.forEach(v => {
-                            //   v.handling_measures = ""
-                            // })
-                            // //在列表尾部添加选取后续任务按钮行
-                            // props.data.data.push({
-                            //   follow_task_name: "",
-                            //   handling_measures: "请输入处理措施"
-                            // })
-                            // this.proTableData[this.currentClickedTask.index].follow_task = props.data.data
-                            // this.followTaskProcessing.data = props.data.data
                             break;
                           default:
                             this.$message.error("数据获取失败，请稍后重试..");
@@ -165,16 +173,16 @@
                      * @Date: 2020-07-27
                      * @Description: 处理后续任务同步到成本维护功能
                      * 重写判断是否选择了后续任务且所有已选后续任务都有默认的或输入的决策措施
+                     * @Date:2020-07-30
+                     * @Update:依产品需求 添加删除逻辑后 修改同步到成本维护接口的数据处理逻辑以及数据结构
                      */
                     syncCostMaintenance() {
                       // 同步到进度维护差异化数据处理
                       // 标记选取了后续任务的任务，并判断这些后续任务的决策措施是否都已输入
                       let sendData = {
                         projectId: this.currentClickedTask.projectid || "",
-                        currentTaskId: this.currentClickedTask.id,
-                        follow_task: [],
+                        data: [],
                       };
-                      let finalData = [];
                       let taskId = [];
                       this.proTableData.forEach((v) => {
                         if (
@@ -189,19 +197,18 @@
                             return j.handling_measures !== undefined;
                           });
                           if (flag) {
-                            finalData.push(...temp);
+                            // finalData.push(...temp);
+                            sendData.data.push({
+                              id: v.id,
+                              followTaskInfo: temp,
+                            });
                           } else {
                             taskId.push(v.task_name);
                           }
                         }
                       });
-                      sendData.follow_task = finalData;
                       if (taskId.length === 0) {
-                        if (finalData.length > 0) {
-                          model.invoke("syncToCostMaintenance", sendData);
-                        } else {
-                          this.$message.warning("没有需要同步的数据");
-                        }
+                        model.invoke("syncToCostMaintenance", sendData);
                       } else {
                         //将所有选取的但没有输入处理措施的后续任务名拼接 提示用户哪些任务没有输入决策措施
                         let str = "";
@@ -284,29 +291,27 @@
                       )
                         return;
                       this.resetData();
-                      // 判断是否是第一次点击 若不是 将当前后续任务数据挂载到上次点击任务上
-                      if (this.currentClickedTask !== null) {
-                        this.proTableData[
-                          this.currentClickedTask.index
-                        ].follow_task = _.cloneDeep(
-                          this.followTaskProcessing.data
-                        );
-                      }
+
                       if (row.task_status === "200") {
                         this.ifFollowTaskShow = true;
-                        if (row.follow_task.length === 0) {
-                          row.follow_task.push({
-                            follow_task_name: "",
-                            handling_measures: "请输入处理措施",
-                          });
+                        // 判断是否是第一次点击 若不是 将当前后续任务数据挂载到上次点击任务上
+                        if (this.currentClickedTask !== null) {
+                          this.proTableData[
+                            this.currentClickedTask.index
+                          ].follow_task = _.cloneDeep(
+                            this.followTaskProcessing.data
+                          );
                         }
-                        this.followTaskProcessing.data = _.cloneDeep(
-                          row.follow_task
-                        );
+                        // 如果该条任务以获取过数据  直接取出该后续任务数据显示
+                        if (row.feched) {
+                          this.followTaskProcessing.data = _.cloneDeep(
+                            row.follow_task
+                          );
+                        }
                       } else {
                         this.ifFollowTaskShow = false;
                       }
-                      this.currentClickedTask = row;
+                      this.currentClickedTask = _.cloneDeep(row);
                       // TODO 调用接口发送 taks_id到后台 获取该任务的其他信息
                       model.invoke("getClickedTaskDetailData", row);
                     },
@@ -337,13 +342,14 @@
                         this.followTaskProcessing.data
                       );
                     },
+                    // 依产品要求 去除当前任务情况表的偏差原因字段
                     // 监听当前任务情况偏差原因输入 ，如有输入或修改 发送到后台
-                    drChange(val) {
-                      model.invode("currentTaskInfoDeviationReason", {
-                        id: this.currentClickedTask.id,
-                        deviation_reason: val,
-                      });
-                    },
+                    // drChange(val) {
+                    //   model.invode("currentTaskInfoDeviationReason", {
+                    //     id: this.currentClickedTask.id,
+                    //     deviation_reason: val,
+                    //   });
+                    // },
                     // 监听挣值分析偏差原因输入 ，如有输入或修改 发送到后台
                     evasChange(val) {
                       console.log(val);
@@ -354,6 +360,7 @@
                     },
                     followTaskcancel() {
                       this.multipleSelection = [];
+                      this.$refs.followTaskListTable.clearSelection();
                       this.followTaskListShow = false;
                     },
                     /**
@@ -361,6 +368,8 @@
                      * @Date: 2020-07-27
                      * @Description: 成本对比分析  重写选取后续任务逻辑
                      * 将所选的后续任务追加到后续任务列表 过滤掉重复选择的任务
+                     * @Date：2020-07-30
+                     * @Update：依产品需求 已选择后续任务做了措施调整并同步后 下次默认显示并且不可删除
                      */
                     followTaskConfirm() {
                       let arr = _.cloneDeep(this.multipleSelection);
@@ -368,6 +377,7 @@
                       this.$refs.followTaskListTable.clearSelection();
                       arr.forEach((v) => {
                         v.handling_measures = 0;
+                        v.erasable = true; // 添加是否可删除标识
                       });
                       // 从原数组弹出最后一行点击按钮行
                       let last = this.followTaskProcessing.data.pop();

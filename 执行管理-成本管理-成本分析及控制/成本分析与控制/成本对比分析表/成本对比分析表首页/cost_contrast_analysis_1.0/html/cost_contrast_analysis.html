@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 
 <html lang="en">
   <head>
@@ -11,7 +11,7 @@
     <title>Document</title>
   </head>
 
-<body>
+<body> -->
 <div id="costCAApp">
   <!-- <div class="btn-lsit">
     <div class="btn-box-left">
@@ -135,27 +135,9 @@
             <el-table-column prop="plan_quantities" label="计划工程量" width="100"></el-table-column>
             <el-table-column prop="plan_cost" label="计划总费用" width="100"></el-table-column>
             <el-table-column prop="Adjusted_cost" label="调整后总费用" width="100"></el-table-column>
-            <!-- <el-table-column prop="duration_after_adjustment" label="调整后工时" width="100"></el-table-column> -->
             <el-table-column prop="actual_duration" label="实际工时" width="120"></el-table-column>
             <el-table-column prop="actual_quantities" label="实际工程量" width="100"></el-table-column>
             <el-table-column prop="actual_cost" label="实际总费用" width="100"></el-table-column>
-            <el-table-column prop="deviation_reason" label="偏差原因" min-width="200">
-              <template slot-scope="scope">
-                <el-input 
-                  v-model="scope.row.deviation_reason" 
-                  placeholder="请输入偏差原因"
-                  maxlength="50"
-                  size="small"
-                  @change="drChange"
-                  ></el-input>
-              </template>
-            </el-table-column>
-            <!-- <el-table-column prop="free_time" label="自由时差" width="100"></el-table-column>
-            <el-table-column prop="free_time_exceed" label="超出自由时差" width="100"></el-table-column>
-            <el-table-column prop="free_time_analysis_conclusion" label="自由时差分析结论" width="160"></el-table-column>
-            <el-table-column prop="total_time" label="总时差" width="100"></el-table-column>
-            <el-table-column prop="total_time_exceed" label="超出总时差" width="100"></el-table-column>
-            <el-table-column prop="total_time_analysis_conclusion" label="总时差分析结论" width="160"></el-table-column> -->
           </el-table>
         </div>
       </div>
@@ -215,6 +197,11 @@
                 </div>
               </template>
             </el-table-column>
+            /**
+             * @Author: zhang fq
+             * @Date: 2020-07-30
+             * @Description: 后续任务添加过滤 默认后续任务不可删除 不显示删除按钮
+             */
             <el-table-column label="后续任务处理措施" min-width="200">
               <template slot-scope="scope">
                 <div class="search-icon" v-if="scope.$index===(followTaskProcessing.data.length-1)">
@@ -226,7 +213,7 @@
                     <el-input-number precision="2" class="custom-elinput-num" v-model="scope.row.handling_measures" controls-position="right" @change="hmChange" :min="0" :max="1000000"></el-input-number>
                     元
                   </div>
-                  <div class="follow-task-handle-right" @click="handleFollowTaskDel(scope.row,scope.$index)">
+                  <div v-show="scope.row.erasable"  class="follow-task-handle-right" @click="handleFollowTaskDel(scope.row,scope.$index)">
                     <i class="el-icon-delete"></i>
                   </div>
                 </div>
@@ -295,9 +282,9 @@
     </div>
   </div>
 </div>
-<script src="../js/lodash.js"></script>
+<!-- <script src="../js/lodash.js"></script>
     <script src="../js/vue.min.js"></script>
     <script src="../js/element.js"></script>
     <script src="../js/test.js"></script>
   </body>
-</html>
+</html> -->
