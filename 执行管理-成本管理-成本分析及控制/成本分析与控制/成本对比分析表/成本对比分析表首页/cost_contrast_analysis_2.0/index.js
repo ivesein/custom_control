@@ -300,12 +300,12 @@
                      * @Date: 2020-07-29
                      * @Description: 成本对比分析 监听当前任务情况偏差原因输入 ，如有输入或修改 发送到后台
                      */
-                    drChange(val) {
-                      model.invode("currentTaskInfoDeviationReason", {
-                        id: this.currentRow.id,
-                        deviation_reason: val,
-                      });
-                    },
+                    // drChange(val) {
+                    //   model.invoke("currentTaskInfoDeviationReason", {
+                    //     id: this.currentRow.id,
+                    //     deviation_reason: val,
+                    //   });
+                    // },
                     /**
                      * @Author: zhang fq
                      * @Date: 2020-07-29
@@ -313,7 +313,7 @@
                      */
                     evasChange(val) {
                       console.log(val);
-                      model.invode("earnedAnalysisDeviationReason", {
+                      model.invoke("earnedAnalysisDeviationReason", {
                         id: this.currentRow.id,
                         deviation_reason: val,
                       });

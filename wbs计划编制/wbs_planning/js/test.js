@@ -187,7 +187,7 @@ new Vue({
           plan_endtime: "2019-10-17 18:30:02",
           owner_role: "",
           modify_duration: "",
-          position: "1",
+          position: 1,
           mod_con_duration: "",
           task_type: "",
           skill: "",
@@ -212,7 +212,7 @@ new Vue({
           plan_endtime: "2019-10-17 18:30:02",
           owner_role: "",
           modify_duration: "",
-          position: "2",
+          position: 11,
           mod_con_duration: "",
           task_type: "2",
           skill: "测试",
@@ -237,7 +237,7 @@ new Vue({
           plan_endtime: "2019-10-10 00:00:00",
           owner_role: "",
           modify_duration: "",
-          position: "3",
+          position: 2,
           mod_con_duration: "",
           task_type: "4",
           skill: "挖土",
@@ -262,7 +262,7 @@ new Vue({
           plan_endtime: "2019-10-10 00:00:00",
           owner_role: "角色001",
           modify_duration: "",
-          position: "4",
+          position: 9,
           mod_con_duration: "",
           task_type: "1",
           skill: "挖土设计",
@@ -287,7 +287,7 @@ new Vue({
           plan_endtime: "2019-10-10 00:00:00",
           owner_role: "角色002",
           modify_duration: "",
-          position: "5",
+          position: 5,
           mod_con_duration: "",
           task_type: "3",
           skill: "挖土复核",
@@ -814,7 +814,7 @@ new Vue({
           task_id: "23738b34-7b9c-4fa4-a59c-3369de670021",
           type: "project",
           duration: "11",
-          position: "2",
+          position: "3",
           raiseArray: [
             {
               receivewbs: "1", //接收任务代码 array
@@ -850,7 +850,7 @@ new Vue({
           task_id: "23738b34-7b9c-4fa4-a59c-3369de670021",
           type: "project",
           duration: "11",
-          position: "2",
+          position: "4",
           raiseArray: [
             {
               receivewbs: "1", //接收任务代码 array
@@ -877,7 +877,7 @@ new Vue({
           task_id: "23738b34-7b9c-4fa4-a59c-3369de670021",
           type: "project",
           duration: "11",
-          position: "2",
+          position: "5",
           raiseArray: [
             {
               receivewbs: "1", //接收任务代码 array
