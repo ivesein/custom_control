@@ -30,6 +30,7 @@
         </div> -->
       <el-table
         ref="scheduleTable"
+        :default-sort="{prop: 'position', order: 'ascending'}"
         :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
         :data="scheduleData"
         style="width: 100%; margin: 10px 0 10px 0;"
@@ -48,7 +49,11 @@
               <el-checkbox @change="itemChange(scope.row)" v-model="scope.row.checked"></el-checkbox>
             </template>
           </el-table-column> -->
-        <el-table-column type="index" label="序号" width="60"></el-table-column>
+        <el-table-column
+          prop="position"
+          label="序号"
+          width="60"
+        ></el-table-column>
         <el-table-column
           prop="wbs"
           label="WBS编码"
@@ -127,6 +132,7 @@
     <el-tab-pane label="委外计划" name="second">
       <el-table
         ref="contractTable"
+        :default-sort="{prop: 'position', order: 'ascending'}"
         :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
         :data="contractData"
         style="width: 100%; margin: 10px 0 10px 0;"
@@ -145,7 +151,11 @@
               <el-checkbox @change="itemChange(scope.row)" v-model="scope.row.checked"></el-checkbox>
             </template>
           </el-table-column> -->
-        <el-table-column type="index" label="序号" width="60"></el-table-column>
+        <el-table-column
+          prop="position"
+          label="序号"
+          width="60"
+        ></el-table-column>
         <el-table-column
           prop="wbs"
           label="WBS编码"
@@ -232,6 +242,7 @@
         </div> -->
       <el-table
         ref="qualityTable"
+        :default-sort="{prop: 'position', order: 'ascending'}"
         :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
         :data="qualityData"
         style="width: 100%; margin: 10px 0 10px 0;"
@@ -250,7 +261,11 @@
               <el-checkbox @change="itemChange(scope.row)" v-model="scope.row.checked"></el-checkbox>
             </template>
           </el-table-column> -->
-        <el-table-column type="index" label="序号" width="60"></el-table-column>
+        <el-table-column
+          prop="position"
+          label="序号"
+          width="60"
+        ></el-table-column>
         <el-table-column
           prop="wbs"
           label="WBS编码"
@@ -261,11 +276,11 @@
           min-width="300"
           label="任务名称"
         ></el-table-column>
-        <el-table-column
-          prop="major.text"
-          label="专业"
-          width="120"
-        ></el-table-column>
+        <!-- <el-table-column
+            prop="major.text"
+            label="专业"
+            width="120"
+          ></el-table-column> -->
         <el-table-column
           prop="describe"
           label="任务说明"
@@ -410,6 +425,7 @@
     <el-tab-pane label="提资计划" name="fourth">
       <el-table
         ref="datumFileTable"
+        :default-sort="{prop: 'position', order: 'ascending'}"
         :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
         :data="datumFileData"
         style="width: 100%; margin: 10px 0 10px 0;"
@@ -418,7 +434,11 @@
         :border="true"
         :height="tableHeight"
       >
-        <el-table-column type="index" label="序号" width="60"></el-table-column>
+        <el-table-column
+          prop="position"
+          label="序号"
+          width="60"
+        ></el-table-column>
         <el-table-column
           prop="wbs"
           label="WBS编码"
@@ -493,6 +513,7 @@
     <el-tab-pane label="成本计划" name="fifth">
       <el-table
         ref="costTable"
+        :default-sort="{prop: 'position', order: 'ascending'}"
         :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
         :data="costData"
         style="width: 100%; margin: 10px 0 10px 0;"
@@ -511,7 +532,11 @@
               <el-checkbox @change="itemChange(scope.row)" v-model="scope.row.checked"></el-checkbox>
             </template>
           </el-table-column> -->
-        <el-table-column type="index" label="序号" width="60"></el-table-column>
+        <el-table-column
+          prop="position"
+          label="序号"
+          width="60"
+        ></el-table-column>
         <el-table-column
           prop="wbs"
           label="WBS编码"
