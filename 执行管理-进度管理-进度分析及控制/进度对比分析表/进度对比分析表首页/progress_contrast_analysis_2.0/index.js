@@ -261,7 +261,7 @@
                             return j.handling_measures !== undefined;
                           });
                           if (flag) {
-                            finalData.push(...temp);
+                            finalData.push(v);
                           } else {
                             taskId.push(v.task_name);
                           }

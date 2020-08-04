@@ -81,9 +81,9 @@
         </el-table-column>
         <el-table-column prop="task_status" label="任务状态" width="100">
           <template slot-scope="scope">
-            <div v-show="scope.row.task_status==='1'">未开始</div>
-            <div v-show="scope.row.task_status==='2'">进行中</div>
-            <div v-show="scope.row.task_status==='3'">已完成</div>
+            <div v-show="scope.row.task_status==='000'">未开始</div>
+            <div v-show="scope.row.task_status==='100'">进行中</div>
+            <div v-show="scope.row.task_status==='200'">已完成</div>
           </template>
         </el-table-column>
         <el-table-column prop="handle_status" label="处理状态" width="100">
@@ -125,12 +125,12 @@
           >
             <el-table-column
               prop="before_task_name"
-              label="紧前任务名称"
+              label="前置任务名称"
               width="200"
             ></el-table-column>
             <el-table-column
               prop="handling_measures"
-              label="紧前任务对当前任务影响的处理措施"
+              label="前置任务对当前任务影响的处理措施"
             ></el-table-column>
           </el-table>
         </div>
@@ -203,7 +203,7 @@
       <!-- 当前任务挣值数据分析 -->
       <div
         class="detail-info-box"
-        v-show="currentTask&&currentTask.task_status==='3'"
+        v-show="currentTask&&currentTask.task_status==='200'"
       >
         <div class="title-info-box">
           <div class="drop-btn">
@@ -265,7 +265,7 @@
       <!-- 后续任务处理 -->
       <div
         class="detail-info-box"
-        v-show="currentTask&&currentTask.task_status==='3'"
+        v-show="currentTask&&currentTask.task_status==='200'"
       >
         <div class="title-info-box">
           <div class="drop-btn">
@@ -293,7 +293,7 @@
             row-key="task_id"
             :border="true"
           >
-            <el-table-column prop="follow_task_name" label="后续任务名称">
+            <el-table-column prop="task_name" label="后续任务名称">
               <!-- <template slot-scope="scope">
                 <div class="search-icon">
                   <span style="font-size: 14px;">请选择后续任务</span>
@@ -301,10 +301,11 @@
                 </div>
               </template> -->
             </el-table-column>
-            <el-table-column
-              prop="handling_measures"
-              label="后续任务处理措施"
-            ></el-table-column>
+            <el-table-column prop="handling_measures" label="后续任务处理措施">
+              <template slot-scope="scope">
+                压缩成本${scope.row.handling_measures}元
+              </template>
+            </el-table-column>
           </el-table>
         </div>
       </div>

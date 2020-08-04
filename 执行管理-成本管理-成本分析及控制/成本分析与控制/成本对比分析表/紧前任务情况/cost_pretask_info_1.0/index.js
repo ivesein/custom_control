@@ -54,12 +54,11 @@
                     proTableData: [],
                     beforeTaskInfo: {
                       open: true,
-                      title: "紧前任务对当前任务影响情况",
+                      title: "前置任务对当前任务影响情况",
                       data: [],
                     },
                     currentTaskInfo: {
                       title: "当前任务情况",
-                      task_status: "1",
                       open: true,
                       data: [],
                     },
