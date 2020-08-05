@@ -78,14 +78,11 @@ new Vue({
     top: 0,
   },
   created() {
-    let a = {};
-    let b = _.cloneDeep(a.cc);
-    console.log(b);
     var data_ = datajson;
     // var data_ = this.addSortNum(tData).sort(this.compare("sortNum"));
-    console.table(data_);
+    // console.table(data_);
     data_ = this.setAuditTaskUndertaker(data_);
-    console.log("data_>>>", data_);
+    // console.log("data_>>>", data_);
     // this.tableData = data_;
     this.tableData = this.formatToTreeData({
       arrayList: data_,

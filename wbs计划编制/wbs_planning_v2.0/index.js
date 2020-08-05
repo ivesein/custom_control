@@ -126,8 +126,7 @@
                       this.qualityData = data.qualityData || [];
                       this.contractData = data.contractData || [];
                       this.costData = data.costData || [];
-                      this.datumFileData =
-                        data.datumFileData.sort(this.compare("position")) || [];
+                      this.datumFileData = data.datumFileData || [];
                     },
                     handleTabClick(tab, event) {
                       console.log(tab, event);
@@ -137,13 +136,6 @@
                         // console.log(column)
                         return "padding: 0px!important;";
                       }
-                    },
-                    compare(property) {
-                      return (a, b) => {
-                        var value1 = a[property];
-                        var value2 = b[property];
-                        return value1 - value2;
-                      };
                     },
                   },
                 }).$mount($("#wbsPlanningApp", model.dom).get(0));

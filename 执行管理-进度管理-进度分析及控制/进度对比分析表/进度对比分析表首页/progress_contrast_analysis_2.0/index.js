@@ -194,6 +194,12 @@
                           case "filterBtnClicked":
                             this.showSelectBox();
                             break;
+                          case "goBeforeTaskDetail":
+                            this.goBeforeTaskDetail();
+                            break;
+                          case "goCurrentTaskControl":
+                            this.goCurrentTaskControl();
+                            break;
                           default:
                             this.$message.error("数据获取失败，请稍后重试..");
                         }
@@ -227,12 +233,34 @@
                     },
                     refreshData() {},
                     goExit() {},
-                    goBeforeTaskDetail() {},
-                    goCurrentTaskControl() {},
+                    /**
+                     * @Author: zhang fq
+                     * @Date: 2020-08-05
+                     * @Description: 进度对比分析 跳转前置任务信息页面
+                     */
+                    goBeforeTaskDetail() {
+                      if (this.currentRow !== null) {
+                        model.invoke("goBeforeTaskDetail", this.currentRow);
+                      } else {
+                        this.$message.error("请先选择任务");
+                      }
+                    },
+                    /**
+                     * @Author: zhang fq
+                     * @Date: 2020-08-05
+                     * @Description: 进度对比分析 跳转到当前任务信息页面
+                     */
+                    goCurrentTaskControl() {
+                      if (this.currentRow !== null) {
+                        model.invoke("goCurrentTaskControl", this.currentRow);
+                      } else {
+                        this.$message.error("请先选择任务");
+                      }
+                    },
                     //调接口 打开任务汇报详情表格弹出
                     goTaskReportDetail() {
-                      if (this.currentRow.id) {
-                        model.invoke("getReportDetailData", this.currentRow.id);
+                      if (this.currentRow !== null) {
+                        model.invoke("getReportDetailData", this.currentRow);
                         this.taskReportDetailShow = true;
                       } else {
                         this.$message.error("请先选择任务");

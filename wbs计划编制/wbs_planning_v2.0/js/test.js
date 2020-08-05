@@ -762,7 +762,7 @@ new Vue({
           end_date: "2019-10-03 00:00:00",
           type: "project",
           duration: "11",
-          position: "3",
+          position: "1",
           raiseArray: [
             {
               receivewbs: "1", //接收任务代码 array
@@ -814,7 +814,7 @@ new Vue({
           task_id: "23738b34-7b9c-4fa4-a59c-3369de670021",
           type: "project",
           duration: "11",
-          position: "7",
+          position: "3",
           raiseArray: [
             {
               receivewbs: "1", //接收任务代码 array
@@ -850,7 +850,7 @@ new Vue({
           task_id: "23738b34-7b9c-4fa4-a59c-3369de670021",
           type: "project",
           duration: "11",
-          position: "15",
+          position: "4",
           raiseArray: [
             {
               receivewbs: "1", //接收任务代码 array
@@ -877,7 +877,7 @@ new Vue({
           task_id: "23738b34-7b9c-4fa4-a59c-3369de670021",
           type: "project",
           duration: "11",
-          position: "9",
+          position: "5",
           raiseArray: [
             {
               receivewbs: "1", //接收任务代码 array
@@ -910,7 +910,7 @@ new Vue({
     this.qualityData = apiData.qualityData;
     this.contractData = apiData.contractData;
     this.costData = apiData.costData;
-    this.datumFileData = apiData.datumFileData.sort(this.compare("position"));
+    this.datumFileData = apiData.datumFileData;
   },
   mounted() {
     this.$nextTick(function () {
@@ -926,13 +926,6 @@ new Vue({
     });
   },
   methods: {
-    compare(property) {
-      return (a, b) => {
-        var value1 = a[property];
-        var value2 = b[property];
-        return value1 - value2;
-      };
-    },
     handleTabClick(tab, event) {
       console.log(tab, event);
     },

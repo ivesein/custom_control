@@ -41,92 +41,92 @@
           default-expand-all
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         >
-          <!-- <el-table-column width="40">
+          <!-- <u-table-column width="40">
             <template slot="header" slot-scope="scope">
               <el-checkbox @change="handleCheckAllChange" v-model="allChecked"></el-checkbox>
             </template>
             <template slot-scope="scope">
               <el-checkbox @change="itemChange(scope.row)" v-model="scope.row.checked"></el-checkbox>
             </template>
-          </el-table-column> -->
-          <el-table-column
+          </u-table-column> -->
+          <u-table-column
             prop="position"
             label="序号"
             width="60"
-          ></el-table-column>
-          <el-table-column
+          ></u-table-column>
+          <u-table-column
             prop="wbs"
             label="WBS编码"
             width="120"
-          ></el-table-column>
-          <el-table-column
+          ></u-table-column>
+          <u-table-column
             prop="task_name"
             min-width="300"
             label="任务名称"
-          ></el-table-column>
-          <el-table-column
+          ></u-table-column>
+          <u-table-column
             prop="major.text"
             label="专业"
             width="120"
-          ></el-table-column>
-          <el-table-column
+          ></u-table-column>
+          <u-table-column
             prop="describe"
             label="任务说明"
             width="220"
-          ></el-table-column>
-          <el-table-column label="工期" width="120">
+          ></u-table-column>
+          <u-table-column label="工期" width="120">
             <template slot-scope="scope">
               <div>
                 ${ scope.row.duration }
               </div>
             </template>
-          </el-table-column>
-          <el-table-column label="开始日期" width="180">
+          </u-table-column>
+          <u-table-column label="开始日期" width="180">
             <template slot-scope="scope">
               <div>
                 ${ scope.row.start_date }
               </div>
             </template>
-          </el-table-column>
-          <el-table-column label="结束日期" width="180">
+          </u-table-column>
+          <u-table-column label="结束日期" width="180">
             <template slot-scope="scope">
               <div>
                 ${ scope.row.end_date }
               </div>
             </template>
-          </el-table-column>
-          <el-table-column
+          </u-table-column>
+          <u-table-column
             prop="duration_plan"
             label="工程量"
             width="120"
-          ></el-table-column>
-          <el-table-column
+          ></u-table-column>
+          <u-table-column
             prop="my_unit.text"
             label="单位"
             width="120"
-          ></el-table-column>
-          <el-table-column
+          ></u-table-column>
+          <u-table-column
             prop="effect"
             label="工效"
             width="120"
-          ></el-table-column>
-          <el-table-column
+          ></u-table-column>
+          <u-table-column
             prop="my_unit.text"
             label="工效单位"
             width="120"
-          ></el-table-column>
-          <el-table-column
+          ></u-table-column>
+          <u-table-column
             prop="task_before"
             label="前置任务"
             width="120"
-          ></el-table-column>
-          <el-table-column label="里程碑" width="120">
+          ></u-table-column>
+          <u-table-column label="里程碑" width="120">
             <template slot-scope="scope">
               <el-switch
                 v-model="scope.row.type==='milestone'?true:false"
               ></el-switch>
             </template>
-          </el-table-column>
+          </u-table-column>
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="委外计划" name="second">
@@ -143,88 +143,88 @@
           default-expand-all
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         >
-          <!-- <el-table-column width="40">
+          <!-- <u-table-column width="40">
             <template slot="header" slot-scope="scope">
               <el-checkbox @change="handleCheckAllChange" v-model="allChecked"></el-checkbox>
             </template>
             <template slot-scope="scope">
               <el-checkbox @change="itemChange(scope.row)" v-model="scope.row.checked"></el-checkbox>
             </template>
-          </el-table-column> -->
-          <el-table-column
+          </u-table-column> -->
+          <u-table-column
             prop="position"
             label="序号"
             width="60"
-          ></el-table-column>
-          <el-table-column
+          ></u-table-column>
+          <u-table-column
             prop="wbs"
             label="WBS编码"
             width="120"
-          ></el-table-column>
-          <el-table-column
+          ></u-table-column>
+          <u-table-column
             prop="task_name"
             min-width="300"
             label="任务名称"
-          ></el-table-column>
-          <el-table-column
+          ></u-table-column>
+          <u-table-column
             prop="major.text"
             label="专业"
             width="120"
-          ></el-table-column>
-          <el-table-column
+          ></u-table-column>
+          <u-table-column
             prop="describe"
             label="任务说明"
             width="220"
-          ></el-table-column>
-          <el-table-column label="工期" width="120">
+          ></u-table-column>
+          <u-table-column label="工期" width="120">
             <template slot-scope="scope">
               <div>
                 ${ scope.row.duration }
               </div>
             </template>
-          </el-table-column>
-          <el-table-column label="开始日期" width="180">
+          </u-table-column>
+          <u-table-column label="开始日期" width="180">
             <template slot-scope="scope">
               <div>
                 ${ scope.row.start_date }
               </div>
             </template>
-          </el-table-column>
-          <el-table-column label="结束日期" width="180">
+          </u-table-column>
+          <u-table-column label="结束日期" width="180">
             <template slot-scope="scope">
               <div>
                 ${ scope.row.end_date }
               </div>
             </template>
-          </el-table-column>
-          <el-table-column label="是否委外" width="120">
+          </u-table-column>
+          <u-table-column label="是否委外" width="120">
             <template slot-scope="scope">
               <el-switch
                 v-model="scope.row.delegate==='1'?true:false"
               ></el-switch>
             </template>
-          </el-table-column>
-          <el-table-column
+          </u-table-column>
+          <u-table-column
             prop="delegate_reason"
             label="委外原因"
             width="120"
-          ></el-table-column>
-          <el-table-column
+          ></u-table-column>
+          <u-table-column
             prop="delegate_role_name"
             label="委外负责人角色"
             width="140"
-          ></el-table-column>
-          <el-table-column
+          ></u-table-column>
+          <u-table-column
             prop="delegate_person_name"
             label="委外负责人名称"
             width="140"
-          ></el-table-column>
-          <!-- <el-table-column prop="duration" label="委外工期" width="120"></el-table-column> -->
-          <el-table-column
+          ></u-table-column>
+          <!-- <u-table-column prop="duration" label="委外工期" width="120"></u-table-column> -->
+          <u-table-column
             prop="contract_thing"
             label="合同事项"
             width="120"
-          ></el-table-column>
+          ></u-table-column>
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="质量计划" name="third">
@@ -240,7 +240,7 @@
           </button>
           <button class="btn-itme" id="refresh" @click="refreshData">刷新</button>
         </div> -->
-        <el-table
+        <u-table
           ref="qualityTable"
           :default-sort="{prop: 'position', order: 'ascending'}"
           :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
@@ -250,64 +250,65 @@
           row-key="task_id"
           :border="true"
           :height="tableHeight"
-          default-expand-all
+          use-virtual
+          :treeConfig="{children: 'children', expandAll: false}"
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         >
-          <!-- <el-table-column width="40">
+          <!-- <u-table-column width="40">
             <template slot="header" slot-scope="scope">
               <el-checkbox @change="handleCheckAllChange" v-model="allChecked"></el-checkbox>
             </template>
             <template slot-scope="scope">
               <el-checkbox @change="itemChange(scope.row)" v-model="scope.row.checked"></el-checkbox>
             </template>
-          </el-table-column> -->
-          <el-table-column
+          </u-table-column> -->
+          <u-table-column
             prop="position"
             label="序号"
             width="60"
-          ></el-table-column>
-          <el-table-column
+          ></u-table-column>
+          <u-table-column
             prop="wbs"
             label="WBS编码"
             width="120"
-          ></el-table-column>
-          <el-table-column
+          ></u-table-column>
+          <u-table-column
             prop="task_name"
             min-width="300"
             label="任务名称"
-          ></el-table-column>
-          <!-- <el-table-column
+          ></u-table-column>
+          <!-- <u-table-column
             prop="major.text"
             label="专业"
             width="120"
-          ></el-table-column> -->
-          <el-table-column
+          ></u-table-column> -->
+          <u-table-column
             prop="describe"
             label="任务说明"
             width="220"
-          ></el-table-column>
-          <!-- <el-table-column label="工期" width="120">
+          ></u-table-column>
+          <!-- <u-table-column label="工期" width="120">
             <template slot-scope="scope">
               <div>
                 ${ scope.row.duration }
               </div>
             </template>
-          </el-table-column> -->
-          <el-table-column label="开始日期" width="180">
+          </u-table-column> -->
+          <u-table-column label="开始日期" width="180">
             <template slot-scope="scope">
               <div>
                 ${ scope.row.plan_starttime }
               </div>
             </template>
-          </el-table-column>
-          <el-table-column label="结束日期" width="180">
+          </u-table-column>
+          <u-table-column label="结束日期" width="180">
             <template slot-scope="scope">
               <div>
                 ${ scope.row.plan_endtime }
               </div>
             </template>
-          </el-table-column>
-          <el-table-column label="阶段" width="160">
+          </u-table-column>
+          <u-table-column label="阶段" width="160">
             <template slot-scope="scope">
               <div class="recheck-box" v-show="scope.row.task_type === '3'">
                 <div class="recheck-top">
@@ -331,8 +332,8 @@
                 </div>
               </div>
             </template>
-          </el-table-column>
-          <el-table-column label="承担人角色" width="120">
+          </u-table-column>
+          <u-table-column label="承担人角色" width="120">
             <template slot-scope="scope">
               <div class="checek-man" v-show="scope.row.task_type === '3'">
                 ${ scope.row.owner_role }
@@ -356,8 +357,8 @@
                 ${ scope.row.owner_role }
               </div>
             </template>
-          </el-table-column>
-          <el-table-column label="技能等级" width="120">
+          </u-table-column>
+          <u-table-column label="技能等级" width="120">
             <template slot-scope="scope">
               <div class="checek-man" v-show="scope.row.task_type === '3'">
                 ${ scope.row.skill }
@@ -381,8 +382,8 @@
                 ${ scope.row.skill }
               </div>
             </template>
-          </el-table-column>
-          <el-table-column label="持续时间" width="120">
+          </u-table-column>
+          <u-table-column label="持续时间" width="120">
             <template slot-scope="scope">
               <div class="checek-man" v-show="scope.row.task_type === '3'">
                 ${ scope.row.first_duration }
@@ -400,8 +401,8 @@
                 ${ scope.row.first_duration }
               </div> -->
             </template>
-          </el-table-column>
-          <el-table-column label="完成并提交日期" width="180">
+          </u-table-column>
+          <u-table-column label="完成并提交日期" width="180">
             <template slot-scope="scope">
               <div class="checek-man" v-show="scope.row.task_type === '3'">
                 ${ scope.row.submit_date }
@@ -419,8 +420,8 @@
                 ${ scope.row.submit_date }
               </div> -->
             </template>
-          </el-table-column>
-        </el-table>
+          </u-table-column>
+        </u-table>
       </el-tab-pane>
       <el-tab-pane label="提资计划" name="fourth">
         <el-table
@@ -434,53 +435,48 @@
           :border="true"
           :height="tableHeight"
         >
-          <el-table-column
-            type="index"
+          <u-table-column
+            prop="position"
             label="序号"
             width="60"
-          ></el-table-column>
-          <!-- <el-table-column
-            prop="position"
-            label="位置"
-            width="60"
-          ></el-table-column> -->
-          <el-table-column
+          ></u-table-column>
+          <u-table-column
             prop="wbs"
             label="WBS编码"
             width="120"
-          ></el-table-column>
-          <el-table-column
+          ></u-table-column>
+          <u-table-column
             prop="task_name"
             min-width="300"
             label="任务名称"
-          ></el-table-column>
-          <el-table-column
+          ></u-table-column>
+          <u-table-column
             prop="describe"
             label="任务说明"
             width="220"
-          ></el-table-column>
-          <el-table-column label="工时" width="120">
+          ></u-table-column>
+          <u-table-column label="工时" width="120">
             <template slot-scope="scope">
               <div>
                 ${ scope.row.duration }
               </div>
             </template>
-          </el-table-column>
-          <el-table-column label="开始日期" width="180">
+          </u-table-column>
+          <u-table-column label="开始日期" width="180">
             <template slot-scope="scope">
               <div>
                 ${ scope.row.plan_starttime }
               </div>
             </template>
-          </el-table-column>
-          <el-table-column label="结束日期" width="180">
+          </u-table-column>
+          <u-table-column label="结束日期" width="180">
             <template slot-scope="scope">
               <div>
                 ${ scope.row.plan_endtime }
               </div>
             </template>
-          </el-table-column>
-          <el-table-column label="接收任务编码" width="120">
+          </u-table-column>
+          <u-table-column label="接收任务编码" width="120">
             <template slot-scope="scope">
               <div
                 class="checek-man"
@@ -490,8 +486,8 @@
                 ${ item.receivewbs }
               </div>
             </template>
-          </el-table-column>
-          <el-table-column label="接收任务名称" width="300">
+          </u-table-column>
+          <u-table-column label="接收任务名称" width="300">
             <template slot-scope="scope">
               <div
                 class="checek-man"
@@ -501,8 +497,8 @@
                 ${ item.receivename }
               </div>
             </template>
-          </el-table-column>
-          <el-table-column label="接收任务资料" width="300">
+          </u-table-column>
+          <u-table-column label="接收任务资料" width="300">
             <template slot-scope="scope">
               <div
                 class="checek-man"
@@ -512,7 +508,7 @@
                 ${ item.receivedata }
               </div>
             </template>
-          </el-table-column>
+          </u-table-column>
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="成本计划" name="fifth">
@@ -529,80 +525,80 @@
           default-expand-all
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         >
-          <!-- <el-table-column width="40">
+          <!-- <u-table-column width="40">
             <template slot="header" slot-scope="scope">
               <el-checkbox @change="handleCheckAllChange" v-model="allChecked"></el-checkbox>
             </template>
             <template slot-scope="scope">
               <el-checkbox @change="itemChange(scope.row)" v-model="scope.row.checked"></el-checkbox>
             </template>
-          </el-table-column> -->
-          <el-table-column
+          </u-table-column> -->
+          <u-table-column
             prop="position"
             label="序号"
             width="60"
-          ></el-table-column>
-          <el-table-column
+          ></u-table-column>
+          <u-table-column
             prop="wbs"
             label="WBS编码"
             width="120"
-          ></el-table-column>
-          <el-table-column
+          ></u-table-column>
+          <u-table-column
             prop="task_name"
             min-width="300"
             label="任务名称"
-          ></el-table-column>
-          <el-table-column
+          ></u-table-column>
+          <u-table-column
             prop="major.text"
             label="专业"
             width="120"
-          ></el-table-column>
-          <el-table-column
+          ></u-table-column>
+          <u-table-column
             prop="describe"
             label="任务说明"
             width="220"
-          ></el-table-column>
-          <!-- <el-table-column label="工期" width="120">
+          ></u-table-column>
+          <!-- <u-table-column label="工期" width="120">
             <template slot-scope="scope">
               <div>
                 ${ scope.row.duration }
               </div>
             </template>
-          </el-table-column> -->
-          <el-table-column label="开始日期" width="180">
+          </u-table-column> -->
+          <u-table-column label="开始日期" width="180">
             <template slot-scope="scope">
               <div>
                 ${ scope.row.start_date }
               </div>
             </template>
-          </el-table-column>
-          <el-table-column label="结束日期" width="180">
+          </u-table-column>
+          <u-table-column label="结束日期" width="180">
             <template slot-scope="scope">
               <div>
                 ${ scope.row.end_date }
               </div>
             </template>
-          </el-table-column>
-          <el-table-column label="任务绩效" width="120">
-            <el-table-column
+          </u-table-column>
+          <u-table-column label="任务绩效" width="120">
+            <u-table-column
               prop="work_amount_unit"
               label="工程量/单位"
               width="120"
-            ></el-table-column>
-            <!-- <el-table-column prop="assn_pro_unit" label="单位" width="80"></el-table-column> -->
-            <el-table-column
+            ></u-table-column>
+            <!-- <u-table-column prop="assn_pro_unit" label="单位" width="80"></u-table-column> -->
+            <u-table-column
               prop="performance_bonus"
               label="绩效"
               width="80"
-            ></el-table-column>
-            <el-table-column
+            ></u-table-column>
+            <u-table-column
               prop="performance_bonus_subtotal"
               label="小计"
               width="80"
-            ></el-table-column>
-          </el-table-column>
-          <el-table-column prop="" label="机械" width="120">
-            <el-table-column label="名称" width="100">
+            ></u-table-column>
+          </u-table-column>
+          <u-table-column prop="" label="机械" width="120">
+            <u-table-column label="名称" width="100">
               <template slot-scope="scope">
                 <div
                   class="checek-man-cost"
@@ -612,8 +608,8 @@
                   ${ item }
                 </div>
               </template>
-            </el-table-column>
-            <el-table-column label="型号" width="80">
+            </u-table-column>
+            <u-table-column label="型号" width="80">
               <template slot-scope="scope">
                 <div
                   class="checek-man-cost"
@@ -623,8 +619,8 @@
                   ${ item }
                 </div>
               </template>
-            </el-table-column>
-            <el-table-column label="耗用量" width="80">
+            </u-table-column>
+            <u-table-column label="耗用量" width="80">
               <template slot-scope="scope">
                 <div
                   class="checek-man-cost"
@@ -634,8 +630,8 @@
                   ${ item }
                 </div>
               </template>
-            </el-table-column>
-            <el-table-column label="单位" width="80">
+            </u-table-column>
+            <u-table-column label="单位" width="80">
               <template slot-scope="scope">
                 <div
                   class="checek-man-cost"
@@ -645,8 +641,8 @@
                   ${ item }
                 </div>
               </template>
-            </el-table-column>
-            <el-table-column label="单价" width="80">
+            </u-table-column>
+            <u-table-column label="单价" width="80">
               <template slot-scope="scope">
                 <div
                   class="checek-man-cost"
@@ -656,8 +652,8 @@
                   ${ item }
                 </div>
               </template>
-            </el-table-column>
-            <el-table-column label="小计" width="80">
+            </u-table-column>
+            <u-table-column label="小计" width="80">
               <template slot-scope="scope">
                 <div
                   class="checek-man-cost"
@@ -667,10 +663,10 @@
                   ${ item }
                 </div>
               </template>
-            </el-table-column>
-          </el-table-column>
-          <el-table-column prop="" label="材料" width="120">
-            <el-table-column label="名称" width="100">
+            </u-table-column>
+          </u-table-column>
+          <u-table-column prop="" label="材料" width="120">
+            <u-table-column label="名称" width="100">
               <template slot-scope="scope">
                 <div
                   class="checek-man-cost"
@@ -680,8 +676,8 @@
                   ${ item }
                 </div>
               </template>
-            </el-table-column>
-            <el-table-column label="型号" width="80">
+            </u-table-column>
+            <u-table-column label="型号" width="80">
               <template slot-scope="scope">
                 <div
                   class="checek-man-cost"
@@ -691,8 +687,8 @@
                   ${ item }
                 </div>
               </template>
-            </el-table-column>
-            <el-table-column label="耗用量" width="80">
+            </u-table-column>
+            <u-table-column label="耗用量" width="80">
               <template slot-scope="scope">
                 <div
                   class="checek-man-cost"
@@ -702,8 +698,8 @@
                   ${ item }
                 </div>
               </template>
-            </el-table-column>
-            <el-table-column label="单位" width="80">
+            </u-table-column>
+            <u-table-column label="单位" width="80">
               <template slot-scope="scope">
                 <div
                   class="checek-man-cost"
@@ -713,8 +709,8 @@
                   ${ item }
                 </div>
               </template>
-            </el-table-column>
-            <el-table-column label="单价" width="80">
+            </u-table-column>
+            <u-table-column label="单价" width="80">
               <template slot-scope="scope">
                 <div
                   class="checek-man-cost"
@@ -724,8 +720,8 @@
                   ${ item }
                 </div>
               </template>
-            </el-table-column>
-            <el-table-column label="小计" width="80">
+            </u-table-column>
+            <u-table-column label="小计" width="80">
               <template slot-scope="scope">
                 <div
                   class="checek-man-cost"
@@ -735,10 +731,10 @@
                   ${ item }
                 </div>
               </template>
-            </el-table-column>
-          </el-table-column>
-          <el-table-column prop="" label="人工" width="120">
-            <el-table-column label="角色名称" width="100">
+            </u-table-column>
+          </u-table-column>
+          <u-table-column prop="" label="人工" width="120">
+            <u-table-column label="角色名称" width="100">
               <template slot-scope="scope">
                 <div
                   class="checek-man-cost"
@@ -748,8 +744,8 @@
                   ${ item }
                 </div>
               </template>
-            </el-table-column>
-            <el-table-column label="人员姓名" width="80">
+            </u-table-column>
+            <u-table-column label="人员姓名" width="80">
               <template slot-scope="scope">
                 <div
                   class="checek-man-cost"
@@ -759,8 +755,8 @@
                   ${ item }
                 </div>
               </template>
-            </el-table-column>
-            <el-table-column label="工作量" width="80">
+            </u-table-column>
+            <u-table-column label="工作量" width="80">
               <template slot-scope="scope">
                 <div
                   class="checek-man-cost"
@@ -770,8 +766,8 @@
                   ${ item }
                 </div>
               </template>
-            </el-table-column>
-            <el-table-column label="工作量单位" width="80">
+            </u-table-column>
+            <u-table-column label="工作量单位" width="80">
               <template slot-scope="scope">
                 <div
                   class="checek-man-cost"
@@ -781,8 +777,8 @@
                   ${ item }
                 </div>
               </template>
-            </el-table-column>
-            <el-table-column label="单价" width="80">
+            </u-table-column>
+            <u-table-column label="单价" width="80">
               <template slot-scope="scope">
                 <div
                   class="checek-man-cost"
@@ -792,8 +788,8 @@
                   ${ item }
                 </div>
               </template>
-            </el-table-column>
-            <el-table-column label="小计" width="80">
+            </u-table-column>
+            <u-table-column label="小计" width="80">
               <template slot-scope="scope">
                 <div
                   class="checek-man-cost"
@@ -803,8 +799,8 @@
                   ${ item }
                 </div>
               </template>
-            </el-table-column>
-          </el-table-column>
+            </u-table-column>
+          </u-table-column>
         </el-table>
       </el-tab-pane>
     </el-tabs>
@@ -812,5 +808,6 @@
   <script src="../js/lodash.js"></script>
   <script src="../js/vue.min.js"></script>
   <script src="../js/element.js"></script>
+  <script src="../js/table.js"></script>
   <script src="../js/test.js"></script>
 </body>
