@@ -176,7 +176,20 @@ button[disabled] {
 }
 
 /* 修改element表头错位的问题 */
-.el-table--border th.gutter:last-of-type {
+th.gutter {
   /* display: block !important; */
-  width: 8px !important;
+  width: 24px !important;
+}
+
+.cell--tree-node {
+  display: flex;
+}
+.beautifyTableClass .el-table th.is-leaf {
+  border-bottom: 1px solid #cecece !important;
+  border-top: 1px solid #cecece !important;
+}
+
+.plTableBox,
+.beautifyTableClass {
+  border-left: 1px solid #cecece !important;
 }

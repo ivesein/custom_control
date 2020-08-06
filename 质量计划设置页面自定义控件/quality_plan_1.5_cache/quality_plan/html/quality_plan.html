@@ -5,15 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="stylesheet" href="../css/element.css" />
+    <link rel="stylesheet" href="../css/table.css" />
     <link rel="stylesheet" href="../css/main.css" />
-    <!-- <link rel="stylesheet" href="https://unpkg.com/pl-table/themes/index.css" /> -->
-
-    <!--默认表格样式很丑 引入这个样式就可以好看啦-->
-    <!-- <link
-      rel="stylesheet"
-      href="https://unpkg.com/pl-table/themes/plTableStyle.css"
-    /> -->
 
     <title>Document</title>
   </head>
@@ -42,23 +35,21 @@ v-loading="loading"
         </button>
       </div>
       <div class="table-box">
-        <pl-table
-          ref="thequalityPlanTable"
-          @table-body-scroll="tableBodyScrol
-          use-virtuall"
+        <u-table
+          ref="qualityPlanTable"
+          beautify-table
           highlight-current-row
-          :header-cell-style="{height:'60px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
-          :data="tableData"
           style="width: 100%;"
-          :cell-style="cellStyle"
           row-key="id"
-          :border="true"
+          border
+          @row-click="rowClick"
+          use-virtual
           :height="tableHeight"
-          default-expand-all
+          :treeConfig="{children: 'children', expandAll: false}"
           :row-class-name="tableRowClassName"
-          :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+          :header-cell-style="{height:'60px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
         >
-          <pl-table-column type="select" width="40" align="center">
+          <!-- <u-table-column type="select" width="40" align="center">
             <template slot="header" slot-scope="scope">
               <el-checkbox
                 @change="handleCheckAllChange"
@@ -71,22 +62,23 @@ v-loading="loading"
                 v-model="scope.row.checked"
               ></el-checkbox>
             </template>
-          </pl-table-column>
-          <pl-table-column type="index" label="序号" width="60" align="center">
-          </pl-table-column>
-          <pl-table-column
+          </u-table-column> -->
+          <u-table-column type="index" label="序号" width="60" align="center">
+          </u-table-column>
+          <u-table-column
+            :tree-node="true"
             v-if="getFieldShow('text')"
             prop="text"
             label="WBS任务名称"
             min-width="480"
-          ></pl-table-column>
-          <pl-table-column
+          ></u-table-column>
+          <u-table-column
             v-if="getFieldShow('wbs')"
             prop="wbs"
             label="任务代码"
             width="140"
-          ></pl-table-column>
-          <pl-table-column
+          ></u-table-column>
+          <u-table-column
             v-if="getFieldShow('duration')"
             label="工时"
             width="120"
@@ -96,8 +88,8 @@ v-loading="loading"
                 ${ scope.row.duration }
               </div>
             </template>
-          </pl-table-column>
-          <pl-table-column
+          </u-table-column>
+          <u-table-column
             v-if="getFieldShow('start_date')"
             label="开始时间"
             width="200"
@@ -107,8 +99,8 @@ v-loading="loading"
                 ${ scope.row.start_date }
               </div>
             </template>
-          </pl-table-column>
-          <pl-table-column
+          </u-table-column>
+          <u-table-column
             v-if="getFieldShow('end_date')"
             label="结束时间"
             width="200"
@@ -118,8 +110,8 @@ v-loading="loading"
                 ${ scope.row.end_date }
               </div>
             </template>
-          </pl-table-column>
-          <pl-table-column label="阶段" width="160">
+          </u-table-column>
+          <u-table-column label="阶段" width="160">
             <template slot-scope="scope">
               <div class="recheck-box" v-show="scope.row.task_type === '3'">
                 <div class="recheck-top">
@@ -143,8 +135,8 @@ v-loading="loading"
                 </div>
               </div>
             </template>
-          </pl-table-column>
-          <pl-table-column
+          </u-table-column>
+          <u-table-column
             v-if="getFieldShow('duration_time')"
             label="持续时间"
             width="120"
@@ -172,8 +164,8 @@ v-loading="loading"
                 ${ scope.row.first_duration }
               </div>
             </template>
-          </pl-table-column>
-          <pl-table-column
+          </u-table-column>
+          <u-table-column
             v-if="getFieldShow('qp_owner_role')"
             label="承担人角色"
             width="160"
@@ -201,8 +193,8 @@ v-loading="loading"
                 ${ scope.row.qp_owner_role }
               </div>
             </template>
-          </pl-table-column>
-          <pl-table-column
+          </u-table-column>
+          <u-table-column
             v-if="getFieldShow('owner')"
             label="承担人名称"
             width="120"
@@ -245,8 +237,8 @@ v-loading="loading"
                 <span v-else></span>
               </div>
             </template>
-          </pl-table-column>
-          <pl-table-column
+          </u-table-column>
+          <u-table-column
             v-if="getFieldShow('skill')"
             label="承担人技能"
             min-width="500"
@@ -274,14 +266,13 @@ v-loading="loading"
                 ${ scope.row.skill }
               </div>
             </template>
-          </pl-table-column>
-        </pl-table>
+          </u-table-column>
+        </u-table>
       </div>
     </div>
     <script src="../js/lodash.js"></script>
     <script src="../js/vue.min.js"></script>
-    <script src="../js/mytable.js"></script>
-    <script src="../js/element.js"></script>
+    <script src="../js/table.js"></script>
     <script src="../js/test.js" type="module"></script>
   </body>
 </html>

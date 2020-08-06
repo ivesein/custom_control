@@ -39,7 +39,7 @@
   </div> -->
   <div class="select-box" v-show="ifSelectBoxShow">
     <div class="select-options">
-      <div class="sel-item">
+      <!-- <div class="sel-item">
         <span class="sel-item-title">显示选项：</span>
         <el-radio-group
           v-model="filterCondition.conditionOne"
@@ -48,7 +48,7 @@
           <el-radio :label="1">全部</el-radio>
           <el-radio :label="2">仅显示差异</el-radio>
         </el-radio-group>
-      </div>
+      </div> -->
       <div class="sel-item">
         <span class="sel-item-title">时间范围：</span>
         <el-radio-group
@@ -179,7 +179,7 @@
           >
             <el-table-column
               prop="before_task_name"
-              label="紧前任务名称"
+              label="前置任务名称"
               width="200"
             ></el-table-column>
             <el-table-column label="当前任务处理措施">

@@ -1,5 +1,8 @@
 import { datajson } from "./data.js";
-
+let myData = formatToTreeData({
+  arrayList: datajson,
+  idStr: "id",
+});
 new Vue({
   delimiters: ["${", "}"],
   data: {
@@ -78,18 +81,18 @@ new Vue({
     top: 0,
   },
   created() {
-    var data_ = datajson;
-    // var data_ = this.addSortNum(tData).sort(this.compare("sortNum"));
-    // console.table(data_);
-    data_ = this.setAuditTaskUndertaker(data_);
-    // console.log("data_>>>", data_);
-    // this.tableData = data_;
-    this.tableData = this.formatToTreeData({
-      arrayList: data_,
-      idStr: "id",
-    });
-
-    console.log("this.tableData>>>", this.tableData);
+    // this.tableData = _.cloneDeep(myData);
+    // var data_ = datajson;
+    // // var data_ = this.addSortNum(tData).sort(this.compare("sortNum"));
+    // // console.table(data_);
+    // data_ = this.setAuditTaskUndertaker(data_);
+    // // console.log("data_>>>", data_);
+    // // this.tableData = data_;
+    // this.tableData = this.formatToTreeData({
+    //   arrayList: data_,
+    //   idStr: "id",
+    // });
+    // console.log("this.tableData>>>", this.tableData);
   },
   mounted() {
     // let self = this;
@@ -103,6 +106,19 @@ new Vue({
     //       window.innerHeight - self.$refs.qualityPlanTable.$el.offsetTop - 60;
     //   };
     // });
+    // let data = this.formatToTreeData({
+    //   arrayList: datajson,
+    //   idStr: "id",
+    // });
+    // let data1 = data[0];
+    // // this.treeData = data; // 知道为啥treeData不在 data()方法里面定义吗？嘻嘻
+    // deepFreeze(data1);
+    // // console.log(data);
+    // // data[0].audit_task_id = "hhhhh";
+    // // console.log(data);
+    // // this.tableData = data;
+    // // 设置表格数据
+    this.$refs.qualityPlanTable.reloadData(Object.freeze(myData));
   },
   computed: {
     getBtnShow(btnId) {
@@ -129,9 +145,12 @@ new Vue({
     },
   },
   methods: {
-    tableBodyScroll({ scrollTop }, e) {
-      this.top = scrollTop;
+    rowClick(row) {
+      console.log(row);
     },
+    // tableBodyScroll({ scrollTop }, e) {
+    //   this.top = scrollTop;
+    // },
     /**
      * Author: zhang fq
      * Date: 2020-05-27
@@ -416,3 +435,52 @@ new Vue({
     },
   },
 }).$mount("#qualityPlanApp");
+// 深度冻结
+function deepFreeze(obj) {
+  // 先冻结第一层
+  Object.freeze(obj);
+
+  for (let key in obj) {
+    let prop = obj[key];
+    //  三种情况不进行递归冻结 1.不是对象 2.该对象已经被冻结 3.是原型上的属性
+    if (
+      !(typeof prop === "object") ||
+      Object.isFrozen(prop) ||
+      !obj.hasOwnProperty(key)
+    ) {
+      continue;
+    } else {
+      deepFreeze(prop);
+    }
+  }
+}
+function formatToTreeData({
+  arrayList,
+  pidStr = "parent",
+  idStr = "id",
+  childrenStr = "children",
+}) {
+  let templist = _.cloneDeep(arrayList);
+  let listObj = {}; // 用来储存{key: obj}格式的对象
+  let treeList = []; // 用来储存最终树形结构数据的数组
+  // 将数据变换成{key: obj}格式，方便下面处理数据
+  for (let i = 0; i < templist.length; i++) {
+    templist[i].checked = false;
+    listObj[templist[i][idStr]] = templist[i];
+  }
+  // 根据pid来将数据进行格式化
+  for (let j = 0; j < templist.length; j++) {
+    // 判断父级是否存在
+    let haveParent = listObj[templist[j][pidStr]];
+    if (haveParent) {
+      // 如果有没有父级children字段，就创建一个children字段
+      !haveParent[childrenStr] && (haveParent[childrenStr] = []);
+      // 在父级里插入子项
+      haveParent[childrenStr].push(templist[j]);
+    } else {
+      // 如果没有父级直接插入到最外层
+      treeList.push(templist[j]);
+    }
+  }
+  return treeList;
+}
