@@ -1,9 +1,13 @@
 new Vue({
   delimiters: ["${", "}"],
   data: {
-    tableData: [
-      {
+    tableData: [],
+    originData: {
+      "132265655465461": {
         id: 1,
+        project_id: "",
+        task_id: "",
+        person_id: "",
         plan_effect: "55.7", //计划工效
         report_date: "2020/02/04", //上报日期
         resource_adjustment: [
@@ -34,10 +38,15 @@ new Vue({
         judge_conditions: "1<55.7/50<1.5", //判断条件(计划功效/实际功效)
         measures_suggestions: "建议加班", //措施建议
         decision_making_operation: "3", //决策操作  "":未处理  "0":不处理  "1":通知加班  "2":增加资源  "3":减少资源
+        is_deal_with: true,
         measures_decision: "决策信息", //措施决策
       },
-      {
+      "123165461563122": {
         id: 2,
+        project_id: "",
+        task_id: "",
+        person_id: "",
+        is_deal_with: false,
         plan_effect: "65.5", //计划工效
         report_date: "2020/02/06", //上报日期
         resource_adjustment: [
@@ -70,8 +79,12 @@ new Vue({
         decision_making_operation: "", //决策操作  "":未处理  "0":不处理  "1":通知加班  "2":增加资源  "3":减少资源
         measures_decision: "", //措施决策
       },
-      {
+      "845562113166546": {
         id: 3,
+        project_id: "",
+        task_id: "",
+        person_id: "",
+        is_deal_with: true,
         plan_effect: "65.5", //计划工效
         report_date: "2020/02/06", //上报日期
         resource_adjustment: [
@@ -103,10 +116,10 @@ new Vue({
         remaining_quantities: "340", //剩余工程量
         judge_conditions: "1<55.7/50<1.5", //判断条件(计划功效/实际功效)
         measures_suggestions: "建议加班", //措施建议
-        decision_making_operation: "", //决策操作  "":未处理  "0":不处理  "1":通知加班  "2":增加资源  "3":减少资源
+        decision_making_operation: "2", //决策操作  "":未处理  "0":不处理  "1":通知加班  "2":增加资源  "3":减少资源
         measures_decision: "", //措施决策
       },
-    ],
+    },
     decision_making_options: [
       {
         measures: "不处理",
@@ -128,7 +141,16 @@ new Vue({
     sendData: [],
     changedIndex: [],
   },
-  created() {},
+  created() {
+    let index = 0;
+    this.tableData = [];
+    for (let key in this.originData) {
+      this.originData[key].report_time = key;
+      this.originData[key].theIndex = index;
+      index++;
+      this.tableData.push(this.originData[key]);
+    }
+  },
   mounted() {
     this.handleUpdate();
     console.log(this.tableData);
@@ -136,10 +158,10 @@ new Vue({
   methods: {
     handleUpdate() {
       // 处理禁用状态  添加字段判断
-      this.tableData.forEach((v, k) => {
-        v.disabled = v.decision_making_operation;
-        v.index = k;
-      });
+      // this.tableData.forEach((v, k) => {
+      //   v.disabled = v.decision_making_operation;
+      //   v.index = k;
+      // });
     },
     cellStyle({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 0) {

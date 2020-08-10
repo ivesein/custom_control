@@ -1,0 +1,98 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(85, 130, 243, 0.1);
+}
+
+#projectBriefApp {
+  width: 810px;
+  height: 400px;
+  background: #fff;
+  overflow: hidden;
+  font-family: SourceHanSansCN-Bold;
+}
+
+.content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: stretch;
+  padding: 20px;
+  padding-top: 10px;
+  box-sizing: border-box;
+}
+
+.header-box {
+  display: flex;
+  height: 45px;
+  flex: 1;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.title-box {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 70%;
+  height: 100%;
+  font-size: 18px;
+  color: #2b2b2b;
+  font-weight: 800;
+}
+
+.pagination-box {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 30%;
+  height: 100%;
+  font-size: 14px;
+  color: #666666;
+}
+
+.btn-item i:hover {
+  color: #5582f3;
+  cursor: pointer;
+}
+
+.cpage {
+  color: #5582f3;
+}
+.btn-next {
+  margin-right: 12px;
+}
+
+.unit-title {
+  font-size: 14px;
+  color: #5582f3;
+}
+
+.unit-info {
+  font-size: 14px;
+  color: #666666;
+}
+
+.el-table .warning-row {
+  background: #f8f8f7;
+}
+
+.el-table .el-table__body tr:hover td {
+  /* color: red; */
+  background: rgba(85, 130, 243, 0.08);
+}
+
+.el-table .el-table__body tr:hover .unit-info {
+  color: #2b2b2b;
+}
+
+.el-table td,
+.el-table th.is-leaf {
+  border-bottom: none;
+}

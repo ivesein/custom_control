@@ -83,11 +83,20 @@
                           switch (props.data.method) {
                             case "init":
                               // 处理禁用状态  添加字段判断
-                              props.data.data.forEach((v, k) => {
-                                v.disabled = v.decision_making_operation;
-                                v.theIndex = k;
-                              });
-                              this.tableData = props.data.data;
+                              let data = props.data.data;
+                              let index = 0;
+                              this.tableData = [];
+                              for (let key in data) {
+                                data[key].report_time = key;
+                                data[key].theIndex = index;
+                                index++;
+                                this.tableData.push(data[key]);
+                              }
+                              // props.data.data.forEach((v, k) => {
+                              //   v.disabled = v.decision_making_operation;
+                              //   v.theIndex = k;
+                              // });
+                              // this.tableData = props.data.data;
                               break;
                             case "syncToScheduleMaintenance":
                               this.syncToSM();
@@ -111,6 +120,11 @@
                       model.invoke("saveData", this.sendData);
                     },
                     // 同步到进度维护，决策操作和措施决策输入判空  差异化处理 接口调用发送数据
+                    /**
+                     * @Author: zhang fq
+                     * @Date: 2020-08-10
+                     * @Description: 根据李阳波要求 修改数据结构和 处理差异化数据 发送到同步接口
+                     */
                     syncToSM() {
                       // 判断是否每条都做了选择操作和措施输入
                       let flag = this.tableData.every((v) => {
@@ -122,7 +136,18 @@
                       if (flag) {
                         //取出差异化的数据
                         this.changedIndex.forEach((v) => {
-                          this.sendData.push(this.tableData[v]);
+                          this.tableData[v];
+                          this.sendData.push({
+                            id: this.tableData[v].id,
+                            report_time: this.tableData[v].report_time,
+                            project_id: this.tableData[v].project_id,
+                            task_id: this.tableData[v].task_id,
+                            person_id: this.tableData[v].person_id,
+                            measures_suggestions: this.tableData[v]
+                              .measures_suggestions,
+                            measures_decision: this.tableData[v]
+                              .measures_decision,
+                          });
                         });
                         // 发送差异化数据
                         model.invoke(

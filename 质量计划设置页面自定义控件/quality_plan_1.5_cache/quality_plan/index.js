@@ -69,6 +69,8 @@
                     project_id: "",
                     pageStatus: false, //是否提交
                     top: 0,
+                    currentRow: null, // 当前点击选取的行数据
+                    taskChangedIndex: [], // 记录修改过的任务在缓存数据中的索引
                   },
                   created() {
                     this.handleUpdata(model, props);
@@ -141,6 +143,7 @@
                   methods: {
                     rowClick(row) {
                       console.log(row);
+                      this.currentRow = row;
                     },
                     tableRowClassName({ row, rowIndex }) {
                       if (row.delegate === "1") {
@@ -209,8 +212,6 @@
                               this.yourTurn();
                               break;
                             default:
-                              // console.log("接口返回错误！");
-                              //   this.$message.error("网络繁忙，请稍后再试...");
                               break;
                           }
                         }

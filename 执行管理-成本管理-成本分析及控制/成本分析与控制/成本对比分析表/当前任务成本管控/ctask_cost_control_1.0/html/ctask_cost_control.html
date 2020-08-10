@@ -88,57 +88,70 @@
     </div>
     <div class="table-content" v-show="ifTableTwoShow">
       <el-table ref="currentTaskTable" highlight-current-row :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="tableData2" style="width:100%;margin:10px 0 10px 0;" max-height="350" :cell-style="cellStyle" row-key="task_id" :border="true">
-        <el-table-column prop="report_date" label="本次汇报日期" width="100" ></el-table-column>
+        <el-table-column prop="report_date" label="本次汇报日期" width="120" ></el-table-column>
         <el-table-column prop="report_completed_quantities" label="本次汇报完成工程量" width="100"></el-table-column>
         <el-table-column prop="actual_cumulative_completed_quantities" label="实际累计完成工程量" width="100"></el-table-column>
-        <el-table-column prop="this_report_cq_duration" label="本次汇报完成工程量使用工时" width="120"></el-table-column>
+        <el-table-column prop="this_report_cq_duration" label="本次汇报完成工程量使用工时" width="130"></el-table-column>
         <el-table-column prop="actual_cumulative_duration" label="实际累计使用工时" width="100"></el-table-column>
         <el-table-column label="资源汇报情况" align="center">
-          <el-table-column  label="资源名称" width="80">
+          <el-table-column  label="资源名称" width="100">
             <template slot-scope="scope">
               <div class="check-man" v-for="(item,index) in scope.row.resource_info_data" :key="index">
                 ${item.resource_name}
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="" label="资源型号" width="100">
+          <el-table-column  label="资源型号" width="100">
             <template slot-scope="scope">
               <div class="check-man" v-for="(item,index) in scope.row.resource_info_data" :key="index">
                 ${item.resource_model}
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="" label="本次消耗量" width="100">
+          <el-table-column  label="本次消耗量" width="100">
             <template slot-scope="scope">
               <div class="check-man" v-for="(item,index) in scope.row.resource_info_data" :key="index">
                 ${item.resource_consumption}
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="" label="本次实际单位工程量资源耗用量" width="120">
+          <el-table-column  label="本次实际单位工程量资源耗用量" width="140">
             <template slot-scope="scope">
               <div class="check-man" v-for="(item,index) in scope.row.resource_info_data" :key="index">
                 ${item.resource_actual_unit_consumption}
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="" label="实际累计耗用量" width="80">
+          <el-table-column  label="实际累计耗用量" width="100">
             <template slot-scope="scope">
               <div class="check-man" v-for="(item,index) in scope.row.resource_info_data" :key="index">
                 ${item.resource_actual_cumulative_consumption}
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="" label="实际单价" width="80">
+          <el-table-column  label="实际单价" width="100">
             <template slot-scope="scope">
               <div class="check-man" v-for="(item,index) in scope.row.resource_info_data" :key="index">
                 ${item.resource_price}
               </div>
             </template>
           </el-table-column>
+          </el-table-column>
         </el-table-column>
-        <el-table-column prop="predicted_value" label="单价影响后单位工程资源耗用量预测值" width="130"></el-table-column>
-        <el-table-column prop="suggestions_comparative_treatment" label="根据基准值与实际单位工程量资源消耗量对比处理建议" width="180"></el-table-column>
+        <el-table-column label="单价影响后单位工程资源耗用量预测值" width="140">
+          <template slot-scope="scope">
+            <div class="check-man" v-for="(item,index) in scope.row.resource_info_data" :key="index">
+              ${item.predicted_value}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column  label="根据基准值与实际单位工程量资源消耗量对比处理建议" width="160">
+          <template slot-scope="scope">
+            <div class="check-man" v-for="(item,index) in scope.row.resource_info_data" :key="index">
+              ${item.suggestions_comparative_treatment}
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column label="纠偏措施" >
           <template slot-scope="scope">
             <el-input :disabled="currentType==='1'" size="small" maxlength="50" v-model="scope.row.rectification_measures" placeholder="请输入纠偏措施"></el-input>

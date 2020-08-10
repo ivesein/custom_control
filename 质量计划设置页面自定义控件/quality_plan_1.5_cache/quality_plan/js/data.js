@@ -322,7 +322,7 @@ export const datajson=[{
     "delegate_reason": "",
     "fmanual_name": []
 }, {
-    "isreply": "",
+    "isreply": "2",
     "relation_per_id": [],
     "personName": "",
     "planned_end": "",
@@ -415,7 +415,7 @@ export const datajson=[{
     "earliest_time": "",
     "modify_duration": "",
     "task_before": "",
-    "type": "",
+    "type": "task",
     "fmachine_used": [],
     "fmaterial_number": [],
     "id": "85491413815394307",
@@ -646,7 +646,7 @@ export const datajson=[{
     "delegate_reason": "",
     "fmanual_name": []
 }, {
-    "isreply": "",
+    "isreply": "2",
     "relation_per_id": [],
     "personName": "",
     "planned_end": "",
@@ -739,7 +739,7 @@ export const datajson=[{
     "earliest_time": "",
     "modify_duration": "",
     "task_before": "",
-    "type": "",
+    "type": "task",
     "fmachine_used": [],
     "fmaterial_number": [],
     "id": "85491413815394310",

@@ -3,6 +3,13 @@ let myData = formatToTreeData({
   arrayList: datajson,
   idStr: "id",
 });
+// let myData1 = _.cloneDeep(myData[0]);
+// Object.preventExtensions(myData1);
+// // debugger;
+// let arr = [];
+// arr.push(myData1);
+// Object.preventExtensions(arr);
+// myData2[0].sdfsdfsc = "222222333333";
 new Vue({
   delimiters: ["${", "}"],
   data: {
@@ -79,46 +86,26 @@ new Vue({
     loading_icon: "el-icon-loading",
     pageStatus: false,
     top: 0,
+    // tableData: myData,
+    currentRow: null,
+    taskChangedIndex: [], // 记录修改过的任务在缓存数据中的索引
   },
-  created() {
-    // this.tableData = _.cloneDeep(myData);
-    // var data_ = datajson;
-    // // var data_ = this.addSortNum(tData).sort(this.compare("sortNum"));
-    // // console.table(data_);
-    // data_ = this.setAuditTaskUndertaker(data_);
-    // // console.log("data_>>>", data_);
-    // // this.tableData = data_;
-    // this.tableData = this.formatToTreeData({
-    //   arrayList: data_,
-    //   idStr: "id",
-    // });
-    // console.log("this.tableData>>>", this.tableData);
-  },
+  created() {},
   mounted() {
-    // let self = this;
-    // // 固定表格表头 设置表格高度自适应填满剩余高度
-    // this.$nextTick(function () {
-    //   self.tableHeight =
-    //     window.innerHeight - self.$refs.qualityPlanTable.$el.offsetTop - 60;
-    //   // 监听窗口大小变化
-    //   window.onresize = function () {
-    //     self.tableHeight =
-    //       window.innerHeight - self.$refs.qualityPlanTable.$el.offsetTop - 60;
-    //   };
-    // });
-    // let data = this.formatToTreeData({
-    //   arrayList: datajson,
-    //   idStr: "id",
-    // });
-    // let data1 = data[0];
-    // // this.treeData = data; // 知道为啥treeData不在 data()方法里面定义吗？嘻嘻
-    // deepFreeze(data1);
-    // // console.log(data);
-    // // data[0].audit_task_id = "hhhhh";
-    // // console.log(data);
-    // // this.tableData = data;
+    let self = this;
+    // 固定表格表头 设置表格高度自适应填满剩余高度
+    this.$nextTick(function () {
+      self.tableHeight =
+        window.innerHeight - self.$refs.qualityPlanTable.$el.offsetTop - 60;
+      // 监听窗口大小变化
+      window.onresize = function () {
+        self.tableHeight =
+          window.innerHeight - self.$refs.qualityPlanTable.$el.offsetTop - 60;
+      };
+    });
     // // 设置表格数据
-    this.$refs.qualityPlanTable.reloadData(Object.freeze(myData));
+    let data = this.setAuditTaskUndertaker(myData);
+    this.$refs.qualityPlanTable.reloadData(data);
   },
   computed: {
     getBtnShow(btnId) {
@@ -146,11 +133,9 @@ new Vue({
   },
   methods: {
     rowClick(row) {
+      this.currentRow = row;
       console.log(row);
     },
-    // tableBodyScroll({ scrollTop }, e) {
-    //   this.top = scrollTop;
-    // },
     /**
      * Author: zhang fq
      * Date: 2020-05-27
@@ -209,78 +194,73 @@ new Vue({
         }
       };
     },
+    /**
+     * @Author: zhang fq
+     * @Date: 2020-08-07
+     * @Description: 重写质量计划 设置角色交互数据处理逻辑
+     * 大量缩减交互处理代码，同步修改页面显示和缓存数据，提高性能
+     */
     SetRole() {
-      alert(1);
-      let ids = this.getSelectedId();
-      console.log("SetRole>>>", ids);
-      let sendData = {
-        data: ids,
-      };
-      if (ids.length > 0) {
-      } else {
-        alert("未勾选任务");
+      if (this.currentRow === null) {
+        this.$message.warning("请单击选择一条任务进行设置");
+        return;
       }
-    },
-    SetStaff() {},
-    handleCheckAllChange(val) {
-      this.traversalNode(this.tableData[0], this.allChecked);
-    },
-    itemChange(row) {
-      let check = row.checked;
-      let temp = this.traversalNode(row, check);
-      let tempTableData = _.cloneDeep(this.tableData[0]);
-      let flatData = this.traversalNode(tempTableData);
-      // 获取该节点所在所有父节点
-      let parentIds = this.findParentIds(flatData, row.parent);
-      console.log("temp>>>", temp);
-      if (check) {
-        // 如果点击是置true 递归查找所有父节点下的子节点
-        // 如果子节点都为true 置该父节点为ture
-        // 如果子节点有一个为false  置该父节点以及该父节点的所有父节点为false
-        let res = this.helloKids(flatData, parentIds)[0];
-        this.tableData = [res];
+      if (this.currentRow.type !== "project") {
+        if (this.currentRow.delegate === 1) {
+          this.$message.error("已委外的任务无法设置角色");
+          return;
+        }
+        if (
+          this.currentRow.type == "task" &&
+          this.currentRow.task_type !== "4"
+        ) {
+          // TODO:处理交互
+          let index = Math.floor(Math.random() * 10 + 1);
+          let role = [
+            "设计专员1",
+            "设计专员2",
+            "设计专员3",
+            "设计专员4",
+            "设计专员5",
+            "设计专员6",
+            "设计专员7",
+            "设计专员8",
+            "设计专员9",
+            "设计专员10",
+          ];
+          let name = [
+            "张三",
+            "李四",
+            "王五",
+            "马六",
+            "黄岐",
+            "杜甫",
+            "李白",
+            "王维",
+            "王勃",
+            "孙思邈",
+          ];
+          // 根据开始设定的源索引 在缓存的源数据里直接找到该条 更新
+          datajson[this.currentRow.indexR].qp_owner_role = role[index];
+          datajson[this.currentRow.indexR].qp_owner = name[index];
+          datajson[this.currentRow.indexR].qp_owner_id = "11111111";
+          // 同步更新页面显示
+          this.currentRow.qp_owner_role = role[index];
+          this.currentRow.qp_owner = name[index];
+          this.currentRow.qp_owner_id = "11111111";
+          // 将修改了数据的该条任务 记录起来
+          this.taskChangedIndex.push(this.currentRow.indexR);
+        } else {
+          this.$message.error("该类型的任务无法设置角色");
+          return;
+        }
       } else {
-        // 如果点击是置false 直接将该节点的所有父节点置为false
-        this.findYouAndSetFalse(this.tableData[0], parentIds);
-        this.allChecked = false;
+        this.$message.error("摘要任务无法设置角色");
+        return;
       }
     },
     saveData() {
       console.log("saveData>>>");
-    },
-    setDesignOwner() {
-      let ids = this.getSelectedId();
-      console.log("setDesignOwner>>>", ids);
-      let sendData = {
-        data: ids,
-      };
-      if (ids.length > 0) {
-      } else {
-        alert("未勾选任务");
-      }
-    },
-
-    setReviewOwner() {
-      let ids = this.getSelectedId();
-      console.log("setReviewOwner>>>", ids);
-      let sendData = {
-        data: ids,
-      };
-      if (ids.length > 0) {
-      } else {
-        alert("未勾选任务");
-      }
-    },
-    setAuditOwner() {
-      let ids = this.getSelectedId();
-      console.log("setAuditOwner>>>", ids);
-      let sendData = {
-        data: ids,
-      };
-      if (ids.length > 0) {
-      } else {
-        alert("未勾选任务");
-      }
     },
     SetDurationTime() {
       let ids = this.getSelectedId();
@@ -298,28 +278,13 @@ new Vue({
     refreshData() {
       console.log("refreshData");
     },
-    // 获取选择的任务的task_id
-    getSelectedId() {
-      let idArr = [];
-      let tempArr = this.traversalNode(this.tableData[0]);
-      tempArr.forEach(function (v) {
-        if (v.checked && v.type == "task" && v.task_type !== "4") {
-          idArr.push({
-            project_id: v.project_id,
-            plan_id: v.plan_id,
-            id: v.id,
-            text: v.text,
-            task_type: v.task_type,
-            duration: v.duration,
-          });
-        }
-      });
-      return idArr;
-    },
-    cellStyle({ row, column, rowIndex, columnIndex }) {
-      return "padding: 0px;line-height:40px;height: 40px";
-    },
     // 将源数据格式化为表格树形结构数据
+    /**
+     * @Author: zhang fq
+     * @Date: 2020-08-07
+     * @Description: 优化将模板数据（一维数组）处理为树形结构数据的算法，
+     * 添加源索引，后期前后台交互可直接根据索引更新，优化处理速度
+     */
     formatToTreeData({
       arrayList,
       pidStr = "parent",
@@ -460,12 +425,15 @@ function formatToTreeData({
   idStr = "id",
   childrenStr = "children",
 }) {
+  let treeList = []; // 用来储存最终树形结构数据的数组
+  if (!Array.isArray(arrayList)) {
+    return treeList;
+  }
   let templist = _.cloneDeep(arrayList);
   let listObj = {}; // 用来储存{key: obj}格式的对象
-  let treeList = []; // 用来储存最终树形结构数据的数组
   // 将数据变换成{key: obj}格式，方便下面处理数据
   for (let i = 0; i < templist.length; i++) {
-    templist[i].checked = false;
+    templist[i].indexR = i; // 标记源索引
     listObj[templist[i][idStr]] = templist[i];
   }
   // 根据pid来将数据进行格式化

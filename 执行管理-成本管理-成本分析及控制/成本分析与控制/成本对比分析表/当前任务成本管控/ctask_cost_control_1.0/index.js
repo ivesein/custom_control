@@ -75,6 +75,7 @@
                             this.tableData1 = props.data.data.planResourcesData;
                             this.tableData2 =
                               props.data.data.resourcesReportData;
+                            this.taskId = props.data.data.task_id;
                             this.currentType = props.data.type;
                             break;
                           case "cTaskCostControlSave":
@@ -106,10 +107,11 @@
                             return v.rectification_measures !== "";
                           });
                           if (flag) {
-                            model.invoke(
-                              "syncToCostMaintenance",
-                              this.tableData2
-                            );
+                            let param = {
+                              task_id: this.taskId,
+                              data: this.tableData2,
+                            };
+                            model.invoke("syncToCostMaintenance", param);
                           } else {
                             this.$message.error(
                               "请确保每一条任务资源汇报详情都输入了纠偏措施!"

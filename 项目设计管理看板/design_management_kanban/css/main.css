@@ -1,0 +1,104 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(85, 130, 243, 0.1);
+}
+
+/* 
+  @author  zhang fuqiang
+  @time  2020-02-07  
+  @description  头像墙自定义空页面样式
+*/
+
+#designManagementApp {
+  width: 520px;
+  height: 400px;
+  background: #fff;
+  overflow: hidden;
+  font-family: SourceHanSansCN-Bold;
+}
+
+#designManagementApp .content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: stretch;
+  padding: 20px;
+  padding-top: 10px;
+  box-sizing: border-box;
+}
+
+#designManagementApp .header-box {
+  display: flex;
+  height: 45px;
+  flex: 1;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+#designManagementApp .title-box {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 70%;
+  height: 100%;
+  font-size: 18px;
+  color: #2b2b2b;
+  font-weight: 800;
+}
+
+#designManagementApp .pagination-box {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 30%;
+  height: 100%;
+  font-size: 14px;
+  color: #666666;
+}
+
+#designManagementApp .btn-item i:hover {
+  color: #5582f3;
+  cursor: pointer;
+}
+
+#designManagementApp .cpage {
+  color: #5582f3;
+}
+#designManagementApp .btn-next {
+  margin-right: 12px;
+}
+
+#designManagementApp .unit-title {
+  font-size: 14px;
+  color: #5582f3;
+}
+
+#designManagementApp .unit-info {
+  font-size: 14px;
+  color: #666666;
+}
+
+#designManagementApp .el-table .warning-row {
+  background: #f8f8f7;
+}
+
+#designManagementApp .el-table .el-table__body tr:hover td {
+  /* color: red; */
+  background: rgba(85, 130, 243, 0.08);
+}
+
+#designManagementApp .el-table .el-table__body tr:hover .unit-info {
+  color: #2b2b2b;
+}
+
+#designManagementApp .el-table td,
+.el-table th.is-leaf {
+  border-bottom: none;
+}

@@ -1,0 +1,101 @@
+<!-- <!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="../css/element.css" />
+    <link rel="stylesheet" href="../css/main.css" />
+
+    <title>Document</title>
+  </head>
+  <body> -->
+<div id="projectBriefApp">
+  <div class="content">
+    <div class="header-box">
+      <div class="title-box">
+        <span class="title">项目简况</span>
+      </div>
+      <div class="pagination-box">
+        <div class="btn-item btn-prev" @click="prevBtn">
+          <i class="el-icon-arrow-left"></i>
+        </div>
+        <div class="cpage">${currentPage}</div>
+        <div class="btn-item btn-next" @click="nextBtn">
+          <i class="el-icon-arrow-right"></i>
+        </div>
+        <div class="total-page">
+          共 <span class="page-totol-num">${totalPage}</span> 页
+        </div>
+      </div>
+    </div>
+    <div class="table-box">
+      <el-table
+        :data="sliceTableData"
+        height="328"
+        :row-class-name="tableRowClassName"
+        :header-cell-style="{'font-size':'14px',color:'#2b2b2b'}"
+        style="width: 100%;"
+      >
+        <el-table-column label="项目阶段名称" min-width="200">
+          <template slot-scope="scope">
+            <el-tooltip
+              placement="top"
+              :disabled="scope.row.project_phase.length<=14"
+            >
+              <span slot="content">${ scope.row.project_phase }</span>
+              <span class="unit-title"
+                >${
+                scope.row.project_phase.length>14?scope.row.project_phase.slice(0,14)+"...":scope.row.project_phase
+                }</span
+              >
+              >
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column label="公路类型">
+          <template slot-scope="scope">
+            <span class="unit-info">${ scope.row.highway_type }</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="公路等级">
+          <template slot-scope="scope">
+            <span class="unit-info">${ scope.row.highway_grade }</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="里程规模">
+          <template slot-scope="scope">
+            <span class="unit-info">${ scope.row.mileage_scale }</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="起讫点">
+          <template slot-scope="scope">
+            <el-tooltip
+              placement="top"
+              :disabled="scope.row.OD_points.length<=4"
+            >
+              <span slot="content">${ scope.row.OD_points }</span>
+              <span class="unit-info"
+                >${
+                scope.row.OD_points.length>4?scope.row.OD_points.slice(0,4)+"...":scope.row.OD_points
+                }</span
+              >
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column label="规划版本">
+          <template slot-scope="scope">
+            <span class="unit-info">${ scope.row.planning_version }</span>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+  </div>
+</div>
+<!-- <script src="../js/lodash.js"></script>
+    <script src="../js/vue.min.js"></script>
+    <script src="../js/element.js"></script>
+    <script src="../js/test.js"></script>
+  </body>
+</html> -->
