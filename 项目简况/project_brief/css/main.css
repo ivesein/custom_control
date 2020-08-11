@@ -15,7 +15,7 @@ body {
   font-family: SourceHanSansCN-Bold;
 }
 
-.content {
+#projectBriefApp .content {
   width: 100%;
   height: 100%;
   display: flex;
@@ -27,7 +27,7 @@ body {
   box-sizing: border-box;
 }
 
-.header-box {
+#projectBriefApp .header-box {
   display: flex;
   height: 45px;
   flex: 1;
@@ -36,7 +36,7 @@ body {
   border-bottom: 1px solid #e6e6e6;
 }
 
-.title-box {
+#projectBriefApp .title-box {
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -47,7 +47,7 @@ body {
   font-weight: 800;
 }
 
-.pagination-box {
+#projectBriefApp .pagination-box {
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -57,42 +57,42 @@ body {
   color: #666666;
 }
 
-.btn-item i:hover {
+#projectBriefApp .btn-item i:hover {
   color: #5582f3;
   cursor: pointer;
 }
 
-.cpage {
+#projectBriefApp .cpage {
   color: #5582f3;
 }
-.btn-next {
+#projectBriefApp .btn-next {
   margin-right: 12px;
 }
 
-.unit-title {
+#projectBriefApp .unit-title {
   font-size: 14px;
   color: #5582f3;
 }
 
-.unit-info {
+#projectBriefApp .unit-info {
   font-size: 14px;
   color: #666666;
 }
 
-.el-table .warning-row {
+#projectBriefApp .el-table .warning-row {
   background: #f8f8f7;
 }
 
-.el-table .el-table__body tr:hover td {
+#projectBriefApp .el-table .el-table__body tr:hover td {
   /* color: red; */
   background: rgba(85, 130, 243, 0.08);
 }
 
-.el-table .el-table__body tr:hover .unit-info {
+#projectBriefApp .el-table .el-table__body tr:hover .unit-info {
   color: #2b2b2b;
 }
 
-.el-table td,
+#projectBriefApp .el-table td,
 .el-table th.is-leaf {
   border-bottom: none;
 }

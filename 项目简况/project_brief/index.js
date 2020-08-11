@@ -91,8 +91,6 @@
                     prevBtn() {
                       if (this.currentPage > 1) {
                         this.currentPage--;
-                      } else {
-                        return;
                       }
                     },
                     /**
@@ -103,8 +101,6 @@
                     nextBtn() {
                       if (this.currentPage < this.totalPage) {
                         this.currentPage++;
-                      } else {
-                        return;
                       }
                     },
                     /**

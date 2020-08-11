@@ -33,7 +33,7 @@
           KDApi.loadFile("./js/lodash.js", model.schemaId, function () {
             KDApi.loadFile("./js/element.js", model.schemaId, function () {
               KDApi.templateFilePath(
-                "./html/check_records.html",
+                "./html/design_management_kanban.html",
                 model.schemaId,
                 {
                   path: KDApi.nameSpace(model.schemaId) + "./img/lock.png",
@@ -78,15 +78,11 @@
                     prevBtn() {
                       if (this.currentPage > 1) {
                         this.currentPage--;
-                      } else {
-                        return;
                       }
                     },
                     nextBtn() {
                       if (this.currentPage < this.totalPage) {
                         this.currentPage++;
-                      } else {
-                        return;
                       }
                     },
                     tableRowClassName({ row, rowIndex }) {

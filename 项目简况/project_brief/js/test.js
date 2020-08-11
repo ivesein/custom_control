@@ -86,24 +86,17 @@ new Vue({
     prevBtn() {
       if (this.currentPage > 1) {
         this.currentPage--;
-      } else {
-        return;
       }
     },
     nextBtn() {
       if (this.currentPage < this.totalPage) {
         this.currentPage++;
-      } else {
-        return;
       }
     },
     tableRowClassName({ row, rowIndex }) {
       if (rowIndex % 2 === 1) {
         return "warning-row";
       }
-    },
-    errorHandler() {
-      return true;
     },
   },
 }).$mount("#projectBriefApp");
