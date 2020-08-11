@@ -75,7 +75,6 @@
                       conditionThree: 1, //任务状态 1 全部  2 未开始  3 进行中  4 已完成
                       timeRange: [], //时间范围 为2时 日期范围所选值 数组["2020-03-01","2020-03-15"]
                     },
-                    ifFollowTaskShow: false, //是否显示后续任务处理表
                     taskReportDetailData: [],
                     currentRow: null,
                   },
@@ -101,12 +100,25 @@
                    * Author: zhang fq
                    * Date: 2020-06-02
                    * Description: 过滤进度分析控制-初始化数据-提示信息 不显示task_status为""
+                   * Date: 2020-08-11
+                   * Update: 修复bug1216 执行管理-进度管理-进度分析控制：第一次进入页面，
+                   * 选中第一条设计任务时，后续任务栏没有带出，等切换至其他任务后，
+                   * 在切换到该任务时，才能显示该任务的后续任务
                    */
                   computed: {
                     filterMessageData() {
                       return this.messageData.filter((v) => {
                         return v.task_status === "1" || v.task_status === "2";
                       });
+                    },
+                    ifFollowShow() {
+                      if (this.currentRow !== null) {
+                        return this.currentRow.task_status === "200"
+                          ? true
+                          : false;
+                      } else {
+                        return false;
+                      }
                     },
                   },
                   methods: {
@@ -149,9 +161,11 @@
                               );
                               this.currentRow = this.proTableData[0];
                               // 默认高亮左侧任务列表第一条
-                              this.$refs.projectTable.setCurrentRow(
-                                this.currentRow
-                              );
+                              if (this.$refs.projectTable) {
+                                this.$refs.projectTable.setCurrentRow(
+                                  this.currentRow
+                                );
+                              }
                             }
                             break;
                           case "pickFollowTasks":
@@ -393,8 +407,6 @@
                         return;
                       }
                       this.currentRow = _.cloneDeep(row);
-                      this.ifFollowTaskShow =
-                        row.task_status === "200" ? true : false;
                     },
                     goSelectFollowTask() {
                       console.log("打开选择后续任务弹窗");

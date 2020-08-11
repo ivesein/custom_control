@@ -10,7 +10,7 @@ new Vue({
         task_name: "工作5", //wbs任务名称
         owner: "张三", //承担人
         is_certical_task: true, //是否关键任务
-        task_status: "000", //任务状态  1 未开始  2 进行中  3 已完成
+        task_status: "200", //任务状态  000 未开始  100进行中  200 已完成
         handle_status: "0", //处理状态  0 待处理  1 已处理
         beforeTaskInfo: [
           {
@@ -263,6 +263,9 @@ new Vue({
       return this.messageData.filter((v) => {
         return v.task_status !== "";
       });
+    },
+    ifFollowShow() {
+      return this.currentRow.task_status === "200" ? true : false;
     },
   },
   mounted() {

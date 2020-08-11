@@ -329,7 +329,7 @@
         </div>
       </div>
       <!-- 后续任务处理表 -->
-      <div class="detail-info-box" v-show="ifFollowTaskShow">
+      <div class="detail-info-box" v-show="ifFollowShow">
         <div class="title-info-box">
           <div class="drop-btn">
             <i
@@ -381,7 +381,7 @@
                 </div>
                 <div class="follow-task-handle" v-else>
                   <div class="follow-task-handle-left">
-                    调整工时
+                    压缩工时
                     <el-input-number
                       class="custom-elinput-num"
                       v-model="scope.row.handling_measures"
