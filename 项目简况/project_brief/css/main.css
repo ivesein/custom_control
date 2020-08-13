@@ -8,8 +8,8 @@ body {
 }
 
 #projectBriefApp {
-  width: 810px;
-  height: 400px;
+  width: 100%;
+  height: 100%;
   background: #fff;
   overflow: hidden;
   font-family: SourceHanSansCN-Bold;
@@ -20,10 +20,11 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: stretch;
+  justify-content: flex-start;
   align-items: stretch;
   padding: 20px;
   padding-top: 10px;
+  padding-bottom: 5px;
   box-sizing: border-box;
 }
 
@@ -94,5 +95,13 @@ body {
 
 #projectBriefApp .el-table td,
 .el-table th.is-leaf {
-  border-bottom: none;
+  border-bottom: none !important;
+}
+
+#projectBriefApp el-table__row > td {
+  border: none;
+}
+
+#projectBriefApp .el-table::before {
+  height: 0px;
 }

@@ -48,6 +48,7 @@
                     currentPage: 1,
                     totalPage: 1,
                     projectName: "",
+                    numPerPage: 2,
                   },
                   created() {
                     this.handleUpdata(model, props);
@@ -55,8 +56,8 @@
                   computed: {
                     sliceTableData() {
                       return this.tableData.slice(
-                        (this.currentPage - 1) * 6,
-                        this.currentPage * 6
+                        (this.currentPage - 1) * this.numPerPage,
+                        this.currentPage * this.numPerPage
                       );
                     },
                   },
@@ -70,7 +71,9 @@
                         if (props.data.method === "init") {
                           this.projectName = props.data.data.projectName;
                           this.tableData = props.data.data.tableData || [];
-                          this.totalPage = Math.ceil(this.tableData.length / 6);
+                          this.totalPage = Math.ceil(
+                            this.tableData.length / this.numPerPage
+                          );
                         }
                       }
                       // TODO 处理数据更新  复制已阅读 和未阅读

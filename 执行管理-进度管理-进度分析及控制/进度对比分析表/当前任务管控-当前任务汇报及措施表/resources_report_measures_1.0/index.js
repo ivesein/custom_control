@@ -143,8 +143,8 @@
                             project_id: this.tableData[v].project_id,
                             task_id: this.tableData[v].task_id,
                             person_id: this.tableData[v].person_id,
-                            measures_suggestions: this.tableData[v]
-                              .measures_suggestions,
+                            decision_making_operation: this.tableData[v]
+                              .decision_making_operation,
                             measures_decision: this.tableData[v]
                               .measures_decision,
                           });

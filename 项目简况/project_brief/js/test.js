@@ -73,13 +73,13 @@ new Vue({
   computed: {
     sliceTableData() {
       return this.tableData.slice(
-        (this.currentPage - 1) * 6,
-        this.currentPage * 6
+        (this.currentPage - 1) * 2,
+        this.currentPage * 2
       );
     },
   },
   created() {
-    this.totalPage = Math.ceil(this.tableData.length / 6);
+    this.totalPage = Math.ceil(this.tableData.length / 2);
   },
   mounted() {},
   methods: {

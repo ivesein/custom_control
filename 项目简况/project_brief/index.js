@@ -47,6 +47,7 @@
                     tableData: [],
                     currentPage: 1,
                     totalPage: 1,
+                    numPerPage: 2,
                   },
                   created() {
                     this.handleUpdata(model, props);
@@ -59,8 +60,8 @@
                      */
                     sliceTableData() {
                       return this.tableData.slice(
-                        (this.currentPage - 1) * 6,
-                        this.currentPage * 6
+                        (this.currentPage - 1) * this.numPerPage,
+                        this.currentPage * this.numPerPage
                       );
                     },
                   },
@@ -78,7 +79,9 @@
                       ) {
                         if (props.data.method === "init") {
                           this.tableData = props.data.data || [];
-                          this.totalPage = Math.ceil(this.tableData.length / 6);
+                          this.totalPage = Math.ceil(
+                            this.tableData.length / this.numPerPage
+                          );
                         }
                       }
                       // TODO 处理数据更新  复制已阅读 和未阅读
