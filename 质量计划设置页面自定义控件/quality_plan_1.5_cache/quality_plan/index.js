@@ -223,6 +223,8 @@
                      * @description: 处理后台通知 标签页点击到当前页面时的逻辑
                      * @date: 2020-05-27
                      * @update: 修改测试出的问题 重写页签切换 缓存读取逻辑 优化轮询
+                     * @date: 2020-08-13
+                     * @update: 根据讨论的方案修改切换到当前页前的缓存数据读取逻辑 添加是否有更新判断 避免重复读取
                      */
                     yourTurn() {
                       let _this = this;
@@ -253,42 +255,62 @@
                           );
                         }
                         if (qpCachedData !== null) {
-                          // _this.loading = false;
-                          qpOriginData = _.cloneDeep(qpCachedData.data);
-                          qpOriginData = setAuditTaskUndertaker(qpOriginData);
-                          if (
-                            qpCachedData.permission &&
-                            qpCachedData.permission.quality_plan
-                          ) {
-                            qpPermission = _.cloneDeep(
+                          // 读取缓存中的 数据修改标志位 判断是否有数据更新
+                          // 有则读缓存 处理树形数据 修改标志位保存
+                          if (qpCachedData.readCache.zl === true) {
+                            // _this.loading = false;
+                            qpOriginData = _.cloneDeep(qpCachedData.data);
+                            qpOriginData = setAuditTaskUndertaker(qpOriginData);
+                            if (
+                              qpCachedData.permission &&
                               qpCachedData.permission.quality_plan
+                            ) {
+                              qpPermission = _.cloneDeep(
+                                qpCachedData.permission.quality_plan
+                              );
+                              _this.funcPerm =
+                                qpPermission.cstlRoleFuncPerm || [];
+                              _this.fieldPerm =
+                                qpPermission.cstlRoleFieldPerm || [];
+                            }
+                            _this.pageStatus = qpCachedData.pageStatus;
+                            _this.$refs.qualityPlanTable.reloadData(
+                              formatToTreeData({
+                                arrayList: qpOriginData,
+                                idStr: "id",
+                              })
                             );
-                            // _this.funcPerm=[]
-                            _this.funcPerm =
-                              qpPermission.cstlRoleFuncPerm || [];
-                            // qpPermission.cstlRoleFuncPerm.forEach(v=>{
-                            //   _this.funcPerm.push(v)
-                            // })
-                            // _this.fieldPerm=[]
-                            _this.fieldPerm =
-                              qpPermission.cstlRoleFieldPerm || [];
-                            // qpPermission.cstlRoleFieldPerm.forEach(v=>{
-                            //   _this.fieldPerm.push(v)
-                            // })
+                            // 设置标志位  更新缓存  下次切刀当前页读取缓存时判断是否需要重新加载数据
+                            _this.setReadCache(
+                              false,
+                              qpCachedData.readCache,
+                              "zl"
+                            );
+                            _this.setCacheData(_this.project_id, qpCachedData);
+                          } else {
+                            console.log("数据没有更新，无需读取");
                           }
-                          _this.pageStatus = qpCachedData.pageStatus;
-                          // let tableData = formatToTreeData({
-                          //   arrayList: qpOriginData,
-                          //   idStr: "id",
-                          // });
-                          _this.$refs.qualityPlanTable.reloadData(
-                            formatToTreeData({
-                              arrayList: qpOriginData,
-                              idStr: "id",
-                            })
-                          );
                         }
                       }, 300);
+                    },
+                    /**
+                     * @Author: zhang fq
+                     * @Date: 2020-08-13
+                     * @Description: 修改是否读取缓存标志位  同步修改其它页面的标志位
+                     * 如果自己页面有修改  bool传true  将自己的标致置false 其它标致都置true
+                     * 如果自己页面没有修改 bool传false 将自己的标致置false 其它标致不变
+                     */
+                    setReadCache(bool, readCache, cKey = "zl") {
+                      if (bool) {
+                        for (let key in readCache) {
+                          if (key !== cKey) {
+                            readCache[key] = true;
+                          }
+                        }
+                        readCache[cKey] = false;
+                      } else {
+                        readCache[cKey] = false;
+                      }
                     },
                     /**
                      * @Author: zhang fq
@@ -365,247 +387,247 @@
                       }
                       originData = setAuditTaskUndertaker(originData);
                       // 处理页面数据更新
-                      this.tableData = formatToTreeData({
-                        arrayList: originData,
-                        idStr: "id",
-                      });
+                      this.$refs.qualityPlanTable.reloadData(
+                        formatToTreeData({
+                          arrayList: originData,
+                          idStr: "id",
+                        })
+                      );
                       // 更新缓存
                       qpCachedData.data = _.cloneDeep(originData);
+                      // 数据有修改 更新是否读取缓存标志位 通知其它页签重新读取缓存
+                      this.setReadCache(true, qpCachedData.readCache, "zl");
                       this.setCacheData(this.project_id, qpCachedData);
                     },
                     /**
                      * @Author: zhang fq
                      * @Date: 2020-06-19
                      * @Description: 配合严孝翔修改质量计划设置设置持续时间接口数据处理
+                     * @Date: 2020-08-13
+                     * @Update: 优化设置持续时间成功后数据返回处理 减少循环
+                     * 直接用索引index找到原数据进行更新
                      */
-                    updateSetDuration(originData, selectedIds, changeData) {
-                      this.allChecked = false;
-                      // console.log("selectedIds>>>", selectedIds);
-                      selectedIds.forEach(function (sv) {
-                        // qpChangedIds.push(sv) //将编辑过得id保存
-                        //将源数据中对应的任务字段更新
-                        originData.forEach(function (ov) {
-                          if (sv === ov.id) {
-                            changeData.data.forEach(function (cv) {
-                              if (ov.task_type === cv.task_type) {
-                                for (var key in cv) {
-                                  ov[key] = cv[key];
-                                }
-                              }
-                            });
-                          }
-                        });
-                      });
+                    updateSetDuration(originData, changeData) {
+                      for (let key in changeData.data[0]) {
+                        originData[this.currentRow.indexR][key] =
+                          changeData.data[0][key];
+                        // 更新当前选中行的数据 数据回填
+                        this.currentRow[key] = changeData.data[0][key];
+                      }
                       originData = setAuditTaskUndertaker(originData);
                       // 处理页面数据更新
-                      this.tableData = formatToTreeData({
-                        arrayList: originData,
-                        idStr: "id",
-                      });
+                      // this.$refs.qualityPlanTable.reloadData(
+                      //   formatToTreeData({
+                      //     arrayList: originData,
+                      //     idStr: "id",
+                      //   })
+                      // );
                       // 更新缓存
                       qpCachedData.data = _.cloneDeep(originData);
+                      // 数据有修改 更新是否读取缓存标志位 通知其它页签重新读取缓存
+                      this.setReadCache(true, qpCachedData.readCache, "zl");
                       this.setCacheData(this.project_id, qpCachedData);
                     },
-                    updataData(originData, selectedIds, changeData) {
-                      this.allChecked = false;
-                      // console.log("selectedIds>>>", selectedIds);
-                      selectedIds.forEach(function (sv) {
-                        // qpChangedIds.push(sv) //将编辑过得id保存
-                        //将源数据中对应的任务字段更新
-                        originData.forEach(function (ov) {
-                          if (sv === ov.id) {
-                            changeData.forEach(function (cv) {
-                              //如果是设置人员角色按钮接口返回的数据
-                              if (cv.id) {
-                                // 判断owner_id里是否有当前人员的id
-                                let owner_index = null;
-                                for (let i = 0; i < ov.owner_id.length; i++) {
-                                  if (ov.owner_id[i] === ov.qp_owner_id) {
-                                    owner_index = i;
-                                    break;
-                                  }
-                                }
-                                // 有则替换 无则push
-                                if (owner_index !== null) {
-                                  ov.owner_id[owner_index] = cv.qp_owner_id;
-                                } else {
-                                  ov.owner_id.push(cv.qp_owner_id);
-                                }
-                              }
-                              if (ov.task_type === cv.task_type) {
-                                for (var key in cv) {
-                                  ov[key] = cv[key];
-                                }
-                              }
-                            });
-                          }
-                        });
-                      });
-                      originData = setAuditTaskUndertaker(originData);
-                      // 处理页面数据更新
-                      this.tableData = formatToTreeData({
-                        arrayList: originData,
-                        idStr: "id",
-                      });
-                      // 更新缓存
-                      qpCachedData.data = _.cloneDeep(originData);
-                      this.setCacheData(this.project_id, qpCachedData);
-                    },
-                    handleCheckAllChange(val) {
-                      this.traversalNode(this.tableData[0], this.allChecked);
-                    },
-                    itemChange(row) {
-                      let check = row.checked;
-                      let temp = this.traversalNode(row, check);
-                      let tempTableData = _.cloneDeep(this.tableData[0]);
-                      let flatData = this.traversalNode(tempTableData);
-                      // 获取该节点所在所有父节点
-                      let parentIds = this.findParentIds(flatData, row.parent);
-                      // console.log("temp>>>", temp)
-                      if (check) {
-                        // 如果点击是置true 递归查找所有父节点下的子节点
-                        // 如果子节点都为true 置该父节点为ture
-                        // 如果子节点有一个为false  置该父节点以及该父节点的所有父节点为false
-                        let res = this.helloKids(flatData, parentIds)[0];
-                        this.tableData = [res];
-                      } else {
-                        // 如果点击是置false 直接将该节点的所有父节点置为false
-                        this.findYouAndSetFalse(this.tableData[0], parentIds);
-                        this.allChecked = false;
-                      }
-                    },
-                    // 树形结构数据扁平化处理  如果需要可以设置该节点以及子节点checked
-                    traversalNode(node, bool) {
-                      let nodes = [];
-                      if (node) {
-                        if (bool !== undefined) node.checked = bool;
-                        let stack = [];
-                        stack.push(node);
-                        while (stack.length != 0) {
-                          let item = stack.shift();
-                          nodes.push(item);
-                          let children = item.children ? item.children : [];
-                          children.forEach(function (v) {
-                            if (bool !== undefined) v.checked = bool;
-                            stack.push(v);
-                          });
-                        }
-                      }
-                      return nodes;
-                    },
-                    // 递归找到所有父节点设为false
-                    findYouAndSetFalse(node, pids) {
-                      var that = this;
-                      if (pids.includes(node.id)) {
-                        node.checked = false;
-                      }
-                      let children = node.children ? node.children : [];
-                      children.forEach(function (v) {
-                        that.findYouAndSetFalse(v, pids);
-                      });
-                    },
-                    // 在扁平化的树结构数据中递归找到所点击任务的所有父节点task_id
-                    findParentIds(arr, pid) {
-                      let pids = [];
-                      let currentpid = pid;
-                      // console.log(Array.isArray(arr))
-                      if (Array.isArray(arr) && arr.length > 0) {
-                        while (currentpid != 0) {
-                          arr.forEach(function (v) {
-                            if (v.id == currentpid) {
-                              pids.push(v.id);
-                              currentpid = v.parent;
-                            }
-                          });
-                        }
-                      }
-                      return pids;
-                    },
-                    // flatdata 为表格绑定的整个数据的扁平化数据  pids为包含所点击节点的所有父节点数组
-                    // 在整个扁平化数据中循环查找每个父节点下的子节点 判断
-                    // 若果有一个子节点为false 置所有父节点为false
-                    // 如果循环到当前父节点下的所有子节点都为true  置该父节点为true 继续找该父节点的父节点 重复该步骤
-                    helloKids(flatdata, pids) {
-                      let _that = this;
-                      let arr = [];
-                      // 如果pids为空 表示点击的节点为根节点没有父节点 直接置为true
-                      if (pids.length == 0) {
-                        this.allChecked = true;
-                        return flatdata;
-                      }
-                      for (let i = 0, len = pids.length; i < len; i++) {
-                        for (let j = 0, jlen = flatdata.length; j < jlen; j++) {
-                          if (pids[i] == flatdata[j].id) {
-                            let bool = flatdata[j].checked;
-                            let children = flatdata[j].children
-                              ? flatdata[j].children
-                              : [];
-                            for (
-                              let k = 0, klen = children.length;
-                              k < klen;
-                              k++
-                            ) {
-                              if (!children[k].checked) {
-                                bool = false;
-                                _that.allChecked = false;
-                                break;
-                              } else {
-                                bool = true;
-                              }
-                            }
-                            flatdata[j].checked = bool;
-                            if (bool) {
-                              _that.allChecked = true;
-                            }
-                          }
-                        }
-                      }
-                      // console.log("arr>>>", arr)
-                      return flatdata;
-                    },
-                    // 获取选择的任务的task_id
-                    getSelectedId() {
-                      var that = this;
-                      this.currentSelectedIds = [];
-                      let resData = {
-                        selected: [],
-                        idArr: [],
-                      };
-                      // let idArr = []
-                      let tempArr = this.traversalNode(this.tableData[0]);
-                      tempArr.forEach(function (v) {
-                        if (v.checked && v.type !== "project") {
-                          resData.selected.push(v);
-                          if (v.type == "task" && v.task_type !== "4") {
-                            that.currentSelectedIds.push(v.id);
-                            resData.idArr.push(v);
-                            // resData.idArr.push({
-                            //   project_id: v.project_id,
-                            //   plan_id: v.plan_id,skill
-                            //   id: v.id,
-                            //   text: v.text,
-                            //   task_type: v.task_type,
-                            //   duration: v.duration,
-                            //   task_assign_id:v.task_assign_id,
-                            //   skill:v.skill,
-                            //   skill_id:v.skill_id
-                            // })
-                          }
-                        }
-                        // if (v.checked && v.type == "task" && v.task_type !== "4") {
-                        //   that.currentSelectedIds.push(v.id)
-                        //   idArr.push({
-                        //     project_id: v.project_id,
-                        //     plan_id: v.plan_id,
-                        //     id: v.id,
-                        //     text: v.text,
-                        //     task_type: v.task_type,
-                        //     duration: v.duration
-                        //   })
-                        // }
-                      });
-                      return resData;
-                    },
+                    // updataData(originData, selectedIds, changeData) {
+                    //   this.allChecked = false;
+                    //   // console.log("selectedIds>>>", selectedIds);
+                    //   selectedIds.forEach(function (sv) {
+                    //     // qpChangedIds.push(sv) //将编辑过得id保存
+                    //     //将源数据中对应的任务字段更新
+                    //     originData.forEach(function (ov) {
+                    //       if (sv === ov.id) {
+                    //         changeData.forEach(function (cv) {
+                    //           //如果是设置人员角色按钮接口返回的数据
+                    //           if (cv.id) {
+                    //             // 判断owner_id里是否有当前人员的id
+                    //             let owner_index = null;
+                    //             for (let i = 0; i < ov.owner_id.length; i++) {
+                    //               if (ov.owner_id[i] === ov.qp_owner_id) {
+                    //                 owner_index = i;
+                    //                 break;
+                    //               }
+                    //             }
+                    //             // 有则替换 无则push
+                    //             if (owner_index !== null) {
+                    //               ov.owner_id[owner_index] = cv.qp_owner_id;
+                    //             } else {
+                    //               ov.owner_id.push(cv.qp_owner_id);
+                    //             }
+                    //           }
+                    //           if (ov.task_type === cv.task_type) {
+                    //             for (var key in cv) {
+                    //               ov[key] = cv[key];
+                    //             }
+                    //           }
+                    //         });
+                    //       }
+                    //     });
+                    //   });
+                    //   originData = setAuditTaskUndertaker(originData);
+                    //   // 处理页面数据更新
+                    //   this.tableData = formatToTreeData({
+                    //     arrayList: originData,
+                    //     idStr: "id",
+                    //   });
+                    //   // 更新缓存
+                    //   qpCachedData.data = _.cloneDeep(originData);
+                    //   this.setCacheData(this.project_id, qpCachedData);
+                    // },
+                    // handleCheckAllChange(val) {
+                    //   this.traversalNode(this.tableData[0], this.allChecked);
+                    // },
+                    // itemChange(row) {
+                    //   let check = row.checked;
+                    //   let temp = this.traversalNode(row, check);
+                    //   let tempTableData = _.cloneDeep(this.tableData[0]);
+                    //   let flatData = this.traversalNode(tempTableData);
+                    //   // 获取该节点所在所有父节点
+                    //   let parentIds = this.findParentIds(flatData, row.parent);
+                    //   // console.log("temp>>>", temp)
+                    //   if (check) {
+                    //     // 如果点击是置true 递归查找所有父节点下的子节点
+                    //     // 如果子节点都为true 置该父节点为ture
+                    //     // 如果子节点有一个为false  置该父节点以及该父节点的所有父节点为false
+                    //     let res = this.helloKids(flatData, parentIds)[0];
+                    //     this.tableData = [res];
+                    //   } else {
+                    //     // 如果点击是置false 直接将该节点的所有父节点置为false
+                    //     this.findYouAndSetFalse(this.tableData[0], parentIds);
+                    //     this.allChecked = false;
+                    //   }
+                    // },
+                    // // 树形结构数据扁平化处理  如果需要可以设置该节点以及子节点checked
+                    // traversalNode(node, bool) {
+                    //   let nodes = [];
+                    //   if (node) {
+                    //     if (bool !== undefined) node.checked = bool;
+                    //     let stack = [];
+                    //     stack.push(node);
+                    //     while (stack.length != 0) {
+                    //       let item = stack.shift();
+                    //       nodes.push(item);
+                    //       let children = item.children ? item.children : [];
+                    //       children.forEach(function (v) {
+                    //         if (bool !== undefined) v.checked = bool;
+                    //         stack.push(v);
+                    //       });
+                    //     }
+                    //   }
+                    //   return nodes;
+                    // },
+                    // // 递归找到所有父节点设为false
+                    // findYouAndSetFalse(node, pids) {
+                    //   var that = this;
+                    //   if (pids.includes(node.id)) {
+                    //     node.checked = false;
+                    //   }
+                    //   let children = node.children ? node.children : [];
+                    //   children.forEach(function (v) {
+                    //     that.findYouAndSetFalse(v, pids);
+                    //   });
+                    // },
+                    // // 在扁平化的树结构数据中递归找到所点击任务的所有父节点task_id
+                    // findParentIds(arr, pid) {
+                    //   let pids = [];
+                    //   let currentpid = pid;
+                    //   // console.log(Array.isArray(arr))
+                    //   if (Array.isArray(arr) && arr.length > 0) {
+                    //     while (currentpid != 0) {
+                    //       arr.forEach(function (v) {
+                    //         if (v.id == currentpid) {
+                    //           pids.push(v.id);
+                    //           currentpid = v.parent;
+                    //         }
+                    //       });
+                    //     }
+                    //   }
+                    //   return pids;
+                    // },
+                    // // flatdata 为表格绑定的整个数据的扁平化数据  pids为包含所点击节点的所有父节点数组
+                    // // 在整个扁平化数据中循环查找每个父节点下的子节点 判断
+                    // // 若果有一个子节点为false 置所有父节点为false
+                    // // 如果循环到当前父节点下的所有子节点都为true  置该父节点为true 继续找该父节点的父节点 重复该步骤
+                    // helloKids(flatdata, pids) {
+                    //   let _that = this;
+                    //   let arr = [];
+                    //   // 如果pids为空 表示点击的节点为根节点没有父节点 直接置为true
+                    //   if (pids.length == 0) {
+                    //     this.allChecked = true;
+                    //     return flatdata;
+                    //   }
+                    //   for (let i = 0, len = pids.length; i < len; i++) {
+                    //     for (let j = 0, jlen = flatdata.length; j < jlen; j++) {
+                    //       if (pids[i] == flatdata[j].id) {
+                    //         let bool = flatdata[j].checked;
+                    //         let children = flatdata[j].children
+                    //           ? flatdata[j].children
+                    //           : [];
+                    //         for (
+                    //           let k = 0, klen = children.length;
+                    //           k < klen;
+                    //           k++
+                    //         ) {
+                    //           if (!children[k].checked) {
+                    //             bool = false;
+                    //             _that.allChecked = false;
+                    //             break;
+                    //           } else {
+                    //             bool = true;
+                    //           }
+                    //         }
+                    //         flatdata[j].checked = bool;
+                    //         if (bool) {
+                    //           _that.allChecked = true;
+                    //         }
+                    //       }
+                    //     }
+                    //   }
+                    //   // console.log("arr>>>", arr)
+                    //   return flatdata;
+                    // },
+                    // // 获取选择的任务的task_id
+                    // getSelectedId() {
+                    //   var that = this;
+                    //   this.currentSelectedIds = [];
+                    //   let resData = {
+                    //     selected: [],
+                    //     idArr: [],
+                    //   };
+                    //   // let idArr = []
+                    //   let tempArr = this.traversalNode(this.tableData[0]);
+                    //   tempArr.forEach(function (v) {
+                    //     if (v.checked && v.type !== "project") {
+                    //       resData.selected.push(v);
+                    //       if (v.type == "task" && v.task_type !== "4") {
+                    //         that.currentSelectedIds.push(v.id);
+                    //         resData.idArr.push(v);
+                    //         // resData.idArr.push({
+                    //         //   project_id: v.project_id,
+                    //         //   plan_id: v.plan_id,skill
+                    //         //   id: v.id,
+                    //         //   text: v.text,
+                    //         //   task_type: v.task_type,
+                    //         //   duration: v.duration,
+                    //         //   task_assign_id:v.task_assign_id,
+                    //         //   skill:v.skill,
+                    //         //   skill_id:v.skill_id
+                    //         // })
+                    //       }
+                    //     }
+                    //     // if (v.checked && v.type == "task" && v.task_type !== "4") {
+                    //     //   that.currentSelectedIds.push(v.id)
+                    //     //   idArr.push({
+                    //     //     project_id: v.project_id,
+                    //     //     plan_id: v.plan_id,
+                    //     //     id: v.id,
+                    //     //     text: v.text,
+                    //     //     task_type: v.task_type,
+                    //     //     duration: v.duration
+                    //     //   })
+                    //     // }
+                    //   });
+                    //   return resData;
+                    // },
                     cellStyle({ row, column, rowIndex, columnIndex }) {
                       return "padding: 0px;line-height:40px;height: 40px";
                     },
@@ -613,30 +635,32 @@
                      * Author: zhang fq
                      * Date: 2020-05-27
                      * Description: bug转需求 设置角色判断 已委外的任务无法设置角色
+                     * Date：2020-08-13
+                     * Update：优化表格数据处理 修改选取任务进行设置角色和设置持续时间的处理，
                      */
                     SetRole() {
-                      var _this = this;
-                      let ids = this.getSelectedId();
-                      let sendData = {
-                        data: ids.idArr,
-                      };
-                      if (ids.selected.length === 0) {
-                        this.$message.error("未勾选任务");
+                      if (this.currentRow === null) {
+                        this.$message.warning("请单击选择一条任务进行设置");
                         return;
                       }
-                      if (ids.idArr.length === 0) {
-                        this.$message.error("您勾选的任务无法设置角色");
-                      } else if (ids.idArr.length === 1) {
-                        if (ids.idArr[0].delegate === "1") {
+                      if (this.currentRow.type !== "project") {
+                        if (this.currentRow.delegate === 1) {
                           this.$message.error("已委外的任务无法设置角色");
+                          return;
+                        }
+                        if (
+                          this.currentRow.type == "task" &&
+                          this.currentRow.task_type !== "4"
+                        ) {
+                          // TODO:处理交互
+                          model.invoke("setQualityPlanRole", this.currentRow);
                         } else {
-                          qpChangedIds = qpChangedIds.concat(
-                            this.currentSelectedIds
-                          );
-                          model.invoke("setQualityPlanRole", sendData);
+                          this.$message.error("该类型的任务无法设置角色");
+                          return;
                         }
                       } else {
-                        this.$message.error("设置角色不能多选");
+                        this.$message.error("摘要任务无法设置角色");
+                        return;
                       }
                     },
                     /**
@@ -645,31 +669,28 @@
                      * Description: bug转需求 设置持续时间判断 已委外的任务无法设置持续时间
                      */
                     SetDurationTime() {
-                      let ids = this.getSelectedId();
-                      let sendData = {
-                        data: ids.idArr,
-                      };
-                      if (ids.selected.length === 0) {
-                        this.$message.error("未勾选任务");
+                      if (this.currentRow === null) {
+                        this.$message.warning("请单击选择一条任务进行设置");
                         return;
                       }
-                      if (ids.selected.length > 1) {
-                        this.$message.error("设置任务持续时间不能多选");
-                        return;
-                      }
-                      if (ids.idArr.length === 0) {
-                        this.$message.error("您勾选的任务无法设置任务持续时间");
-                      } else if (ids.idArr.length > 1) {
-                        this.$message.error("设置任务持续时间不能多选");
-                      } else if (ids.idArr[0].task_type !== "3") {
-                        this.$message.error("只有复核任务可以设置任务持续时间");
-                      } else if (ids.idArr[0].delegate === "1") {
-                        this.$message.error("已委外的任务无法设置任务持续时间");
+                      if (this.currentRow.type !== "project") {
+                        if (this.currentRow.delegate === 1) {
+                          this.$message.error("已委外的任务无法设置持续时间");
+                          return;
+                        }
+                        if (
+                          this.currentRow.type == "task" &&
+                          this.currentRow.task_type === "3"
+                        ) {
+                          // TODO:处理交互
+                          model.invoke("SetDurationTime", this.currentRow);
+                        } else {
+                          this.$message.error("该类型的任务无法设置持续时间");
+                          return;
+                        }
                       } else {
-                        qpChangedIds = qpChangedIds.concat(
-                          this.currentSelectedIds
-                        );
-                        model.invoke("SetDurationTime", sendData);
+                        this.$message.error("摘要任务无法设置持续时间");
+                        return;
                       }
                     },
                   },
@@ -695,7 +716,7 @@
     let treeList = []; // 用来储存最终树形结构数据的数组
     // 将数据变换成{key: obj}格式，方便下面处理数据
     for (let i = 0; i < templist.length; i++) {
-      templist[i].checked = false;
+      templist[i].indexR = i;
       listObj[templist[i][idStr]] = templist[i];
     }
     // 根据pid来将数据进行格式化

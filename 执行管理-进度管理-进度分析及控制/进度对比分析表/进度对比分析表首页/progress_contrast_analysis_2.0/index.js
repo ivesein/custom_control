@@ -155,7 +155,7 @@
                             }
                             break;
                           case "getTaskListData":
-                            if (props.data.data) {
+                            if (props.data.data.length > 0) {
                               this.proTableData = this.handleProTableData(
                                 props.data.data
                               );
@@ -166,6 +166,9 @@
                                   this.currentRow
                                 );
                               }
+                            } else {
+                              this.proTableData = [];
+                              this.currentRow = null;
                             }
                             break;
                           case "pickFollowTasks":
