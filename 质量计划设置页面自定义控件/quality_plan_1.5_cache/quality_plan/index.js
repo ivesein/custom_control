@@ -316,6 +316,8 @@
                      * @Author: zhang fq
                      * @Date: 2020-06-19
                      * @Description: 配合严孝翔修改质量计划设置角色新增角色接口数据处理
+                     * @Date：2020-08-13
+                     * @Update：优化设置人员角色接口交互数据处理逻辑
                      */
                     updateSetRole(originData, selectedIds, changeData) {
                       if (
@@ -325,7 +327,7 @@
                       ) {
                         return;
                       }
-                      this.allChecked = false;
+                      // this.allChecked = false;
                       // 处理setRole
                       if (changeData.setRole) {
                         originData.forEach((ov) => {
@@ -352,47 +354,45 @@
                       }
                       // 处理data
                       if (changeData.data) {
-                        selectedIds.forEach(function (sv) {
-                          // qpChangedIds.push(sv) //将编辑过得id保存
-                          //将源数据中对应的任务字段更新
-                          originData.forEach(function (ov) {
-                            if (sv === ov.id) {
-                              changeData.data.forEach(function (cv) {
-                                //如果是设置人员角色按钮接口返回的数据
-                                if (cv.id) {
-                                  // 判断owner_id里是否有当前人员的id
-                                  let owner_index = null;
-                                  for (let i = 0; i < ov.owner_id.length; i++) {
-                                    if (ov.owner_id[i] === ov.qp_owner_id) {
-                                      owner_index = i;
-                                      break;
-                                    }
-                                  }
-                                  // 有则替换 无则push
-                                  if (owner_index !== null) {
-                                    ov.owner_id[owner_index] = cv.qp_owner_id;
-                                  } else {
-                                    ov.owner_id.push(cv.qp_owner_id);
-                                  }
-                                }
-                                if (ov.task_type === cv.task_type) {
-                                  for (var key in cv) {
-                                    ov[key] = cv[key];
-                                  }
-                                }
-                              });
+                        //如果是设置人员角色按钮接口返回的数据
+                        // 同步处理党小伟需要计算资源的owner_id字段
+                        if (changeData.data[0].id) {
+                          let owner_index = null;
+                          for (
+                            let i = 0;
+                            i <
+                            originData[this.currentRow.indexR].owner_id.length;
+                            i++
+                          ) {
+                            if (
+                              originData[this.currentRow.indexR].owner_id[i] ===
+                              originData[this.currentRow.indexR].qp_owner_id
+                            ) {
+                              owner_index = i;
+                              break;
                             }
-                          });
-                        });
+                          }
+                          // 有则替换 无则push
+                          if (owner_index !== null) {
+                            originData[this.currentRow.indexR].owner_id[
+                              owner_index
+                            ] = changeData.data[0].qp_owner_id;
+                          } else {
+                            originData[this.currentRow.indexR].owner_id.push(
+                              changeData.data[0].qp_owner_id
+                            );
+                          }
+                        }
+                        // 将源数据中对应的任务字段更新
+                        for (let key in changeData.data[0]) {
+                          //将源数据中对应的任务字段更新
+                          originData[this.currentRow.indexR][key] =
+                            changeData.data[0][key];
+                          // 数据回填 更新当前行数据
+                          this.currentRow[key] = changeData.data[0][key];
+                        }
                       }
                       originData = setAuditTaskUndertaker(originData);
-                      // 处理页面数据更新
-                      this.$refs.qualityPlanTable.reloadData(
-                        formatToTreeData({
-                          arrayList: originData,
-                          idStr: "id",
-                        })
-                      );
                       // 更新缓存
                       qpCachedData.data = _.cloneDeep(originData);
                       // 数据有修改 更新是否读取缓存标志位 通知其它页签重新读取缓存
