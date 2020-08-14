@@ -127,6 +127,8 @@
                      * @Date: 2020-07-28
                      * @Description: 处理异常状态任务过滤  解决后台返回数据包含其他状态任务问题
                      * @Update：将同步到进度维护、任务汇报详情、筛选按钮放到后台，添加这3个按钮的接口交互
+                     * @Date：2020-08-14
+                     * @Update：修复筛选框显示的情况下点击刷新后台传参后筛选框不隐藏的问题
                      */
                     // 根据接口方法名 处理后台返回参数
                     handleUpdata(model, props) {
@@ -138,6 +140,7 @@
                         switch (props.data.method) {
                           case "getFilterData":
                           case "init":
+                            this.ifSelectBoxShow = false;
                             let mDate = props.data.data;
                             if (mDate && mDate.length > 0) {
                               this.messageData = mDate.filter((v) => {
