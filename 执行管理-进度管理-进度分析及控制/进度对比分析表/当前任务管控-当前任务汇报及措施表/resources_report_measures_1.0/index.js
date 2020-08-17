@@ -124,8 +124,18 @@
                      * @Author: zhang fq
                      * @Date: 2020-08-10
                      * @Description: 根据李阳波要求 修改数据结构和 处理差异化数据 发送到同步接口
+                     * @Date: 2020-08-17
+                     * @Update: 配合李洋波修改自测的多次同步成功发送多次数据的bug
                      */
                     syncToSM() {
+                      // 判断是否已同步成功过一次
+                      let ifSyncSuccess = this.tableData.every((v) => {
+                        return v.is_deal_with === true;
+                      });
+                      if (!ifSyncSuccess) {
+                        this.$message.info("已同步成功！");
+                        return;
+                      }
                       // 判断是否每条都做了选择操作和措施输入
                       let flag = this.tableData.every((v) => {
                         return (
