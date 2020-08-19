@@ -303,20 +303,7 @@
                           }
                         });
                       }
-                      // 处理setPerson
-                      if (changeData.setPerson) {
-                        changeData.setPerson.forEach((cv) => {
-                          originData.forEach((ov) => {
-                            if (cv.qp_owner_roleid === ov.qp_owner_roleid) {
-                              ov.qp_owner_role = cv.qp_owner_role;
-                              ov.skill = cv.skill;
-                              ov.skill_id = cv.skill_id;
-                              ov.qp_owner = cv.qp_owner;
-                              ov.qp_owner_id = cv.qp_owner_id;
-                            }
-                          });
-                        });
-                      }
+
                       // 处理data
                       if (changeData.data) {
                         selectedIds.forEach(function (sv) {
@@ -341,6 +328,15 @@
                                   } else {
                                     ov.owner_id.push(cv.qp_owner_id);
                                   }
+                                  // 处理owner_time
+                                  ov.owner_time = {};
+                                  ov.owner_time[cv.qp_owner_id] = [
+                                    {
+                                      assignId: ov.task_assign_id,
+                                      endTime: ov.end_date,
+                                      startTime: ov.start_date,
+                                    },
+                                  ];
                                 }
                                 if (ov.task_type === cv.task_type) {
                                   for (var key in cv) {
@@ -352,6 +348,22 @@
                           });
                         });
                       }
+
+                      // 处理setPerson
+                      if (changeData.setPerson) {
+                        changeData.setPerson.forEach((cv) => {
+                          originData.forEach((ov) => {
+                            if (cv.qp_owner_roleid === ov.qp_owner_roleid) {
+                              ov.qp_owner_role = cv.qp_owner_role;
+                              ov.skill = cv.skill;
+                              ov.skill_id = cv.skill_id;
+                              ov.qp_owner = cv.qp_owner;
+                              ov.qp_owner_id = cv.qp_owner_id;
+                            }
+                          });
+                        });
+                      }
+
                       originData = setAuditTaskUndertaker(originData);
                       // 处理页面数据更新
                       this.tableData = formatToTreeData({
