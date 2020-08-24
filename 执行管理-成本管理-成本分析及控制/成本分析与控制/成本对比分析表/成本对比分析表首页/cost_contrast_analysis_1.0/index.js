@@ -119,6 +119,11 @@
                                 v.feched = false;
                               });
                               this.messageBoxShow = false;
+                              // 将右侧各个表格数据置空
+                              this.beforeTaskInfo.data = [];
+                              this.currentTaskInfo.data = [];
+                              this.earnedValueAnalysisSuggestions.data = [];
+                              this.followTaskProcessing.data = [];
                             }
                             break;
                           case "syncToCostMaintenance":

@@ -289,40 +289,66 @@
                                 return v !== osub.owner_id;
                               });
                             });
-                            changeData.forEach(function (cv) {
-                              // 根据质量维护设置人员、持续时间、或资源调配接口返回数据
-                              // 修改进度计划 owner_id和owner_time字段值
-                              cv.subArray.forEach((sub) => {
-                                //处理owner_time
-                                let obj = {};
-                                // 判断 如果有该owner_id为键的值  则直接push进去
-                                // 没有则新建值为空数组的该键 把数据push进去
-                                if (obj[sub.owner_id] !== undefined) {
-                                  obj[sub.owner_id].push({
-                                    startTime: sub.res_plan_starttime,
-                                    endTime: sub.res_plan_endtime,
-                                    assignId: sub.task_assign_id,
-                                  });
+                            // -------------------此处为新改得理逻-----------------------
+                            ov.owner_time = {};
+                            changeData.forEach((cv) => {
+                              cv.subArray.forEach((item) => {
+                                if (ov.owner_id.indexOf(item.owner_id) === -1) {
+                                  ov.owner_id.push(item.owner_id);
+                                  ov.owner_time[item.owner_id] = [
+                                    {
+                                      startTime: item.res_plan_starttime,
+                                      endTime: item.res_plan_endtime,
+                                      assignId: item.task_assign_id,
+                                    },
+                                  ];
                                 } else {
-                                  obj[sub.owner_id] = [];
-                                  obj[sub.owner_id].push({
-                                    startTime: sub.res_plan_starttime,
-                                    endTime: sub.res_plan_endtime,
-                                    assignId: sub.task_assign_id,
+                                  ov.owner_time[item.owner_id].push({
+                                    startTime: item.res_plan_starttime,
+                                    endTime: item.res_plan_endtime,
+                                    assignId: item.task_assign_id,
                                   });
-                                }
-                                // 更新进度的owner_time字段  有则替换 没则增加
-                                for (let key in obj) {
-                                  // 将新的资源id push到进度所需的owner_id资源id字段中
-                                  ov.owner_id.push(key);
-                                  ov.owner_time[key] = obj[key];
                                 }
                               });
-                              //更新源数据和缓存数据
                               for (var key in cv) {
                                 ov[key] = cv[key];
                               }
                             });
+                            // -------------------以下为上一版处理逻辑--------------------
+                            // changeData.forEach(function (cv) {
+                            //   // 根据质量维护设置人员、持续时间、或资源调配接口返回数据
+                            //   // 修改进度计划 owner_id和owner_time字段值
+                            //   cv.subArray.forEach((sub) => {
+                            //     //处理owner_time
+                            //     let obj = {};
+                            //     // 判断 如果有该owner_id为键的值  则直接push进去
+                            //     // 没有则新建值为空数组的该键 把数据push进去
+                            //     if (obj[sub.owner_id] !== undefined) {
+                            //       obj[sub.owner_id].push({
+                            //         startTime: sub.res_plan_starttime,
+                            //         endTime: sub.res_plan_endtime,
+                            //         assignId: sub.task_assign_id,
+                            //       });
+                            //     } else {
+                            //       obj[sub.owner_id] = [];
+                            //       obj[sub.owner_id].push({
+                            //         startTime: sub.res_plan_starttime,
+                            //         endTime: sub.res_plan_endtime,
+                            //         assignId: sub.task_assign_id,
+                            //       });
+                            //     }
+                            //     // 更新进度的owner_time字段  有则替换 没则增加
+                            //     for (let key in obj) {
+                            //       // 将新的资源id push到进度所需的owner_id资源id字段中
+                            //       ov.owner_id.push(key);
+                            //       ov.owner_time[key] = obj[key];
+                            //     }
+                            //   });
+                            //   //更新源数据和缓存数据
+                            //   for (var key in cv) {
+                            //     ov[key] = cv[key];
+                            //   }
+                            // });
                           }
                         });
                       });
