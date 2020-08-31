@@ -375,6 +375,8 @@
                      * 将所选的后续任务追加到后续任务列表 过滤掉重复选择的任务
                      * @Date：2020-07-30
                      * @Update：依产品需求 已选择后续任务做了措施调整并同步后 下次默认显示并且不可删除
+                     * @Date：2020-08-30
+                     * @Update：修复测试组提出的成本分析控制后续任务选择后列表为空的bug
                      */
                     followTaskConfirm() {
                       let arr = _.cloneDeep(this.multipleSelection);
@@ -389,7 +391,7 @@
                       // 对返回的 用户选择的所有后续任务进行过滤， 去掉列表里已有的
                       arr.forEach((v) => {
                         let flag = this.followTaskProcessing.data.some((s) => {
-                          return v.id === s.id;
+                          return v.task_id === s.task_id;
                         });
                         if (!flag) {
                           this.followTaskProcessing.data.push(v);

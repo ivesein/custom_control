@@ -132,12 +132,12 @@
         <div class="table-info-box" v-if="currentTaskInfo.open">
           <el-table ref="TableRight" :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}" :data="currentTaskInfo.data" style="margin:10px 0 10px 0;" :style="{width:tableWidth}" :cell-style="cellStyle" row-key="task_id" :border="true">
             <el-table-column prop="plan_duration" label="计划工时" width="120"></el-table-column>
-            <el-table-column prop="plan_quantities" label="计划工程量" width="100"></el-table-column>
-            <el-table-column prop="plan_cost" label="计划总费用" width="100"></el-table-column>
-            <el-table-column prop="Adjusted_cost" label="调整后总费用" width="100"></el-table-column>
+            <el-table-column prop="plan_quantities" label="计划工程量" width="120"></el-table-column>
+            <el-table-column prop="plan_cost" label="计划总费用" width="120"></el-table-column>
+            <el-table-column prop="Adjusted_cost" label="调整后总费用" width="140"></el-table-column>
             <el-table-column prop="actual_duration" label="实际工时" width="120"></el-table-column>
-            <el-table-column prop="actual_quantities" label="实际工程量" width="100"></el-table-column>
-            <el-table-column prop="actual_cost" label="实际总费用" width="100"></el-table-column>
+            <el-table-column prop="actual_quantities" label="实际工程量" width="120"></el-table-column>
+            <el-table-column prop="actual_cost" label="实际总费用" min-width="120"></el-table-column>
           </el-table>
         </div>
       </div>

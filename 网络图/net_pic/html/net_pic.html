@@ -1,0 +1,124 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="stylesheet" href="./css/d3-demo2.css" />
+  <link rel="stylesheet" href="../css/element.css" />
+  <title>Document</title>
+</head>
+
+<body> -->
+<div
+  id="netPicApp"
+  class="network-box"
+  v-loading="loading"
+  element-loading-text="图形绘制中..."
+>
+  <div class="top-box">
+    <div class="log-box top-item"></div>
+    <div class="title-box">
+      <span>${projectName}</span>
+      <!-- <span class="version-text">2.0</span> -->
+    </div>
+    <div class="select-box top-item">
+      <!-- <el-select v-model="option" placeholder="请选择" @change="handleChange">
+          <el-option v-for="(item,index) in getDataOptions" :key="index" :label="item" :value="item">
+          </el-option>
+        </el-select> -->
+      <el-button size="mini" @click="handleScaleClicked"
+        >${getScaleText}</el-button
+      >
+    </div>
+  </div>
+  <div id="svgContainer">
+    <!-- <div class="role-box">
+          <div class="date-item role-header">
+            <div class="role-header-item date-role-cell">
+              年-月
+            </div>
+            <div class="role-header-item date-role-cell">
+              日
+            </div>
+          </div>
+          <div class="date-item" v-for="(item,key) of dateData">
+            <div class="year-month-cell date-role-cell">${key}</div>
+            <div class="date-box">
+              <div class="date-cell date-role-cell" v-for="date in item">
+                ${date}
+              </div>
+            </div>
+          </div>
+        </div> -->
+  </div>
+  <div class="bot-info-box" v-show="false">
+    <div class="box-info-left">
+      <ul>
+        <li>1.春节放假七天</li>
+        <li>2.施工计划因疫情影响而做出相应调整</li>
+      </ul>
+    </div>
+    <div class="box-info-center">
+      <img
+        src="data:image/svg+xml;base64,PHN2ZyBpZD0i5Zu+5bGCXzEiIGRhdGEtbmFtZT0i5Zu+5bGCIDEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDczNy4wMSAxNTMuMzUiPjxkZWZzPjxzdHlsZT4uY2xzLTF7ZmlsbDojZjVmMmQ4O30uY2xzLTIsLmNscy01LC5jbHMtNywuY2xzLTgsLmNscy05e2ZpbGw6bm9uZTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9LmNscy0ye3N0cm9rZTpyZWQ7fS5jbHMtMiwuY2xzLTUsLmNscy04LC5jbHMtOXtzdHJva2Utd2lkdGg6M3B4O30uY2xzLTN7ZmlsbDpyZWQ7fS5jbHMtNHtmb250LXNpemU6MzBweDtmb250LWZhbWlseTpTb3VyY2VIYW5TYW5zQ04tUmVndWxhci1HQnBjLUVVQy1ILCBTb3VyY2UgSGFuIFNhbnMgQ047fS5jbHMtNSwuY2xzLTgsLmNscy05e3N0cm9rZTojMTc3NmVlO30uY2xzLTZ7ZmlsbDojMTc3NmVlO30uY2xzLTd7c3Ryb2tlOiM5OTk7c3Ryb2tlLXdpZHRoOjJweDt9LmNscy04e3N0cm9rZS1kYXNoYXJyYXk6MC4wMSAwO30uY2xzLTl7c3Ryb2tlLWRhc2hhcnJheToxLjk2IDEuOTUgMC4wMSAwO30uY2xzLTEwe2ZpbGw6Izk5OTt9LmNscy0xMXtmaWxsOiM4ZDhiNzQ7fTwvc3R5bGU+PC9kZWZzPjx0aXRsZT7mnKrmoIfpopgtNDwvdGl0bGU+PHJlY3QgY2xhc3M9ImNscy0xIiB3aWR0aD0iNzM3LjAxIiBoZWlnaHQ9IjE1My4zNSIvPjxsaW5lIGNsYXNzPSJjbHMtMiIgeDE9IjE5My41NyIgeTE9IjQ0LjY2IiB4Mj0iMjkxLjcxIiB5Mj0iNDQuNjYiLz48cG9seWdvbiBjbGFzcz0iY2xzLTMiIHBvaW50cz0iMjg1Ljc3IDUzLjM4IDMxOC4yOSA0NC42NiAyODUuNzcgMzUuOTUgMjg1Ljc3IDUzLjM4Ii8+PHRleHQgY2xhc3M9ImNscy00IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg1MC44MyA1My4wNSkiPuWFs+mUruW3peS9nDwvdGV4dD48bGluZSBjbGFzcz0iY2xzLTUiIHgxPSI1NjkuNjQiIHkxPSI0Ny42NiIgeDI9IjY2Ny43OCIgeTI9IjQ3LjY2Ii8+PHBvbHlnb24gY2xhc3M9ImNscy02IiBwb2ludHM9IjY2MS44NCA1Ni4zOCA2OTQuMzYgNDcuNjYgNjYxLjg0IDM4Ljk1IDY2MS44NCA1Ni4zOCIvPjxwYXRoIGNsYXNzPSJjbHMtNyIgZD0iTTU2OCw5MC4zNWM0LjM2LDAsNC4zNiw0LjI1LDguNzIsNC4yNXM0LjM2LTQuMjUsOC43Mi00LjI1LDQuMzYsNC4yNSw4LjcyLDQuMjUsNC4zNi00LjI1LDguNzItNC4yNSw0LjM2LDQuMjUsOC43Miw0LjI1LDQuMzYtNC4yNSw4LjcyLTQuMjUsNC4zNiw0LjI1LDguNzIsNC4yNSw0LjM2LTQuMjUsOC43Mi00LjI1LDQuMzYsNC4yNSw4LjcyLDQuMjUsNC4zNi00LjI1LDguNzItNC4yNSw0LjM2LDQuMjUsOC43Miw0LjI1LDQuMzYtNC4yNSw4LjczLTQuMjUsNC4zNiw0LjI1LDguNzMsNC4yNSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCAwLjE0KSIvPjx0ZXh0IGNsYXNzPSJjbHMtNCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzkwLjUgNTkuODYpIj7pnZ7lhbPplK7lt6XkvZw8L3RleHQ+PGxpbmUgY2xhc3M9ImNscy01IiB4MT0iMTkzLjQiIHkxPSI5NC4yOCIgeDI9IjE5NC40IiB5Mj0iOTQuMjgiLz48bGluZSBjbGFzcz0iY2xzLTgiIHgxPSIxOTYuMzUiIHkxPSI5NC4yOCIgeDI9IjE5Ni4zNiIgeTI9Ijk0LjI4Ii8+PGxpbmUgY2xhc3M9ImNscy05IiB4MT0iMTk2LjM2IiB5MT0iOTQuMjgiIHgyPSIyOTAuNTQiIHkyPSI5NC4yOCIvPjxsaW5lIGNsYXNzPSJjbHMtNSIgeDE9IjI5MC41NCIgeTE9Ijk0LjI4IiB4Mj0iMjkxLjU0IiB5Mj0iOTQuMjgiLz48cG9seWdvbiBjbGFzcz0iY2xzLTYiIHBvaW50cz0iMjg1LjYgMTAyLjk5IDMxOC4xMiA5NC4yOCAyODUuNiA4NS41NiAyODUuNiAxMDIuOTkiLz48dGV4dCBjbGFzcz0iY2xzLTQiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDUwLjgzIDEwNC42NikiPuiZmuW3peS9nDwvdGV4dD48dGV4dCBjbGFzcz0iY2xzLTQiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDM4Ni44NiAxMDQuNjYpIj7oh6rnlLHml7blt648L3RleHQ+PHBvbHlnb24gY2xhc3M9ImNscy0xMCIgcG9pbnRzPSI2OTYuMzcgOTIuODUgNjYyLjUxIDEwMS41NCA2NjIuNTEgODMuNjkgNjk2LjM3IDkyLjg1Ii8+PHJlY3QgY2xhc3M9ImNscy0xMSIgeD0iNC43MiIgeT0iMTMwLjg5IiB3aWR0aD0iNzI2LjUiIGhlaWdodD0iMi44MyIvPjx0ZXh0IHk9IjAuMTQiPjwvdGV4dD48L3N2Zz4="
+        alt=""
+      />
+    </div>
+    <div class="box-info-right">
+      <div class="bot-info-item">
+        <div class="info-item">
+          <div class="info-title">监管单位：</div>
+          <div class="info-content">某某建设设计有限公司</div>
+        </div>
+        <div class="info-item">
+          <div class="info-title">设计单位：</div>
+          <div class="info-content">某某设计公司</div>
+        </div>
+      </div>
+      <div class="bot-info-item">
+        <div class="info-item">
+          <div class="info-title">开始时间：</div>
+          <div class="info-content">2005-02-15</div>
+        </div>
+        <div class="info-item">
+          <div class="info-title">结束时间：</div>
+          <div class="info-content">2005-04-18</div>
+        </div>
+      </div>
+      <div class="bot-info-item">
+        <div class="info-item">
+          <div class="info-title">总工期：</div>
+          <div class="info-content">83天</div>
+        </div>
+        <div class="info-item">
+          <div class="info-title">负责人：</div>
+          <div class="info-content">李洋波</div>
+        </div>
+      </div>
+      <div class="bot-info-item">
+        <div class="info-item">
+          <div class="info-title">制图人：</div>
+          <div class="info-content">ZD-AI</div>
+        </div>
+        <div class="info-item">
+          <div class="info-title">制图时间：</div>
+          <div class="info-content">2005-05-20</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <script src="./js/lq.js"></script>
+    <script src="./js/dag.js"></script>
+    <script src="./js/libs/viz.js"></script>
+    <script src="./js/libs/full.render.js"></script>
+    <script src="./js/lodash.js"></script>
+    <script src="./js/libs/d3.v5.js"></script>
+    <script src="./js/vue.min.js"></script>
+    <script src="./js/element.js"></script>
+    <script src="./js/d3_demo3_index.js" type="module"></script>
+</body>
+
+</html> -->
+</div>

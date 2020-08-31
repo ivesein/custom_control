@@ -148,7 +148,10 @@
         <el-table-column  label="根据基准值与实际单位工程量资源消耗量对比处理建议" width="160">
           <template slot-scope="scope">
             <div class="check-man" v-for="(item,index) in scope.row.resource_info_data" :key="index">
-              ${item.suggestions_comparative_treatment}
+              <el-tooltip class="item" effect="dark" :content="item.suggestions_comparative_treatment" placement="top-start">
+                <span class="check-man-suggestions">${item.suggestions_comparative_treatment}</span>
+
+              </el-tooltip>
             </div>
           </template>
         </el-table-column>

@@ -20,16 +20,16 @@ body {
   box-sizing: border-box;
 }
 
-#taskKanbanApp .tab-box{
+#taskKanbanApp .tab-box {
   /* width: 100%; */
   display: flex;
   height: 40px;
-  flex:none;
+  flex: none;
   justify-content: flex-start;
   align-items: center;
 }
 
-#taskKanbanApp .tab-box .tab-item{
+#taskKanbanApp .tab-box .tab-item {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -42,19 +42,17 @@ body {
   cursor: pointer;
 }
 
-
-
-#taskKanbanApp .tab-box .tab-focus{
+#taskKanbanApp .tab-box .tab-focus {
   background-color: #779bf5;
   color: #fff;
   border: 1px solid #779bf5;
 }
 
 #taskKanbanApp .tab-box .tab-item:last-of-type {
-  border-left:none;
+  border-left: none;
 }
 
-#taskKanbanApp .content-wrap{
+#taskKanbanApp .content-wrap {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -105,7 +103,7 @@ body {
 
 #taskKanbanApp .focus {
   /* background: #5582f3 !important; */
-  color: #BBCDFA !important;
+  color: #bbcdfa !important;
   /* box-shadow: 0 2px 12px 0 rgba(0,0,0,.3); */
 }
 
@@ -137,6 +135,10 @@ body {
 
 .particiption-box {
   margin-left: 15px;
+}
+
+#taskKanbanApp .tz-wcy {
+  background: #f2f5fe;
 }
 
 #taskKanbanApp .bottom-box .label-text {
@@ -178,40 +180,40 @@ body {
   border-bottom: none;
 }
 
-#taskKanbanApp .bottom-box .task-detail:last-child{
+#taskKanbanApp .bottom-box .task-detail:last-child {
   border-bottom: 1px solid rgba(238, 238, 238, 1);
 }
 
-#taskKanbanApp .bottom-box .task-detail-tz{
+#taskKanbanApp .bottom-box .task-detail-tz {
   /* width: 50%; */
 }
 
 .task-detail-left-toBeComplected {
   width: 8px;
   height: 100%;
-  background: rgba(251,220,220,1);
-  border: 1px solid rgba(251,220,220,1);
+  background: rgba(251, 220, 220, 1);
+  border: 1px solid rgba(251, 220, 220, 1);
 }
 
 .task-detail-left-inProgress {
   width: 8px;
   height: 100%;
-  background: rgba(254,231,221,1);
-  border: 1px solid rgba(254,231,221,1);
+  background: rgba(254, 231, 221, 1);
+  border: 1px solid rgba(254, 231, 221, 1);
 }
 
 .task-detail-left-complected {
   width: 8px;
   height: 100%;
-  background: rgba(230,255,221,1);
-  border: 1px solid rgba(230,255,221,1);
+  background: rgba(230, 255, 221, 1);
+  border: 1px solid rgba(230, 255, 221, 1);
 }
 
 #taskKanbanApp .bottom-box .task-detail:hover {
   /* background: #eee; */
   /* border: none; */
   /* box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .3); */
-  background:rgba(239,251,255,1);
+  background: rgba(239, 251, 255, 1);
 }
 
 #taskKanbanApp .bottom-box .task-status-icon {
@@ -229,11 +231,11 @@ body {
 }
 
 .el-icon-remove-outline {
-  color: #E94E4F;
+  color: #e94e4f;
 }
 
 .el-icon-time {
-  color: #FC8555;
+  color: #fc8555;
 }
 
 .el-icon-check {
@@ -248,7 +250,6 @@ body {
   height: 100%;
   flex: 1;
 }
-
 
 /* #taskKanbanApp .task-text-box span {
   font-size: 16px;
@@ -301,7 +302,6 @@ body {
   background: #779bf5;
 }
 
-
 /* #taskKanbanApp .professional_audit_task .task-name {
   display: flex;
   justify-content: space-between;
@@ -317,7 +317,7 @@ body {
 }
 
 #taskKanbanApp .professional_audit_task_name {
-  color: #5582F3;
+  color: #5582f3;
   margin-right: 20px;
   font-size: 14px;
 }
@@ -347,8 +347,8 @@ body {
   box-sizing: border-box;
 }
 
-#taskKanbanApp .professional_audit_task .task-name:hover{
-  background-color: #EFFBFF;
+#taskKanbanApp .professional_audit_task .task-name:hover {
+  background-color: #effbff;
 }
 
 .task-name .professional_audit_task_text {

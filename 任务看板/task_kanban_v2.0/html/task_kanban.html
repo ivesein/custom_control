@@ -11,366 +11,374 @@
   </head>
 
   <body> -->
-<div id="taskKanbanApp">
-  <!-- tab标签 切换设计审核任务和提资任务面板 -->
-  <div class="tab-box">
-    <div
-      class="tab-item"
-      v-for="(item,index) in tabData"
-      :key="index"
-      :class="{'tab-focus':item.focus}"
-      @click="handleTabClick(item)"
-    >
-      ${item.text}
-    </div>
-  </div>
-  <!-- 设计校审任务面板 -->
-  <div class="content-wrap" v-if="showPannal">
-    <div class="top-box">
-      <div
-        v-for="(item,index) in summarData"
-        :key="index"
-        @click="handleSummaryItemClicked(item)"
-        class="chose-time-slot"
-      >
-        <div class="item-card-title">${item.title}</div>
-        <div class="item-card-number" :class="{'focus':item.focus}">
-          ${item.number}
+    <div id="taskKanbanApp">
+      <!-- tab标签 切换设计审核任务和提资任务面板 -->
+      <div class="tab-box">
+        <div
+          class="tab-item"
+          v-for="(item,index) in tabData"
+          :key="index"
+          :class="{'tab-focus':item.focus}"
+          @click="handleTabClick(item)"
+        >
+          ${item.text}
         </div>
       </div>
-    </div>
-    <div class="bottom-box">
-      <div class="bottom-part responsible-box">
-        <div class="bottom-part-title label-text">我负责的</div>
-        <div class="bottom-part-content">
+      <!-- 设计校审任务面板 -->
+      <div class="content-wrap" v-if="showPannal">
+        <div class="top-box">
           <div
-            class="task-detail"
-            v-for="(item,index) in responsibleTaskInfos"
+            v-for="(item,index) in summarData"
             :key="index"
+            @click="handleSummaryItemClicked(item)"
+            class="chose-time-slot"
           >
-            <div
-              v-show="item.task_status==='toBeComplected'"
-              class="task-detail-left-toBeComplected"
-            ></div>
-            <div
-              v-show="item.task_status==='inProgress'"
-              class="task-detail-left-inProgress"
-            ></div>
-            <div
-              v-show="item.task_status==='complected'"
-              class="task-detail-left-complected"
-            ></div>
-            <div class="task-status-icon">
-              <!-- <i v-show="item.task_status==='toBeComplected'" class="el-icon-remove-outline"></i>
+            <div class="item-card-title">${item.title}</div>
+            <div class="item-card-number" :class="{'focus':item.focus}">
+              ${item.number}
+            </div>
+          </div>
+        </div>
+        <div class="bottom-box">
+          <div class="bottom-part responsible-box">
+            <div class="bottom-part-title label-text">我负责的</div>
+            <div class="bottom-part-content">
+              <div
+                class="task-detail"
+                v-for="(item,index) in responsibleTaskInfos"
+                :key="index"
+              >
+                <div
+                  v-show="item.task_status==='toBeComplected'"
+                  class="task-detail-left-toBeComplected"
+                ></div>
+                <div
+                  v-show="item.task_status==='inProgress'"
+                  class="task-detail-left-inProgress"
+                ></div>
+                <div
+                  v-show="item.task_status==='complected'"
+                  class="task-detail-left-complected"
+                ></div>
+                <div class="task-status-icon">
+                  <!-- <i v-show="item.task_status==='toBeComplected'" class="el-icon-remove-outline"></i>
                 <i v-show="item.task_status==='inProgress'" class="el-icon-time"></i>
                 <i v-show="item.task_status==='complected'" class="el-icon-check"></i> -->
-              <img
-                v-show="item.task_status==='toBeComplected'"
-                class="img-icon"
-                :src="toBeComplected"
-                alt=""
-              />
-              <img
-                v-show="item.task_status==='inProgress'"
-                class="img-icon"
-                :src="inProgress"
-                alt=""
-              />
-              <img
-                v-show="item.task_status==='complected'"
-                class="img-icon"
-                :src="complected"
-                alt=""
-              />
-            </div>
-            <div class="task-text-box">
-              <span class="task-name" @click="handleTaskNameClicked(item)"
-                >${item.task_name}</span
-              >
-              <span class="project-name">${item.project_name}</span>
-            </div>
-            <div
-              v-show="item.check_status==='check_in'&&item.beforeTaskStatus===true"
-            >
-              <div v-show="item.task_status==='toBeComplected'" class="btn-box">
-                <div
-                  class="btn"
-                  v-if="item.taskScheduleStatus"
-                  @click="designClickAccept(item)"
-                  type="text"
-                  size="small"
-                >
-                  接受
+                  <img
+                    v-show="item.task_status==='toBeComplected'"
+                    class="img-icon"
+                    :src="toBeComplected"
+                    alt=""
+                  />
+                  <img
+                    v-show="item.task_status==='inProgress'"
+                    class="img-icon"
+                    :src="inProgress"
+                    alt=""
+                  />
+                  <img
+                    v-show="item.task_status==='complected'"
+                    class="img-icon"
+                    :src="complected"
+                    alt=""
+                  />
+                </div>
+                <div class="task-text-box">
+                  <span class="task-name" @click="handleTaskNameClicked(item)"
+                    >${item.task_name}</span
+                  >
+                  <span class="project-name">${item.project_name}</span>
                 </div>
                 <div
-                  class="btn"
-                  v-else
-                  @click="designUrge(item)"
-                  type="text"
-                  size="small"
+                  v-show="item.check_status==='check_in'&&item.beforeTaskStatus===true"
                 >
-                  催办
+                  <div
+                    v-show="item.task_status==='toBeComplected'"
+                    class="btn-box"
+                  >
+                    <div
+                      class="btn"
+                      v-if="item.taskScheduleStatus"
+                      @click="designClickAccept(item)"
+                      type="text"
+                      size="small"
+                    >
+                      接受
+                    </div>
+                    <div
+                      class="btn"
+                      v-else
+                      @click="designUrge(item)"
+                      type="text"
+                      size="small"
+                    >
+                      催办
+                    </div>
+                    <!-- <div class="btn" @click="designClickAccept(item)">接受</div> -->
+                  </div>
                 </div>
-                <!-- <div class="btn" @click="designClickAccept(item)">接受</div> -->
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="bottom-part particiption-box">
-        <div class="bottom-part-title label-text">我参与的</div>
-        <div class="bottom-part-content">
-          <div
-            class="professional_audit_task"
-            v-for="(item,index) in professionalAuditTaskInfos"
-            :key="index+item.task_name"
-          >
-            <div class="task-name">
-              <div class="professional_audit_task_text">
-                <div class="professional_audit_task_name">
-                  ${item.task_name}
-                </div>
-                <div class="project-name">${item.project_name}</div>
-              </div>
-              <div class="drop-btn">
-                <i
-                  class="el-icon-caret-bottom"
-                  @click="iconArrowClick(item)"
-                  v-if="item.open"
-                ></i>
-                <i
-                  class="el-icon-caret-right"
-                  @click="iconArrowClick(item)"
-                  v-else
-                ></i>
-              </div>
-            </div>
-            <div class="pa_task_table_box" v-if="item.open">
-              <el-table
-                :data="item.auditTask"
-                border
-                max-height="220"
-                :header-cell-style="{background: '#eef1f6',color: '#606266'}"
+          <div class="bottom-part particiption-box">
+            <div class="bottom-part-title label-text">我参与的</div>
+            <div class="bottom-part-content">
+              <div
+                class="professional_audit_task"
+                v-for="(item,index) in professionalAuditTaskInfos"
+                :key="index+item.task_name"
               >
-                <el-table-column prop="wbs" label="任务代码" width="120">
-                </el-table-column>
-                <el-table-column label="任务名称">
-                  <template slot-scope="scope">
-                    <div
-                      class="pa-task-name"
-                      @click="handleTaskNameClicked(scope.row)"
-                    >
-                      ${scope.row.task_name}
+                <div class="task-name">
+                  <div class="professional_audit_task_text">
+                    <div class="professional_audit_task_name">
+                      ${item.task_name}
                     </div>
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  prop="design_owner"
-                  label="设计承担人"
-                  width="120"
-                >
-                </el-table-column>
-                <el-table-column
-                  prop="review_owner"
-                  label="复核承担人"
-                  width="120"
-                >
-                </el-table-column>
-                <el-table-column
-                  prop="task_status"
-                  label="任务状态"
-                  width="120"
-                >
-                  <template slot-scope="scope">
-                    <span v-show="scope.row.task_status==='toBeComplected'"
-                      >待开始</span
-                    >
-                    <span v-show="scope.row.task_status==='inProgress'"
-                      >进行中</span
-                    >
-                    <span v-show="scope.row.task_status==='complected'"
-                      >已完成</span
-                    >
-                  </template>
-                </el-table-column>
-                <el-table-column label="开始任务" width="120">
-                  <template slot-scope="scope">
-                    <div
-                      v-show="item.check_status==='check_in'&&item.beforeTaskStatus===true"
-                    >
-                      <div
-                        class="pa_task_btn"
-                        v-show="scope.row.task_status==='toBeComplected'"
-                      >
+                    <div class="project-name">${item.project_name}</div>
+                  </div>
+                  <div class="drop-btn">
+                    <i
+                      class="el-icon-caret-bottom"
+                      @click="iconArrowClick(item)"
+                      v-if="item.open"
+                    ></i>
+                    <i
+                      class="el-icon-caret-right"
+                      @click="iconArrowClick(item)"
+                      v-else
+                    ></i>
+                  </div>
+                </div>
+                <div class="pa_task_table_box" v-if="item.open">
+                  <el-table
+                    :data="item.auditTask"
+                    border
+                    max-height="220"
+                    :header-cell-style="{background: '#eef1f6',color: '#606266'}"
+                  >
+                    <el-table-column prop="wbs" label="任务代码" width="120">
+                    </el-table-column>
+                    <el-table-column label="任务名称">
+                      <template slot-scope="scope">
                         <div
-                          class="btn"
-                          v-if="scope.row.taskScheduleStatus"
-                          @click="auditClickAccept(scope.row)"
-                          type="text"
-                          size="small"
+                          class="pa-task-name"
+                          @click="handleTaskNameClicked(scope.row)"
                         >
-                          接受
+                          ${scope.row.task_name}
                         </div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
+                      prop="design_owner"
+                      label="设计承担人"
+                      width="120"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                      prop="review_owner"
+                      label="复核承担人"
+                      width="120"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                      prop="task_status"
+                      label="任务状态"
+                      width="120"
+                    >
+                      <template slot-scope="scope">
+                        <span v-show="scope.row.task_status==='toBeComplected'"
+                          >待开始</span
+                        >
+                        <span v-show="scope.row.task_status==='inProgress'"
+                          >进行中</span
+                        >
+                        <span v-show="scope.row.task_status==='complected'"
+                          >已完成</span
+                        >
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="开始任务" width="120">
+                      <template slot-scope="scope">
                         <div
-                          class="btn"
-                          v-else
-                          @click="auditUrge(scope.row)"
-                          type="text"
-                          size="small"
+                          v-show="item.check_status==='check_in'&&item.beforeTaskStatus===true"
                         >
-                          催办
+                          <div
+                            class="pa_task_btn"
+                            v-show="scope.row.task_status==='toBeComplected'"
+                          >
+                            <div
+                              class="btn"
+                              v-if="scope.row.taskScheduleStatus"
+                              @click="auditClickAccept(scope.row)"
+                              type="text"
+                              size="small"
+                            >
+                              接受
+                            </div>
+                            <div
+                              class="btn"
+                              v-else
+                              @click="auditUrge(scope.row)"
+                              type="text"
+                              size="small"
+                            >
+                              催办
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </div>
-          </div>
-          <div
-            class="task-detail"
-            v-for="(item,index) in participtionTaskInfos"
-            :key="index"
-          >
-            <div
-              v-show="item.task_status==='toBeComplected'"
-              class="task-detail-left-toBeComplected"
-            ></div>
-            <div
-              v-show="item.task_status==='inProgress'"
-              class="task-detail-left-inProgress"
-            ></div>
-            <div
-              v-show="item.task_status==='complected'"
-              class="task-detail-left-complected"
-            ></div>
-            <div class="task-status-icon">
-              <!-- <i v-show="item.task_status==='toBeComplected'" class="el-icon-remove-outline"></i>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </div>
+              </div>
+              <div
+                class="task-detail"
+                v-for="(item,index) in participtionTaskInfos"
+                :key="index"
+              >
+                <div
+                  v-show="item.task_status==='toBeComplected'"
+                  class="task-detail-left-toBeComplected"
+                ></div>
+                <div
+                  v-show="item.task_status==='inProgress'"
+                  class="task-detail-left-inProgress"
+                ></div>
+                <div
+                  v-show="item.task_status==='complected'"
+                  class="task-detail-left-complected"
+                ></div>
+                <div class="task-status-icon">
+                  <!-- <i v-show="item.task_status==='toBeComplected'" class="el-icon-remove-outline"></i>
                 <i v-show="item.task_status==='inProgress'" class="el-icon-time"></i>
                 <i v-show="item.task_status==='complected'" class="el-icon-check"></i> -->
-              <img
-                v-show="item.task_status==='toBeComplected'"
-                class="img-icon"
-                :src="toBeComplected"
-                alt=""
-              />
-              <img
-                v-show="item.task_status==='inProgress'"
-                class="img-icon"
-                :src="inProgress"
-                alt=""
-              />
-              <img
-                v-show="item.task_status==='complected'"
-                class="img-icon"
-                :src="complected"
-                alt=""
-              />
-            </div>
-            <div class="task-text-box">
-              <span class="task-name" @click="handleTaskNameClicked(item)"
-                >${item.task_name}</span
-              >
-              <span class="project-name">${item.project_name}</span>
-            </div>
-            <div
-              v-show="item.check_status==='check_in'&&item.beforeTaskStatus===true"
-            >
-              <div class="btn-box" v-show="item.task_status==='toBeComplected'">
-                <div
-                  class="btn"
-                  v-if="item.taskScheduleStatus"
-                  @click="reviewClickAccept(item)"
-                >
-                  接受
+                  <img
+                    v-show="item.task_status==='toBeComplected'"
+                    class="img-icon"
+                    :src="toBeComplected"
+                    alt=""
+                  />
+                  <img
+                    v-show="item.task_status==='inProgress'"
+                    class="img-icon"
+                    :src="inProgress"
+                    alt=""
+                  />
+                  <img
+                    v-show="item.task_status==='complected'"
+                    class="img-icon"
+                    :src="complected"
+                    alt=""
+                  />
                 </div>
-                <div class="btn" v-else @click="reviewUrge(item)">催办</div>
+                <div class="task-text-box">
+                  <span class="task-name" @click="handleTaskNameClicked(item)"
+                    >${item.task_name}</span
+                  >
+                  <span class="project-name">${item.project_name}</span>
+                </div>
+                <div
+                  v-show="item.check_status==='check_in'&&item.beforeTaskStatus===true"
+                >
+                  <div
+                    class="btn-box"
+                    v-show="item.task_status==='toBeComplected'"
+                  >
+                    <div
+                      class="btn"
+                      v-if="item.taskScheduleStatus"
+                      @click="reviewClickAccept(item)"
+                    >
+                      接受
+                    </div>
+                    <div class="btn" v-else @click="reviewUrge(item)">催办</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-  <!-- 提资任务面板 -->
-  <div class="content-wrap" v-else>
-    <div class="top-box">
-      <div
-        v-for="(item,index) in summarDataTZ"
-        :key="index"
-        @click="handleSummaryTZItemClicked(item)"
-        class="chose-time-slot"
-      >
-        <div class="item-card-title">${item.title}</div>
-        <div class="item-card-number" :class="{'focus':item.focus}">
-          ${item.number}
-        </div>
-      </div>
-    </div>
-    <div class="bottom-box">
-      <div class="bottom-part responsible-box">
-        <div class="bottom-part-title label-text">我负责的</div>
-        <div class="bottom-part-content">
+      <!-- 提资任务面板 -->
+      <div class="content-wrap" v-else>
+        <div class="top-box">
           <div
-            class="task-detail task-detail-tz"
-            v-for="(item,index) in currentTzTaskData"
+            v-for="(item,index) in summarDataTZ"
             :key="index"
+            @click="handleSummaryTZItemClicked(item)"
+            class="chose-time-slot"
           >
-            <div
-              v-show="item.task_status==='0'||item.task_status==='1'"
-              class="task-detail-left-toBeComplected"
-            ></div>
-            <div
-              v-show="item.task_status==='2'"
-              class="task-detail-left-inProgress"
-            ></div>
-            <div
-              v-show="item.task_status==='3'"
-              class="task-detail-left-complected"
-            ></div>
-            <div class="task-status-icon">
-              <!-- <i v-show="item.task_status==='0'||item.task_status==='1'" class="el-icon-remove-outline"></i>
+            <div class="item-card-title">${item.title}</div>
+            <div class="item-card-number" :class="{'focus':item.focus}">
+              ${item.number}
+            </div>
+          </div>
+        </div>
+        <div class="bottom-box">
+          <div class="bottom-part responsible-box">
+            <div class="bottom-part-title label-text">我负责的</div>
+            <div class="bottom-part-content">
+              <div
+                class="task-detail task-detail-tz"
+                v-for="(item,index) in currentTzTaskData"
+                :key="index"
+              >
+                <div
+                  v-show="item.task_status==='0'||item.task_status==='1'"
+                  class="task-detail-left-toBeComplected"
+                ></div>
+                <div
+                  v-show="item.task_status==='2'"
+                  class="task-detail-left-inProgress"
+                ></div>
+                <div
+                  v-show="item.task_status==='3'"
+                  class="task-detail-left-complected"
+                ></div>
+                <div class="task-status-icon">
+                  <!-- <i v-show="item.task_status==='0'||item.task_status==='1'" class="el-icon-remove-outline"></i>
                 <i v-show="item.task_status==='2'" class="el-icon-time"></i>
                 <i v-show="item.task_status==='3'" class="el-icon-check"></i> -->
-              <img
-                v-show="item.task_status==='0'||item.task_status==='1'"
-                class="img-icon"
-                :src="toBeComplected"
-                alt=""
-              />
-              <img
-                v-show="item.task_status==='2'"
-                class="img-icon"
-                :src="inProgress"
-                alt=""
-              />
-              <img
-                v-show="item.task_status==='3'"
-                class="img-icon"
-                :src="complected"
-                alt=""
-              />
+                  <img
+                    v-show="item.task_status==='0'||item.task_status==='1'"
+                    class="img-icon"
+                    :src="toBeComplected"
+                    alt=""
+                  />
+                  <img
+                    v-show="item.task_status==='2'"
+                    class="img-icon"
+                    :src="inProgress"
+                    alt=""
+                  />
+                  <img
+                    v-show="item.task_status==='3'"
+                    class="img-icon"
+                    :src="complected"
+                    alt=""
+                  />
+                </div>
+                <div class="task-text-box">
+                  <span class="task-name" @click="handleTZTaskNameClicked(item)"
+                    >${item.task_name}</span
+                  >
+                  <span class="project-name">${item.project_name}</span>
+                </div>
+                <div v-show="item.task_status==='1'" class="btn-box">
+                  <div class="btn" @click="tzClickAccept(item)">接受</div>
+                </div>
+              </div>
             </div>
-            <div class="task-text-box">
-              <span class="task-name" @click="handleTZTaskNameClicked(item)"
-                >${item.task_name}</span
-              >
-              <span class="project-name">${item.project_name}</span>
+          </div>
+          <div class="bottom-part particiption-box tz-wcy">
+            <div class="bottom-part-title label-text tz-wcy" v-show="false">
+              我参与的
             </div>
-            <div v-show="item.task_status==='1'" class="btn-box">
-              <div class="btn" @click="tzClickAccept(item)">接受</div>
-            </div>
+            <div class="bottom-part-content tz-wcy"></div>
           </div>
         </div>
       </div>
-      <div class="bottom-part particiption-box">
-        <div class="bottom-part-title label-text">我参与的</div>
-        <div class="bottom-part-content"></div>
-      </div>
     </div>
-  </div>
-</div>
-<!-- <script src="../js/lodash.js"></script>
+    <!-- <script src="../js/lodash.js"></script>
     <script src="../js/vue.min.js"></script>
     <script src="../js/element.js"></script>
     <script src="../js/test.js"></script>

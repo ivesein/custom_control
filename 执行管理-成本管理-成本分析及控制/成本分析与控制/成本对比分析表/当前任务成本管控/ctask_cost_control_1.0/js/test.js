@@ -56,7 +56,8 @@ new Vue({
             resource_actual_cumulative_consumption: "4", //实际累计耗用量
             resource_actual_price: "1000", //实际单价
             predicted_value: "20", //单价影响后单位工程资源耗用量预测值
-            suggestions_comparative_treatment: "15", //根据基准值与实际单位工程量资源消耗量对比处理建议
+            suggestions_comparative_treatment:
+              "根据基准值与实际单位工程量资源消耗量对比处理建议根据基准值与实际单位工程量资源消耗量对比处理建议根据基准值与实际单位工程量资源消耗量对比处理建议根据基准值与实际单位工程量资源消耗量对比处理建议", //根据基准值与实际单位工程量资源消耗量对比处理建议
           },
         ],
         rectification_measures: "请输入纠偏措施",
