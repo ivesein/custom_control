@@ -5454,18 +5454,9 @@ class Coordinate {
    */
   _createGraphData() {
     //排布数据优化
-    //let lastNodeDiff = this.aoan.nodesData.nodes[LAST_CODE].difference;
-    // //标尺
-    let ruleString = "";
-    // for (let i = 0; i <= lastNodeDiff - 1; i++) {
-    //     ruleString = ruleString + "__" + i + "->__" + (Number(i) + 1) + "[len=1]\n";
-    // }
-    // //console.log("ruleString:", ruleString);
-    // ruleString = ruleString + "\n";
-
     let differenceData = this.aoan.nodesData.differenceData;
     let keys = Object.keys(differenceData);
-    let ruleStringPath = "";
+    // let ruleStringPath = "";
     // for (let i = 1; i < keys.length; i++) {
     //     let current = i;
     //     let previous = i - 1;
@@ -5483,8 +5474,8 @@ class Coordinate {
     // }
     // console.log("ruleStringPath", ruleStringPath);
     //ruleStringPath = "";
-    //对齐
-    let xAlign = "";
+
+    let ruleString = ""; //标尺
     for (let i = 0; i < keys.length; i++) {
       let key = keys[i];
       let nodes = this.aoan.nodesData.indexData[key];
@@ -5493,12 +5484,17 @@ class Coordinate {
         temp = temp + " " + nodes[j];
       }
       temp = "    {rank=same T" + i + " " + temp + "}\n";
-      xAlign = xAlign + temp;
+      if (i === 0) {
+        ruleString = "T" + i;
+      } else {
+        ruleString = ruleString + "->T" + i;
+      }
     }
-    //console.log("xAlign:", xAlign);
+    ruleString = ruleString + "[weight=" + this.factor * 5 + "]\n";
     //关键路径,尽量保持直线
     let pathsString = "";
     let paths = this.aoan.criticalTopSort();
+    console.log("criticalTopSort", paths);
     if (paths.length > 0) {
       for (let i = 0; i < paths.length; i++) {
         let pathNodes = paths[i].path;
@@ -5511,7 +5507,7 @@ class Coordinate {
           }
         }
         pathsString =
-          pathsString + "    " + path + "[weight=" + this.factor + "]\n";
+          pathsString + "    " + path + "[weight=" + this.factor * 2 + "]\n";
       }
     } else {
       console.log("****************************");
@@ -5519,7 +5515,9 @@ class Coordinate {
       console.log("****************************");
     }
     //非关键路径,尽量保持直线（权重降低）
+
     paths = this.aoan.unCriticalTopSort();
+    console.log("unCriticalTopSort", paths);
     if (paths.length > 0) {
       for (let i = 0; i < paths.length; i++) {
         let pathNodes = paths[i].path;
@@ -5531,65 +5529,63 @@ class Coordinate {
             path = path + "->" + pathNodes[j];
           }
         }
-        pathsString =
-          pathsString +
-          "    " +
-          path +
-          "[weight=" +
-          Math.round(this.factor / 2) +
-          "]\n";
+        //优化普通路径
+        // if (pathNodes.length > 2) {
+        //     pathsString = pathsString + "    " + path + "[weight=" + Math.round(this.factor / 2) + "]\n";
+        // } else {
+        //     pathsString = pathsString + "    " + path + "\n";
+        // }
+        pathsString = pathsString + "    " + path + "\n";
       }
     }
     //边
-    let edgeString = "";
-    let nodeString = "";
-    keys = this.aoan.edges.keys();
-    for (let i = 0; i < keys.length; i++) {
-      let code = keys[i];
-      let edgeVertexs = this.aoan.edges.get(code);
-      for (let j = 0; j < edgeVertexs.length; j++) {
-        if (edgeVertexs[j]) {
-          let vType = edgeVertexs[j].type;
-          let vEnd = edgeVertexs[j].vertexEnd;
-          edgeString = edgeString + `    ${code}->${vEnd}\n`;
-        }
-      }
-    }
+    // let edgeString = "";
+    // keys = this.aoan.edges.keys();
+    // for (let i = 0; i < keys.length; i++) {
+    //     let code = keys[i];
+    //     let edgeVertexs = this.aoan.edges.get(code);
+    //     for (let j = 0; j < edgeVertexs.length; j++) {
+    //         if (edgeVertexs[j]) {
+    //             let vType = edgeVertexs[j].type;
+    //             let vEnd = edgeVertexs[j].vertexEnd;
+    //             edgeString = edgeString + `    ${code}->${vEnd}\n`;
+    //         }
+    //     }
+    // }
 
     let ranksep = 1.0;
     let nodesep = 2.0;
     let graphData = `
-strict digraph g {
-    rankdir=LR
-    splines=ortho
-    graph [
-        dpi=${USER_DPI}
-        newrank=true
-        ranksep=${ranksep}
-        nodesep=${nodesep}
-        remincross=true
-    ]
-    edge[]
-    node [
-        width=0.2
-        height=0.2
-        shape=circle
-        margin=0
-        //shape=point
-        fixedsize=true
-    ]
-${nodeString}
-${pathsString}
-${edgeString}
-${ruleStringPath}
-${ruleString}
-${xAlign}
-}`;
+            strict digraph g {
+                rankdir=LR
+                splines=ortho
+                graph [
+                    dpi=${USER_DPI}
+                    newrank=true
+                    ranksep=${ranksep}
+                    nodesep=${nodesep}
+                    remincross=true
+                ]
+                edge[]
+                node [
+                    width=0.2
+                    height=0.2
+                    shape=circle
+                    margin=0
+                    fixedsize=true
+                ]
+  
+            ${pathsString}
+
+            }`;
+    //            ${edgeString}
+    //            ${ruleString}
+    //${xAlign}
     //console.log("edgeString:", edgeString);
-    console.log("pathsString:", pathsString);
+    //console.log("pathsString:", pathsString);
     //console.log("ruleString:", ruleString);
     //console.log("graphData:", graphData);
-    //console.log(graphData);
+    console.log(graphData);
     return graphData;
   }
   /**

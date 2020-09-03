@@ -569,6 +569,23 @@
                                                       v.link.option.length / 2;
                                                     text.y =
                                                       v.link.lines[i].start.y;
+                                                    // 添加标签所在横线的的宽度数据供绘制任务名标签时
+                                                    // 判断是否能需要截取为多行垂直显示
+                                                    text.width =
+                                                      Number(
+                                                        v.link.option.length
+                                                      ) *
+                                                        xUnit -
+                                                      NODE_RADIUS * 2;
+                                                    if (scale === 2) {
+                                                      text.width =
+                                                        Number(
+                                                          v.link.option.length
+                                                        ) *
+                                                          xUnit *
+                                                          24 -
+                                                        NODE_RADIUS * 2;
+                                                    }
                                                     break;
                                                   }
                                                 }
@@ -1825,37 +1842,24 @@
     textData.forEach((v) => {
       let textgroup = rootGroup.append("g").attr("class", "text-group");
       // 绘制label任务名
-      textgroup
-        .append("text")
-        .text(v.label)
-        .attr("class", "label-text")
-        .attr("text-anchor", "middle") // 水平居中
-        .attr("x", function (d, i) {
-          if (scale === 2) {
-            let x = conversionCoordinates(v.x);
-            return offsetX + xUnit * x.int * 24 + xUnit * x.double + marginLeft;
-          } else {
-            return (
-              // (offsetX + xUnit) * (v.x1 + (v.x2 - v.x1) / 2) + marginLeft
-              offsetX + xUnit * v.x + marginLeft
-            );
-          }
-          // return (
-          //   // (offsetX + xUnit) * (v.x1 + (v.x2 - v.x1) / 2) + marginLeft
-          //   offsetX + xUnit * v.x + marginLeft
-          // );
-        })
-        .attr("y", function (d, i) {
-          return (offsetY + yUnit) * v.y + marginTop;
-        })
-        .attr("dy", -labelOffsetHeight)
-        .attr("font-size", labelFontSize)
-        .attr("fill", labelFontColor);
-      // .attr("transform", function (d, i) {
-      //   if (v.ifRotate) {
-      //     return "translate(" + d.x + "," + d.y + ")rotate(90)";
-      //   }
-      // });
+      let posX = offsetX + xUnit * v.x + marginLeft;
+      let posY = (offsetY + yUnit) * v.y + marginTop;
+      if (scale === 2) {
+        let x = conversionCoordinates(v.x);
+        posX = offsetX + xUnit * x.int * 24 + xUnit * x.double + marginLeft;
+      }
+      // 调用任务名标签 根据任务长度自动截取算法 添加任务名标签
+      appendMultiText(
+        textgroup,
+        v.label,
+        posX,
+        posY,
+        v.width,
+        labelOffsetHeight,
+        labelFontColor,
+        labelFontSize,
+        14
+      );
       // 绘制工期
       textgroup
         .append("text")
@@ -2097,6 +2101,70 @@
       }
     }
   }
+  // -------------------------------------------------------------------------------------------------
+  // 超长文字标签根据宽度自动截取为多行显示算法
+  function appendMultiText(
+    container,
+    str,
+    posX,
+    posY,
+    width,
+    labelOffsetHeight,
+    labelFontColor,
+    labelFontSize,
+    fontfamily
+  ) {
+    if (arguments.length < 6) {
+      labelFontSize = 14;
+    }
+    if (arguments.length < 7) {
+      fontfamily = "simsun, arial";
+    } //获取分割后的字符串
+    var strs = splitByLine(str, width, labelFontSize);
+    var mulText = container
+      .append("text")
+      .attr("x", posX)
+      .attr("y", posY)
+      .attr("text-anchor", "middle") // 水平居中
+      // .attr("dy", -labelOffsetHeight)
+      .attr("fill", labelFontColor)
+      .style("font-size", labelFontSize)
+      .style("font-family", fontfamily);
+    mulText
+      .selectAll("tspan")
+      .data(strs)
+      .enter()
+      .append("tspan")
+      .attr("x", mulText.attr("x"))
+      .attr("dy", -labelOffsetHeight)
+      .text(function (d) {
+        return d;
+      });
+    return mulText;
+    function splitByLine(str, max, fontsize) {
+      var curLen = 0;
+      var result = [];
+      var start = 0,
+        end = 0;
+      for (var i = 0; i < str.length; i++) {
+        var code = str.charCodeAt(i);
+        var pixelLen = code > 255 ? fontsize : fontsize / 2;
+        curLen += pixelLen;
+        if (curLen > max) {
+          end = i;
+          result.push(str.substring(start, end));
+          start = i;
+          curLen = pixelLen;
+        }
+        if (i === str.length - 1) {
+          end = i;
+          result.push(str.substring(start, end + 1));
+        }
+      }
+      return result.reverse();
+    }
+  }
+
   // ----------------------------------------------------------------------------------
   // 注册自定义控件
   KDApi.register("net_pic", MyComponent);
