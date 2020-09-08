@@ -33,7 +33,7 @@
           :default-sort="{prop: 'position', order: 'ascending'}"
           :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
           :data="scheduleData"
-          style="width: 100%; margin: 10px 0 10px 0;"
+          style="width: 100%; margin: 10px 0 10px 0"
           :cell-style="cellStyle"
           row-key="task_id"
           :border="true"
@@ -76,23 +76,17 @@
           ></u-table-column>
           <u-table-column label="工期" width="120">
             <template slot-scope="scope">
-              <div>
-                ${ scope.row.duration }
-              </div>
+              <div>${ scope.row.duration }</div>
             </template>
           </u-table-column>
           <u-table-column label="开始日期" width="180">
             <template slot-scope="scope">
-              <div>
-                ${ scope.row.start_date }
-              </div>
+              <div>${ scope.row.start_date }</div>
             </template>
           </u-table-column>
           <u-table-column label="结束日期" width="180">
             <template slot-scope="scope">
-              <div>
-                ${ scope.row.end_date }
-              </div>
+              <div>${ scope.row.end_date }</div>
             </template>
           </u-table-column>
           <u-table-column
@@ -135,7 +129,7 @@
           :default-sort="{prop: 'position', order: 'ascending'}"
           :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
           :data="contractData"
-          style="width: 100%; margin: 10px 0 10px 0;"
+          style="width: 100%; margin: 10px 0 10px 0"
           :cell-style="cellStyle"
           row-key="task_id"
           :border="true"
@@ -178,23 +172,17 @@
           ></u-table-column>
           <u-table-column label="工期" width="120">
             <template slot-scope="scope">
-              <div>
-                ${ scope.row.duration }
-              </div>
+              <div>${ scope.row.duration }</div>
             </template>
           </u-table-column>
           <u-table-column label="开始日期" width="180">
             <template slot-scope="scope">
-              <div>
-                ${ scope.row.start_date }
-              </div>
+              <div>${ scope.row.start_date }</div>
             </template>
           </u-table-column>
           <u-table-column label="结束日期" width="180">
             <template slot-scope="scope">
-              <div>
-                ${ scope.row.end_date }
-              </div>
+              <div>${ scope.row.end_date }</div>
             </template>
           </u-table-column>
           <u-table-column label="是否委外" width="120">
@@ -245,7 +233,7 @@
           :default-sort="{prop: 'position', order: 'ascending'}"
           :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
           :data="qualityData"
-          style="width: 100%; margin: 10px 0 10px 0;"
+          style="width: 100%; margin: 10px 0 10px 0"
           :cell-style="cellStyle"
           row-key="task_id"
           :border="true"
@@ -296,40 +284,26 @@
           </u-table-column> -->
           <u-table-column label="开始日期" width="180">
             <template slot-scope="scope">
-              <div>
-                ${ scope.row.plan_starttime }
-              </div>
+              <div>${ scope.row.plan_starttime }</div>
             </template>
           </u-table-column>
           <u-table-column label="结束日期" width="180">
             <template slot-scope="scope">
-              <div>
-                ${ scope.row.plan_endtime }
-              </div>
+              <div>${ scope.row.plan_endtime }</div>
             </template>
           </u-table-column>
           <u-table-column label="阶段" width="160">
             <template slot-scope="scope">
               <div class="recheck-box" v-show="scope.row.task_type === '3'">
-                <div class="recheck-top">
-                  首次复核
-                </div>
+                <div class="recheck-top">首次复核</div>
                 <div class="recheck-mid">
-                  <div class="mid-left">
-                    整改
-                  </div>
+                  <div class="mid-left">整改</div>
                   <div class="mid-right">
-                    <div class="mid-right-item mid-right-top">
-                      修改
-                    </div>
-                    <div class="mid-right-item">
-                      修改确认
-                    </div>
+                    <div class="mid-right-item mid-right-top">修改</div>
+                    <div class="mid-right-item">修改确认</div>
                   </div>
                 </div>
-                <div class="recheck-bot">
-                  复核确认
-                </div>
+                <div class="recheck-bot">复核确认</div>
               </div>
             </template>
           </u-table-column>
@@ -346,7 +320,7 @@
               </div>
               <div
                 class="checek-man"
-                style="border: none;"
+                style="border: none"
                 v-show="scope.row.task_type === '3'"
               >
                 ${ scope.row.owner_role }
@@ -371,7 +345,7 @@
               </div>
               <div
                 class="checek-man"
-                style="border: none;"
+                style="border: none"
                 v-show="scope.row.task_type === '3'"
               >
                 ${ scope.row.skill }
@@ -429,7 +403,7 @@
           :default-sort="{prop: 'position', order: 'ascending'}"
           :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
           :data="datumFileData"
-          style="width: 100%; margin: 10px 0 10px 0;"
+          style="width: 100%; margin: 10px 0 10px 0"
           :cell-style="cellStyle"
           row-key="task_id"
           :border="true"
@@ -457,23 +431,17 @@
           ></u-table-column>
           <u-table-column label="工时" width="120">
             <template slot-scope="scope">
-              <div>
-                ${ scope.row.duration }
-              </div>
+              <div>${ scope.row.duration }</div>
             </template>
           </u-table-column>
           <u-table-column label="开始日期" width="180">
             <template slot-scope="scope">
-              <div>
-                ${ scope.row.plan_starttime }
-              </div>
+              <div>${ scope.row.plan_starttime }</div>
             </template>
           </u-table-column>
           <u-table-column label="结束日期" width="180">
             <template slot-scope="scope">
-              <div>
-                ${ scope.row.plan_endtime }
-              </div>
+              <div>${ scope.row.plan_endtime }</div>
             </template>
           </u-table-column>
           <u-table-column label="接收任务编码" width="120">
@@ -517,7 +485,7 @@
           :default-sort="{prop: 'position', order: 'ascending'}"
           :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
           :data="costData"
-          style="width: 100%; margin: 10px 0 10px 0;"
+          style="width: 100%; margin: 10px 0 10px 0"
           :cell-style="cellStyle"
           row-key="task_id"
           :border="true"
@@ -567,16 +535,12 @@
           </u-table-column> -->
           <u-table-column label="开始日期" width="180">
             <template slot-scope="scope">
-              <div>
-                ${ scope.row.start_date }
-              </div>
+              <div>${ scope.row.start_date }</div>
             </template>
           </u-table-column>
           <u-table-column label="结束日期" width="180">
             <template slot-scope="scope">
-              <div>
-                ${ scope.row.end_date }
-              </div>
+              <div>${ scope.row.end_date }</div>
             </template>
           </u-table-column>
           <u-table-column label="任务绩效" width="120">
