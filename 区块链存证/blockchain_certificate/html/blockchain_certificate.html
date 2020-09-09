@@ -51,6 +51,17 @@
           </el-pagination>
           </div>
         </div>
+        <div class="detail-container" v-show="detailInfoShow">
+          <div class="detail-box">
+            <div class="detail-info-list">
+              <div class="detail-info-item" v-for="(val, key, index) in  detailInfo">
+                <span class="label">${transform(key)}:</span>
+                <span class="value">${val}</span>
+              </div>
+            </div>
+          </div>
+          <i class="close-btn el-icon-error" @click="closeDetailInfo"></i>
+        </div>
       </div>
     </div>
     <script src="../js/lodash.js"></script>
