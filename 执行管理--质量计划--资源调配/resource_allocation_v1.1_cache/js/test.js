@@ -519,21 +519,63 @@ new Vue({
 
     console.log("this.tableData>>>", this.tableData);
   },
-  mounted() {
-    let self = this;
-    let height = $("#resourceAllocationApp", model.dom).get(0).clientHeight;
-    this.$nextTick(function () {
-      self.tableHeight =
-        height - self.$refs.resourceAllocationTable.$el.offsetTop - 80;
 
-      // 监听窗口大小变化
-      window.onresize = function () {
-        self.tableHeight =
-          height - self.$refs.resourceAllocationTable.$el.offsetTop - 80;
+  mounted() {
+    // let self = this;
+    // let height = $("#resourceAllocationApp", model.dom).get(0).clientHeight;
+    // this.$nextTick(function () {
+    //   self.tableHeight =
+    //     height - self.$refs.resourceAllocationTable.$el.offsetTop - 80;
+    //   // 监听窗口大小变化
+    //   window.onresize = function () {
+    //     self.tableHeight =
+    //       height - self.$refs.resourceAllocationTable.$el.offsetTop - 80;
+    //   };
+    // });
+  },
+  computed: {
+    /**
+     * Author: zhang fq
+     * Date: 2020-06-10
+     * Description: 质量维护 添加权限功能
+     * 根据后台返回数据处理页面按钮能否点击以及字段是否显示
+     */
+    getBtnShow(btnId) {
+      // return true;
+
+      var _this = this;
+      return function (btnId) {
+        return true;
+
+        // let arr = _this.funcPerm.filter((v) => {
+        //   return v.elementid === btnId;
+        // });
+        // return arr.length > 0 ? false : true;
       };
-    });
+    },
+    getFieldShow(fieldId) {
+      var _this = this;
+      return function (fieldId) {
+        return true;
+
+        // let arr = _this.fieldPerm.filter((v) => {
+        //   return v.elementid === fieldId;
+        // });
+        // if (arr.length > 0) {
+        //   return arr[0].isvisible === 1 ? true : false;
+        // } else {
+        //   return true;
+        // }
+      };
+    },
   },
   methods: {
+    tableRowClassName({ row, rowIndex }) {
+      if (row.delegate === "1") {
+        return "delegate-row";
+      }
+      return "";
+    },
     goAllocation() {
       // 资源调配
       var _this = this;
@@ -826,6 +868,11 @@ new Vue({
       }
       console.log("arr>>>", arr);
       return flatdata;
+    },
+    showMeasures(row) {
+      // 将要显示处理措施详情的该跳任务发送到后台 通知后台弹出措施列表
+      // model.invoke("showQualityMeasures", row);
+      console.log(row);
     },
   },
 }).$mount("#resourceAllocationApp");

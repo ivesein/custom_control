@@ -12,15 +12,14 @@
 	height: 30px;
 } */
 
-
 /* 设置表主体的高度 */
-
 
 /* .el-table__body td,
 .el-table__body th {
 	padding: 1px;
 } */
-html,body{
+html,
+body {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -35,7 +34,7 @@ html,body{
   align-items: stretch;
 }
 
-#resourceAllocationApp .table-box{
+#resourceAllocationApp .table-box {
   padding: 10px;
 }
 
@@ -68,9 +67,9 @@ html,body{
   background: #779bf5;
 }
 
-button[disabled]{
-  background: #ccc!important;
-  color: #666!important;
+button[disabled] {
+  background: #ccc !important;
+  color: #666 !important;
 }
 
 #resourceAllocationApp .recheck-box {
@@ -157,23 +156,26 @@ button[disabled]{
   padding-right: 0;
 }
 
-
 /* #resourceAllocationApp .el-table .cell {
   padding: 0px !important;
 } */
 
-#resourceAllocationApp .el-table__body tr.current-row>td {
+#resourceAllocationApp .el-table__body tr.current-row > td {
   background-color: #bbcdfa !important;
   /* color: #f19944; */
   /* 设置文字颜色，可以选择不设置 */
 }
 
-#resourceAllocationApp .el-table--enable-row-hover .el-table__body tr:hover>td {
+#resourceAllocationApp
+  .el-table--enable-row-hover
+  .el-table__body
+  tr:hover
+  > td {
   background-color: #bbcdfa;
   /* color: #f19944; */
   /* 设置文字颜色，可以选择不设置 */
 }
-#resourceAllocationApp .type-one .checek-man{
+#resourceAllocationApp .type-one .checek-man {
   border-top: none;
   border-bottom: 1px solid #ebeef5;
 }
@@ -181,22 +183,39 @@ button[disabled]{
   border: none;
 }
 
-.el-table td, .el-table th.is-leaf,.el-table--border, .el-table--group{
-  border-color: #cecece!important; 
+.el-table td,
+.el-table th.is-leaf,
+.el-table--border,
+.el-table--group {
+  border-color: #cecece !important;
 }
-.el-table--border::after, .el-table--group::after, .el-table::before{
-  background-color: #cecece!important;
+.el-table--border::after,
+.el-table--group::after,
+.el-table::before {
+  background-color: #cecece !important;
 }
 
 #resourceAllocationApp .el-table__body tr.current-row > td {
-  background-color: #eff3fd   !important;
+  background-color: #eff3fd !important;
   /* color: #f19944; */ /* 设置文字颜色，可以选择不设置 */
 }
-#resourceAllocationApp .el-table--enable-row-hover .el-table__body tr:hover > td {
-  background-color: #eff3fd  ;
+#resourceAllocationApp
+  .el-table--enable-row-hover
+  .el-table__body
+  tr:hover
+  > td {
+  background-color: #eff3fd;
   /* color: #f19944; */ /* 设置文字颜色，可以选择不设置 */
 }
 
 .el-table .delegate-row {
   background: #eee;
+}
+
+#resourceAllocationApp .quality-action {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+  color: #5582f4;
 }

@@ -687,6 +687,16 @@
                       }
                       return "";
                     },
+                    /**
+                     * @Author: zhang fq
+                     * @Date: 2020-09-11
+                     * @Description: 根据产品需求更改 修改质量维护页面处理措施展示方式
+                     * 添加查看详情点击逻辑
+                     */
+                    showMeasures(row) {
+                      // 将要显示处理措施详情的该跳任务发送到后台 通知后台弹出措施列表
+                      model.invoke("showQualityMeasures", row);
+                    },
                   },
                 }).$mount($("#resourceAllocationApp", model.dom).get(0));
               });

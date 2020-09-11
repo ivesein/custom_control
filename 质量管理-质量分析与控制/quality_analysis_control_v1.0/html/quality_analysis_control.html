@@ -20,7 +20,7 @@
         highlight-current-row
         :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
         :data="proTableData"
-        style="margin: 10px 0 10px 0;"
+        style="margin: 10px 0 10px 0"
         :cell-style="cellStyle"
         row-key="task_id"
         :border="true"
@@ -49,15 +49,9 @@
         </el-table-column>
         <el-table-column label="任务状态" width="140">
           <template slot-scope="scope">
-            <div v-show="scope.row.task_schedule_status==='000'">
-              未开始
-            </div>
-            <div v-show="scope.row.task_schedule_status==='100'">
-              进行中
-            </div>
-            <div v-show="scope.row.task_schedule_status==='200'">
-              已完成
-            </div>
+            <div v-show="scope.row.task_schedule_status==='000'">未开始</div>
+            <div v-show="scope.row.task_schedule_status==='100'">进行中</div>
+            <div v-show="scope.row.task_schedule_status==='200'">已完成</div>
           </template>
         </el-table-column>
         <el-table-column label="处理状态" width="140">
@@ -72,7 +66,7 @@
         ref="TableRight"
         :header-cell-style="{height:'50px',background:'#f6f7f9',color:'#6b6b6b',fontWeight:'500',fontSize:'12px'}"
         :data="currentTask"
-        style="margin: 10px 0 10px 0;"
+        style="margin: 10px 0 10px 0"
         :style="{width:tableWidth}"
         :cell-style="cellStyle"
         row-key="task_id"
@@ -110,7 +104,7 @@
             ></el-input>
           </template>
         </el-table-column>
-        <el-table-column label="纠偏措施" min-width="200">
+        <el-table-column label="处理措施" min-width="200">
           <template slot-scope="scope">
             <el-input
               @change="actionChange"
@@ -118,7 +112,7 @@
               maxlength="50"
               :disabled="scope.row.task_schedule_status!=='200'"
               v-model="scope.row.quality_action"
-              placeholder="请输入纠偏措施"
+              placeholder="请输入处理措施"
             ></el-input>
           </template>
         </el-table-column>
