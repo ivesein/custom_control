@@ -46,6 +46,7 @@ new Vue({
     totalPage: 1,
     detailInfo: {},
     detailInfoShow: false,
+    baseUrl: "http://192.168.111.12:8100/api/bsn",
   },
   computed: {
     // sliceTableData() {
@@ -56,31 +57,34 @@ new Vue({
     // },
     transform(key) {
       return function (key) {
-        switch (key) {
-          case "operate_info":
-            return "操作事项";
-          case "operate_time":
-            return "操作时间";
-          case "operater":
-            return "操作人员";
-          case "certificate_url":
-            return "存证地址";
-          case "time":
-            return "时间";
-          case "starting_point":
-            return "起点";
-          case "certificate_name":
-            return "名称";
-          case "ending_point":
-            return "终点";
-        }
+        return true;
+        // switch (key) {
+        //   case "operate_info":
+        //     return "操作事项";
+        //   case "operate_time":
+        //     return "操作时间";
+        //   case "operater":
+        //     return "操作人员";
+        //   case "certificate_url":
+        //     return "存证地址";
+        //   case "time":
+        //     return "时间";
+        //   case "starting_point":
+        //     return "起点";
+        //   case "certificate_name":
+        //     return "名称";
+        //   case "ending_point":
+        //     return "终点";
+        // }
       };
     },
   },
   created() {
     // this.totalPage = Math.ceil(this.tableData.length / 2);
   },
-  mounted() {},
+  mounted() {
+    this.getBsnList("15529270813");
+  },
   methods: {
     prevBtn() {
       if (this.currentPage > 1) {
@@ -103,6 +107,30 @@ new Vue({
       this.detailInfo.starting_point = row.starting_point;
       this.detailInfo.certificate_name = row.certificate_name;
       this.detailInfo.ending_point = row.ending_point;
+    },
+    /**
+     * @Author: zhang fq
+     * @Date: 2020-09-15
+     * @Description: 根据接口文档封装区块链存证信息列表获取接口方法
+     */
+    getBsnList(id) {
+      let param = {
+        userId: id,
+      };
+      $.ajax({
+        type: "GET",
+        url: this.baseUrl + "/selectAll",
+        data: param,
+        // dataType: "json",
+        success: (res) => {
+          console.log(res);
+
+          // this.tableData = res.data;
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
     },
     tableRowClassName({ row, rowIndex }) {
       if (rowIndex % 2 === 1) {
