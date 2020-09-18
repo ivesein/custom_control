@@ -1,4 +1,4 @@
-//字典
+﻿//字典
 class Dictionary {
   constructor() {
     this.items = {};
@@ -283,17 +283,83 @@ class Evee {
 }
 
 /*
- * @Author: your name
+ * @Description: 常用工具函数
+ * @Author: yaon
  * @Date: 2019-12-30 16:13:14
- * @LastEditTime: 2019-12-30 17:12:07
- * @LastEditors: your name
- * @Description: In User Settings Edit
- * @FilePath: \netpic\js\libs\libs.js
  */
-//常用方法
 class Libs {
   constructor() {}
+  /**
+   * xml转换json数据1
+   * @param {Object} xml
+   */
+  xmlToJson(xml) {
+    // Create the return object
+    var obj = {};
+    if (xml.nodeType == 1) {
+      // element
+      // do attributes
+      if (xml.attributes.length > 0) {
+        obj["@attributes"] = {};
+        for (var j = 0; j < xml.attributes.length; j++) {
+          var attribute = xml.attributes.item(j);
+          obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
+        }
+      }
+    } else if (xml.nodeType == 3) {
+      // text
+      obj = xml.nodeValue;
+    }
+    // do children
+    if (xml.hasChildNodes()) {
+      for (var i = 0; i < xml.childNodes.length; i++) {
+        var item = xml.childNodes.item(i);
+        var nodeName = item.nodeName;
+        if (typeof obj[nodeName] == "undefined") {
+          obj[nodeName] = xmlToJson(item);
+        } else {
+          if (typeof obj[nodeName].push == "undefined") {
+            var old = obj[nodeName];
+            obj[nodeName] = [];
+            obj[nodeName].push(old);
+          }
+          obj[nodeName].push(xmlToJson(item));
+        }
+      }
+    }
 
+    return obj;
+  }
+  /**
+   * xml转换json数据2
+   * @param {Object} xml
+   */
+  xml2json(xml) {
+    try {
+      var obj = {};
+      if (xml.children.length > 0) {
+        for (var i = 0; i < xml.children.length; i++) {
+          var item = xml.children.item(i);
+          var nodeName = item.nodeName;
+          if (typeof obj[nodeName] == "undefined") {
+            obj[nodeName] = xml2json(item);
+          } else {
+            if (typeof obj[nodeName].push == "undefined") {
+              var old = obj[nodeName];
+              obj[nodeName] = [];
+              obj[nodeName].push(old);
+            }
+            obj[nodeName].push(xml2json(item));
+          }
+        }
+      } else {
+        obj = xml.textContent;
+      }
+      return obj;
+    } catch (e) {
+      console.log(e.message);
+    }
+  }
   /**
      * 计算时间差的天数
      * 2020-08-06 同时返回小时部分和带小数的天数差
@@ -618,7 +684,7 @@ class Graph extends Evee {
         this.removeVertex(endCode); //删除顶点
       }
     }
-    //console.log("#########",code);
+    //console.log("#########", code);
 
     delete this.tasksNode[code];
   }
@@ -803,6 +869,7 @@ class Graph extends Evee {
       edge.vertexEnd.code,
       edge.vertexStart.code
     );
+    //console.log('edge.code', edge.code);
     if (_hasNodeToNode) {
       console.log("不允许相同节点的两条边");
     } else {
@@ -1222,7 +1289,6 @@ class Graph extends Evee {
     }
     let pathNodes = [];
     let paths = new Array();
-    let duration = 0;
     // 遍历所有节点，并依次调用sortHelper函数
     let keys = Object.keys(visiteds);
     for (let i = 0; i < keys.length; i++) {
@@ -1239,28 +1305,19 @@ class Graph extends Evee {
       if (_edges && _edges.length > 0) {
         _edges.forEach(function (w) {
           if (w.critical) {
-            duration =
-              duration +
-              (w.option
-                ? w.option.duration
-                  ? Number(w.option.duration)
-                  : 0
-                : 0);
             sortHelper(w.vertexEnd);
           }
         });
       } else {
         paths.push({
           path: pathNodes,
-          duration: duration,
         });
         pathNodes = [];
-        duration = 0;
       }
     }
-    paths.sort((a, b) => {
-      return b.duration - a.duration;
-    });
+    // paths = paths.sort((a, b) => {
+    //     return a.path.length - b.path.length;
+    // })
     return paths;
   }
   /**
@@ -1273,12 +1330,11 @@ class Graph extends Evee {
       let code = this.vertexs[i].code;
       let critical = this.vertexs[i].critical;
       if (!critical) {
-        visiteds[this.vertexs[i].code] = false;
+        visiteds[code] = false;
       }
     }
     let pathNodes = [];
     let paths = new Array();
-    let duration = 0;
     // 遍历所有节点，并依次调用sortHelper函数
     let keys = Object.keys(visiteds);
     for (let i = 0; i < keys.length; i++) {
@@ -1295,28 +1351,19 @@ class Graph extends Evee {
       if (_edges && _edges.length > 0) {
         _edges.forEach(function (w) {
           if (!w.critical) {
-            duration =
-              duration +
-              (w.option
-                ? w.option.duration
-                  ? Number(w.option.duration)
-                  : 0
-                : 0);
             sortHelper(w.vertexEnd);
           }
         });
       } else {
         paths.push({
           path: pathNodes,
-          duration: duration,
         });
         pathNodes = [];
-        duration = 0;
       }
     }
-    paths.sort((a, b) => {
-      return b.duration - a.duration;
-    });
+    // paths = paths.sort((a, b) => {
+    //     return a.path.length - b.path.length;
+    // })
     return paths;
   }
 }
@@ -1488,6 +1535,19 @@ class Collection {
     }
     return true;
   }
+  //去全部子集
+  allSubsets(arr) {
+    let res = [[]];
+    for (let i = 0; i < arr.length; i++) {
+      const tempRes = res.map((subset) => {
+        const one = subset.concat([]);
+        one.push(arr[i]);
+        return one;
+      });
+      res = res.concat(tempRes);
+    }
+    return res;
+  }
   //判断a是否等于b
   isEqual(a, b) {
     let aStr = new Array(a).join("-");
@@ -1614,19 +1674,18 @@ class Gantt {
   }
 
   //将数组转为hash，降低时间复杂度
+
   _rawTasksHandle(allTasks) {
     let start = null;
     let end = null;
     for (let i = 0; i < allTasks.length; i++) {
       let taskInfo = allTasks[i];
+      //标准化（统一为boolean型）关键路径标识
       taskInfo.isCriticalTask = taskInfo.isCriticalTask
         ? taskInfo.isCriticalTask === "true" || taskInfo.isCriticalTask === true
           ? true
           : false
         : false;
-
-      //2020-08-06 根据模板数据取目标级别的任务数据（当前取4级任务）
-      //2020-08-07 重构根据task_type取值，并且包含3级 专业审核任务  增加常规1级任务模式选项
       if (this.targetTaskModel === TARGET_TASK_MODEL.TEMPLATE) {
         if (
           taskInfo.task_type === "1" || //设计任务(4级)
@@ -2134,11 +2193,11 @@ class Link {
  * ********************************************/
 
 const _DIRECTION = {
-  NONE: 0, //没有方向
-  UP: 1, //向上
-  DOWN: 2, //向下
-  LEFT: 3, //向左
-  RIGHT: 4, //向右
+  NONE: 0, // 没有方向
+  UP: 1, // 向上
+  DOWN: 2, // 向下
+  LEFT: 3, // 向左
+  RIGHT: 4, // 向右
 };
 const _LINE_DIRECTION = {
   HORIZON: 1, //水平线
@@ -2175,7 +2234,7 @@ class LinkPlan {
     this.lineCount = 1000;
     this.contactPoint = {};
     this.contactPointOffsetBase = {};
-    this.rankIncrement = 0;
+    this.rankIncrement = 0; // 从原点向上画的层数（负数）
     this.linked = {
       lines: [],
     };
@@ -2267,20 +2326,6 @@ class LinkPlan {
         });
       }
     }
-    // console.log("---result", result);
-    // 排序
-    // for (let key in result.yList) {
-    //     result.yList[key] = result.yList[key].sort((a, b) => {
-    //         return a.x - b.x;
-    //     })
-    // }
-
-    // for (let key in result.xList) {
-    //     result.xList[key] = result.xList[key].sort((a, b) => {
-    //         return a.x - b.x;
-    //     })
-    // }
-    // this._compressRank();
     return result;
   }
 
@@ -2300,13 +2345,13 @@ class LinkPlan {
    */
   // 创建节点的坐标
   createPlan(callback) {
-    console.time("点线计算");
+    console.time("link_plan.js");
     this._init();
-
-    console.time("Horizon");
-    // ----------无--------情--------的--------分------割------线----------
-    // Step1:连接相同层(或相同时标)的连续节点   水平线
     let keys = Object.keys(this.aoan.edgesMap);
+
+    // ----------无--------情--------的--------分------割------线----------
+    console.time("Horizon");
+    // Step1:连接相同层(或相同时标)的连续节点   水平线
     for (let i = 0; i < keys.length; i++) {
       let edgeCode = keys[i]; // 正序
       {
@@ -2318,11 +2363,11 @@ class LinkPlan {
       // console.log(startCode, "------11111------->", endCode);
       this._createHorizonLink(startCode, endCode);
     }
-
     console.timeEnd("Horizon");
-    console.time("L-critical");
+
     // ----------无--------情--------的--------分------割------线----------
-    // Step2:连接L线
+    console.time("L-critical");
+    // Step2:连接L线 - 关键路径
     for (let i = 0; i < keys.length; i++) {
       let edgeCode = keys[i]; // 正序
       {
@@ -2332,16 +2377,15 @@ class LinkPlan {
       let startCode = edge.start;
       let endCode = edge.end;
       let isCritical = edge.isCritical;
-      // let isDummy = edge.end;
       if (edge.link === null && isCritical) {
         // console.log(startCode, "------22222111------->", endCode);
         this._createLLink(startCode, endCode, false);
       }
     }
-
     console.timeEnd("L-critical");
-    console.time("L");
+
     // ----------无--------情--------的--------分------割------线----------
+    console.time("L");
     // Step2:连接L线
     for (let i = 0; i < keys.length; i++) {
       let edgeCode = keys[i]; // 正序
@@ -2351,18 +2395,16 @@ class LinkPlan {
       let edge = this.aoan.edgesMap[edgeCode];
       let startCode = edge.start;
       let endCode = edge.end;
-      // let isCritical = edge.isCritical;
-      // let isDummy = edge.end;
       if (edge.link === null) {
-        // console.log(startCode, "------22222111------->", endCode);
+        // console.log(startCode, "------22222222------->", endCode);
         this._createLLink(startCode, endCode, false);
       }
     }
-
     console.timeEnd("L");
-    console.time("S");
+
     // ----------无--------情--------的--------分------割------线----------
-    // Step5:连接S线（允许并行，不允许穿点）
+    console.time("S");
+    // Step3:连接S线（允许并行，不允许穿点）
     for (let i = 0; i < keys.length; i++) {
       let edgeCode = keys[i]; // 正序
       {
@@ -2376,11 +2418,11 @@ class LinkPlan {
         this._createSLink(startCode, endCode, false);
       }
     }
-
     console.timeEnd("S");
-    console.time("U");
+
     // ----------无--------情--------的--------分------割------线----------
-    // Step6:连接U线
+    console.time("U");
+    // Step4:连接U线
     for (let i = 0; i < keys.length; i++) {
       let edgeCode = keys[i]; // 正序
       {
@@ -2391,14 +2433,32 @@ class LinkPlan {
       let endCode = edge.end;
       if (edge.link === null) {
         // console.log(startCode, "------444444444------->", endCode);
-        this._createULink(startCode, endCode);
+        this._createULink(startCode, endCode, false);
       }
     }
-
     console.timeEnd("U");
-    console.time("Vertical");
+
     // ----------无--------情--------的--------分------割------线----------
-    // Step8:连接(相同层或)相同时标的连续节点   垂直线
+    // console.time("SU");
+    // // Step3-4:连接S-U线
+    // for (let i = 0; i < keys.length; i++) {
+    //   let edgeCode = keys[i]; // 正序
+    //   if (inverted) {
+    //     edgeCode = keys[keys.length - 1 - i]; // 倒序
+    //   }
+    //   let edge = this.aoan.edgesMap[edgeCode];
+    //   let startCode = edge.start;
+    //   let endCode = edge.end;
+    //   if (edge.link === null) {
+    //     // console.log(startCode, "------3434343434------->", endCode);
+    //     this._createSULink(startCode, endCode, false);
+    //   }
+    // }
+    // console.timeEnd("SU");
+
+    // ----------无--------情--------的--------分------割------线----------
+    console.time("Vertical");
+    // Step5:连接(相同层或)相同时标的连续节点   垂直线
     for (let i = 0; i < keys.length; i++) {
       let edgeCode = keys[i]; // 正序
       {
@@ -2407,18 +2467,16 @@ class LinkPlan {
       let edge = this.aoan.edgesMap[edgeCode];
       let startCode = edge.start;
       let endCode = edge.end;
-      // let isCritical = edge.isCritical;
-      // let isDummy = edge.end;
-      // console.log(startCode, "------11111------->", endCode);
+      // console.log(startCode, "------55555------->", endCode);
       if (edge.link === null) {
         this._createVerticalLink(startCode, endCode, false);
       }
     }
-
     console.timeEnd("Vertical");
-    console.time("Best");
+
     // ----------无--------情--------的--------分------割------线----------
-    // Step7:找到合适的连线（允许穿点）
+    console.time("Best");
+    // Step6:找到合适的连线（允许穿点）
     for (let i = 0; i < keys.length; i++) {
       let edgeCode = keys[i]; // 正序
       {
@@ -2428,20 +2486,19 @@ class LinkPlan {
       let startCode = edge.start;
       let endCode = edge.end;
       if (edge.link === null) {
-        // console.log(startCode, "------77777------->", endCode);
+        // console.log(startCode, "------666666------->", endCode);
         this._createBestLink(startCode, endCode);
       }
     }
-
     console.timeEnd("Best");
-    // ----------无--------情--------的--------分------割------线----------
 
+    // ----------无--------情--------的--------分------割------线----------
     // 计算线条的偏移量
     this._computeOffset();
     // console.log("this:", this);
     this._updateRank(callback);
     // callback(nodes, option);
-    console.timeEnd("点线计算");
+    console.timeEnd("link_plan.js");
   }
 
   /**
@@ -2459,7 +2516,6 @@ class LinkPlan {
       let eX = endLocation.x;
       let sY = startLocation.y;
       let eY = endLocation.y;
-
       let taskInfo = this.aoan.edgesMap[startCode + "-" + endCode];
       let taskType = taskInfo.taskType;
       let rawTaskInfo = taskInfo.option;
@@ -2470,59 +2526,65 @@ class LinkPlan {
       let isDummy = taskInfo.isDummy;
       let direction = _DIRECTION.NONE;
       let lineLen = Number(eX) - Number(sX);
-      let free = rawTaskInfo ? rawTaskInfo.free_float : 0;
-      let freeDay = Number(free / 24).toFixed(4);
+      let free = rawTaskInfo
+        ? rawTaskInfo.free_float
+          ? rawTaskInfo.free_float
+          : 0
+        : 0;
       let duration = taskInfo.duration || 0;
-      let durationDay = Number(duration / 24).toFixed(4);
 
       if (!isDummy) {
         // 实工作
         label = rawTaskInfo.text ? rawTaskInfo.text : "";
       }
 
+      let lineShape = null;
+      switch (taskType) {
+        case 1: // 1 - 实工作 - 实线
+          lineShape = _LINE_SHAPE.SOLID;
+          break;
+        case 2: // 2 - 虚工作 - 虚线
+          lineShape = _LINE_SHAPE.DOTTED;
+          break;
+        case 3: // 3 - 挂起工作 - 虚线(暂定)
+          lineShape = _LINE_SHAPE.DOTTED;
+          break;
+        case 4: // 4 - 避免重复 - 虚线(暂定)
+          lineShape = _LINE_SHAPE.DOTTED;
+          break;
+        case 5: // 5 - 延时 - 虚线(暂定)
+          lineShape = _LINE_SHAPE.DOTTED;
+          break;
+        case 6: // 6 - 搭接关系 - 虚线(暂定)
+          lineShape = _LINE_SHAPE.DOTTED;
+          break;
+        default:
+          // 自由时差 - 波浪线
+          lineShape = _LINE_SHAPE.WAVE;
+      }
+
       if (sY === eY) {
         // 水平线
-        let isContinuousNodesOnTime = this._isContinuousNodes(
+        // 判断在同层是否连续节点
+        let isContinuousNodesOnRank = this._isContinuousNodes(
           startCode,
           endCode,
           _LINE_DIRECTION.HORIZON,
           sY
         );
-        if (isContinuousNodesOnTime) {
+        if (isContinuousNodesOnRank) {
           if (sX < eX) {
-            // 后节点在后方       向后
+            // 后节点在后方
+            // 方向向右
             direction = _DIRECTION.RIGHT;
-            // 判断在同层是否连续节点
-            let isContinuousNodesOnRank = this._isContinuousNodes(
-              startCode,
-              endCode,
-              _LINE_DIRECTION.HORIZON,
-              sY
-            );
-            // console.log("isContinuousNodesOnRank", isContinuousNodesOnRank);
-            if (isContinuousNodesOnRank) {
-              // 是连续节点  1，─
-              type = _LINK_TYPE.HORIZON;
-              lines = this._createHorizonLines(sX, eX, sY, direction, taskInfo);
-            }
           } else if (sX > eX) {
-            // 后节点在前方        向前
+            // 后节点在前方
+            // 方向向左
             direction = _DIRECTION.LEFT;
-            // 判断在同层是否连续节点
-            let isContinuousNodesOnRank = this._isContinuousNodes(
-              startCode,
-              endCode,
-              _LINE_DIRECTION.HORIZON,
-              sY
-            );
-            // console.log("isContinuousNodesOnRank2", isContinuousNodesOnRank);
-            if (isContinuousNodesOnRank) {
-              // 是连续节点  1，─
-              type = _LINK_TYPE.HORIZON;
-              lines = this._createHorizonLines(eX, sX, sY, direction, taskInfo);
-            }
           }
-        } // else 两个节点不是连续的节点 应该用U型链接
+          type = _LINK_TYPE.HORIZON; // 1 ——
+          lines = this._createHorizonLines(sX, eX, sY, direction, taskInfo);
+        }
       }
 
       if (lines.length > 0) {
@@ -2532,10 +2594,9 @@ class LinkPlan {
           dummy: isDummy,
           length: lineLen,
           duration: duration,
-          durationDay: durationDay,
           direction: direction,
           free: free,
-          freeDay: freeDay,
+          lineShape: lineShape,
         };
 
         let link = new Link(option, type, { lines: lines }, startCode, endCode);
@@ -2549,24 +2610,24 @@ class LinkPlan {
   // 创建水平线段        duration / (duration + free) = length / linelen
   _createHorizonLines(sX, eX, y, arrow, taskInfo) {
     let lines = [];
-    let label = "";
     let taskType = taskInfo.taskType;
     let rawTaskInfo = taskInfo.option;
     let lineLen = Number(eX) - Number(sX);
-    let free = Number(rawTaskInfo ? rawTaskInfo.free_float : 0); // 自由时差 - 小时
-    let freeDay = Number(free / 24).toFixed(4); // 自由时差 - 小时转化为天
+    let free = rawTaskInfo
+      ? rawTaskInfo.free_float
+        ? rawTaskInfo.free_float
+        : 0
+      : 0; // 自由时差 - 小时
     let duration = Number(taskInfo.duration) || 0; // 持续时间 - 小时
-    let durationDay = Number(duration / 24).toFixed(4); // 小时转化为天
     let durationLength = (duration * lineLen) / (duration + free) || 0;
-    // console.log(durationLength);
     let freeLength = (free * lineLen) / (duration + free) || 0;
-
     let isDummy = taskInfo.isDummy;
-    if (!isDummy) {
-      label = rawTaskInfo.text ? rawTaskInfo.text : "";
-    }
+    let dLength = Number(durationLength.toFixed(4)); // duration 线段长度
+    let fLength = Number(freeLength.toFixed(4)); // free_float 线段长度
+    let dfLength = Number(lineLen.toFixed(4)); // 没有自由时差时的线段长度
+    let xCoordinate = Number((Number(sX) + Number(durationLength)).toFixed(4)); // duration 和 free_float 线段相交的交点
 
-    let lineShape = _LINE_SHAPE.WAVE;
+    let lineShape = null;
     switch (taskType) {
       case 1: // 1 - 实工作 - 实线
         lineShape = _LINE_SHAPE.SOLID;
@@ -2592,6 +2653,7 @@ class LinkPlan {
     }
 
     if (isDummy) {
+      // 虚工作
       lines.push({
         arrow: arrow,
         shape: lineShape,
@@ -2612,11 +2674,13 @@ class LinkPlan {
         passNodes: [],
       });
     } else {
+      // 非虚工作
       if (free > 0) {
+        // 有自由时差
         lines.push({
           arrow: _DIRECTION.NONE,
-          shape: lineShape,
-          length: Number(durationLength).toFixed(4),
+          shape: lineShape, // 持续时间 - 看情况
+          length: dLength,
           direction: _LINE_DIRECTION.HORIZON,
           start: {
             x: sX,
@@ -2625,7 +2689,7 @@ class LinkPlan {
             yOffset: 0,
           },
           end: {
-            x: (Number(sX) + Number(durationLength)).toFixed(4),
+            x: xCoordinate,
             y: y,
             xOffset: 0,
             yOffset: 0,
@@ -2635,10 +2699,10 @@ class LinkPlan {
         lines.push({
           arrow: arrow,
           shape: _LINE_SHAPE.WAVE, // 自由时差 - 波浪线
-          length: Number(freeLength).toFixed(4),
+          length: fLength,
           direction: _LINE_DIRECTION.HORIZON,
           start: {
-            x: (Number(sX) + Number(durationLength)).toFixed(4),
+            x: xCoordinate,
             y: y,
             xOffset: 0,
             yOffset: 0,
@@ -2652,10 +2716,11 @@ class LinkPlan {
           passNodes: [],
         });
       } else {
+        // 没有自由时差
         lines.push({
           arrow: arrow,
           shape: lineShape,
-          length: Number(lineLen).toFixed(4),
+          length: dfLength,
           direction: _LINE_DIRECTION.HORIZON,
           start: {
             x: sX,
@@ -2685,23 +2750,27 @@ class LinkPlan {
       let eX = endLocation.x;
       let sY = startLocation.y;
       let eY = endLocation.y;
-
       let taskInfo = this.aoan.edgesMap[startCode + "-" + endCode];
       let rawTaskInfo = taskInfo.option;
       let label = "";
       let isCritical = taskInfo.isCritical;
       let isDummy = taskInfo.isDummy;
       let lineLen = Number(eX) - Number(sX);
-      let free = rawTaskInfo ? rawTaskInfo.free_float : 0;
+      let free = rawTaskInfo
+        ? rawTaskInfo.free_float
+          ? rawTaskInfo.free_float
+          : 0
+        : 0;
       let duration = taskInfo.duration || 0;
 
       if (!isDummy) {
-        // 实工作
+        // 非虚工作
         label = rawTaskInfo.text ? rawTaskInfo.text : "";
       }
 
       if (sX !== eX && sY !== eY) {
-        // 后节点在后方           向后
+        // 节点不在同一层和同一时标  L型线段
+        // console.log("startCode---", startCode, "---endCode---", endCode);
         let links = this._checkLLink(
           startLocation,
           endLocation,
@@ -2710,12 +2779,13 @@ class LinkPlan {
         );
         // 找到交叉点较少的结果
         if (links.length > 0) {
+          // console.log(links);
           if (links.length === 2) {
             links = links.sort((a, b) => {
               return a.intersection.length - b.intersection.length;
             });
             // 如果交叉数相同，则找扣分较少的
-            if (links[0].intersection.length === links[1].intersection.length) {
+            if (links[0].intersection.length == links[1].intersection.length) {
               let temp = links[0].intersection.length;
               for (let i = 0; i < links.length; i++) {
                 if (temp !== links[i].intersection.length) {
@@ -2728,6 +2798,7 @@ class LinkPlan {
             }
           }
           let _link = links[0];
+          // console.log(_link);
 
           let option = {
             label: label,
@@ -2749,7 +2820,6 @@ class LinkPlan {
     }
   }
   /**
-   *
    * @param {Json} startLocation          开始位置
    * @param {Json} endLocation            结束位置
    * @param {Json} taskInfo               任务信息
@@ -2762,44 +2832,44 @@ class LinkPlan {
     let eX = endLocation.x;
     let sY = startLocation.y;
     let eY = endLocation.y;
-
     let _result1 = null;
     let _result2 = null;
     let deduction = 0;
     let direction = _DIRECTION.NONE;
-
     let _horizon = {};
     let _vertical = {};
-
     let lines = [];
     let links = [];
 
     if (sX < eX) {
-      // 后节点在后方        向后
+      // 后节点在后方  4，┐  5，└>  6，┘  3，┌>
+      // 向右拐
       direction = _DIRECTION.RIGHT;
       if (sY < eY) {
         // 后节点在前节点的下方
-        // -----------------    4，┐  ----------------------
+
+        // Start -----------------  L2  4，┐  ----------------------
         lines = [];
-        // 水平线
         _horizon = {
+          // 水平线
           start: sX,
           end: eX,
           arrow: _DIRECTION.NONE,
           parameter: sY,
         };
+        // 判断水平线是否可以连接
         _result1 = this._resolve(_horizon, _LINE_DIRECTION.HORIZON, false);
         // console.log("_result1", _result1);
         if (_result1.isOk) {
-          // 如果水平线可以连接，则判断垂直线
-          // 垂直线
+          // 如果水平线可以连接，则判断垂直线是否可以连接
           _vertical = {
+            // 垂直线
             start: sY,
             end: eY,
             arrow: _DIRECTION.DOWN,
             parameter: eX,
           };
-          deduction = deduction + _result1.deduction;
+          deduction += _result1.deduction;
           _result2 = this._resolve(
             _vertical,
             _LINE_DIRECTION.VERTICAL,
@@ -2808,8 +2878,19 @@ class LinkPlan {
           // console.log("_result2", _result2);
           if (_result2.isOk) {
             // 垂直线也可以连接，则生成线段
-            lines = this._createLLines(_horizon, _vertical, taskInfo);
-            deduction = deduction + _result2.deduction;
+            let tag = 1;
+            let xnodes = this.pretreatmentNodesTable.yList[sY]; // 同一层上的所有节点
+            // 循环同一层上的节点，若有和拐点重合则禁止连接
+            for (let i = 0; i < xnodes.length; i++) {
+              let node = xnodes[i];
+              if (_vertical.parameter == node.x) {
+                tag = 0;
+              }
+            }
+            if (enablePassNode || tag == 1) {
+              deduction += _result2.deduction;
+              lines = this._createLLines(_horizon, _vertical, taskInfo);
+            }
           }
         }
         if (lines.length > 0) {
@@ -2822,38 +2903,49 @@ class LinkPlan {
             intersection: _result1.intersection.concat(_result2.intersection),
           });
         }
-        // -----------------    5，└  ----------------------
+        //  End  -----------------  L2  4，┐  ----------------------
+
+        // Start -----------------  L3  5，└  ----------------------
         lines = [];
         deduction = 0;
-        // 水平线
-        _horizon = {
-          start: sX,
-          end: eX,
-          arrow: _DIRECTION.RIGHT,
-          parameter: eY,
-        };
-        _result1 = this._resolve(_horizon, _LINE_DIRECTION.HORIZON, false);
-        // console.log("_result1", _result1);
-        if (_result1.isOk) {
-          // 如果水平线可以连接，则判断垂直线
+        _vertical = {
           // 垂直线
-          _vertical = {
-            start: sY,
-            end: eY,
-            arrow: _DIRECTION.NONE,
-            parameter: sX,
+          start: sY,
+          end: eY,
+          arrow: _DIRECTION.NONE,
+          parameter: sX,
+        };
+        _result1 = this._resolve(
+          _vertical,
+          _LINE_DIRECTION.VERTICAL,
+          enablePassNode
+        );
+        if (_result1.isOk) {
+          // 如果垂直线可以连接，判断水平线
+          _horizon = {
+            // 水平线
+            start: sX,
+            end: eX,
+            arrow: _DIRECTION.RIGHT,
+            parameter: eY,
           };
-          deduction = deduction + _result1.deduction;
-          _result2 = this._resolve(
-            _vertical,
-            _LINE_DIRECTION.VERTICAL,
-            enablePassNode
-          );
-          // console.log("_result2", _result2);
+          deduction += _result1.deduction;
+          _result2 = this._resolve(_horizon, _LINE_DIRECTION.HORIZON, false);
           if (_result2.isOk) {
-            // 垂直线也可以连接，则生成线段
-            deduction = deduction + _result2.deduction;
-            lines = this._createLLines(_horizon, _vertical, taskInfo);
+            // 水平线也可以连接，则生成线段
+            let tag = 1;
+            let ynodes = this.pretreatmentNodesTable.xList[sX];
+            // 循环同一时标上的节点，若有和拐点重合则禁止连接
+            for (let i = 0; i < ynodes.length; i++) {
+              let node = ynodes[i];
+              if (_horizon.parameter == node.y) {
+                tag = 0;
+              }
+            }
+            if (enablePassNode || tag == 1) {
+              deduction += _result2.deduction;
+              lines = this._createLLines(_horizon, _vertical, taskInfo);
+            }
           }
         }
         if (lines.length > 0) {
@@ -2867,11 +2959,14 @@ class LinkPlan {
           });
         }
         // console.log("---links:", links);
+        //  End  -----------------  L3  5，└  ----------------------
       } else if (sY > eY) {
         // 后节点在前节点的上方
-        // -----------------    6，┘  ----------------------
-        // 水平线
+
+        // Start -----------------  L4  6，┘  ----------------------
+        lines = [];
         _horizon = {
+          // 水平线
           start: sX,
           end: eX,
           arrow: _DIRECTION.NONE,
@@ -2880,14 +2975,14 @@ class LinkPlan {
         _result1 = this._resolve(_horizon, _LINE_DIRECTION.HORIZON, false);
         if (_result1.isOk) {
           // 如果水平线可以连接，则判断垂直线
-          // 垂直线
           _vertical = {
+            // 垂直线
             start: eY,
             end: sY,
             arrow: _DIRECTION.UP,
             parameter: eX,
           };
-          deduction = deduction + _result1.deduction;
+          deduction += _result1.deduction;
           _result2 = this._resolve(
             _vertical,
             _LINE_DIRECTION.VERTICAL,
@@ -2895,11 +2990,21 @@ class LinkPlan {
           );
           if (_result2.isOk) {
             // 垂直线也可以连接，则生成线段
-            lines = this._createLLines(_horizon, _vertical, taskInfo);
-            deduction = deduction + _result2.deduction;
+            let tag = 1;
+            let xnodes = this.pretreatmentNodesTable.yList[sY];
+            // 循环同一层上的节点，若有和拐点重合则禁止连接
+            for (let i = 0; i < xnodes.length; i++) {
+              let node = xnodes[i];
+              if (_vertical.parameter == node.x) {
+                tag = 0;
+              }
+            }
+            if (enablePassNode || tag == 1) {
+              deduction += _result2.deduction;
+              lines = this._createLLines(_horizon, _vertical, taskInfo);
+            }
           }
         }
-
         if (lines.length > 0) {
           links.push({
             type: _LINK_TYPE.L4,
@@ -2910,36 +3015,50 @@ class LinkPlan {
             intersection: _result1.intersection.concat(_result2.intersection),
           });
         }
-        // -----------------    3，┌  ----------------------
+        // console.log("links:", links);
+        //  End  -----------------  L4  6，┘  ----------------------
+
+        // Start -----------------  L1  3，┌  ----------------------
         lines = [];
         deduction = 0;
-        // 水平线
-        _horizon = {
-          start: sX,
-          end: eX,
-          arrow: _DIRECTION.RIGHT,
-          parameter: eY,
-        };
-        _result1 = this._resolve(_horizon, _LINE_DIRECTION.HORIZON, false);
-        if (_result1.isOk) {
-          // 如果水平线可以连接，则判断垂直线
+        _vertical = {
           // 垂直线
-          _vertical = {
-            start: eY,
-            end: sY,
-            arrow: _DIRECTION.NONE,
-            parameter: sX,
+          start: eY,
+          end: sY,
+          arrow: _DIRECTION.NONE,
+          parameter: sX,
+        };
+        _result1 = this._resolve(
+          _vertical,
+          _LINE_DIRECTION.VERTICAL,
+          enablePassNode
+        );
+        if (_result1.isOk) {
+          // 如果垂直线可以连接，判断水平线
+          _horizon = {
+            // 水平线
+            start: sX,
+            end: eX,
+            arrow: _DIRECTION.RIGHT,
+            parameter: eY,
           };
-          deduction = deduction + _result1.deduction;
-          _result2 = this._resolve(
-            _vertical,
-            _LINE_DIRECTION.VERTICAL,
-            enablePassNode
-          );
+          deduction += _result1.deduction;
+          _result2 = this._resolve(_horizon, _LINE_DIRECTION.HORIZON, false);
           if (_result2.isOk) {
-            // 垂直线也可以连接，则生成线段
-            lines = this._createLLines(_horizon, _vertical, taskInfo);
-            deduction = deduction + _result2.deduction;
+            // 水平线可以连接，生成线段
+            let tag = 1;
+            let ynodes = this.pretreatmentNodesTable.xList[sX];
+            // 循环同一时标上的节点，若有和拐点重合则禁止连接
+            for (let i = 0; i < ynodes.length; i++) {
+              let node = ynodes[i];
+              if (_horizon.parameter == node.y) {
+                tag = 0;
+              }
+            }
+            if (enablePassNode || tag == 1) {
+              deduction += _result2.deduction;
+              lines = this._createLLines(_horizon, _vertical, taskInfo);
+            }
           }
         }
         if (lines.length > 0) {
@@ -2953,42 +3072,57 @@ class LinkPlan {
           });
         }
         // console.log("links:", links);
+        //  End  -----------------  L1  3，┌  ----------------------
       }
     } else if (sX > eX) {
-      // 后节点在前方              向前
+      // 后节点在前方  6，┘  3，┌   4，┐  5，└
+      // 向左拐
       direction = _DIRECTION.LEFT;
       if (sY < eY) {
         // 后节点在前节点的下方
-        // -----------------    6，┘  ----------------------
-        _horizon = {
-          start: eX,
-          end: sX,
-          arrow: _DIRECTION.LEFT,
-          parameter: eY,
-        };
-        _result1 = this._resolve(_horizon, _LINE_DIRECTION.HORIZON, false);
-        if (_result1.isOk) {
-          // 如果水平线可以连接，则判断垂直线
+
+        // Start -----------------  L4  6，┘  ----------------------
+        lines = [];
+        _vertical = {
           // 垂直线
-          _vertical = {
-            start: sY,
-            end: eY,
-            arrow: _DIRECTION.NONE,
-            parameter: sX,
+          start: sY,
+          end: eY,
+          arrow: _DIRECTION.NONE,
+          parameter: sX,
+        };
+        _result1 = this._resolve(
+          _vertical,
+          _LINE_DIRECTION.VERTICAL,
+          enablePassNode
+        );
+        if (_result1.isOk) {
+          // 如果垂直线可以连接，判断水平线
+          _horizon = {
+            // 水平线
+            start: eX,
+            end: sX,
+            arrow: _DIRECTION.LEFT,
+            parameter: eY,
           };
-          deduction = deduction + _result1.deduction;
-          _result2 = this._resolve(
-            _vertical,
-            _LINE_DIRECTION.VERTICAL,
-            enablePassNode
-          );
+          deduction += _result1.deduction;
+          _result2 = this._resolve(_horizon, _LINE_DIRECTION.HORIZON, false);
           if (_result2.isOk) {
-            // 垂直线也可以连接，则生成线段
-            lines = this._createLLines(_horizon, _vertical, taskInfo);
-            deduction = deduction + _result2.deduction;
+            // 水平线可以链接，生成线段
+            let tag = 1;
+            let ynodes = this.pretreatmentNodesTable.xList[sX];
+            // 循环同一时标上的节点，若有和拐点重合则禁止连接
+            for (let i = 0; i < ynodes.length; i++) {
+              let node = ynodes[i];
+              if (_horizon.parameter == node.y) {
+                tag = 0;
+              }
+            }
+            if (enablePassNode || tag == 1) {
+              deduction += _result2.deduction;
+              lines = this._createLLines(_horizon, _vertical, taskInfo);
+            }
           }
         }
-
         if (lines.length > 0) {
           links.push({
             type: _LINK_TYPE.L4,
@@ -2999,27 +3133,29 @@ class LinkPlan {
             intersection: _result1.intersection.concat(_result2.intersection),
           });
         }
-        // -----------------    3，┌ ----------------------
+        //  End  -----------------  L4  6，┘  ----------------------
+
+        // Start -----------------  L1  3，┌  ----------------------
         lines = [];
         deduction = 0;
-        // 水平线
         _horizon = {
+          // 水平线
           start: eX,
           end: sX,
-          arrow: _DIRECTION.RIGHT,
+          arrow: _DIRECTION.NONE,
           parameter: eY,
         };
         _result1 = this._resolve(_horizon, _LINE_DIRECTION.HORIZON, false);
         if (_result1.isOk) {
           // 如果水平线可以连接，则判断垂直线
-          // 垂直线
           _vertical = {
+            // 垂直线
             start: sY,
             end: eY,
-            arrow: _DIRECTION.NONE,
+            arrow: _DIRECTION.DOWN,
             parameter: eX,
           };
-          deduction = deduction + _result1.deduction;
+          deduction += _result1.deduction;
           _result2 = this._resolve(
             _vertical,
             _LINE_DIRECTION.VERTICAL,
@@ -3027,11 +3163,21 @@ class LinkPlan {
           );
           if (_result2.isOk) {
             // 垂直线也可以连接，则生成线段
-            lines = this._createLLines(_horizon, _vertical, taskInfo);
-            deduction = deduction + _result2.deduction;
+            let tag = 1;
+            let xnodes = this.pretreatmentNodesTable.yList[eY];
+            // 循环同一层上的节点，若有和拐点重合则禁止连接
+            for (let i = 0; i < xnodes.length; i++) {
+              let node = xnodes[i];
+              if (_vertical.parameter == node.x) {
+                tag = 0;
+              }
+            }
+            if (enablePassNode || tag == 1) {
+              deduction += _result2.deduction;
+              lines = this._createLLines(_horizon, _vertical, taskInfo);
+            }
           }
         }
-
         if (lines.length > 0) {
           links.push({
             type: _LINK_TYPE.L1,
@@ -3043,39 +3189,52 @@ class LinkPlan {
           });
         }
         // console.log("links:", links);
+        //  End  -----------------  L1  3，┌  ----------------------
       } else if (sY > eY) {
         // 后节点在前节点的上方
-        // -----------------    4，┐  ----------------------
-        // 水平线
-        _horizon = {
-          start: eX,
-          end: sX,
-          arrow: _DIRECTION.LEFT,
-          parameter: eY,
-        };
-        _result1 = this._resolve(_horizon, _LINE_DIRECTION.HORIZON, false);
-        if (_result1.isOk) {
-          // 如果水平线可以连接，则判断垂直线
+
+        // Start -----------------  L2  4，┐  ----------------------
+        lines = [];
+        _vertical = {
           // 垂直线
-          _vertical = {
-            start: eY,
-            end: sY,
-            arrow: _DIRECTION.NONE,
-            parameter: sX,
+          start: eY,
+          end: sY,
+          arrow: _DIRECTION.NONE,
+          parameter: sX,
+        };
+        _result1 = this._resolve(
+          _vertical,
+          _LINE_DIRECTION.VERTICAL,
+          enablePassNode
+        );
+        if (_result1.isOk) {
+          // 如果垂直线可以连接，判断水平线
+          _horizon = {
+            // 水平线
+            start: eX,
+            end: sX,
+            arrow: _DIRECTION.LEFT,
+            parameter: eY,
           };
-          deduction = deduction + _result1.deduction;
-          _result2 = this._resolve(
-            _vertical,
-            _LINE_DIRECTION.VERTICAL,
-            enablePassNode
-          );
+          deduction += _result1.deduction;
+          _result2 = this._resolve(_horizon, _LINE_DIRECTION.HORIZON, false);
           if (_result2.isOk) {
-            // 垂直线也可以连接，则生成线段
-            lines = this._createLLines(_horizon, _vertical, taskInfo);
-            deduction = deduction + _result2.deduction;
+            // 水平线可以连接，生成线段
+            let tag = 1;
+            let ynodes = this.pretreatmentNodesTable.xList[sX];
+            // 循环同一时标上的节点，若有和拐点重合则禁止连接
+            for (let i = 0; i < ynodes.length; i++) {
+              let node = ynodes[i];
+              if (_horizon.parameter == node.y) {
+                tag = 0;
+              }
+            }
+            if (enablePassNode || tag == 1) {
+              deduction += _result2.deduction;
+              lines = this._createLLines(_horizon, _vertical, taskInfo);
+            }
           }
         }
-
         if (lines.length > 0) {
           links.push({
             type: _LINK_TYPE.L2,
@@ -3086,11 +3245,13 @@ class LinkPlan {
             intersection: _result1.intersection.concat(_result2.intersection),
           });
         }
-        // -----------------    5，└  ----------------------
+        //  End  -----------------  L2  4，┐  ----------------------
+
+        // Start -----------------  L3  5，└  ----------------------
         lines = [];
         deduction = 0;
-        // 水平线
         _horizon = {
+          // 水平线
           start: eX,
           end: sX,
           arrow: _DIRECTION.NONE,
@@ -3099,14 +3260,14 @@ class LinkPlan {
         _result1 = this._resolve(_horizon, _LINE_DIRECTION.HORIZON, false);
         if (_result1.isOk) {
           // 如果水平线可以连接，则判断垂直线
-          // 垂直线
           _vertical = {
+            // 垂直线
             start: eY,
             end: sY,
             arrow: _DIRECTION.UP,
             parameter: eX,
           };
-          deduction = deduction + _result1.deduction;
+          deduction += _result1.deduction;
           _result2 = this._resolve(
             _vertical,
             _LINE_DIRECTION.VERTICAL,
@@ -3114,8 +3275,19 @@ class LinkPlan {
           );
           if (_result2.isOk) {
             // 垂直线也可以连接，则生成线段
-            lines = this._createLLines(_horizon, _vertical, taskInfo);
-            deduction = deduction + _result2.deduction;
+            let tag = 1;
+            let xnodes = this.pretreatmentNodesTable.yList[sY];
+            // 循环同一层上的节点，若有和拐点重合则禁止连接
+            for (let i = 0; i < xnodes.length; i++) {
+              let node = xnodes[i];
+              if (_vertical.parameter == node.x) {
+                tag = 0;
+              }
+            }
+            if (enablePassNode || tag == 1) {
+              deduction += _result2.deduction;
+              lines = this._createLLines(_horizon, _vertical, taskInfo);
+            }
           }
         }
         if (lines.length > 0) {
@@ -3128,6 +3300,7 @@ class LinkPlan {
             intersection: _result1.intersection.concat(_result2.intersection),
           });
         }
+        //  End  -----------------  L3  5，└  ----------------------
       }
     }
     // console.log("L-links", links);
@@ -3158,23 +3331,26 @@ class LinkPlan {
   _createSLink(startCode, endCode, enablePassNode) {
     let startLocation = this.nodes[startCode];
     let endLocation = this.nodes[endCode];
+
     if (startLocation && endLocation) {
       let sX = startLocation.x;
       let eX = endLocation.x;
-
       let taskInfo = this.aoan.edgesMap[startCode + "-" + endCode];
       let rawTaskInfo = taskInfo.option;
       let label = "";
       let isCritical = taskInfo.isCritical;
       let isDummy = taskInfo.isDummy;
       if (!isDummy) {
-        // 实工作
+        // 非虚工作
         label = rawTaskInfo.text ? rawTaskInfo.text : "";
       }
       let lineLen = Number(eX) - Number(sX);
       let duration = taskInfo.duration || 0;
-      let durationDay = Number(duration / 24).toFixed(4);
-      let free = rawTaskInfo ? rawTaskInfo.free_float : 0;
+      let free = rawTaskInfo
+        ? rawTaskInfo.free_float
+          ? rawTaskInfo.free_float
+          : 0
+        : 0;
 
       // console.log("startLocation, endLocation", startLocation, endLocation);
       /* @describe    线型
@@ -3237,35 +3413,27 @@ class LinkPlan {
     let eX = endLocation.x;
     let sY = startLocation.y;
     let eY = endLocation.y;
-
-    // let lineLen = Number(eX) - Number(sX);
-    // let type = taskInfo.type;
-    // let label = "";
-    // let duration = taskInfo.duration;
-
     let direction = _DIRECTION.NONE;
-
     // console.log("startLocation, endLocation", startLocation, endLocation);
     /* @describe    线型
      *  7，  ┌┘
      *  8，  └┐
      * ***************************************************************/
-
     let links = [];
-
     let searchPlan = [];
     if (sX < eX) {
-      // 后节点在后方              向后
+      // 后节点在后方  8，└┐  7，┌┘
+      // 向右拐
       direction = _DIRECTION.RIGHT;
       if (sY < eY) {
         // 后下
-        // -----------------    8，  └┐  ----------------------
+        // -----------------    8，S2 └┐  ----------------------
         for (let i = sY + 1; i < eY; i++) {
           searchPlan.push({
-            linkType: _LINK_TYPE.S2,
+            linkType: _LINK_TYPE.S2, // 8
             lines: {
-              // 垂直线1
               line1: {
+                // 垂直线1
                 type: _LINE_DIRECTION.VERTICAL,
                 line: {
                   start: sY,
@@ -3274,8 +3442,8 @@ class LinkPlan {
                   parameter: sX,
                 },
               },
-              // 垂直线2
               line2: {
+                // 垂直线2
                 type: _LINE_DIRECTION.VERTICAL,
                 line: {
                   start: i,
@@ -3284,8 +3452,8 @@ class LinkPlan {
                   parameter: eX,
                 },
               },
-              // 水平线
               line3: {
+                // 水平线
                 type: _LINE_DIRECTION.HORIZON,
                 line: {
                   start: sX,
@@ -3299,13 +3467,13 @@ class LinkPlan {
         }
       } else if (sY > eY) {
         // 后上
-        // -----------------    7，  ┌┘  ----------------------
+        // -----------------    7，S1 ┌┘  ----------------------
         for (let i = eY + 1; i < sY; i++) {
           searchPlan.push({
-            linkType: _LINK_TYPE.S1,
+            linkType: _LINK_TYPE.S1, // 7
             lines: {
-              // 垂直线1
               line1: {
+                // 垂直线1
                 type: _LINE_DIRECTION.VERTICAL,
                 line: {
                   start: i,
@@ -3314,8 +3482,8 @@ class LinkPlan {
                   parameter: sX,
                 },
               },
-              // 垂直线2
               line2: {
+                // 垂直线2
                 type: _LINE_DIRECTION.VERTICAL,
                 line: {
                   start: eY,
@@ -3324,8 +3492,8 @@ class LinkPlan {
                   parameter: eX,
                 },
               },
-              // 水平线
               line3: {
+                // 水平线
                 type: _LINE_DIRECTION.HORIZON,
                 line: {
                   start: sX,
@@ -3339,17 +3507,18 @@ class LinkPlan {
         }
       }
     } else if (sX > eX) {
-      // 后节点在前方              向前
+      // 后节点在前方  7，┌┘  8，└┐
+      // 向左拐
       direction = _DIRECTION.LEFT;
       if (sY < eY) {
         // 前下
-        // -----------------    7，  ┌┘  ----------------------
+        // -----------------    7，S1 ┌┘  ----------------------
         for (let i = sY + 1; i < eY; i++) {
           searchPlan.push({
-            linkType: _LINK_TYPE.S1,
+            linkType: _LINK_TYPE.S1, // 7
             lines: {
-              // 垂直线1
               line1: {
+                // 垂直线1
                 type: _LINE_DIRECTION.VERTICAL,
                 line: {
                   start: i,
@@ -3358,8 +3527,8 @@ class LinkPlan {
                   parameter: eX,
                 },
               },
-              // 垂直线2
               line2: {
+                // 垂直线2
                 type: _LINE_DIRECTION.VERTICAL,
                 line: {
                   start: sY,
@@ -3368,8 +3537,8 @@ class LinkPlan {
                   parameter: sX,
                 },
               },
-              // 水平线
               line3: {
+                // 水平线
                 type: _LINE_DIRECTION.HORIZON,
                 line: {
                   start: sX,
@@ -3383,13 +3552,13 @@ class LinkPlan {
         }
       } else if (sY > eY) {
         // 前上
-        // -----------------    8，  └┐  ----------------------
+        // -----------------    8，S2 └┐  ----------------------
         for (let i = eY + 1; i < sY; i++) {
           searchPlan.push({
-            linkType: _LINK_TYPE.S2,
+            linkType: _LINK_TYPE.S2, // 8
             lines: {
-              // 垂直线1
               line1: {
+                // 垂直线1
                 type: _LINE_DIRECTION.VERTICAL,
                 line: {
                   start: eY,
@@ -3398,8 +3567,8 @@ class LinkPlan {
                   parameter: eX,
                 },
               },
-              // 垂直线2
               line2: {
+                // 垂直线2
                 type: _LINE_DIRECTION.VERTICAL,
                 line: {
                   start: i,
@@ -3408,8 +3577,8 @@ class LinkPlan {
                   parameter: sX,
                 },
               },
-              // 水平线
               line3: {
+                // 水平线
                 type: _LINE_DIRECTION.HORIZON,
                 line: {
                   start: sX,
@@ -3423,10 +3592,10 @@ class LinkPlan {
         }
       }
     }
+    // console.log(searchPlan);
     if (searchPlan.length > 0) {
       links = this._findBlankS(searchPlan, taskInfo, direction, enablePassNode);
     }
-
     return links;
   }
   // 在两个坐标范围内找到可以┌┘连接的空白位置
@@ -3442,14 +3611,14 @@ class LinkPlan {
     let vLineData = [];
     let links = [];
     for (let i = 0; i < searchPlan.length; i++) {
-      let lines = searchPlan[i].lines;
       let linkType = searchPlan[i].linkType;
+      let lines = searchPlan[i].lines;
       // console.log(lines);
       hLineData = [];
       vLineData = [];
       // 垂直线1
       _line1 = lines.line1;
-      // ��直线2
+      // 垂直线2
       _line2 = lines.line2;
       // 水平线
       _line3 = lines.line3;
@@ -3459,17 +3628,17 @@ class LinkPlan {
       _result1 = this._resolve(_line1.line, _line1.type, enablePassNode);
       if (_result1.isOk) {
         // 如果垂直线1可以连接，则判断垂直线2
-        deduction = deduction + _result1.deduction;
+        deduction += _result1.deduction;
         // 垂直线2
         _result2 = this._resolve(_line2.line, _line2.type, enablePassNode);
         if (_result2.isOk) {
           // 如果垂直线2可以连接，则判断水平线
-          deduction = deduction + _result2.deduction;
+          deduction += _result2.deduction;
           // 水平线
           _result3 = this._resolve(_line3.line, _line3.type, false);
           if (_result3.isOk) {
             // 如果垂直线2可以连接，则判断水平线
-            deduction = deduction + _result3.deduction;
+            deduction += _result3.deduction;
             vLineData.push(_line1);
             vLineData.push(_line2);
             hLineData.push(_line3);
@@ -3496,39 +3665,41 @@ class LinkPlan {
   }
 
   // 创建U型链接
-  _createULink(startCode, endCode) {
+  _createULink(startCode, endCode, enablePassNode) {
     let startLocation = this.nodes[startCode];
     let endLocation = this.nodes[endCode];
+
     if (startLocation && endLocation) {
       let sX = startLocation.x;
       let eX = endLocation.x;
-
       let taskInfo = this.aoan.edgesMap[startCode + "-" + endCode];
       let rawTaskInfo = taskInfo.option;
       let label = "";
       let isCritical = taskInfo.isCritical;
       let isDummy = taskInfo.isDummy;
       if (!isDummy) {
-        // 实工作
+        // 非虚工作
         label = rawTaskInfo.text ? rawTaskInfo.text : "";
       }
-      let links = this._checkULink(startLocation, endLocation, taskInfo, false);
       let lineLen = Number(eX) - Number(sX);
-      let free = rawTaskInfo ? rawTaskInfo.free_float : 0;
       let duration = taskInfo.duration || 0;
-      let durationDay = Number(duration / 24).toFixed(4);
+      let free = rawTaskInfo
+        ? rawTaskInfo.free_float
+          ? rawTaskInfo.free_float
+          : 0
+        : 0;
 
-      // let free = Number(lineLen) - Number(duration);
-      // let free = (Number(lineLen) - Number(durationDay)).toFixed(4);
-      // let startTime = new Date(taskInfo.option.earliest_end_time).getTime();
-      // let endTime = new Date(taskInfo.option.latest_end_time).getTime();
-      // let days = (endTime - startTime) / (1000 * 24 * 3600);
-      // let free = Math.floor(days);
-
+      let links = this._checkULink(
+        startLocation,
+        endLocation,
+        taskInfo,
+        enablePassNode
+      );
       // 找到交叉点较少的结果
       if (links.length > 0) {
+        // console.log(links);
         if (links.length > 1) {
-          // console.log("linkslinkslinks", links);
+          // console.log("links", links);
           links = links.sort((a, b) => {
             return a.intersection.length - b.intersection.length;
           });
@@ -3561,9 +3732,11 @@ class LinkPlan {
         if (link.option.turnRank) {
           if (link.option.turnRank < this.option.rank.min) {
             this.option.rank.min = _link.turnRank;
-            this.rankIncrement = _link.turnRank * -1;
+            this.rankIncrement = _link.turnRank;
+            // this.rankIncrement = _link.turnRank * -1;
           }
           if (link.option.turnRank > this.option.rank.max) {
+            this.rankIncrement = link.option.turnRank - this.option.rank.max;
             this.option.rank.max = link.option.turnRank;
           }
         }
@@ -3675,11 +3848,9 @@ class LinkPlan {
     let hEnd = Number(horizon.end);
     let vStart = Number(vertical.start);
     let vEnd = Number(vertical.end);
-
     let _line1 = {};
     let _line2 = {};
     let _line3 = {};
-
     let hLineData = [];
     let vLineData = [];
     let lines = [];
@@ -3689,189 +3860,607 @@ class LinkPlan {
     let _result3 = null;
     let deduction = 0;
 
-    let isDummy = taskInfo.isDummy;
-    let isCritical = taskInfo.isCritical;
-    for (let i = min - 1; i <= max + 1; i++) {
-      // console.log(i, linkType, "vStart:", vStart, "vEnd:", vEnd, "hStart:", hStart, "hEnd:", hEnd);
-      if (i !== vStart && i !== vEnd) {
-        hLineData = [];
-        vLineData = [];
-        if (linkType === _LINK_TYPE.U1 && i < vStart && i < vEnd) {
+    // ------- 9  ┌┐  U1 -------
+    if (linkType === _LINK_TYPE.U1) {
+      hLineData = [];
+      vLineData = [];
+      let Y = vStart <= vEnd ? vStart : vEnd;
+      for (let i = Y - 1; i >= min; i--) {
+        _line1 = {
           // 垂直线1
-          _line1 = {
-            type: _LINE_DIRECTION.VERTICAL,
-            line: {
-              start: i,
-              end: vStart,
-              arrow: _DIRECTION.NONE,
-              parameter: hStart,
-            },
-          };
+          type: _LINE_DIRECTION.VERTICAL,
+          line: {
+            start: i,
+            end: vStart,
+            arrow: _DIRECTION.NONE,
+            parameter: hStart,
+          },
+        };
+        _line2 = {
           // 垂直线2
-          _line2 = {
-            type: _LINE_DIRECTION.VERTICAL,
-            line: {
-              start: i,
-              end: vEnd,
-              arrow: _DIRECTION.NONE,
-              parameter: hEnd,
-            },
-          };
+          type: _LINE_DIRECTION.VERTICAL,
+          line: {
+            start: i,
+            end: vEnd,
+            arrow: _DIRECTION.NONE,
+            parameter: hEnd,
+          },
+        };
+        _line3 = {
           // 水平线
-          _line3 = {
-            type: _LINE_DIRECTION.HORIZON,
-            line: {
-              start: hStart,
-              end: hEnd,
-              arrow: _DIRECTION.NONE,
-              parameter: i,
-            },
-          };
-          // 确定箭头
-          switch (linkType) {
-            case _LINK_TYPE.U1: // 9, ┌┐
-              switch (direction) {
-                case _DIRECTION.RIGHT:
-                  _line2.line.arrow = _DIRECTION.DOWN;
-                  break;
-                case _DIRECTION.LEFT:
-                  _line1.line.arrow = _DIRECTION.DOWN;
-                  break;
-              }
-              break;
-            case _LINK_TYPE.U2: // 10,└┘
-              switch (direction) {
-                case _DIRECTION.RIGHT:
-                  _line2.line.arrow = _DIRECTION.UP;
-                  break;
-                case _DIRECTION.LEFT:
-                  _line1.line.arrow = _DIRECTION.UP;
-                  break;
-              }
-              break;
-          }
-          // 生成方案
-          // 垂直线1
-          _result1 = this._resolve(_line1.line, _line1.type, enablePassNode);
-          // console.log("_result1", _result1);
-          if (_result1.isOk) {
-            // 如果垂直线1可以连接，则判断垂直线2
-            deduction = deduction + _result1.deduction;
-            // 垂直线2
-            _result2 = this._resolve(_line2.line, _line2.type, enablePassNode);
-            if (_result2.isOk) {
-              // 如果垂直线2可以连接，则判断水平线
-              deduction = deduction + _result2.deduction;
-              // 水平线
-              _result3 = this._resolve(_line3.line, _line3.type, false);
-              if (_result3.isOk) {
-                // 如果垂直线2可以连接，则判断水平线
-                vLineData.push(_line1);
-                vLineData.push(_line2);
-                hLineData.push(_line3);
-                deduction = deduction + _result3.deduction;
-                lines = this._createIrregularLines(
-                  hLineData,
-                  vLineData,
-                  taskInfo
-                );
-                if (lines.length > 0) {
-                  links.push({
-                    type: linkType,
-                    turnRank: i,
-                    y: { vStart: vStart, vEnd: vEnd },
-                    sort: Math.abs(vStart - i) + Math.abs(vEnd - i),
-                    direction: direction,
-                    deduction: deduction,
-                    lines: lines,
-                    passNodes: _result1.passNodes
-                      .concat(_result2.passNodes)
-                      .concat(_result3.passNodes),
-                    intersection: _result1.intersection
-                      .concat(_result2.intersection)
-                      .concat(_result3.intersection),
-                  });
-                }
+          type: _LINE_DIRECTION.HORIZON,
+          line: {
+            start: hStart,
+            end: hEnd,
+            arrow: _DIRECTION.NONE,
+            parameter: i,
+          },
+        };
+        // 确定箭头
+        switch (direction) {
+          case _DIRECTION.RIGHT:
+            _line2.line.arrow = _DIRECTION.DOWN;
+            break;
+          case _DIRECTION.LEFT:
+            _line1.line.arrow = _DIRECTION.DOWN;
+            break;
+        }
+        // 生成方案
+        // 垂直线1
+        _result1 = this._resolve(_line1.line, _line1.type, enablePassNode);
+        // console.log("_result1", _result1);
+        if (_result1.isOk) {
+          // 如果垂直线1可以连接，则判断垂直线2
+          deduction += _result1.deduction;
+          // 垂直线2
+          _result2 = this._resolve(_line2.line, _line2.type, enablePassNode);
+          if (_result2.isOk) {
+            // 如果垂直线2可以连接，则判断水平线
+            deduction += _result2.deduction;
+            // 水平线
+            _result3 = this._resolve(_line3.line, _line3.type, false);
+            if (_result3.isOk) {
+              // 如果水平线可以连接，则生成线段
+              vLineData.push(_line1);
+              vLineData.push(_line2);
+              hLineData.push(_line3);
+              deduction += _result3.deduction;
+              lines = this._createIrregularLines(
+                hLineData,
+                vLineData,
+                taskInfo
+              );
+              if (lines.length > 0) {
+                links.push({
+                  type: linkType,
+                  turnRank: i,
+                  y: { vStart: vStart, vEnd: vEnd },
+                  sort: Math.abs(vStart - i) + Math.abs(vEnd - i),
+                  direction: direction,
+                  deduction: deduction,
+                  lines: lines,
+                  passNodes: _result1.passNodes
+                    .concat(_result2.passNodes)
+                    .concat(_result3.passNodes),
+                  intersection: _result1.intersection
+                    .concat(_result2.intersection)
+                    .concat(_result3.intersection),
+                });
               }
             }
           }
-        } else if (linkType === _LINK_TYPE.U2 && i > vStart && i > vEnd) {
+        }
+      }
+    }
+    // ------- 10 └┘  U2 -------
+    else if (linkType === _LINK_TYPE.U2) {
+      hLineData = [];
+      vLineData = [];
+      let Y = vStart >= vEnd ? vStart : vEnd;
+      for (let i = Y + 1; i <= max + 1; i++) {
+        _line1 = {
           // 垂直线1
-          _line1 = {
-            type: _LINE_DIRECTION.VERTICAL,
-            line: {
-              start: vStart,
-              end: i,
-              arrow: _DIRECTION.NONE,
-              parameter: hStart,
-            },
-          };
+          type: _LINE_DIRECTION.VERTICAL,
+          line: {
+            start: vStart,
+            end: i,
+            arrow: _DIRECTION.NONE,
+            parameter: hStart,
+          },
+        };
+        _line2 = {
           // 垂直线2
-          _line2 = {
+          type: _LINE_DIRECTION.VERTICAL,
+          line: {
+            start: vEnd,
+            end: i,
+            arrow: _DIRECTION.NONE,
+            parameter: hEnd,
+          },
+        };
+        _line3 = {
+          // 水平线
+          type: _LINE_DIRECTION.HORIZON,
+          line: {
+            start: hStart,
+            end: hEnd,
+            arrow: _DIRECTION.NONE,
+            parameter: i,
+          },
+        };
+        // 确定箭头
+        switch (direction) {
+          case _DIRECTION.RIGHT:
+            _line2.line.arrow = _DIRECTION.UP;
+            break;
+          case _DIRECTION.LEFT:
+            _line1.line.arrow = _DIRECTION.UP;
+            break;
+        }
+        // 生成方案
+        // console.log(i, "1", _line1, "_2", _line2, "_3", _line3);
+        // 垂直线1
+        _result1 = this._resolve(_line1.line, _line1.type, enablePassNode);
+        // console.log("------------_result1", _result1);
+        if (_result1.isOk) {
+          // 如果垂直线1可以连接，则判断垂直线2
+          deduction += _result1.deduction;
+          // 垂直线2
+          _result2 = this._resolve(_line2.line, _line2.type, enablePassNode);
+          // console.log("------------_result2", _result2);
+          if (_result2.isOk) {
+            // 如果垂直线2可以连接，则判断水平线
+            deduction += _result2.deduction;
+            // 水平线
+            _result3 = this._resolve(_line3.line, _line3.type, false);
+            if (_result3.isOk) {
+              // 如果水平线可以连接，则生成线段
+              // console.log("------------_result3", _result3);
+              vLineData.push(_line1);
+              vLineData.push(_line2);
+              hLineData.push(_line3);
+              deduction += _result3.deduction;
+              lines = this._createIrregularLines(
+                hLineData,
+                vLineData,
+                taskInfo
+              );
+              if (lines.length > 0) {
+                links.push({
+                  type: linkType,
+                  turnRank: i,
+                  y: { vStart: vStart, vEnd: vEnd },
+                  sort: Math.abs(vStart - i) + Math.abs(vEnd - i),
+                  lines: lines,
+                  deduction: deduction,
+                  direction: direction,
+                  passNodes: _result1.passNodes
+                    .concat(_result2.passNodes)
+                    .concat(_result3.passNodes),
+                  intersection: _result1.intersection
+                    .concat(_result2.intersection)
+                    .concat(_result3.intersection),
+                });
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // for (let i = min - 1; i <= max + 1; i++) {
+    //   // console.log(i, linkType, "vStart:", vStart, "vEnd:", vEnd, "hStart:", hStart, "hEnd:", hEnd);
+    //   if (i !== vStart && i !== vEnd) {
+    //     hLineData = [];
+    //     vLineData = [];
+    //     if (linkType === _LINK_TYPE.U1 && i < vStart && i < vEnd) {
+    //       _line1 = {                     // 垂直线1
+    //         type: _LINE_DIRECTION.VERTICAL,
+    //         line: {
+    //           start: i,
+    //           end: vStart,
+    //           arrow: _DIRECTION.NONE,
+    //           parameter: hStart,
+    //         },
+    //       };
+    //       _line2 = {                     // 垂直线2
+    //         type: _LINE_DIRECTION.VERTICAL,
+    //         line: {
+    //           start: i,
+    //           end: vEnd,
+    //           arrow: _DIRECTION.NONE,
+    //           parameter: hEnd,
+    //         },
+    //       };
+    //       _line3 = {                     // 水平线
+    //         type: _LINE_DIRECTION.HORIZON,
+    //         line: {
+    //           start: hStart,
+    //           end: hEnd,
+    //           arrow: _DIRECTION.NONE,
+    //           parameter: i,
+    //         },
+    //       };
+    //       // 确定箭头
+    //       switch (linkType) {
+    //         case _LINK_TYPE.U1:          // 9, ┌┐
+    //           switch (direction) {
+    //             case _DIRECTION.RIGHT:
+    //               _line2.line.arrow = _DIRECTION.DOWN;
+    //               break;
+    //             case _DIRECTION.LEFT:
+    //               _line1.line.arrow = _DIRECTION.DOWN;
+    //               break;
+    //           }
+    //           break;
+    //         case _LINK_TYPE.U2:          // 10,└┘
+    //           switch (direction) {
+    //             case _DIRECTION.RIGHT:
+    //               _line2.line.arrow = _DIRECTION.UP;
+    //               break;
+    //             case _DIRECTION.LEFT:
+    //               _line1.line.arrow = _DIRECTION.UP;
+    //               break;
+    //           }
+    //           break;
+    //       }
+    //       // 生成方案
+    //       // 垂直线1
+    //       _result1 = this._resolve(_line1.line, _line1.type, enablePassNode);
+    //       // console.log("_result1", _result1);
+    //       if (_result1.isOk) {           // 如果垂直线1可以连接，则判断垂直线2
+    //         deduction += _result1.deduction;
+    //         // 垂直线2
+    //         _result2 = this._resolve(_line2.line, _line2.type, enablePassNode);
+    //         if (_result2.isOk) {         // 如果垂直线2可以连接，则判断水平线
+    //           deduction += _result2.deduction;
+    //           // 水平线
+    //           _result3 = this._resolve(_line3.line, _line3.type, false);
+    //           if (_result3.isOk) {       // 如果水平线可以连接，则生成线段
+    //             vLineData.push(_line1);
+    //             vLineData.push(_line2);
+    //             hLineData.push(_line3);
+    //             deduction += _result3.deduction;
+    //             lines = this._createIrregularLines(hLineData, vLineData, taskInfo);
+    //             if (lines.length > 0) {
+    //               links.push({
+    //                 type: linkType,
+    //                 turnRank: i,
+    //                 y: { vStart: vStart, vEnd: vEnd },
+    //                 sort: Math.abs(vStart - i) + Math.abs(vEnd - i),
+    //                 direction: direction,
+    //                 deduction: deduction,
+    //                 lines: lines,
+    //                 passNodes: _result1.passNodes.concat(_result2.passNodes).concat(_result3.passNodes),
+    //                 intersection: _result1.intersection.concat(_result2.intersection).concat(_result3.intersection),
+    //               });
+    //             }
+    //           }
+    //         }
+    //       }
+    //     } else if (linkType === _LINK_TYPE.U2 && i > vStart && i > vEnd) {
+    //       _line1 = {                     // 垂直线1
+    //         type: _LINE_DIRECTION.VERTICAL,
+    //         line: {
+    //           start: vStart,
+    //           end: i,
+    //           arrow: _DIRECTION.NONE,
+    //           parameter: hStart,
+    //         },
+    //       };
+    //       _line2 = {                     // 垂直线2
+    //         type: _LINE_DIRECTION.VERTICAL,
+    //         line: {
+    //           start: vEnd,
+    //           end: i,
+    //           arrow: _DIRECTION.NONE,
+    //           parameter: hEnd,
+    //         },
+    //       };
+    //       _line3 = {                     // 水平线
+    //         type: _LINE_DIRECTION.HORIZON,
+    //         line: {
+    //           start: hStart,
+    //           end: hEnd,
+    //           arrow: _DIRECTION.NONE,
+    //           parameter: i,
+    //         },
+    //       };
+    //       // 确定箭头
+    //       switch (linkType) {
+    //         case _LINK_TYPE.U1: // 9, ┌┐
+    //           switch (direction) {
+    //             case _DIRECTION.RIGHT:
+    //               _line2.line.arrow = _DIRECTION.DOWN;
+    //               break;
+    //             case _DIRECTION.LEFT:
+    //               _line1.line.arrow = _DIRECTION.DOWN;
+    //               break;
+    //           }
+    //           break;
+    //         case _LINK_TYPE.U2: // 10,└┘
+    //           switch (direction) {
+    //             case _DIRECTION.RIGHT:
+    //               _line2.line.arrow = _DIRECTION.UP;
+    //               break;
+    //             case _DIRECTION.LEFT:
+    //               _line1.line.arrow = _DIRECTION.UP;
+    //               break;
+    //           }
+    //           break;
+    //       }
+    //       // 生成方案
+    //       // console.log(i, "1", _line1, "_2", _line2, "_3", _line3);
+    //       // 垂直线1
+    //       _result1 = this._resolve(_line1.line, _line1.type, enablePassNode);
+    //       // console.log("------------_result1", _result1);
+    //       if (_result1.isOk) {           // 如果垂直线1可以连接，则判断垂直线2
+    //         deduction += _result1.deduction;
+    //         // 垂直线2
+    //         _result2 = this._resolve(_line2.line, _line2.type, enablePassNode);
+    //         // console.log("------------_result2", _result2);
+    //         if (_result2.isOk) {         // 如果垂直线2可以连接，则判断水平线
+    //           deduction += _result2.deduction;
+    //           // 水平线
+    //           _result3 = this._resolve(_line3.line, _line3.type, false);
+    //           if (_result3.isOk) {       // 如果水平线可以连接，则生成线段
+    //             // console.log("------------_result3", _result3);
+    //             vLineData.push(_line1);
+    //             vLineData.push(_line2);
+    //             hLineData.push(_line3);
+    //             deduction += _result3.deduction;
+    //             lines = this._createIrregularLines(hLineData, vLineData, taskInfo);
+    //             if (lines.length > 0) {
+    //               links.push({
+    //                 type: linkType,
+    //                 turnRank: i,
+    //                 y: { vStart: vStart, vEnd: vEnd },
+    //                 sort: Math.abs(vStart - i) + Math.abs(vEnd - i),
+    //                 lines: lines,
+    //                 deduction: deduction,
+    //                 direction: direction,
+    //                 passNodes: _result1.passNodes.concat(_result2.passNodes).concat(_result3.passNodes),
+    //                 intersection: _result1.intersection.concat(_result2.intersection).concat(_result3.intersection),
+    //               });
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
+    // console.log("-----links", links);
+    return links;
+  }
+
+  /**
+   * 我听过一个江湖潜规则，每一个大公司团队都会招一个特别不着调，水平也不行，智商也比较低的工程师，用来背低绩效。
+   * 当组里成员感到职业发展太难的时候，就会下意识看看那个人，这样，心里就会有莫大的安慰。
+   * 我当时下意识地看看周围的同事，发现他们都不符合这些描述。
+   * @param {Json} startLocation
+   * @param {Json} endLocation
+   * @param {Json} taskInfo
+   * @param {boolean} enablePassNode
+   */
+  // 创建S、U型合并连接
+  _createSULink(startCode, endCode, enablePassNode) {
+    let startLocation = this.nodes[startCode];
+    let endLocation = this.nodes[endCode];
+    let SData = [];
+    let UData = [];
+
+    if (startLocation && endLocation) {
+      let sX = startLocation.x;
+      let eX = endLocation.x;
+      let taskInfo = this.aoan.edgesMap[startCode + "-" + endCode];
+      let rawTaskInfo = taskInfo.option;
+      let label = "";
+      let isCritical = taskInfo.isCritical;
+      let isDummy = taskInfo.isDummy;
+      if (!isDummy) {
+        label = rawTaskInfo.text ? rawTaskInfo.text : "";
+      }
+      let lineLen = Number(eX) - Number(sX);
+      let duration = taskInfo.duration || 0;
+      let free = rawTaskInfo
+        ? rawTaskInfo.free_float
+          ? rawTaskInfo.free_float
+          : 0
+        : 0;
+      let links = [];
+      if (
+        taskInfo.link === null &&
+        startLocation.x !== endLocation.x &&
+        startLocation.y !== endLocation.y
+      ) {
+        links = this._checkSULink(
+          startLocation,
+          endLocation,
+          taskInfo,
+          enablePassNode
+        );
+
+        links.forEach((item) => {
+          if (item.turnRank) {
+            // U型
+            UData.push(item);
+          } else {
+            // S型
+            SData.push(item);
+          }
+        });
+        // S型
+        if (SData.length > 0) {
+          // 找到交叉点较少的结果
+          //   console.log("SData", SData);
+          if (SData.length > 1) {
+            SData = SData.sort((a, b) => {
+              return a.intersection.length - b.intersection.length;
+            });
+            // 如果交叉数相同，则找扣分较少的
+            if (SData[0].intersection.length === SData[1].intersection.length) {
+              let temp = SData[0].intersection.length;
+              for (let i = 0; i < SData.length; i++) {
+                if (temp !== SData[i].intersection.length) {
+                  SData.splice(i, 1);
+                }
+              }
+              SData = SData.sort((a, b) => {
+                return a.deduction - b.deduction;
+              });
+            }
+          }
+          let _link = SData[0];
+          let option = {
+            label: label,
+            critical: isCritical,
+            dummy: isDummy,
+            length: lineLen,
+            duration: duration,
+            direction: _link.direction,
+            free: free,
+          };
+          let link = new Link(option, _link.type, _link, startCode, endCode);
+          this.aoan.edgesMap[startCode + "-" + endCode].link = link;
+          this._registerLink(link);
+        }
+        // U型
+        if (UData.length > 0) {
+          //   console.log("UData", UData);
+          // 找到交叉点较少的结果
+          if (UData.length > 1) {
+            // console.log("links", links);
+            UData = UData.sort((a, b) => {
+              return a.intersection.length - b.intersection.length;
+            });
+            // 如果交叉数相同，则找扣分较少的
+            if (UData[0].intersection.length === UData[1].intersection.length) {
+              let temp = UData[0].intersection.length;
+              for (let i = 0; i < UData.length; i++) {
+                if (temp !== UData[i].intersection.length) {
+                  UData.splice(i, 1);
+                }
+              }
+              // console.log("links", links);
+              UData = UData.sort((a, b) => {
+                return a.sort - b.sort;
+              });
+            }
+          }
+          let _link = UData[0];
+          let option = {
+            label: label,
+            critical: isCritical,
+            dummy: isDummy,
+            length: lineLen,
+            duration: duration,
+            direction: _link.direction,
+            turnRank: _link.turnRank,
+            free: free,
+          };
+          let link = new Link(option, _link.type, _link, startCode, endCode);
+          if (link.option.turnRank) {
+            if (link.option.turnRank < this.option.rank.min) {
+              this.option.rank.min = _link.turnRank;
+              this.rankIncrement = _link.turnRank * -1;
+            }
+            if (link.option.turnRank > this.option.rank.max) {
+              this.option.rank.max = link.option.turnRank;
+            }
+          }
+          this.aoan.edgesMap[startCode + "-" + endCode].link = link;
+          this._registerLink(link);
+        }
+      }
+    }
+  }
+  // 检查S、U型合并 - 连线
+  _checkSULink(startLocation, endLocation, taskInfo, enablePassNode) {
+    let sX = startLocation.x;
+    let eX = endLocation.x;
+    let sY = startLocation.y;
+    let eY = endLocation.y;
+    let rank = this.option.rank;
+    let min = rank.min;
+    let max = rank.max;
+    let linkType = _LINK_TYPE.NONE;
+    let linkDirection = _DIRECTION.NONE;
+    let arrowDirection = _DIRECTION.NONE;
+    let _line1 = {};
+    let _line2 = {};
+    let _line3 = {};
+    let hLineData = [];
+    let vLineData = [];
+    let _result1 = null;
+    let _result2 = null;
+    let _result3 = null;
+    let deduction = 0;
+    let lines = [];
+    let links = [];
+
+    if (sX < eX) {
+      // start节点在前，end节点在后
+      linkDirection = _DIRECTION.RIGHT;
+      if (sY < eY) {
+        // start节点在上，end节点在下
+        for (let i = sY + 1; i < eY; i++) {
+          // 向下 S型 8，└┐
+          arrowDirection = _DIRECTION.DOWN;
+          linkType = _LINK_TYPE.S2;
+          _line1 = {
+            // 垂直线1
             type: _LINE_DIRECTION.VERTICAL,
             line: {
-              start: vEnd,
+              start: sY,
               end: i,
               arrow: _DIRECTION.NONE,
-              parameter: hEnd,
+              parameter: sX,
             },
           };
-          // 水平线
-          _line3 = {
+          _line2 = {
+            // 水平线
             type: _LINE_DIRECTION.HORIZON,
             line: {
-              start: hStart,
-              end: hEnd,
+              start: sX,
+              end: eX,
               arrow: _DIRECTION.NONE,
               parameter: i,
             },
           };
-          // 确定箭头
-          switch (linkType) {
-            case _LINK_TYPE.U1: // 9, ┌┐
-              switch (direction) {
-                case _DIRECTION.RIGHT:
-                  _line2.line.arrow = _DIRECTION.DOWN;
-                  break;
-                case _DIRECTION.LEFT:
-                  _line1.line.arrow = _DIRECTION.DOWN;
-                  break;
-              }
-              break;
-            case _LINK_TYPE.U2: // 10,└┘
-              switch (direction) {
-                case _DIRECTION.RIGHT:
-                  _line2.line.arrow = _DIRECTION.UP;
-                  break;
-                case _DIRECTION.LEFT:
-                  _line1.line.arrow = _DIRECTION.UP;
-                  break;
-              }
-              break;
-          }
+          _line3 = {
+            // 垂直线2
+            type: _LINE_DIRECTION.VERTICAL,
+            line: {
+              start: i,
+              end: eY,
+              arrow: arrowDirection,
+              parameter: eX,
+            },
+          };
           // 生成方案
-          // console.log(i, "1", _line1, "_2", _line2, "_3", _line3);
           // 垂直线1
           _result1 = this._resolve(_line1.line, _line1.type, enablePassNode);
-          // console.log("------------_result1", _result1);
           if (_result1.isOk) {
-            // 如果垂直线1可以连接，则判断垂直线2
-            deduction = deduction + _result1.deduction;
-            // 垂直线2
-            _result2 = this._resolve(_line2.line, _line2.type, enablePassNode);
-            // console.log("------------_result2", _result2);
+            // 如果垂直线1可以连接，则判断水平线
+            deduction += _result1.deduction;
+            // 水平线
+            _result2 = this._resolve(_line2.line, _line2.type, false);
             if (_result2.isOk) {
-              // 如果垂直线2可以连接，则判断水平线
-              deduction = deduction + _result2.deduction;
-              // 水平线
-              _result3 = this._resolve(_line3.line, _line3.type, false);
+              // 如果水平线可以连接，则判断垂直线2
+              deduction += _result2.deduction;
+              _result3 = this._resolve(
+                _line3.line,
+                _line3.type,
+                enablePassNode
+              );
               if (_result3.isOk) {
-                // 如果垂直线2可以连接，则判断水平线
-                // console.log("------------_result3", _result3);
+                // 如果垂直线2可以连接，则生成线段
+                deduction += _result3.deduction;
+                vLineData = [];
+                hLineData = [];
                 vLineData.push(_line1);
-                vLineData.push(_line2);
-                hLineData.push(_line3);
-                deduction = deduction + _result3.deduction;
+                hLineData.push(_line2);
+                vLineData.push(_line3);
                 lines = this._createIrregularLines(
                   hLineData,
                   vLineData,
@@ -3880,12 +4469,9 @@ class LinkPlan {
                 if (lines.length > 0) {
                   links.push({
                     type: linkType,
-                    turnRank: i,
-                    y: { vStart: vStart, vEnd: vEnd },
-                    sort: Math.abs(vStart - i) + Math.abs(vEnd - i),
                     lines: lines,
+                    direction: linkDirection,
                     deduction: deduction,
-                    direction: direction,
                     passNodes: _result1.passNodes
                       .concat(_result2.passNodes)
                       .concat(_result3.passNodes),
@@ -3898,10 +4484,940 @@ class LinkPlan {
             }
           }
         }
+        if (links.length == 0) {
+          for (let j = sY; j > min; j--) {
+            // 向下 U型 9, ┌┐
+            arrowDirection = _DIRECTION.DOWN;
+            linkType = _LINK_TYPE.U1;
+            _line1 = {
+              // 垂直线1
+              type: _LINE_DIRECTION.VERTICAL,
+              line: {
+                start: sY,
+                end: j,
+                arrow: _DIRECTION.NONE,
+                parameter: sX,
+              },
+            };
+            _line2 = {
+              // 水平线
+              type: _LINE_DIRECTION.HORIZON,
+              line: {
+                start: sX,
+                end: eX,
+                arrow: _DIRECTION.NONE,
+                parameter: j,
+              },
+            };
+            _line3 = {
+              // 垂直线2
+              type: _LINE_DIRECTION.VERTICAL,
+              line: {
+                start: j,
+                end: eY,
+                arrow: arrowDirection,
+                parameter: eX,
+              },
+            };
+            // 生成方案
+            // 垂直线1
+            _result1 = this._resolve(_line1.line, _line1.type, enablePassNode);
+            if (_result1.isOk) {
+              // 如果垂直线1可以连接，则判断水平线
+              deduction += _result1.deduction;
+              _result2 = this._resolve(_line2.line, _line2.type, false);
+              if (_result2.isOk) {
+                // 如果水平线可以连接，则判断垂直线2
+                deduction += _result2.deduction;
+                _result3 = this._resolve(
+                  _line3.line,
+                  _line3.type,
+                  enablePassNode
+                );
+                if (_result3.isOk) {
+                  // 如果垂直线2可以连接，生成线段
+                  deduction += _result3.deduction;
+                  vLineData = [];
+                  hLineData = [];
+                  vLineData.push(_line1);
+                  hLineData.push(_line2);
+                  vLineData.push(_line3);
+                  lines = this._createIrregularLines(
+                    hLineData,
+                    vLineData,
+                    taskInfo
+                  );
+                  if (lines.length > 0) {
+                    links.push({
+                      type: linkType,
+                      turnRank: j,
+                      y: { sY: sY, eY: eY },
+                      sort: Math.abs(sY - j) + Math.abs(eY - j),
+                      direction: linkDirection,
+                      deduction: deduction,
+                      lines: lines,
+                      passNodes: _result1.passNodes
+                        .concat(_result2.passNodes)
+                        .concat(_result3.passNodes),
+                      intersection: _result1.intersection
+                        .concat(_result2.intersection)
+                        .concat(_result3.intersection),
+                    });
+                  }
+                }
+              }
+            }
+          }
+          for (let k = eY + 1; k < max; k++) {
+            // 向上 U型 10,└┘
+            arrowDirection = _DIRECTION.UP;
+            linkType = _LINK_TYPE.U2;
+            _line1 = {
+              // 垂直线1
+              type: _LINE_DIRECTION.VERTICAL,
+              line: {
+                start: sY,
+                end: k,
+                arrow: _DIRECTION.NONE,
+                parameter: sX,
+              },
+            };
+            _line2 = {
+              // 水平线
+              type: _LINE_DIRECTION.HORIZON,
+              line: {
+                start: sX,
+                end: eX,
+                arrow: _DIRECTION.NONE,
+                parameter: k,
+              },
+            };
+            _line3 = {
+              // 垂直线2
+              type: _LINE_DIRECTION.VERTICAL,
+              line: {
+                start: k,
+                end: eY,
+                arrow: arrowDirection,
+                parameter: eX,
+              },
+            };
+            // 生成方案
+            // 垂直线1
+            _result1 = this._resolve(_line1.line, _line1.type, enablePassNode);
+            if (_result1.isOk) {
+              // 如果垂直线1可以连接，则判断水平线
+              deduction += _result1.deduction;
+              _result2 = this._resolve(_line2.line, _line2.type, false);
+              if (_result2.isOk) {
+                // 如果水平线可以连接，则判断垂直线2
+                deduction += _result2.deduction;
+                _result3 = this._resolve(
+                  _line3.line,
+                  _line3.type,
+                  enablePassNode
+                );
+                if (_result3.isOk) {
+                  // 如果垂直线2可以连接，生成线段
+                  deduction += _result3.deduction;
+                  vLineData = [];
+                  hLineData = [];
+                  vLineData.push(_line1);
+                  hLineData.push(_line2);
+                  vLineData.push(_line3);
+                  lines = this._createIrregularLines(
+                    hLineData,
+                    vLineData,
+                    taskInfo
+                  );
+                  if (lines.length > 0) {
+                    links.push({
+                      type: linkType,
+                      turnRank: k,
+                      y: { sY: sY, eY: eY },
+                      sort: Math.abs(sY - k) + Math.abs(eY - k),
+                      direction: linkDirection,
+                      deduction: deduction,
+                      lines: lines,
+                      passNodes: _result1.passNodes
+                        .concat(_result2.passNodes)
+                        .concat(_result3.passNodes),
+                      intersection: _result1.intersection
+                        .concat(_result2.intersection)
+                        .concat(_result3.intersection),
+                    });
+                  }
+                }
+              }
+            }
+          }
+        }
+      } else if (sY > eY) {
+        // start节点在下，end节点在上
+        for (let i = eY + 1; i < sY; i++) {
+          // 向上 S型 7，┌┘
+          arrowDirection = _DIRECTION.UP;
+          linkType = _LINK_TYPE.S1;
+          _line1 = {
+            // 垂直线1
+            type: _LINE_DIRECTION.VERTICAL,
+            line: {
+              start: sY,
+              end: i,
+              arrow: _DIRECTION.NONE,
+              parameter: sX,
+            },
+          };
+          _line2 = {
+            // 水平线
+            type: _LINE_DIRECTION.HORIZON,
+            line: {
+              start: sX,
+              end: eX,
+              arrow: _DIRECTION.NONE,
+              parameter: i,
+            },
+          };
+          _line3 = {
+            // 垂直线2
+            type: _LINE_DIRECTION.VERTICAL,
+            line: {
+              start: i,
+              end: eY,
+              arrow: arrowDirection,
+              parameter: eX,
+            },
+          };
+          // 生成方案
+          // 垂直线1
+          _result1 = this._resolve(_line1.line, _line1.type, enablePassNode);
+          if (_result1.isOk) {
+            // 如果垂直线1可以连接，则判断水平线
+            deduction += _result1.deduction;
+            // 水平线
+            _result2 = this._resolve(_line2.line, _line2.type, false);
+            if (_result2.isOk) {
+              // 如果水平线可以连接，则判断垂直线2
+              deduction += _result2.deduction;
+              _result3 = this._resolve(
+                _line3.line,
+                _line3.type,
+                enablePassNode
+              );
+              if (_result3.isOk) {
+                // 如果垂直线2可以连接，则生成线段
+                deduction += _result3.deduction;
+                vLineData = [];
+                hLineData = [];
+                vLineData.push(_line1);
+                hLineData.push(_line2);
+                vLineData.push(_line3);
+                lines = this._createIrregularLines(
+                  hLineData,
+                  vLineData,
+                  taskInfo
+                );
+                if (lines.length > 0) {
+                  links.push({
+                    type: linkType,
+                    lines: lines,
+                    direction: linkDirection,
+                    deduction: deduction,
+                    passNodes: _result1.passNodes
+                      .concat(_result2.passNodes)
+                      .concat(_result3.passNodes),
+                    intersection: _result1.intersection
+                      .concat(_result2.intersection)
+                      .concat(_result3.intersection),
+                  });
+                }
+              }
+            }
+          }
+        }
+        if (links.length == 0) {
+          for (let j = eY; j > min; j--) {
+            // 向下 U型 9, ┌┐
+            arrowDirection = _DIRECTION.DOWN;
+            linkType = _LINK_TYPE.U1;
+            _line1 = {
+              // 垂直线1
+              type: _LINE_DIRECTION.VERTICAL,
+              line: {
+                start: sY,
+                end: j,
+                arrow: _DIRECTION.NONE,
+                parameter: sX,
+              },
+            };
+            _line2 = {
+              // 水平线
+              type: _LINE_DIRECTION.HORIZON,
+              line: {
+                start: sX,
+                end: eX,
+                arrow: _DIRECTION.NONE,
+                parameter: j,
+              },
+            };
+            _line3 = {
+              // 垂直线2
+              type: _LINE_DIRECTION.VERTICAL,
+              line: {
+                start: j,
+                end: eY,
+                arrow: arrowDirection,
+                parameter: eX,
+              },
+            };
+            // 生成方案
+            // 垂直线1
+            _result1 = this._resolve(_line1.line, _line1.type, enablePassNode);
+            if (_result1.isOk) {
+              // 如果垂直线1可以连接，则判断水平线
+              deduction += _result1.deduction;
+              _result2 = this._resolve(_line2.line, _line2.type, false);
+              if (_result2.isOk) {
+                // 如果水平线可以连接，则判断垂直线2
+                deduction += _result2.deduction;
+                _result3 = this._resolve(
+                  _line3.line,
+                  _line3.type,
+                  enablePassNode
+                );
+                if (_result3.isOk) {
+                  // 如果垂直线2可以连接，生成线段
+                  deduction += _result3.deduction;
+                  vLineData = [];
+                  hLineData = [];
+                  vLineData.push(_line1);
+                  hLineData.push(_line2);
+                  vLineData.push(_line3);
+                  lines = this._createIrregularLines(
+                    hLineData,
+                    vLineData,
+                    taskInfo
+                  );
+                  if (lines.length > 0) {
+                    links.push({
+                      type: linkType,
+                      turnRank: j,
+                      y: { sY: sY, eY: eY },
+                      sort: Math.abs(sY - j) + Math.abs(eY - j),
+                      direction: linkDirection,
+                      deduction: deduction,
+                      lines: lines,
+                      passNodes: _result1.passNodes
+                        .concat(_result2.passNodes)
+                        .concat(_result3.passNodes),
+                      intersection: _result1.intersection
+                        .concat(_result2.intersection)
+                        .concat(_result3.intersection),
+                    });
+                  }
+                }
+              }
+            }
+          }
+          for (let k = sY + 1; k < max; k++) {
+            // 向上 U型 10,└┘
+            arrowDirection = _DIRECTION.UP;
+            linkType = _LINK_TYPE.U2;
+            _line1 = {
+              // 垂直线1
+              type: _LINE_DIRECTION.VERTICAL,
+              line: {
+                start: sY,
+                end: k,
+                arrow: _DIRECTION.NONE,
+                parameter: sX,
+              },
+            };
+            _line2 = {
+              // 水平线
+              type: _LINE_DIRECTION.HORIZON,
+              line: {
+                start: sX,
+                end: eX,
+                arrow: _DIRECTION.NONE,
+                parameter: k,
+              },
+            };
+            _line3 = {
+              // 垂直线2
+              type: _LINE_DIRECTION.VERTICAL,
+              line: {
+                start: k,
+                end: eY,
+                arrow: arrowDirection,
+                parameter: eX,
+              },
+            };
+            // 生成方案
+            // 垂直线1
+            _result1 = this._resolve(_line1.line, _line1.type, enablePassNode);
+            if (_result1.isOk) {
+              // 如果垂直线1可以连接，则判断水平线
+              deduction += _result1.deduction;
+              _result2 = this._resolve(_line2.line, _line2.type, false);
+              if (_result2.isOk) {
+                // 如果水平线可以连接，则判断垂直线2
+                deduction += _result2.deduction;
+                _result3 = this._resolve(
+                  _line3.line,
+                  _line3.type,
+                  enablePassNode
+                );
+                if (_result3.isOk) {
+                  // 如果垂直线2可以连接，生成线段
+                  deduction += _result3.deduction;
+                  vLineData = [];
+                  hLineData = [];
+                  vLineData.push(_line1);
+                  hLineData.push(_line2);
+                  vLineData.push(_line3);
+                  lines = this._createIrregularLines(
+                    hLineData,
+                    vLineData,
+                    taskInfo
+                  );
+                  if (lines.length > 0) {
+                    links.push({
+                      type: linkType,
+                      turnRank: k,
+                      y: { sY: sY, eY: eY },
+                      sort: Math.abs(sY - k) + Math.abs(eY - k),
+                      direction: linkDirection,
+                      deduction: deduction,
+                      lines: lines,
+                      passNodes: _result1.passNodes
+                        .concat(_result2.passNodes)
+                        .concat(_result3.passNodes),
+                      intersection: _result1.intersection
+                        .concat(_result2.intersection)
+                        .concat(_result3.intersection),
+                    });
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    } else if (sX > eX) {
+      // end节点在前，start节点在后
+      linkDirection = _DIRECTION.LEFT;
+      if (sY > eY) {
+        // end节点在上，start节点在下
+        for (let i = eY + 1; i < sY; i++) {
+          // 向上 S型 8，└┐
+          arrowDirection = _DIRECTION.UP;
+          linkType = _LINK_TYPE.S2;
+          _line1 = {
+            // 垂直线1
+            type: _LINE_DIRECTION.VERTICAL,
+            line: {
+              start: sY,
+              end: i,
+              arrow: _DIRECTION.NONE,
+              parameter: sX,
+            },
+          };
+          _line2 = {
+            // 水平线
+            type: _LINE_DIRECTION.HORIZON,
+            line: {
+              start: sX,
+              end: eX,
+              arrow: _DIRECTION.NONE,
+              parameter: i,
+            },
+          };
+          _line3 = {
+            // 垂直线2
+            type: _LINE_DIRECTION.VERTICAL,
+            line: {
+              start: i,
+              end: eY,
+              arrow: arrowDirection,
+              parameter: eX,
+            },
+          };
+          // 生成方案
+          // 垂直线1
+          _result1 = this._resolve(_line1.line, _line1.type, enablePassNode);
+          if (_result1.isOk) {
+            // 如果垂直线1可以连接，则判断水平线
+            deduction += _result1.deduction;
+            // 水平线
+            _result2 = this._resolve(_line2.line, _line2.type, false);
+            if (_result2.isOk) {
+              // 如果水平线可以连接，则判断垂直线2
+              deduction += _result2.deduction;
+              _result3 = this._resolve(
+                _line3.line,
+                _line3.type,
+                enablePassNode
+              );
+              if (_result3.isOk) {
+                // 如果垂直线2可以连接，则生成线段
+                deduction += _result3.deduction;
+                vLineData = [];
+                hLineData = [];
+                vLineData.push(_line1);
+                hLineData.push(_line2);
+                vLineData.push(_line3);
+                lines = this._createIrregularLines(
+                  hLineData,
+                  vLineData,
+                  taskInfo
+                );
+                if (lines.length > 0) {
+                  links.push({
+                    type: linkType,
+                    lines: lines,
+                    direction: linkDirection,
+                    deduction: deduction,
+                    passNodes: _result1.passNodes
+                      .concat(_result2.passNodes)
+                      .concat(_result3.passNodes),
+                    intersection: _result1.intersection
+                      .concat(_result2.intersection)
+                      .concat(_result3.intersection),
+                  });
+                }
+              }
+            }
+          }
+        }
+        if (links.length == 0) {
+          for (let j = eY; j > min; j--) {
+            // 向下 U型 9, ┌┐
+            arrowDirection = _DIRECTION.DOWN;
+            linkType = _LINK_TYPE.U1;
+            _line1 = {
+              // 垂直线1
+              type: _LINE_DIRECTION.VERTICAL,
+              line: {
+                start: sY,
+                end: j,
+                arrow: _DIRECTION.NONE,
+                parameter: sX,
+              },
+            };
+            _line2 = {
+              // 水平线
+              type: _LINE_DIRECTION.HORIZON,
+              line: {
+                start: sX,
+                end: eX,
+                arrow: _DIRECTION.NONE,
+                parameter: j,
+              },
+            };
+            _line3 = {
+              // 垂直线2
+              type: _LINE_DIRECTION.VERTICAL,
+              line: {
+                start: j,
+                end: eY,
+                arrow: arrowDirection,
+                parameter: eX,
+              },
+            };
+            // 生成方案
+            // 垂直线1
+            _result1 = this._resolve(_line1.line, _line1.type, enablePassNode);
+            if (_result1.isOk) {
+              // 如果垂直线1可以连接，则判断水平线
+              deduction += _result1.deduction;
+              _result2 = this._resolve(_line2.line, _line2.type, false);
+              if (_result2.isOk) {
+                // 如果水平线可以连接，则判断垂直线2
+                deduction += _result2.deduction;
+                _result3 = this._resolve(
+                  _line3.line,
+                  _line3.type,
+                  enablePassNode
+                );
+                if (_result3.isOk) {
+                  // 如果垂直线2可以连接，生成线段
+                  deduction += _result3.deduction;
+                  vLineData = [];
+                  hLineData = [];
+                  vLineData.push(_line1);
+                  hLineData.push(_line2);
+                  vLineData.push(_line3);
+                  lines = this._createIrregularLines(
+                    hLineData,
+                    vLineData,
+                    taskInfo
+                  );
+                  if (lines.length > 0) {
+                    links.push({
+                      type: linkType,
+                      turnRank: j,
+                      y: { sY: sY, eY: eY },
+                      sort: Math.abs(sY - j) + Math.abs(eY - j),
+                      direction: linkDirection,
+                      deduction: deduction,
+                      lines: lines,
+                      passNodes: _result1.passNodes
+                        .concat(_result2.passNodes)
+                        .concat(_result3.passNodes),
+                      intersection: _result1.intersection
+                        .concat(_result2.intersection)
+                        .concat(_result3.intersection),
+                    });
+                  }
+                }
+              }
+            }
+          }
+          for (let k = sY + 1; k < max; k++) {
+            // 向上 U型 10,└┘
+            arrowDirection = _DIRECTION.UP;
+            linkType = _LINK_TYPE.U2;
+            _line1 = {
+              // 垂直线1
+              type: _LINE_DIRECTION.VERTICAL,
+              line: {
+                start: sY,
+                end: k,
+                arrow: _DIRECTION.NONE,
+                parameter: sX,
+              },
+            };
+            _line2 = {
+              // 水平线
+              type: _LINE_DIRECTION.HORIZON,
+              line: {
+                start: sX,
+                end: eX,
+                arrow: _DIRECTION.NONE,
+                parameter: k,
+              },
+            };
+            _line3 = {
+              // 垂直线2
+              type: _LINE_DIRECTION.VERTICAL,
+              line: {
+                start: k,
+                end: eY,
+                arrow: arrowDirection,
+                parameter: eX,
+              },
+            };
+            // 生成方案
+            // 垂直线1
+            _result1 = this._resolve(_line1.line, _line1.type, enablePassNode);
+            if (_result1.isOk) {
+              // 如果垂直线1可以连接，则判断水平线
+              deduction += _result1.deduction;
+              _result2 = this._resolve(_line2.line, _line2.type, false);
+              if (_result2.isOk) {
+                // 如果水平线可以连接，则判断垂直线2
+                deduction += _result2.deduction;
+                _result3 = this._resolve(
+                  _line3.line,
+                  _line3.type,
+                  enablePassNode
+                );
+                if (_result3.isOk) {
+                  // 如果垂直线2可以连接，生成线段
+                  deduction += _result3.deduction;
+                  vLineData = [];
+                  hLineData = [];
+                  vLineData.push(_line1);
+                  hLineData.push(_line2);
+                  vLineData.push(_line3);
+                  lines = this._createIrregularLines(
+                    hLineData,
+                    vLineData,
+                    taskInfo
+                  );
+                  if (lines.length > 0) {
+                    links.push({
+                      type: linkType,
+                      turnRank: k,
+                      y: { sY: sY, eY: eY },
+                      sort: Math.abs(sY - k) + Math.abs(eY - k),
+                      direction: linkDirection,
+                      deduction: deduction,
+                      lines: lines,
+                      passNodes: _result1.passNodes
+                        .concat(_result2.passNodes)
+                        .concat(_result3.passNodes),
+                      intersection: _result1.intersection
+                        .concat(_result2.intersection)
+                        .concat(_result3.intersection),
+                    });
+                  }
+                }
+              }
+            }
+          }
+        }
+      } else if (sY < eY) {
+        // end节点在下，start节点在上
+        for (let i = sY + 1; i < eY; i++) {
+          // 向下 S型 7，┌┘
+          arrowDirection = _DIRECTION.DOWN;
+          linkType = _LINK_TYPE.S1;
+          _line1 = {
+            // 垂直线1
+            type: _LINE_DIRECTION.VERTICAL,
+            line: {
+              start: sY,
+              end: i,
+              arrow: _DIRECTION.NONE,
+              parameter: sX,
+            },
+          };
+          _line2 = {
+            // 水平线
+            type: _LINE_DIRECTION.HORIZON,
+            line: {
+              start: sX,
+              end: eX,
+              arrow: _DIRECTION.NONE,
+              parameter: i,
+            },
+          };
+          _line3 = {
+            // 垂直线2
+            type: _LINE_DIRECTION.VERTICAL,
+            line: {
+              start: i,
+              end: eY,
+              arrow: arrowDirection,
+              parameter: eX,
+            },
+          };
+          // 生成方案
+          // 垂直线1
+          _result1 = this._resolve(_line1.line, _line1.type, enablePassNode);
+          if (_result1.isOk) {
+            // 如果垂直线1可以连接，则判断水平线
+            deduction += _result1.deduction;
+            // 水平线
+            _result2 = this._resolve(_line2.line, _line2.type, false);
+            if (_result2.isOk) {
+              // 如果水平线可以连接，则判断垂直线2
+              deduction += _result2.deduction;
+              _result3 = this._resolve(
+                _line3.line,
+                _line3.type,
+                enablePassNode
+              );
+              if (_result3.isOk) {
+                // 如果垂直线2可以连接，则生成线段
+                deduction += _result3.deduction;
+                vLineData = [];
+                hLineData = [];
+                vLineData.push(_line1);
+                hLineData.push(_line2);
+                vLineData.push(_line3);
+                lines = this._createIrregularLines(
+                  hLineData,
+                  vLineData,
+                  taskInfo
+                );
+                if (lines.length > 0) {
+                  links.push({
+                    type: linkType,
+                    lines: lines,
+                    direction: linkDirection,
+                    deduction: deduction,
+                    passNodes: _result1.passNodes
+                      .concat(_result2.passNodes)
+                      .concat(_result3.passNodes),
+                    intersection: _result1.intersection
+                      .concat(_result2.intersection)
+                      .concat(_result3.intersection),
+                  });
+                }
+              }
+            }
+          }
+        }
+        if (links.length == 0) {
+          for (let j = sY; j > min; j--) {
+            // 向下 U型 9, ┌┐
+            arrowDirection = _DIRECTION.DOWN;
+            linkType = _LINK_TYPE.U1;
+            _line1 = {
+              // 垂直线1
+              type: _LINE_DIRECTION.VERTICAL,
+              line: {
+                start: sY,
+                end: j,
+                arrow: _DIRECTION.NONE,
+                parameter: sX,
+              },
+            };
+            _line2 = {
+              // 水平线
+              type: _LINE_DIRECTION.HORIZON,
+              line: {
+                start: sX,
+                end: eX,
+                arrow: _DIRECTION.NONE,
+                parameter: j,
+              },
+            };
+            _line3 = {
+              // 垂直线2
+              type: _LINE_DIRECTION.VERTICAL,
+              line: {
+                start: j,
+                end: eY,
+                arrow: arrowDirection,
+                parameter: eX,
+              },
+            };
+            // 生成方案
+            // 垂直线1
+            _result1 = this._resolve(_line1.line, _line1.type, enablePassNode);
+            if (_result1.isOk) {
+              // 如果垂直线1可以连接，则判断水平线
+              deduction += _result1.deduction;
+              _result2 = this._resolve(_line2.line, _line2.type, false);
+              if (_result2.isOk) {
+                // 如果水平线可以连接，则判断垂直线2
+                deduction += _result2.deduction;
+                _result3 = this._resolve(
+                  _line3.line,
+                  _line3.type,
+                  enablePassNode
+                );
+                if (_result3.isOk) {
+                  // 如果垂直线2可以连接，生成线段
+                  deduction += _result3.deduction;
+                  vLineData = [];
+                  hLineData = [];
+                  vLineData.push(_line1);
+                  hLineData.push(_line2);
+                  vLineData.push(_line3);
+                  lines = this._createIrregularLines(
+                    hLineData,
+                    vLineData,
+                    taskInfo
+                  );
+                  if (lines.length > 0) {
+                    links.push({
+                      type: linkType,
+                      turnRank: j,
+                      y: { sY: sY, eY: eY },
+                      sort: Math.abs(sY - j) + Math.abs(eY - j),
+                      direction: linkDirection,
+                      deduction: deduction,
+                      lines: lines,
+                      passNodes: _result1.passNodes
+                        .concat(_result2.passNodes)
+                        .concat(_result3.passNodes),
+                      intersection: _result1.intersection
+                        .concat(_result2.intersection)
+                        .concat(_result3.intersection),
+                    });
+                  }
+                }
+              }
+            }
+          }
+          for (let k = eY + 1; k < max; k++) {
+            // 向上 U型 10,└┘
+            arrowDirection = _DIRECTION.UP;
+            linkType = _LINK_TYPE.U2;
+            _line1 = {
+              // 垂直线1
+              type: _LINE_DIRECTION.VERTICAL,
+              line: {
+                start: sY,
+                end: k,
+                arrow: _DIRECTION.NONE,
+                parameter: sX,
+              },
+            };
+            _line2 = {
+              // 水平线
+              type: _LINE_DIRECTION.HORIZON,
+              line: {
+                start: sX,
+                end: eX,
+                arrow: _DIRECTION.NONE,
+                parameter: k,
+              },
+            };
+            _line3 = {
+              // 垂直线2
+              type: _LINE_DIRECTION.VERTICAL,
+              line: {
+                start: k,
+                end: eY,
+                arrow: arrowDirection,
+                parameter: eX,
+              },
+            };
+            // 生成方案
+            // 垂直线1
+            _result1 = this._resolve(_line1.line, _line1.type, enablePassNode);
+            if (_result1.isOk) {
+              // 如果垂直线1可以连接，则判断水平线
+              deduction += _result1.deduction;
+              _result2 = this._resolve(_line2.line, _line2.type, false);
+              if (_result2.isOk) {
+                // 如果水平线可以连接，则判断垂直线2
+                deduction += _result2.deduction;
+                _result3 = this._resolve(
+                  _line3.line,
+                  _line3.type,
+                  enablePassNode
+                );
+                if (_result3.isOk) {
+                  // 如果垂直线2可以连接，生成线段
+                  deduction += _result3.deduction;
+                  vLineData = [];
+                  hLineData = [];
+                  vLineData.push(_line1);
+                  hLineData.push(_line2);
+                  vLineData.push(_line3);
+                  lines = this._createIrregularLines(
+                    hLineData,
+                    vLineData,
+                    taskInfo
+                  );
+                  if (lines.length > 0) {
+                    links.push({
+                      type: linkType,
+                      turnRank: k,
+                      y: { sY: sY, eY: eY },
+                      sort: Math.abs(sY - k) + Math.abs(eY - k),
+                      direction: linkDirection,
+                      deduction: deduction,
+                      lines: lines,
+                      passNodes: _result1.passNodes
+                        .concat(_result2.passNodes)
+                        .concat(_result3.passNodes),
+                      intersection: _result1.intersection
+                        .concat(_result2.intersection)
+                        .concat(_result3.intersection),
+                    });
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
-    // console.log("-----links", links);
+
     return links;
+  }
+  // 再两个坐标范围内找到可以连接S、U型线段的空白位置
+  _findBlankSU() {
+    // S
+    // U
   }
 
   // 创建垂直连接
@@ -3913,11 +5429,10 @@ class LinkPlan {
       let eX = endLocation.x;
       let sY = startLocation.y;
       let eY = endLocation.y;
-
       let taskInfo = this.aoan.edgesMap[startCode + "-" + endCode];
       let taskType = taskInfo.taskType;
       let rawTaskInfo = taskInfo.option;
-      let type = 2;
+      let type = _LINK_TYPE.VERTICAL; // 垂直线 2
       let lines = [];
       let label = "";
       let isCritical = taskInfo.isCritical;
@@ -3925,140 +5440,70 @@ class LinkPlan {
       let direction = _DIRECTION.NONE;
       let lineLen = Number(eY) - Number(sY);
       let free = rawTaskInfo ? rawTaskInfo.free_float : 0; // 自由时差 - 小时
-      let freeDay = Number(free / 24).toFixed(4);
       let duration = taskInfo.duration || 0;
-      let durationDay = Number(duration / 24).toFixed(4);
+      let deduction = 0;
+      let intersections = [];
+      let passNodes = [];
 
       if (!isDummy) {
         // 实工作
         label = rawTaskInfo.text ? rawTaskInfo.text : "";
       }
-      let deduction = 0;
-      let intersections = [];
-      let passNodes = [];
 
       if (sX === eX) {
         // 相同时标
-        // 判断在同时标是否连续节点
-        let isContinuousNodesOnTime = this._isContinuousNodes(
-          startCode,
-          endCode,
-          _LINE_DIRECTION.VERTICAL,
-          sX
-        );
-        // console.log("isContinuousNodesOnTime", isContinuousNodesOnTime);
-        if (isContinuousNodesOnTime) {
-          let _result = null;
-          if (sY < eY) {
-            // 后节点在前节点的下方      向下        2，│↓
-            // 垂直线
-            type = _LINK_TYPE.VERTICAL;
-            direction = _DIRECTION.DOWN;
-            let _vertical = {
-              start: sY,
-              end: eY,
-              arrow: direction,
-              parameter: sX,
-            };
-            _result = this._resolve(_vertical, type, enablePassNode);
-            // console.log("_result", _result);
-            if (_result.isOk) {
-              // 垂直线也可以连接，则生成线段
-              lines = this._createVerticalLines(
-                sY,
-                eY,
-                sX,
-                direction,
-                taskInfo,
-                _result
-              );
-              deduction = deduction + _result.deduction;
-              intersections = _result.intersection;
-              passNodes = _result.passNodes;
-            }
-          } else if (sY > eY) {
-            // 后节点在前节点的上方      向上        2，│↑│
-            type = _LINK_TYPE.VERTICAL;
-            direction = _DIRECTION.UP;
-            let _vertical = {
-              start: eY,
-              end: sY,
-              arrow: direction,
-              parameter: sX,
-            };
-            _result = this._resolve(_vertical, type, enablePassNode);
-            // console.log("_result1", _result);
-            if (_result.isOk) {
-              // 垂直线也可以连接，则生成线段
-              lines = this._createVerticalLines(
-                eY,
-                sY,
-                sX,
-                direction,
-                taskInfo,
-                _result
-              );
-              deduction = deduction + _result.deduction;
-              intersections = _result.intersection;
-              passNodes = _result.passNodes;
-            }
+        let _result = null;
+        if (sY < eY) {
+          // 后节点在前节点的下方   向下   2，↓
+          direction = _DIRECTION.DOWN;
+          let _vertical = {
+            start: sY,
+            end: eY,
+            arrow: direction,
+            parameter: sX,
+          };
+          _result = this._resolve(_vertical, type, enablePassNode);
+          if (_result.isOk) {
+            // 垂直线也可以连接，则生成线段
+            deduction += _result.deduction; // 扣分项
+            intersections = _result.intersection; // 交点坐标
+            passNodes = _result.passNodes; // 穿过的节点坐标
+            lines = this._createVerticalLines(
+              sY,
+              eY,
+              sX,
+              direction,
+              taskInfo,
+              _result
+            );
+          }
+        } else if (sY > eY) {
+          // 后节点在前节点的上方   向上   2，↑
+          direction = _DIRECTION.UP;
+          let _vertical = {
+            start: eY,
+            end: sY,
+            arrow: direction,
+            parameter: sX,
+          };
+          _result = this._resolve(_vertical, type, enablePassNode);
+          if (_result.isOk) {
+            // 垂直线也可以连接，则生成线段
+            deduction += _result.deduction;
+            intersections = _result.intersection;
+            passNodes = _result.passNodes;
+            lines = this._createVerticalLines(
+              eY,
+              sY,
+              sX,
+              direction,
+              taskInfo,
+              _result
+            );
           }
         } else {
-          let _result = null;
-          if (sY < eY) {
-            // 后节点在前节点的下方      向下        2，│
-            // 垂直线
-            type = _LINK_TYPE.VERTICAL;
-            direction = _DIRECTION.DOWN;
-            let _vertical = {
-              start: sY,
-              end: eY,
-              arrow: direction,
-              parameter: sX,
-            };
-            _result = this._resolve(_vertical, type, enablePassNode);
-            // console.log("_result", _result);
-            if (_result.isOk) {
-              // 垂直线也可以连接，则生成线段
-              lines = this._createVerticalLines(
-                sY,
-                eY,
-                sX,
-                direction,
-                taskInfo,
-                _result
-              );
-              deduction = deduction + _result.deduction;
-              intersections = _result.intersection;
-              passNodes = _result.passNodes;
-            }
-          } else if (sY > eY) {
-            // 后节点在前节点的上方      向上        2，│
-            type = _LINK_TYPE.VERTICAL;
-            direction = _DIRECTION.UP;
-            let _vertical = {
-              start: eY,
-              end: sY,
-              arrow: direction,
-              parameter: sX,
-            };
-            _result = this._resolve(_vertical, type, enablePassNode);
-            // console.log("_result1", _result);
-            if (_result.isOk) {
-              // 垂直线也可以连接，则生成线段
-              lines = this._createVerticalLines(
-                eY,
-                sY,
-                sX,
-                direction,
-                taskInfo,
-                _result
-              );
-              deduction = deduction + _result.deduction;
-              intersections = _result.intersection;
-              passNodes = _result.passNodes;
-            }
-          }
+          // 不该发生节点重合
+          console.log("ERROR:", startCode, endCode, " 两节点重合!!!");
         }
       }
 
@@ -4069,10 +5514,8 @@ class LinkPlan {
           dummy: isDummy,
           length: lineLen,
           duration: duration,
-          durationDay: durationDay,
           direction: direction,
           free: free,
-          freeDay: freeDay,
         };
 
         let link = new Link(option, type, { lines: lines }, startCode, endCode);
@@ -4087,17 +5530,17 @@ class LinkPlan {
   }
   // 创建垂直线段
   _createVerticalLines(sY, eY, x, arrow, taskInfo, vDate) {
-    let lines = [];
-    let label = "";
-    let taskType = taskInfo.taskType;
-    let rawTaskInfo = taskInfo.option;
+    // 判断虚工作
     let isDummy = taskInfo.isDummy;
-    let lineShape = _LINE_SHAPE.WAVE;
-
+    let label = "";
+    let rawTaskInfo = taskInfo.option;
     if (!isDummy) {
-      // 实工作
+      // 非虚工作
       label = rawTaskInfo.text ? rawTaskInfo.text : "";
     }
+    // 判断线型：实线 - 虚线 - 波浪线
+    let taskType = taskInfo.taskType;
+    let lineShape = null;
     switch (taskType) {
       case 1: // 1 - 实工作 - 实线
         lineShape = _LINE_SHAPE.SOLID;
@@ -4122,6 +5565,7 @@ class LinkPlan {
         lineShape = _LINE_SHAPE.WAVE;
     }
 
+    let lines = [];
     lines.push({
       arrow: arrow,
       shape: lineShape,
@@ -4191,128 +5635,115 @@ class LinkPlan {
       let label = "";
       let isCritical = taskInfo.isCritical;
       let isDummy = taskInfo.isDummy;
-      if (!isDummy) {
-        // 实工作
-        label = rawTaskInfo.text ? rawTaskInfo.text : "";
-      }
-      let lineLen = Number(eX) - Number(sX);
       let free = rawTaskInfo ? rawTaskInfo.free_float : 0;
       let duration = taskInfo.duration || 0;
-      let durationDay = Number(duration / 24).toFixed(4);
 
-      // let free = (Number(lineLen) - Number(durationDay)).toFixed(4);
-      // let startTime = new Date(taskInfo.option.earliest_end_time).getTime();
-      // let endTime = new Date(taskInfo.option.latest_end_time).getTime();
-      // let days = (endTime - startTime) / (1000 * 24 * 3600);
-      // let free = Math.floor(days);
-
-      if (sX === eX) {
-        // 垂直穿点连线
-        this._createVerticalLink(startCode, endCode, true);
-      } else {
-        // 不垂直，则找其他连接方式
-        // U
-        let links = [];
-        links = links.concat(
-          this._checkULink(startLocation, endLocation, taskInfo, enablePassNode)
-        );
-        // L
-        if (sX !== eX && sY !== eY) {
-          // 后节点在后方              向后
-          links = links.concat(
-            this._checkLLink(
-              startLocation,
-              endLocation,
-              taskInfo,
-              true,
-              enablePassNode
-            )
-          );
-        }
-        // S
-        if (
-          startLocation.x !== endLocation.x &&
-          startLocation.y !== endLocation.y
-        ) {
-          links = links.concat(
-            this._checkSLink(
-              startLocation,
-              endLocation,
-              taskInfo,
-              enablePassNode
-            )
-          );
-        }
-        // 按照穿点较少，交叉较少，线型数值较小，等分较高的优先级，找到合适的连接
-        if (links.length > 0) {
-          if (links.length > 1) {
-            // 优先找到穿点较少的方案
-            links = links.sort((a, b) => {
-              return a.passNodes.length - b.passNodes.length;
-            });
-            // 如果穿点相同
-            if (links[0].passNodes.length === links[1].passNodes.length) {
-              let temp = links[0].passNodes.length;
-              for (let i = 0; i < links.length; i++) {
-                if (temp !== links[i].passNodes.length) {
-                  links.splice(i, 1);
-                }
-              }
-              // 如果穿点相同，则找交叉较少的方案
-              if (links.length > 1) {
-                links = links.sort((a, b) => {
-                  return a.intersection.length - b.intersection.length;
-                });
-                // 如果交叉相同
-                if (
-                  links[0].intersection.length === links[1].intersection.length
-                ) {
-                  let temp = links[0].intersection.length;
-                  for (let i = 0; i < links.length; i++) {
-                    if (temp !== links[i].intersection.length) {
-                      links.splice(i, 1);
-                    }
-                  }
-                  // 如果交叉相同，则找线型较小的方案
-                  if (links.length > 1) {
-                    links = links.sort((a, b) => {
-                      return a.type - b.type;
-                    });
-                    // 如果线型相同，则找扣分较少的方案
-                    if (links[0].type === links[1].type) {
-                      let temp = links[0].type;
-                      for (let i = 0; i < links.length; i++) {
-                        if (temp !== links[i].type) {
-                          links.splice(i, 1);
-                        }
-                      }
-                      if (links.length > 1) {
-                        links = links.sort((a, b) => {
-                          return a.deduction - b.deduction;
-                        });
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-
-          let _link = links[0];
-          let option = {
-            label: label,
-            critical: isCritical,
-            dummy: isDummy,
-            length: lineLen,
-            duration: duration,
-            direction: _link.direction,
-            free: free,
-          };
-          let link = new Link(option, _link.type, _link, startCode, endCode);
-          this.aoan.edgesMap[startCode + "-" + endCode].link = link;
-          this._registerLink(link, true);
-        }
+      if (!isDummy) {
+        // 非虚工作
+        label = rawTaskInfo.text ? rawTaskInfo.text : "";
       }
+
+      // if (sX === eX) {                   // 垂直穿点连线
+      //   this._createVerticalLink(startCode, endCode, enablePassNode);
+      // } else {                           // 不垂直，则找其他连接方式
+      //   let links = [];
+      //   // L
+      //   if (sX !== eX && sY !== eY) {
+      //     links = links.concat(
+      //       this._checkLLink(startLocation, endLocation, taskInfo, enablePassNode)
+      //     );
+      //   }
+      //   // S
+      //   if (startLocation.x !== endLocation.x && startLocation.y !== endLocation.y) {
+      //     links = links.concat(
+      //       this._checkSLink(startLocation, endLocation, taskInfo, enablePassNode)
+      //     );
+      //   }
+      //   // U
+      //   links = links.concat(
+      //     this._checkULink(startLocation, endLocation, taskInfo, enablePassNode)
+      //   );
+      //   // SU
+      //   // if (startLocation.x !== endLocation.x && startLocation.y !== endLocation.y) {
+      //   //   links = links.concat(
+      //   //     this._checkSLink(startLocation, endLocation, taskInfo, enablePassNode)
+      //   //   );
+      //   // }
+      //   // 按照穿点较少，交叉较少，线型数值较小，等分较高的优先级，找到合适的连接
+      //   if (links.length > 0) {
+      //     if (links.length > 1) {
+      //       // 优先找到穿点较少的方案
+      //       links = links.sort((a, b) => {
+      //         return a.passNodes.length - b.passNodes.length;
+      //       });
+      //       // 如果穿点相同
+      //       if (links[0].passNodes.length === links[1].passNodes.length) {
+      //         let temp = links[0].passNodes.length;
+      //         for (let i = 0; i < links.length; i++) {
+      //           if (temp !== links[i].passNodes.length) {
+      //             links.splice(i, 1);
+      //           }
+      //         }
+      //         // 如果穿点相同，则找交叉较少的方案
+      //         if (links.length > 1) {
+      //           links = links.sort((a, b) => {
+      //             return a.intersection.length - b.intersection.length;
+      //           });
+      //           // 如果交叉相同
+      //           if (
+      //             links[0].intersection.length === links[1].intersection.length
+      //           ) {
+      //             let temp = links[0].intersection.length;
+      //             for (let i = 0; i < links.length; i++) {
+      //               if (temp !== links[i].intersection.length) {
+      //                 links.splice(i, 1);
+      //               }
+      //             }
+      //             // 如果交叉相同，则找线型较小的方案
+      //             if (links.length > 1) {
+      //               links = links.sort((a, b) => {
+      //                 return a.type - b.type;
+      //               });
+      //               // 如果线型相同，则找扣分较少的方案
+      //               if (links[0].type === links[1].type) {
+      //                 let temp = links[0].type;
+      //                 for (let i = 0; i < links.length; i++) {
+      //                   if (temp !== links[i].type) {
+      //                     links.splice(i, 1);
+      //                   }
+      //                 }
+      //                 if (links.length > 1) {
+      //                   links = links.sort((a, b) => {
+      //                     return a.deduction - b.deduction;
+      //                   });
+      //                 }
+      //               }
+      //             }
+      //           }
+      //         }
+      //       }
+      //     }
+
+      //     let _link = links[0];
+      //     let option = {
+      //       label: label,
+      //       critical: isCritical,
+      //       dummy: isDummy,
+      //       length: lineLen,
+      //       duration: duration,
+      //       direction: _link.direction,
+      //       free: free,
+      //     };
+      //     let link = new Link(option, _link.type, _link, startCode, endCode);
+      //     this.aoan.edgesMap[startCode + "-" + endCode].link = link;
+      //     this._registerLink(link);
+      //   }
+      // }
+
+      this._createVerticalLink(startCode, endCode, enablePassNode);
+      this._createLLink(startCode, endCode, enablePassNode);
+      this._createSLink(startCode, endCode, enablePassNode);
+      this._createULink(startCode, endCode, enablePassNode);
     } else {
       console.log("ERROR:合适的连线缺少节点");
     }
@@ -4322,20 +5753,22 @@ class LinkPlan {
   _resolve(line, type, enablePassNode) {
     let scanResult = this._scanLinkedLine(line, type);
     // console.log(scanResult);
-    let isOk = true;
-    let passNodes = scanResult.passNodes;
-    let intersection = scanResult.intersection;
-    let deduction = intersection.length * 5;
+    let isOk = true; // 默认可以连接
+    let passNodes = scanResult.passNodes; // 穿点
+    let intersection = scanResult.intersection; // 交点
+    let deduction = intersection.length * 5; // 得分
     let result = {
       isOk: isOk,
       deduction: deduction,
     };
     if (!enablePassNode && passNodes.length > 0) {
+      // 禁止有穿点
       result.isOk = false;
       return result;
     }
     let coincide = scanResult.coincide;
     if (coincide.length > 0) {
+      // 有重合
       for (let i = 0; i < coincide.length; i++) {
         let level = coincide[i].level;
         let direction = coincide[i].direction;
@@ -4359,8 +5792,293 @@ class LinkPlan {
     return result;
   }
 
+  /**
+   * 扫描线段获取一条线段，与已经连接过的线段相交和重合情况
+   * @param {Json} line               线段数据
+   * @param {Number} type             类型  1,水平线  2,垂直线
+   * @param {Boolean} parallel        是否有允许并行（垂直线）
+   * @param {Boolean} target          穿点判断是否包含目标节点
+   * @param {Boolean} source          穿点判断是否包含起始节点
+   * @param {Boolean} enablePassNode  是否允许穿点
+   * @author 杨勇
+   */
+  // 扫描线段获取一条线段，与已经连接过的线段相交和重合情况
+  _scanLinkedLine(line, type) {
+    let coincide = []; // 记录路径重合的地方
+    let intersection = []; // 记录交叉点
+    let start = Number(line.start);
+    let end = Number(line.end);
+    let parameter = Number(line.parameter);
+    let hasNode = this._hasNode(start, end, type, parameter);
+
+    if (type === _LINE_DIRECTION.VERTICAL) {
+      // 要判断的是垂直线
+      for (let i = 0; i < this.horizonLines.length; i++) {
+        // 当前线是水平线
+        let _line = this.horizonLines[i];
+        let critical = _line.critical;
+        let dummy = _line.dummy;
+        let arrow = _line.arrow;
+        let startLocation = _line.start;
+        let endLocation = _line.end;
+        let sX = Number(startLocation.x);
+        let eX = Number(endLocation.x);
+        let sY = Number(startLocation.y);
+
+        // 判断相交
+        // console.log(parameter, sX, eX, sY, start, end);
+        if (parameter > sX && parameter < eX && sY > start && sY < end) {
+          intersection.push({
+            direction: _DIRECTION.UP,
+            critical: critical,
+            dummy: dummy,
+            arrow: arrow,
+            line: _line,
+            location: {
+              x: parameter,
+              y: sY,
+            },
+          });
+        }
+      }
+      for (let i = 0; i < this.verticalLines.length; i++) {
+        // 当前线是垂直线
+        let _line = this.verticalLines[i];
+        let direction = _line.direction;
+        let critical = _line.critical;
+        let dummy = _line.dummy;
+        let arrow = _line.arrow;
+        let startLocation = _line.start;
+        let endLocation = _line.end;
+        let sX = Number(startLocation.x);
+        let sY = Number(startLocation.y);
+        let eY = Number(endLocation.y);
+
+        // 默认不重合
+        let isCoincide = false;
+        // 判断重合
+        if (parameter === sX) {
+          // X相同才可能重合
+          isCoincide = this._isCoincide(start, end, sY, eY);
+          if (isCoincide) {
+            coincide.push({
+              level: 1,
+              critical: critical,
+              dummy: dummy,
+              arrow: arrow,
+              direction: direction,
+              id: _line.id,
+              line: _line,
+            });
+          }
+        }
+      }
+    } else if (type === _LINE_DIRECTION.HORIZON) {
+      // 要判断的是水平线
+      for (let i = 0; i < this.horizonLines.length; i++) {
+        // 当前线是水平线
+        let _line = this.horizonLines[i];
+        let direction = _line.direction;
+        let critical = _line.critical;
+        let dummy = _line.dummy;
+        let arrow = _line.arrow;
+        let startLocation = _line.start;
+        let endLocation = _line.end;
+        let sX = Number(startLocation.x);
+        let eX = Number(endLocation.x);
+        let sY = Number(startLocation.y);
+
+        // 默认不重合
+        let isCoincide = false;
+        // 判断重合
+        if (parameter === sY) {
+          // Y相同才可能重合
+          isCoincide = this._isCoincide(start, end, sX, eX);
+          if (isCoincide) {
+            coincide.push({
+              level: -1,
+              critical: critical,
+              dummy: dummy,
+              arrow: arrow,
+              direction: direction,
+              id: _line.id,
+              line: _line,
+            });
+          }
+        }
+      }
+      for (let i = 0; i < this.verticalLines.length; i++) {
+        // 当前线是垂直线
+        let _line = this.verticalLines[i];
+        let critical = _line.critical;
+        let dummy = _line.dummy;
+        let arrow = _line.arrow;
+        let startLocation = _line.start;
+        let endLocation = _line.end;
+        let sX = Number(startLocation.x);
+        let sY = Number(startLocation.y);
+        let eY = Number(endLocation.y);
+
+        // 判断相交
+        if (parameter > sY && parameter < eY && sX > start && sX < end) {
+          intersection.push({
+            direction: _DIRECTION.LEFT,
+            critical: critical,
+            dummy: dummy,
+            arrow: arrow,
+            line: _line,
+            location: {
+              x: sX,
+              y: parameter,
+            },
+          });
+        }
+      }
+    }
+    // console.log("---coincide", coincide);
+    // console.log("---intersection", intersection);
+    return {
+      enable: true,
+      coincide: coincide,
+      passNodes: hasNode.nodes,
+      intersection: intersection,
+    };
+  }
+  // 判断两个坐标之间是否有节点(重写，防止在拐弯处穿点，根据箭头判断)
+  _hasNode(start, end, type, parameter, arrow = _DIRECTION.NONE) {
+    let nodes = [];
+    let result = {
+      hasNode: false,
+      nodes: [],
+    };
+    if (type === _LINE_DIRECTION.HORIZON) {
+      // 要判断的是水平线
+      nodes = this.pretreatmentNodesTable.yList[parameter];
+    } else if (type === _LINE_DIRECTION.VERTICAL) {
+      // 要判断的是垂直线
+      nodes = this.pretreatmentNodesTable.xList[parameter];
+    }
+
+    let temp = 0;
+    if (nodes) {
+      if (nodes.length > 0) {
+        for (let i = 0; i < nodes.length; i++) {
+          let node = nodes[i];
+          if (type === 1) {
+            // 要判断的是水平线
+            temp = node.x;
+          } else if (type === 2) {
+            // 要判断的是垂直线
+            temp = node.y;
+          }
+          if (temp > start && temp < end) {
+            result.hasNode = true;
+            result.nodes.push(node);
+          }
+        }
+      }
+    }
+    return result;
+  }
+
+  /**
+   * 判断两个坐标之间是否有节点
+   * @param {Number} start         开始节点
+   * @param {String} end           结束节点
+   * @param {Number} type          类型  1,层  2,时标
+   * @param {Number} parameter     当type=1时传入要判断的层，当type=2时传入要判断的列
+   * @author 杨勇
+   */
+  // 判断两个坐标之间是否有节点
+  // _hasNode(start, end, type, parameter) {
+  //   let nodes = [];
+  //   let result = {
+  //     hasNode: false,
+  //     nodes: [],
+  //   };
+  //   if (type === _LINE_DIRECTION.HORIZON) {
+  //     // 要判断的是水平线
+  //     nodes = this.pretreatmentNodesTable.yList[parameter];
+  //   } else if (type === _LINE_DIRECTION.VERTICAL) {
+  //     // 要判断的是垂直线
+  //     nodes = this.pretreatmentNodesTable.xList[parameter];
+  //   }
+  //   let temp = 0;
+
+  //   if (nodes) {
+  //     if (nodes.length > 0) {
+  //       for (let i = 0; i < nodes.length; i++) {
+  //         let node = nodes[i];
+  //         if (type === 1) {              // 要判断的是水平线
+  //           temp = node.x;
+  //           if (temp > start && temp < end) {
+  //             result.hasNode = true;
+  //             result.nodes.push(node);
+  //           }
+  //         } else if (type === 2) {       // 要判断的是垂直线
+  //           temp = node.y;
+  //           if (temp >= start && temp <= end) {
+  //             result.hasNode = true;
+  //             result.nodes.push(node);
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return result;
+  // }
+
+  /**
+   * 获取指定层上，指定时标到时标之间的节点
+   * @param {*} start
+   * @param {*} end
+   * @param {*} chkStart
+   * @param {*} chkEnd
+   */
+  // 获取指定层上，指定时标到时标之间的节点
+  _isCoincide(start, end, chkStart, chkEnd) {
+    if (end <= chkStart || start >= chkEnd) return false;
+    return true;
+  }
+
+  /**
+   * 判断两点是否连续节点
+   * @param {String} startCode     开始节点
+   * @param {String} endCode       结束节点
+   * @param {Number} type          判断类型  1,判断同层  2,判断  同时标
+   * @param {Number} parameter     当type=1时传入要判断的层，当type=1时传入要判断的列
+   * @date 2020-07-02              层和时标的两个判断方法有bug，这里合并且重写之
+   * @author 杨勇
+   */
+  // 判断两点是否连续节点
+  _isContinuousNodes(startCode, endCode, type, parameter) {
+    let nodes = [];
+    if (type === _LINE_DIRECTION.HORIZON) {
+      // 判断水平方向
+      nodes = this.pretreatmentNodesTable.yList[parameter];
+    } else if (type === _LINE_DIRECTION.VERTICAL) {
+      // 判断垂直方向
+      nodes = this.pretreatmentNodesTable.xList[parameter];
+    }
+    // console.log(nodes);
+    if (nodes.length > 1) {
+      for (let i = 0; i < nodes.length; i++) {
+        let node = nodes[i].node;
+        if (node === startCode) {
+          if (nodes[i + 1]) {
+            if (nodes[i + 1].node === endCode) {
+              return true;
+            }
+          }
+        }
+      }
+    }
+    return false;
+  }
+
   // 将已经连接过的线段注册到记录中
   _registerLink(link) {
+    // console.log(link);
     let lines = link.getLines();
     let critical = link.option.critical;
     let dummy = link.option.dummy;
@@ -4618,88 +6336,99 @@ class LinkPlan {
       }
     }
   }
-
   /**
-   * 判断两点是否连续节点
-   * @param {String} startCode     开始节点
-   * @param {String} endCode       结束节点
-   * @param {Number} type          判断类型  1,判断同层  2,判断  同时标
-   * @param {Number} parameter     当type=1时传入要判断的层，当type=1时传入要判断的列
-   * @date 2020-07-02              层和时标的两个判断方法有bug，这里合并且重写之
-   * @author 杨勇
+   * 注册连接节点的接触点
+   * @param {*} nodeCode
+   * @param {*} data
+   * @param {*} ContactPoint
+   * @param {*} section
    */
-  // 判断两点是否连续节点
-  _isContinuousNodes(startCode, endCode, type, parameter) {
-    let nodes = [];
-    if (type === _LINE_DIRECTION.HORIZON) {
-      // 判断水平方向
-      nodes = this.pretreatmentNodesTable.yList[parameter];
-    } else if (type === _LINE_DIRECTION.VERTICAL) {
-      // 判断垂直方向
-      nodes = this.pretreatmentNodesTable.xList[parameter];
-    }
-    if (nodes.length >= 2) {
-      for (let i = 0; i < nodes.length; i++) {
-        let node = nodes[i].node;
-        if (node === startCode) {
-          if (nodes[i + 1]) {
-            if (nodes[i + 1].node === endCode) {
-              return true;
-            }
-          }
-        }
-      }
-    }
-    return false;
-  }
-  /**
-   * 判断两个坐标之间是否有节点
-   * @param {Number} start         开始节点
-   * @param {String} end           结束节点
-   * @param {Number} type          类型  1,层  2,时标
-   * @param {Number} parameter     当type=1时传入要判断的层，当type=2时传入要判断的列
-   * @date 2020-07-07
-   * @date 2020-07-13
-   * @author 杨勇
-   */
-  // 判断两个坐标之间是否有节点
-  _hasNode(start, end, type, parameter) {
-    let nodes = [];
-    let result = {
-      hasNode: false,
-      nodes: [],
-    };
-    if (type === _LINE_DIRECTION.HORIZON) {
-      // 要判断的是水平线
-      nodes = this.pretreatmentNodesTable.yList[parameter];
-    } else if (type === _LINE_DIRECTION.VERTICAL) {
-      // 要判断的是垂直线
-      nodes = this.pretreatmentNodesTable.xList[parameter];
-    }
-    let temp = 0;
-
-    if (nodes) {
-      if (nodes.length > 0) {
-        for (let i = 0; i < nodes.length; i++) {
-          let node = nodes[i];
-          if (type === 1) {
-            // 要判断的是水平线
-            temp = node.x;
-          } else if (type === 2) {
-            // 要判断的是垂直线
-            temp = node.y;
-          }
-
-          if (temp > start && temp < end) {
-            result.hasNode = true;
-            result.nodes.push(node);
-          }
-        }
-      }
-    }
-    return result;
+  // 注册连接节点的接触点
+  _registerContactPoint(nodeCode, data, ContactPoint, section) {
+    this.contactPoint[nodeCode][ContactPoint][section].push(data);
   }
 
+  // 同方向多条线段，计算线条的偏移量
+  _computeOffset() {
+    console.log("this.contactPoint", this.contactPoint);
+    let keys = Object.keys(this.contactPoint);
+    // 遍历注册的节点连线接触点数据
+    for (let i = 0; i < keys.length; i++) {
+      let code = keys[i];
+      let _data = this.contactPoint[code];
+      // console.log("--------------", code, "--------------", _data);
+      this._createOffset(_data);
+    }
+  }
+  /**
+   * @description  创建偏移量
+   * @param {Json} contactPointData  一个节点上所有接触点上的数据
+   * @date 2020-07-30
+   * @author 杨勇
+   */
+  // 创建偏移量
+  _createOffset(contactPointData) {
+    // top
+    let topRightData = contactPointData._top.right;
+    let topLeftData = contactPointData._top.left;
+    let topMiddleData = contactPointData._top.middle;
+
+    let topRightBase =
+      topLeftData.length > 0 || topMiddleData.length > 0 ? 1 : 0;
+    let topLeftBase =
+      topRightData.length > 0 || topMiddleData.length > 0 ? 1 : 0;
+
+    if (contactPointData.top.length > 1) {
+      // right
+      if (topRightData.length > 0) {
+        this._sortOneContactPoint(topRightData, _DIRECTION.RIGHT, topRightBase);
+      }
+      // left
+      if (topLeftData.length > 0) {
+        this._sortOneContactPoint(topLeftData, _DIRECTION.LEFT, topLeftBase);
+      }
+      // middle
+      if (topMiddleData.length > 0) {
+        this._setLineOffset(topMiddleData[0].link, topMiddleData[0].line, 0);
+      }
+    }
+    // bottom
+    let bottomRightData = contactPointData._bottom.right;
+    let bottomLeftData = contactPointData._bottom.left;
+    let bottomMiddleData = contactPointData._bottom.middle;
+
+    let bottomRightBase =
+      bottomLeftData.length > 0 || bottomMiddleData.length > 0 ? 1 : 0;
+    let bottomLeftBase =
+      bottomRightData.length > 0 || bottomMiddleData.length > 0 ? 1 : 0;
+
+    if (contactPointData.bottom.length > 1) {
+      // right
+      if (bottomRightData.length > 0) {
+        this._sortOneContactPoint(
+          bottomRightData,
+          _DIRECTION.RIGHT,
+          bottomRightBase
+        );
+      }
+      // left
+      if (bottomLeftData.length > 0) {
+        this._sortOneContactPoint(
+          bottomLeftData,
+          _DIRECTION.LEFT,
+          bottomLeftBase
+        );
+      }
+      // middle
+      if (bottomMiddleData.length > 0) {
+        this._setLineOffset(
+          bottomMiddleData[0].link,
+          bottomMiddleData[0].line,
+          0
+        );
+      }
+    }
+  }
   /**
    * @description  计算一个接触点的偏移
    * @param {JsonArr} links       所有连接
@@ -4772,90 +6501,21 @@ class LinkPlan {
         this._setLineOffset(links[y].link, links[y].line, offset);
         // TODO: -===-
         // if (offset !== 0) { //  && links[y].type == 'out'
-        //     console.log(offset, links[y]);
-        //     let _line = JSON.parse(JSON.stringify(links[y].line));
-        //     _line = {
-        //         start: _line.start.y,
-        //         end: _line.end.y,
-        //         arrow: links[y].line.arrow,
-        //         parameter: _line.start.x + 0.01
-        //     };
-        //     console.log(sortArr)
+        //   console.log(offset, links[y]);
+        //   let _line = JSON.parse(JSON.stringify(links[y].line));
+        //   _line = {
+        //     start: _line.start.y,
+        //     end: _line.end.y,
+        //     arrow: links[y].line.arrow,
+        //     parameter: _line.start.x + 0.0001
+        //   };
+        //   // console.log(sortArr)
 
-        //     let scan = this._scanLinkedLine(_line, _LINE_DIRECTION.VERTICAL);  // HORIZON    VERTICAL
-        //     if (scan.intersection.length > 0) {
-        //         links[y].link.intersections = links[y].link.intersections.concat(scan.intersection);
-        //     }
+        //   let scan = this._scanLinkedLine(_line, _LINE_DIRECTION.VERTICAL);  // HORIZON    VERTICAL
+        //   if (scan.intersection.length > 0) {
+        //     links[y].link.intersections = links[y].link.intersections.concat(scan.intersection);
+        //   }
         // }
-      }
-    }
-  }
-  /**
-   * @description  创建偏移量
-   * @param {Json} contactPointData    一个节点上所有接触点上的数据
-   * @date 2020-07-30
-   * @author 杨勇
-   */
-  // 创建偏移量
-  _createOffset(contactPointData) {
-    // top
-    let topRightData = contactPointData._top.right;
-    let topLeftData = contactPointData._top.left;
-    let topMiddleData = contactPointData._top.middle;
-
-    let topRightBase =
-      topLeftData.length > 0 || topMiddleData.length > 0 ? 1 : 0;
-    let topLeftBase =
-      topRightData.length > 0 || topMiddleData.length > 0 ? 1 : 0;
-
-    if (contactPointData.top.length > 1) {
-      // right
-      if (topRightData.length > 0) {
-        this._sortOneContactPoint(topRightData, _DIRECTION.RIGHT, topRightBase);
-      }
-      // left
-      if (topLeftData.length > 0) {
-        this._sortOneContactPoint(topLeftData, _DIRECTION.LEFT, topLeftBase);
-      }
-      // middle
-      if (topMiddleData.length > 0) {
-        this._setLineOffset(topMiddleData[0].link, topMiddleData[0].line, 0);
-      }
-    }
-    // bottom
-    let bottomRightData = contactPointData._bottom.right;
-    let bottomLeftData = contactPointData._bottom.left;
-    let bottomMiddleData = contactPointData._bottom.middle;
-
-    let bottomRightBase =
-      bottomLeftData.length > 0 || bottomMiddleData.length > 0 ? 1 : 0;
-    let bottomLeftBase =
-      bottomRightData.length > 0 || bottomMiddleData.length > 0 ? 1 : 0;
-
-    if (contactPointData.bottom.length > 1) {
-      // right
-      if (bottomRightData.length > 0) {
-        this._sortOneContactPoint(
-          bottomRightData,
-          _DIRECTION.RIGHT,
-          bottomRightBase
-        );
-      }
-      // left
-      if (bottomLeftData.length > 0) {
-        this._sortOneContactPoint(
-          bottomLeftData,
-          _DIRECTION.LEFT,
-          bottomLeftBase
-        );
-      }
-      // middle
-      if (bottomMiddleData.length > 0) {
-        this._setLineOffset(
-          bottomMiddleData[0].link,
-          bottomMiddleData[0].line,
-          0
-        );
       }
     }
   }
@@ -4868,9 +6528,6 @@ class LinkPlan {
    */
   // 设置线段的偏移量
   _setLineOffset(link, line, offset) {
-    // console.log("link.................", link);
-    // console.log("line.................", line);
-    // console.log("offset.................", offset);
     if (offset !== 0) {
       // line.offset = offset;
       line.start.xOffset = offset;
@@ -4900,25 +6557,19 @@ class LinkPlan {
     }
     // TODO: 计算线段坐标及相连线段坐标的偏移
   }
-  // 同方向多条线段，计算线条的偏移量
-  _computeOffset() {
-    console.log("this.contactPoint", this.contactPoint);
-    let keys = Object.keys(this.contactPoint);
-    // 遍历注册的节点连线接触点数据
-    for (let i = 0; i < keys.length; i++) {
-      let code = keys[i];
-      let _data = this.contactPoint[code];
-      // console.log("--------------", code, "--------------", _data);
-      this._createOffset(_data);
-    }
-  }
   // 更新坐标和连线的分层
   _updateRank(callback) {
-    if (this.rankIncrement > 0) {
+    if (this.rankIncrement < 0) {
+      // ┌┐ 9 U1
+      console.log(
+        "this.rankIncrement>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",
+        this.rankIncrement
+      );
+      this.rankIncrement = Math.abs(this.rankIncrement);
       let nodeKeys = Object.keys(this.nodes);
       for (let i = 0; i < nodeKeys.length; i++) {
         let key = nodeKeys[i];
-        this.nodes[key].y = this.nodes[key].y + Number(this.rankIncrement);
+        this.nodes[key].y += Number(this.rankIncrement); // 所有节点的 y 向下移动 rankIncrement 层
       }
       let edgeKeys = Object.keys(this.aoan.edgesMap);
       for (let i = 0; i < edgeKeys.length; i++) {
@@ -4926,508 +6577,34 @@ class LinkPlan {
         if (this.aoan.edgesMap[key].link !== null) {
           let lines = this.aoan.edgesMap[key].link.lines;
           let intersections = this.aoan.edgesMap[key].link.intersections;
-          // console.log(lines);
+          // console.log(lines);  passNodes
           for (let i = 0; i < lines.length; i++) {
-            lines[i].start.y = lines[i].start.y + Number(this.rankIncrement);
-            lines[i].end.y = lines[i].end.y + Number(this.rankIncrement);
+            // 连线上所有点的 y 向下移动 rankIncrement 层
+            lines[i].start.y += Number(this.rankIncrement);
+            lines[i].end.y += Number(this.rankIncrement);
           }
           for (let i = 0; i < intersections.length; i++) {
-            intersections[i].location.y =
-              intersections[i].location.y + Number(this.rankIncrement);
+            intersections[i].location.y += Number(this.rankIncrement);
           }
         }
       }
-      this.option.rank.max =
-        Number(this.option.rank.max) + Number(this.rankIncrement);
+      this.option.rank.min += Number(this.rankIncrement);
+      this.option.rank.max += Number(this.rankIncrement);
+    } else if (this.rankIncrement > 0) {
+      // └┘ 10 U2
+      this.option.rank.max += Number(this.rankIncrement);
     }
-    // console.log("this.nodes", this.option);
+    console.log("this.nodes >>>", this.nodes, "this.option >>>", this.option);
     this.option.projectEndTime = this.aoan.projectEndTime;
     this.option.projectStartTime = this.aoan.projectStartTime;
     callback(this.nodes, this.aoan.edgesMap, this.option);
-  }
-  /**
-   * 注册连接节点的接触点
-   * @param {*} nodeCode
-   * @param {*} data
-   * @param {*} ContactPoint
-   * @param {*} section
-   */
-  // 注册连接节点的接触点
-  _registerContactPoint(nodeCode, data, ContactPoint, section) {
-    this.contactPoint[nodeCode][ContactPoint][section].push(data);
-  }
-  /**
-   * 获取指定层上，指定时标到时标之间的节点
-   * @param {*} start
-   * @param {*} end
-   * @param {*} chkStart
-   * @param {*} chkEnd
-   */
-  // 获取指定层上，指定时标到时标之间的节点
-  _isCoincide(start, end, chkStart, chkEnd) {
-    if (end <= chkStart || start >= chkEnd) return false;
-    return true;
-  }
-  /**
-   * 扫描线段获取一条线段，与已经连接过的线段相交和重合情况
-   * @param {Json} line               线段数据
-   * @param {Number} type             类型  1,水平线  2,垂直线
-   * @param {Boolean} parallel        是否有允许并行（垂直线）
-   * @param {Boolean} target          穿点判断是否包含目标节点
-   * @param {Boolean} source          穿点判断是否包含起始节点
-   * @param {Boolean} enablePassNode  是否允许穿点
-   * @date 2020-07-02
-   * @date 2020-07-03
-   * @date 2020-07-07
-   * @date 2020-07-13
-   * @author 杨勇
-   */
-  // 扫描线段获取一条线段，与已经连接过的线段相交和重合情况
-  _scanLinkedLine(line, type) {
-    let linkedLines = this.linked.lines;
-    let coincide = []; // 记录路径重合的地方
-    let intersection = []; // 记录交叉点
-    let start = Number(line.start);
-    let end = Number(line.end);
-    let parameter = Number(line.parameter);
-    let hasNode = this._hasNode(start, end, type, parameter);
-    // 先判断是否穿点
-    // console.log("enablePassNode", enablePassNode, hasNode);
-    // if (hasNode.hasNode && !enablePassNode) {
-    //     // console.log("**********穿点*************");
-    //     return ({
-    //         "enable": false,
-    //         "coincide": [],
-    //         "passNodes": [],
-    //         "intersection": []
-    //     });
-    // }
-    if (type === _LINE_DIRECTION.VERTICAL) {
-      // 要判断的是垂直线
-      for (let i = 0; i < this.horizonLines.length; i++) {
-        // 当前线是水平线
-        let _line = this.horizonLines[i];
-        let critical = _line.critical;
-        let dummy = _line.dummy;
-        let arrow = _line.arrow;
-        let startLocation = _line.start;
-        let endLocation = _line.end;
-        let sX = Number(startLocation.x);
-        let eX = Number(endLocation.x);
-        let sY = Number(startLocation.y);
 
-        // 默认不重合
-        // 判断相交
-        // console.log(parameter, sX, eX, sY, start, end);
-        if (parameter > sX && parameter < eX && sY > start && sY < end) {
-          intersection.push({
-            direction: _DIRECTION.UP,
-            critical: critical,
-            dummy: dummy,
-            arrow: arrow,
-            line: _line,
-            location: {
-              x: parameter,
-              y: sY,
-            },
-          });
-        }
-      }
-      for (let i = 0; i < this.verticalLines.length; i++) {
-        // 当前线是垂直线
-        let _line = this.verticalLines[i];
-        let direction = _line.direction;
-        let critical = _line.critical;
-        let dummy = _line.dummy;
-        let arrow = _line.arrow;
-        let startLocation = _line.start;
-        let endLocation = _line.end;
-        let sX = Number(startLocation.x);
-        let sY = Number(startLocation.y);
-        let eY = Number(endLocation.y);
-
-        // 默认不重合
-        let isCoincide = false;
-        // 判断重合
-        if (parameter === sX) {
-          // x相同才可能重合
-          isCoincide = this._isCoincide(start, end, sY, eY);
-          if (isCoincide) {
-            coincide.push({
-              level: 1,
-              critical: critical,
-              dummy: dummy,
-              arrow: arrow,
-              direction: direction,
-              id: _line.id,
-              line: _line,
-            });
-          }
-        }
-      }
-    } else if (type === _LINE_DIRECTION.HORIZON) {
-      // 要判断的是水平线
-      for (let i = 0; i < this.horizonLines.length; i++) {
-        // 当前线是水平线
-        let _line = this.horizonLines[i];
-        let direction = _line.direction;
-        let critical = _line.critical;
-        let dummy = _line.dummy;
-        let arrow = _line.arrow;
-        let startLocation = _line.start;
-        let endLocation = _line.end;
-        let sX = Number(startLocation.x);
-        let eX = Number(endLocation.x);
-        let sY = Number(startLocation.y);
-
-        // 默认不重合
-        let isCoincide = false;
-        // 判断重合
-        if (parameter === sY) {
-          // Y相同才可能重合
-          isCoincide = this._isCoincide(start, end, sX, eX);
-          if (isCoincide) {
-            coincide.push({
-              level: -1,
-              critical: critical,
-              dummy: dummy,
-              arrow: arrow,
-              direction: direction,
-              id: _line.id,
-              line: _line,
-            });
-          }
-        }
-      }
-      for (let i = 0; i < this.verticalLines.length; i++) {
-        // 当前线是垂直线
-        let _line = this.verticalLines[i];
-        let critical = _line.critical;
-        let dummy = _line.dummy;
-        let arrow = _line.arrow;
-        let startLocation = _line.start;
-        let endLocation = _line.end;
-        let sX = Number(startLocation.x);
-        let sY = Number(startLocation.y);
-        let eY = Number(endLocation.y);
-
-        // 默认不重合
-        // 判断相交
-        if (parameter > sY && parameter < eY && sX > start && sX < end) {
-          intersection.push({
-            direction: _DIRECTION.LEFT,
-            critical: critical,
-            dummy: dummy,
-            arrow: arrow,
-            line: _line,
-            location: {
-              x: sX,
-              y: parameter,
-            },
-          });
-        }
-      }
-    }
-
-    // console.log("---coincide", coincide);
-    // console.log("---intersection", intersection);
-    return {
-      enable: true,
-      coincide: coincide,
-      passNodes: hasNode.nodes,
-      intersection: intersection,
+    const speechSynthesis = (message) => {
+      const msg = new SpeechSynthesisUtterance(message);
+      msg.voice = window.speechSynthesis.getVoices()[0];
+      window.speechSynthesis.speak(msg);
     };
-  }
-
-  // TODO: del- - - - - - - -- -- - - -  - - - - - - - - - -- - -  -- - - - -  - -  -- - -  - - - -
-
-  // 创建水平和垂直链接
-  _createStraightLink(startCode, endCode, enablePassNode) {
-    // console.log(startCode + "------aaaa------->" + endCode);
-    let startLocation = this.nodes[startCode];
-    let endLocation = this.nodes[endCode];
-    let sX = startLocation.x;
-    let eX = endLocation.x;
-    let sY = startLocation.y;
-    let eY = endLocation.y;
-    let lineLen = Number(eX) - Number(sX);
-
-    let taskInfo = this.aoan.edgesMap[startCode + "-" + endCode];
-    let type = 1;
-    let label = "";
-    let duration = taskInfo.duration || 0;
-    let rawTaskInfo = taskInfo.option;
-    let isDummy = taskInfo.isDummy;
-    let isCritical = taskInfo.isCritical;
-    if (!isDummy) {
-      // 实工作
-      label = rawTaskInfo.text ? rawTaskInfo.text : "";
-    }
-
-    let lines = [];
-    let direction = _DIRECTION.NONE;
-    let free = Number(lineLen) - Number(duration);
-    let deduction = 0;
-
-    if (sX === eX) {
-      // 相同时标
-      // 判断在同时标是否连续节点
-      let isContinuousNodesOnTime = this._isContinuousNodes(
-        startCode,
-        endCode,
-        _LINE_DIRECTION.VERTICAL,
-        sX
-      );
-      // console.log("isContinuousNodesOnTime", isContinuousNodesOnTime);
-      if (isContinuousNodesOnTime) {
-        if (sY < eY) {
-          // 后节点在前节点的下方      向下        2，│
-          type = _LINK_TYPE.VERTICAL;
-          direction = _DIRECTION.DOWN;
-          lines = this._createVerticalLines(sY, eY, sX, direction, taskInfo);
-        } else if (sY > eY) {
-          // 后节点在前节点的上方      向上        2，│
-          type = _LINK_TYPE.VERTICAL;
-          direction = _DIRECTION.UP;
-          lines = this._createVerticalLines(eY, sY, sX, direction, taskInfo);
-        }
-      } else {
-        // console.log(startCode + "------bbbb------->" + endCode, enablePassNode);
-        if (enablePassNode) {
-          let _result = null;
-          if (sY < eY) {
-            // 后节点在前节点的下方      向下        2，│
-            // 垂直线
-            type = _LINK_TYPE.VERTICAL;
-            direction = _DIRECTION.DOWN;
-            let _vertical = {
-              start: sY,
-              end: eY,
-              arrow: direction,
-              parameter: sX,
-            };
-            _result = this._resolve(_vertical, type, enablePassNode);
-            // console.log("_result", _result);
-            if (_result.isOk) {
-              // 垂直线也可以连接，则生成线段
-              lines = this._createVerticalLines(
-                sY,
-                eY,
-                sX,
-                direction,
-                taskInfo,
-                _result
-              );
-              deduction = deduction + _result.deduction;
-            }
-          } else if (sY > eY) {
-            // 后节点在前节点的上方      向上        2，│
-            type = _LINK_TYPE.VERTICAL;
-            direction = _DIRECTION.UP;
-            let _vertical = {
-              start: eY,
-              end: sY,
-              arrow: direction,
-              parameter: sX,
-            };
-            _result = this._resolve(_vertical, type, enablePassNode);
-            // console.log("_result1", _result);
-            if (_result.isOk) {
-              // 垂直线也可以连接，则生成线段
-              lines = this._createVerticalLines(
-                eY,
-                sY,
-                sX,
-                direction,
-                taskInfo,
-                _result
-              );
-              deduction = deduction + _result.deduction;
-            }
-          }
-        }
-      }
-    } else if (sX < eX) {
-      // 后节点在后方              向后
-      direction = _DIRECTION.RIGHT;
-      if (sY === eY) {
-        // 后节点和前节点在同一层
-        // 判断在同层是否连续节点
-        let isContinuousNodesOnRank = this._isContinuousNodes(
-          startCode,
-          endCode,
-          _LINE_DIRECTION.HORIZON,
-          sY
-        );
-        // console.log("isContinuousNodesOnRank", isContinuousNodesOnRank);
-        if (isContinuousNodesOnRank) {
-          // 是连续节点  1，─
-          type = _LINK_TYPE.HORIZON;
-          lines = this._createHorizonLines(sX, eX, sY, direction, taskInfo);
-        }
-      }
-    } else if (sX > eX) {
-      // 后节点在前方              向前
-      direction = _DIRECTION.LEFT;
-      if (sY === eY) {
-        // 后节点和前节点在同一层    1，─    9, ┌┐    10,└┘
-        // 判断在同层是否连续节点
-        let isContinuousNodesOnRank = this._isContinuousNodes(
-          startCode,
-          endCode,
-          _LINE_DIRECTION.HORIZON,
-          sY
-        );
-        // console.log("isContinuousNodesOnRank2", isContinuousNodesOnRank);
-        if (isContinuousNodesOnRank) {
-          // 是连续节点  1，─
-          type = _LINK_TYPE.HORIZON;
-          lines = this._createHorizonLines(eX, sX, sY, direction, taskInfo);
-        }
-      }
-    }
-
-    if (lines.length > 0) {
-      let option = {
-        label: label,
-        critical: isCritical,
-        dummy: isDummy,
-        length: lineLen,
-        duration: duration,
-        direction: direction,
-        free: free,
-      };
-
-      let link = new Link(option, type, { lines: lines }, startCode, endCode);
-      this.aoan.edgesMap[startCode + "-" + endCode].link = link;
-      this._registerLink(link);
-    }
-  }
-  /**
-   * 获取两标志之间的线段
-   * @param {String} start         开始标志
-   * @param {String} end           结束标志
-   * @param {Number} type          类型  1,层上的线段（横线）  2,判断  时标上的线段（竖线）
-   * @param {Number} parameter     当type=1时传入层，当type=2时传入 列
-   * @date 2020-07-02
-   * @author 杨勇
-   */
-  _getBetweenLines(start, end, type, parameter) {
-    let lines = [];
-    if (type === 1) {
-      lines = this.linked.yList[parameter];
-    } else if (type === 2) {
-      lines = this.linked.xList[parameter];
-    }
-    let result = [];
-    let isPush = false;
-    if (lines.length > 0) {
-      for (let i = 0; i < lines.length; i++) {
-        if (isPush) {
-          result.push(lines[i]);
-        }
-        if (lines.node === start) {
-          isPush = true;
-        }
-        if (lines.node === end) {
-          return result;
-        }
-      }
-    }
-    return result;
-  }
-  /**
-   *
-   * @param {Number} level         重合级别
-   * @param {Number} arrow         当前线段的箭头
-   * @param {Number} isArrow       要检查线段的箭头
-   * @date 2020-07-07
-   */
-  _checkCode(level, arrow, isArrow) {
-    let isOk = true;
-    let deduction = 0;
-    const _CHECK_CODE = {
-      _COINCIDE_LEVEL: {
-        NONE: 0, // 不重合
-        IDENTICAL: 1, // 完全相同（起点终点相同）
-        SCOINCIDE: 2, // 起点相同的重合
-        SEXCEED: 3, // 起点相同的超出
-        ECOINCIDE: 4, // 终点相同的重合
-        EEXCEED: 5, // 结束相同的超出
-        PUBLIC: 6, // 有公共部分
-        INCLUDE: 7, // 包含
-        PINCLUDE: 8, // 被包含
-      },
-    };
-    switch (level) {
-      case _CHECK_CODE._COINCIDE_LEVEL.IDENTICAL: // 完全相同（起点终点相同）
-        isOk = false;
-        break;
-      case _CHECK_CODE._COINCIDE_LEVEL.SCOINCIDE: // 起点相同的重合
-        if (isArrow === _DIRECTION.NONE) {
-          deduction = 5;
-        } else {
-          // 经过箭头，不允许
-          isOk = false;
-        }
-        break;
-      case _CHECK_CODE._COINCIDE_LEVEL.SEXCEED: // 起点相同的超出
-        if (arrow === _DIRECTION.NONE) {
-          deduction = 5;
-        } else {
-          // 经过箭头，不允许
-          isOk = false;
-        }
-        break;
-      case _CHECK_CODE._COINCIDE_LEVEL.ECOINCIDE: // 终点相同的重合
-        if (
-          arrow !== _DIRECTION.NONE &&
-          isArrow !== _DIRECTION.NONE &&
-          arrow === isArrow
-        ) {
-          // 箭头相同指向时允许，否则不允许
-          deduction = 5;
-        } else {
-          isOk = false;
-        }
-        break;
-      case _CHECK_CODE._COINCIDE_LEVEL.EEXCEED: // 终点相同的超出
-        if (
-          arrow !== _DIRECTION.NONE &&
-          isArrow !== _DIRECTION.NONE &&
-          arrow === isArrow
-        ) {
-          // 箭头相同指向时允许，否则不允许
-          deduction = 5;
-        } else {
-          isOk = false;
-        }
-        break;
-      case _CHECK_CODE._COINCIDE_LEVEL.PUBLIC: // 有公共部分,不允许
-        isOk = false;
-        break;
-      case _CHECK_CODE._COINCIDE_LEVEL.INCLUDE: // 包含,不允许
-        isOk = false;
-        break;
-      case _CHECK_CODE._COINCIDE_LEVEL.PINCLUDE: // 被包含,不允许
-        isOk = false;
-        break;
-    }
-    // console.log("deduction", deduction);
-
-    return {
-      isOk: isOk,
-      deduction: deduction,
-    };
-  }
-  _isBetween(start, end, parameter) {
-    if (start <= parameter && end >= parameter) {
-      return true;
-    }
-    if (start >= parameter && end <= parameter) {
-      return true;
-    }
-    return false;
+    speechSynthesis("更新坐标和连线的分层");
   }
 }
 
@@ -5456,45 +6633,33 @@ class Coordinate {
     //排布数据优化
     let differenceData = this.aoan.nodesData.differenceData;
     let keys = Object.keys(differenceData);
-    // let ruleStringPath = "";
-    // for (let i = 1; i < keys.length; i++) {
-    //     let current = i;
-    //     let previous = i - 1;
-    //     let currentKey = keys[current];
-    //     let previousKey = keys[previous];
-    //     //let len = (Number(currentKey) - Number(previousKey)).toFixed(2);
-    //     if (i === 1) {
-    //         //ruleStringPath = ruleStringPath + "T" + previous + "->T" + current + "[len=" + len + "]";
-    //         ruleStringPath = ruleStringPath + "T" + previous + "->T" + current + "";
-    //     } else {
-    //         //ruleStringPath = ruleStringPath + "->T" + current + "[len=" + len + "]";
-    //         ruleStringPath = ruleStringPath + "->T" + current + "";
-    //     }
-    //     //ruleString = ruleString + "__" + previousKey + "->__" + currentKey + "[len=" + len + "]\n";
-    // }
-    // console.log("ruleStringPath", ruleStringPath);
-    //ruleStringPath = "";
-
     let ruleString = ""; //标尺
-    for (let i = 0; i < keys.length; i++) {
-      let key = keys[i];
-      let nodes = this.aoan.nodesData.indexData[key];
-      let temp = "";
-      for (let j = 0; j < nodes.length; j++) {
-        temp = temp + " " + nodes[j];
+    let xAlign = ""; //对齐标尺，避免节点重叠
+    //当节点过多时，降低约束条件（不要求对齐标尺） 2020-09-09
+    if (this.aoan.vertexs.length < 1000) {
+      for (let i = 0; i < keys.length; i++) {
+        let key = keys[i];
+        let nodes = this.aoan.nodesData.indexData[key];
+        let temp = "";
+        for (let j = 0; j < nodes.length; j++) {
+          temp = temp + " " + nodes[j];
+        }
+        temp = "    {rank=same T" + i + " " + temp + "}\n";
+        if (i === 0) {
+          ruleString = "T" + i;
+        } else {
+          ruleString = ruleString + "->T" + i;
+        }
+        xAlign = xAlign + temp;
       }
-      temp = "    {rank=same T" + i + " " + temp + "}\n";
-      if (i === 0) {
-        ruleString = "T" + i;
-      } else {
-        ruleString = ruleString + "->T" + i;
-      }
+
+      ruleString = ruleString + "[weight=" + this.factor * 5 + "]\n";
     }
-    ruleString = ruleString + "[weight=" + this.factor * 5 + "]\n";
     //关键路径,尽量保持直线
     let pathsString = "";
     let paths = this.aoan.criticalTopSort();
-    console.log("criticalTopSort", paths);
+    paths = this.handlePaths(paths);
+    //console.log('criticalTopSort', paths);
     if (paths.length > 0) {
       for (let i = 0; i < paths.length; i++) {
         let pathNodes = paths[i].path;
@@ -5515,9 +6680,9 @@ class Coordinate {
       console.log("****************************");
     }
     //非关键路径,尽量保持直线（权重降低）
-
     paths = this.aoan.unCriticalTopSort();
-    console.log("unCriticalTopSort", paths);
+    paths = this.handlePaths(paths);
+    //console.log('unCriticalTopSort', paths);
     if (paths.length > 0) {
       for (let i = 0; i < paths.length; i++) {
         let pathNodes = paths[i].path;
@@ -5530,28 +6695,34 @@ class Coordinate {
           }
         }
         //优化普通路径
-        // if (pathNodes.length > 2) {
-        //     pathsString = pathsString + "    " + path + "[weight=" + Math.round(this.factor / 2) + "]\n";
-        // } else {
-        //     pathsString = pathsString + "    " + path + "\n";
-        // }
-        pathsString = pathsString + "    " + path + "\n";
+        if (pathNodes.length > 2) {
+          pathsString =
+            pathsString +
+            "    " +
+            path +
+            "[weight=" +
+            Math.round(this.factor / 2) +
+            "]\n";
+        } else {
+          pathsString = pathsString + "    " + path + "\n";
+        }
+        //pathsString = pathsString + "    " + path + "\n";
       }
     }
-    //边
-    // let edgeString = "";
-    // keys = this.aoan.edges.keys();
-    // for (let i = 0; i < keys.length; i++) {
-    //     let code = keys[i];
-    //     let edgeVertexs = this.aoan.edges.get(code);
-    //     for (let j = 0; j < edgeVertexs.length; j++) {
-    //         if (edgeVertexs[j]) {
-    //             let vType = edgeVertexs[j].type;
-    //             let vEnd = edgeVertexs[j].vertexEnd;
-    //             edgeString = edgeString + `    ${code}->${vEnd}\n`;
-    //         }
-    //     }
-    // }
+    // 剔除边数据约束，因为和路径数据重叠 2020-09-09
+    let edgeString = "";
+    keys = this.aoan.edges.keys();
+    for (let i = 0; i < keys.length; i++) {
+      let code = keys[i];
+      let edgeVertexs = this.aoan.edges.get(code);
+      for (let j = 0; j < edgeVertexs.length; j++) {
+        if (edgeVertexs[j]) {
+          let vType = edgeVertexs[j].type;
+          let vEnd = edgeVertexs[j].vertexEnd;
+          edgeString = edgeString + `    ${code}->${vEnd}\n`;
+        }
+      }
+    }
 
     let ranksep = 1.0;
     let nodesep = 2.0;
@@ -5576,7 +6747,9 @@ class Coordinate {
                 ]
   
             ${pathsString}
-
+            ${ruleString}
+            ${xAlign}
+            ${edgeString}
             }`;
     //            ${edgeString}
     //            ${ruleString}
@@ -5608,7 +6781,7 @@ class Coordinate {
     //     });
     console.time("布局计算:");
     this.viz.getSvgData(initData).then(function (element) {
-      //DOM方式解析坐标
+      //解析节点布局的坐标
       let tempElement = document.createElement("div");
       tempElement.innerHTML = element;
       var tempNodes = tempElement.getElementsByClassName("node");
@@ -5617,6 +6790,7 @@ class Coordinate {
         let y = tempNode.children[1].getAttribute("cy");
         let code = tempNode.children[0].innerHTML;
         if (code.indexOf("T") === -1) {
+          //这里的x坐标 取标尺记录的小数标尺，防止取整数时部分节点错位
           let xIndex = Number(that.aoan.nodesData.nodes[code].difference);
           maxXIndex = maxXIndex < xIndex ? xIndex : maxXIndex;
           let yIndex = Math.round(y / USER_DPI);
@@ -5628,7 +6802,7 @@ class Coordinate {
         }
       }
 
-      //自定义解析坐标（Nodejs）
+      //自定义解析坐标（适合Nodejs）
       // let data = element.replace("\n");
       // data = data.replace(/\n/g, '');
       // //console.log(data);
@@ -5779,7 +6953,7 @@ class Coordinate {
           max: maxYIndex,
         },
       };
-      // //console.log("__nodes",__nodes);
+      console.log("__nodes", __nodes);
       that.option = option;
       that.nodes = __nodes;
       console.timeEnd("布局计算:");
@@ -5800,6 +6974,37 @@ class Coordinate {
     let initData = this._createGraphData(factor);
     //计算坐标
     this._createCoordinate(initData, callback);
+  }
+  /**
+   * @description  二维数组总去除有重复的子集
+   * @param {Array} paths         路径数组
+   */
+  handlePaths(paths) {
+    let collection = new Collection();
+    if (paths.length > 0) {
+      for (let i = 0; i < paths.length; i++) {
+        for (let j = 0; j < paths.length; j++) {
+          if (i !== j && paths[i] !== undefined && paths[j] !== undefined) {
+            //求差集
+            let temp1 = paths[i].path;
+            let temp2 = paths[j].path;
+            let diff = collection.difference(temp1, temp2);
+            if (diff.length === 0) {
+              if (temp1.length < temp2.length) {
+                delete paths[i];
+              } else {
+                delete paths[j];
+              }
+            }
+          }
+        }
+      }
+    }
+    //过滤空路径
+    paths = paths.filter((res) => {
+      return res.path != "undefined";
+    });
+    return paths;
   }
 }
 
@@ -5880,8 +7085,8 @@ const TASK_LINK_TYPE$1 = {
 };
 
 const ONLY_START_END = true; //是否唯一起始点
-const INDEPENDENT_START_HANG = true; //开始处是否独立创建挂起工作
-const INDEPENDENT_END_HANG = true; //结束处是否独立创建挂起工作
+const INDEPENDENT_START_HANG = false; //开始处是否独立创建挂起工作
+const INDEPENDENT_END_HANG = false; //结束处是否独立创建挂起工作
 
 class ActivityOnArrowNetwork extends Graph {
   constructor(_ganttData, _option) {
@@ -5917,10 +7122,8 @@ class ActivityOnArrowNetwork extends Graph {
     //console.log("this.nodesData :", this.nodesData);
     //console.log("allPaths:", this.allPaths);
     //this._layoutPlan();
-    this.toString();
+    //this.toString();
     //this.taskTopSort();
-    console.time("绘制界面:");
-    console.timeEnd("绘制界面:");
   }
   //创建网络图
   _createGraph(ganttData) {
@@ -5948,7 +7151,7 @@ class ActivityOnArrowNetwork extends Graph {
     this.endTasks = this._getStartEndTasks().endTasks;
     //console.log("this.endTasks",);
     this._createDummyTask();
-    this._createRealTasks(gantt.unFS);
+    this._createRealTasks(gantt.links, gantt.unFS);
     //console.log("gantt.tasksTopSort",gantt.tasksTopSort);
     this._optimizeDummyTasks(); //优化虚工作
     this._handleArbitraryDummyEdge(); //处理任意方向的虚工作
@@ -5975,150 +7178,11 @@ class ActivityOnArrowNetwork extends Graph {
       idNodesTable[this.vertexs[i].code] = i + 1 + "";
     }
     //重新编制节点
-
-    console.log(idNodesTable);
+    //console.log(idNodesTable);
     this.firstNode = "1";
     this.lastNode = this.vertexs.length + "";
     this.renumber(idNodesTable);
   }
-  //杨昊天
-  // _setLines(task) {
-  //     let libs = new Libs();
-  //     let tempFollows = task.follows;
-  //     let lines = [
-  //         {
-  //             txt: task.text,
-  //             len: task.duration,
-  //             type: 1
-  //         }
-  //     ];
-  //     if (tempFollows.length === 1) {
-  //         let maxfrontEndTime = tempFollows[0].maxfrontEndTime
-  //         task.free_time = libs.dateDifferenceToDays(maxfrontEndTime, task.end_date).diff;
-  //         if (task.free_time != 0) {
-  //             lines.push({
-  //                 txt: '',
-  //                 len: task.free_time,
-  //                 type: 3
-  //             })
-  //         }
-  //     }
-  //     return lines;
-  // }
-  //杨昊天
-  //_setMaxTime(gantt) {
-  //getOppositeEdgesByNode
-  //for (const key in gantt.frontLinks.items) {
-  //let tempTask = this.getTaskInfo(key);
-  // if (gantt.frontLinks.items.hasOwnProperty(key)) {
-  //     let tempTask = this.getTaskInfo(key);
-  //     if (gantt.frontLinks.get(key).length === 0) {
-  //         continue;
-  //     }
-  //     let maxfrontEndTime = 0;
-  //     let tempNode;
-  //     // 获取紧前最大结束时间
-  //     for (const iterator of gantt.frontLinks.items[key]) {
-  //         console.log("iterator",iterator);
-  //         let temptime = new Date(iterator.end_date).getTime();
-  //         if (temptime > maxfrontEndTime) {
-  //             tempNode = iterator;
-  //             maxfrontEndTime = temptime;
-  //         }
-  //     }
-  //     let maxTimeString = tempNode.end_date;
-  //     tempTask.maxfrontEndTime = maxTimeString;
-  // }
-  //tempTask.maxfrontEndTime = tempTask.;
-  //}
-  //}
-
-  /******************************************************************
-   * @description 设置节点的time信息
-   * @date  2020-05-21
-   * @date  2020-08-06  重写，xtime属性重置为含小时
-   * ****************************************************************/
-  // _setNodeTime() {
-  //     let startDates = [];// 开始时间数组
-  //     let libs = new Libs();
-  //     for (const key in this.edges.items) {
-  //         if (this.edges.items.hasOwnProperty(key)) {
-  //             for (let index = 0; index < this.edges.items[key].length; index++) {
-  //                 if (this.edges.items[key][index] === undefined) {
-  //                     this.edges.items[key].splice(index, 1)
-  //                     index--
-  //                 }
-  //             }
-  //         }
-  //     }
-  //     for (const temp of this.vertexs) {
-  //         let key = temp.code;
-  //         // if (this.edges.items.hasOwnProperty(key)) {
-  //         const element = this.edges.items[key];
-  //         if (element[0] !== undefined) {
-  //             for (const iterator of element) {
-  //                 if (iterator.type === 1) {
-  //                     startDates.push({
-  //                         name: key,
-  //                         start_date: iterator.option.start_date
-  //                         //start_date: iterator.option.maxfrontEndTime ? iterator.option.maxfrontEndTime : iterator.option.start_date
-  //                     })
-  //                     break;
-  //                 }
-  //             }
-  //         }
-  //         // }
-  //     }
-  //     //console.log('时间数组', startDates)
-  //     for (const iterator of startDates) {
-  //         this.vertexs.find(function (item) {
-  //             return item.code == iterator.name
-  //         }).xtime = iterator.start_date
-  //     }
-  //     let frontNodes = this.getFronts();
-  //     //console.log('紧前', frontNodes);
-  //     for (let i = 0; i < this.vertexs.length; i++) {
-  //         if (this.vertexs[i].xtime === undefined) {
-  //             if (frontNodes.get(this.vertexs[i].code.toString()) === undefined) {
-  //                 continue;
-  //             }
-  //             for (const iterator of frontNodes.get(this.vertexs[i].code.toString())) {
-  //                 // let temp = this.vertexs.find(function (item) {
-  //                 //     return item.code == iterator
-  //                 // });
-  //                 // if (temp.xtime !== undefined) {
-  //                 //     this.vertexs[i].xtime = Number(tempTime) < Number(new Date(temp.xtime)) ? temp.xtime : tempTime
-  //                 // }
-  //                 let tempEdge = this.edges.items[iterator].find((item) => {
-  //                     //console.log(i, this.vertexs);
-  //                     return item.vertexEnd == this.vertexs[i].code.toString()
-  //                 });
-  //                 if (tempEdge.option != undefined && tempEdge.option.lines != undefined) {
-
-  //                     let type = 0, len = 0;
-  //                     for (const item of tempEdge.option.lines) {
-  //                         if (item.type === 3) {
-  //                             len = item.len
-  //                         }
-  //                     }
-
-  //                     if (len === 0) {
-  //                         this.vertexs[i].xtime = tempEdge.option.end_date;
-  //                     } else {
-  //                         console.log(tempEdge);
-  //                         let timeNumber = new Date(tempEdge.option.end_date).getTime() + len * this.timeScale;
-  //                         let tempDate = new Date(timeNumber);
-  //                         this.vertexs[i].xtime = libs.dateFormat("yyyy-MM-dd hh:mm:ss", tempDate);
-  //                     }
-  //                 }
-  //             }
-  //         }
-  //     }
-  //     // end = new Date(this.vertexs.find(function (item) {
-  //     //     return item.code === 'LAST';
-  //     // }).xtime);
-
-  // }
   //找到虚工作
   _createDummyTask() {
     let collection = new Collection();
@@ -6669,6 +7733,7 @@ class ActivityOnArrowNetwork extends Graph {
             for (let j = 0; j < tasks.length; j++) {
               let task = tasks[j];
               let taskNode = this.getTaskNode(task.code);
+              console.log(task.code, taskNode);
               let endEdges = this.getEdges(taskNode.end);
               let hasRealTask = 0;
               let hasCritical = 0;
@@ -6789,22 +7854,18 @@ class ActivityOnArrowNetwork extends Graph {
     }
   }
   //创建实工作
-  _createRealTasks(unFS) {
-    this._drawFSTasks(this.endTasks);
-    console.log("this.endTasks", this.endTasks);
-    //调用从结束时
-    // for (let i = taskList.length - 1; i >= 0; i--) {
-    //     let _task = this.getTaskInfo(taskList[i]);
-    //     if (false === _task.isCreated) {
-    //     console.log("taskList[i]", taskList[i], _task);
-    //     this._drawFSTasks([_task]);
-    //     }
-    // }
-    //画非FS关系的任务
+  //_createRealTasks(unFS) {
+  _createRealTasks(FS, unFS) {
+    //创建FS关系的任务
+    //this._drawFSTasksByLink(FS)           //线性算法
+    this._drawFSTasks(this.endTasks); //递归算法
+    //创建非FS关系的任务
     this._drawUnFSTasks(unFS);
   }
-  //画全部FS实工作
+  //创建全部FS实工作，递归算法
   _drawFSTasks(tasks) {
+    //递归方式
+    //递归方式
     for (let i = 0; i < tasks.length; i++) {
       let task = tasks[i];
       if (task !== null) {
@@ -6829,90 +7890,44 @@ class ActivityOnArrowNetwork extends Graph {
       }
     }
   }
-  //画全部FS实工作
-  // _drawFSTasks2(tasks) {
-  //     let nullFrontsNumber = 0;
-  //     for (let i = 0; i < tasks.length; i++) {
-  //         let task = tasks[i];
-  //         if (task !== null) {
-  //             if (task.isFirstTask && task.isLastTask) {      //即是开始就是结束，则是孤立任务
-  //                 this._createOneTask(task);
-  //             } else {
-  //                 let taskFronts = tasks[i].fronts;           //获取任务的紧前
-  //                 if (taskFronts.length == 0) {
-  //                 } else {
-  //                 }
-  //             }
-  //             //console.log("task", task.text);
-  //             let taskCode = task.code;
-  //             let taskNode = this.getTaskNode(taskCode);
-  //             let relation = task.relation;
-  //             //console.log(taskCode, "1taskNode", taskNode);
-  //             let taskIsCreated = true;
-  //             if (taskNode == null) {
-  //                 taskNode = this.createTaskNode(task);
-  //                 //console.log(taskCode, "-----未创建");
-  //                 taskNode = this._addTaskEdge(taskNode.start, taskNode.end, task); //创建当前任务
-  //                 taskIsCreated = false;
-  //             }
-  //             console.log(task.text, "2taskNode", taskNode);
-  //             // if (libs.dateDifferenceToDays(task.end_date, this.projectEndTime) === 0) {
-  //             //     this.lastNode = taskNode.end;
-  //             // }
-  //             let taskFronts = tasks[i].fronts;           //获取任务的紧前
-  //             //console.log(taskFronts);
-  //             if (taskFronts.length == 0) {
-  //                 nullFrontsNumber++;
-  //                 return;
-  //                 //console.log("FIRST 没有紧前");
-  //             } else {
-  //                 for (let t = 0; t < taskFronts.length; t++) {
-  //                     let taskFront = taskFronts[t];
-  //                     if (taskFront !== null) {
-  //                         let taskFrontCode = taskFront.code;
-  //                         console.log(taskFrontCode, "-->", taskCode, "-----未创建");
-  //                         let taskFrontNode = this.getTaskNode(taskFrontCode);
-  //                         let frontIsCreated = true;
-  //                         if (taskFrontNode == null) {
-  //                             taskFrontNode = this.createTaskNode(taskFront);
-  //                             frontIsCreated = false;
-  //                         }
-  //                         let tempCode = "D:" + taskFrontNode.end + "->" + taskNode.start;
-  //                         //if (isCreate) {
-  //                         if (taskIsCreated) {           //taskCode已经创建
-  //                             if (frontIsCreated) {      //taskFrontCode也已经创建，则忽略
-  //                                 if (taskFrontNode.end == taskNode.start) {   //如果本身就是连接，则忽略
-  //                                 } else {
-  //                                     this.addDummyEdge(taskFrontNode.end, taskNode.start, tempCode, taskFront);
-  //                                 }
-  //                             } else {                   //taskFrontCode未创建
-  //                                 this._addTaskEdge(taskFrontNode.start, taskFrontNode.end, taskFront);
-  //                                 this.addDummyEdge(taskFrontNode.end, taskNode.start, tempCode, taskFront);
-  //                             }
-  //                         } else {                        //taskCode未创建
-  //                             if (frontIsCreated) {      //taskFrontCode已经创建
-  //                                 this.addDummyEdge(taskFrontNode.end, taskNode.start, tempCode, taskFront);//创建虚工作连接
-  //                             } else {                   //都未创建
-  //                                 this._addTaskEdge(taskFrontNode.start, taskNode.start, taskFront); //创建紧前任务,实工作
-  //                             }
-  //                         }
-  //                         //} else {
-  //                         //console.log(taskFrontCode, "-->", taskCode, "-----已经创建");
-  //                         //}
-  //                     }
-  //                 }
-  //             }
-  //             this._drawFSTasks(taskFronts);
-  //         }
-  //     }
-  //     if (nullFrontsNumber === 0) {
-  //         //console.log("END");
-  //         return;
-  //     }
-  // }
+  //画全部FS实工作，Links线性算法
+  _drawFSTasksByLink(FSLinks) {
+    //创建没有关系的孤立任务
+    let keys = Object.keys(this.rawTasks);
+    for (let i = 0; i < keys.length; i++) {
+      let task = this.rawTasks[keys[i]];
+      if (task !== null) {
+        if (task.isFirstTask && task.isLastTask) {
+          //即是开始就是结束，则是孤立任务
+          this._createSeparateTask(task);
+        }
+      }
+    }
+    //使用link关系，线型创建FS实工作
+    //console.log("--fs-->", FSLinks);
+    if (FSLinks.length > 0) {
+      for (let i = 0; i < FSLinks.length; i++) {
+        let link = FSLinks[i];
+        //console.log("--fs-->", link);
+        let frontId = link.frontId;
+        let followId = link.followId;
+        let taskFront = this.getTaskInfo(frontId);
+        let task = this.getTaskInfo(followId);
+        if (task && taskFront) {
+          this._createFSTaskLink(taskFront, task);
+        } else {
+          if (this.enforce) {
+            console.log("Error:缺少任务", frontId, "或", followId);
+          } else {
+            throw new Error("缺少任务" + frontId, "或" + followId);
+          }
+        }
+      }
+    }
+  }
   //画非FS实工作
   _drawUnFSTasks(unFSLinks) {
-    console.log("--unFS-->", unFSLinks);
+    //console.log("--unFS-->", unFSLinks);
     if (unFSLinks.length > 0) {
       for (let i = 0; i < unFSLinks.length; i++) {
         let link = unFSLinks[i];
@@ -6932,7 +7947,7 @@ class ActivityOnArrowNetwork extends Graph {
       }
     }
   }
-  //创建SS关系
+  //创建非FS关系
   _createUnFSTaskLink(link) {
     let frontTask = this.getTaskInfo(link.frontId);
     let task = this.getTaskInfo(link.followId);
@@ -7210,6 +8225,7 @@ class ActivityOnArrowNetwork extends Graph {
     if (endHangTime !== 0 && INDEPENDENT_END_HANG) {
       //结束需要添加挂起工作
       //创建后挂起边
+      // this._createEdge(hangEdgeStart, hangEdgeEnd, TASK_TYPE.HANG, task.isCriticalTask, hangTaskCode, { "taskType": TASK_TYPE.HANG_TEXT, "hangTime": startHangTime });
       this._createEdge(
         hangEdgeStart,
         hangEdgeEnd,
@@ -7331,6 +8347,7 @@ class ActivityOnArrowNetwork extends Graph {
         critical: task.isCriticalTask,
       };
       //创建前挂起边
+      // this._createEdge(hangEdgeStart, hangEdgeEnd, TASK_TYPE.HANG, task.isCriticalTask, hangTaskCodeFront, { "taskType": TASK_TYPE.HANG_TEXT, "hangTime": startHangTime });
       this._createEdge(
         hangEdgeStart,
         hangEdgeEnd,
@@ -7341,22 +8358,40 @@ class ActivityOnArrowNetwork extends Graph {
       );
       taskEdgeStart.node = hangTaskCodeFront;
       taskEdgeStart.time = taskStartDate;
+      //创建实工作
+      this._createEdge(
+        taskEdgeStart,
+        taskEdgeEnd,
+        TASK_TYPE$1.REAL,
+        task.isCriticalTask,
+        task.code,
+        task,
+        hangEdgeStart.node,
+        1
+      );
+      result = {
+        start: hangEdgeStart.node,
+        startTime: taskEdgeStart.time,
+        end: taskEdgeEnd.node,
+        endTime: taskEdgeEnd.node,
+      };
+    } else {
+      //创建实工作
+      this._createEdge(
+        taskEdgeStart,
+        taskEdgeEnd,
+        TASK_TYPE$1.REAL,
+        task.isCriticalTask,
+        task.code,
+        task
+      );
+      result = {
+        start: taskEdgeStart.node,
+        startTime: taskEdgeStart.time,
+        end: taskEdgeEnd.node,
+        endTime: taskEdgeEnd.node,
+      };
     }
-    //创建实工作
-    this._createEdge(
-      taskEdgeStart,
-      taskEdgeEnd,
-      TASK_TYPE$1.REAL,
-      task.isCriticalTask,
-      task.code,
-      task
-    );
-    result = {
-      start: taskEdgeStart.node,
-      startTime: taskEdgeStart.node,
-      end: taskEdgeEnd.node,
-      endTime: taskEdgeEnd.node,
-    };
     return result;
   }
   //创建后任务
@@ -7395,10 +8430,11 @@ class ActivityOnArrowNetwork extends Graph {
     if (endHangTime !== 0 && INDEPENDENT_END_HANG) {
       //结束需要添加挂起工作
       //创建后挂起边
+      // this._createEdge(hangEdgeStart, hangEdgeEnd, TASK_TYPE.HANG, task.isCriticalTask, hangTaskCode, { "taskType": TASK_TYPE.HANG_TEXT, "hangTime": endHangTime });
       this._createEdge(
         hangEdgeStart,
         hangEdgeEnd,
-        TASK_TYPE$1.HANG,
+        8,
         task.isCriticalTask,
         hangTaskCode,
         { taskType: TASK_TYPE$1.HANG_TEXT, hangTime: endHangTime }
@@ -7415,10 +8451,11 @@ class ActivityOnArrowNetwork extends Graph {
       if (check.nodeDuplicate && !check.taskDuplicate) {
         //后面没有挂起工作，则添加一个挂起工作防止重复
         //创建后挂起边
+        // this._createEdge(hangEdgeStart, hangEdgeEnd, TASK_TYPE.AVOID_REPETITION, task.isCriticalTask, "A" + task.code, { "taskType": TASK_TYPE.AVOID_REPETITION_TEXT });
         this._createEdge(
           hangEdgeStart,
           hangEdgeEnd,
-          TASK_TYPE$1.AVOID_REPETITION,
+          9,
           task.isCriticalTask,
           "A" + task.code,
           { taskType: TASK_TYPE$1.AVOID_REPETITION_TEXT }
@@ -7559,8 +8596,17 @@ class ActivityOnArrowNetwork extends Graph {
     );
     //console.log(sHangEdgeStart, sHangEdgeEnd, taskEdgeStart, taskEdgeEnd, eHangEdgeStart, eHangEdgeEnd);
   }
-  //创建边
-  _createEdge(nodeStart, nodeEnd, type, isCriticalTask, taskCode, task) {
+  //创建边，增加挂起工作的节点信息参数
+  _createEdge(
+    nodeStart,
+    nodeEnd,
+    type,
+    isCriticalTask,
+    taskCode,
+    task,
+    hangCode,
+    hangType
+  ) {
     let vertexLeft = this._createVertex(
       nodeStart.node,
       nodeStart.time,
@@ -7579,7 +8625,7 @@ class ActivityOnArrowNetwork extends Graph {
       taskCode,
       task
     );
-    this.addEdge(newEdge);
+    this.addEdge(newEdge, hangCode, hangType);
     if (type === TASK_TYPE$1.REAL) {
       task.isCreated = true;
     }
@@ -7616,32 +8662,8 @@ class ActivityOnArrowNetwork extends Graph {
         ? true
         : false
       : false;
-    if (libs.dateDifferenceToDays(frontMaxEndTime, startDate).diff !== 0) {
-      //console.log("--node1, node2, task", node1, node2, task);
-      //前面添加一个挂起工作
-      let hNodeCode = "H" + taskCode;
-      let vertexLeft = this._createVertex(
-        node1,
-        frontMaxEndTime,
-        _isCriticalTask
-      );
-      let vertexRight = this._createVertex(
-        hNodeCode,
-        startDate,
-        _isCriticalTask
-      );
-      let newEdge = new Edge(
-        vertexLeft,
-        vertexRight,
-        TASK_TYPE$1.HANG,
-        _isCriticalTask,
-        hNodeCode,
-        task
-      );
-      this.addEdge(newEdge);
-      //console.log(node1, "---H-->", hNodeCode, vertexRight);
-      node1 = hNodeCode;
-    }
+    //添加边时统一再处理挂起任务节点错误
+    if (libs.dateDifferenceToDays(frontMaxEndTime, startDate).diff !== 0);
     let check = this.checkDuplicateNode(node1, node2, task.code);
     if (check.nodeDuplicate) {
       if (check.taskDuplicate) {
@@ -8012,6 +9034,7 @@ class ActivityOnArrowNetwork extends Graph {
         let nodeCode = timeNodes[i].code;
         let inEdges = this.getOppositeNodeByNode(nodeCode);
         let outEdges = this.getNodeByNode(nodeCode);
+        //2020-09-10 时标key取值和节点保存的时标对齐值保持一致的小数位数
         let differenceDiff = libs
           .dateDifferenceToDays(baseTime, timeNodes[i].xtime)
           .diff.toFixed(4);
@@ -8488,4 +9511,3 @@ class ActivityOnArrowNetwork extends Graph {
   }
 }
 
-// export { ActivityOnArrowNetwork };

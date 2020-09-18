@@ -1,52 +1,16 @@
 new Vue({
   delimiters: ["${", "}"],
   data: {
-    tableData: [
-      {
-        name: "信息发布",
-        certificate_hash: "6b4ec688390690a3cba2b85fe49b615b",
-        block_height: 77,
-        operate_info: "更新模板",
-        operate_time: "2020/8/4",
-        operater: "向超",
-        certificate_url: "cerdentials/85ad5037-5/5568940ad22-6/1154-2",
-        time: "2020-08-03",
-        starting_point: "西安",
-        certificate_name: "西咸高速",
-        ending_point: "咸阳",
-      },
-      {
-        name: "项目要求下发",
-        certificate_hash: "8xc95c688390690a3cba2b85fe49b615b",
-        block_height: 98,
-        operate_info: "更新模板",
-        operate_time: "2020/8/5",
-        operater: "向超",
-        certificate_url: "cerdentials/85ad5037-6",
-        time: "2020-08-05",
-        starting_point: "西安",
-        certificate_name: "西咸高速",
-        ending_point: "咸阳",
-      },
-      {
-        name: "项目要求下发",
-        certificate_hash: "8xc95c688390690a3cba2b85fe49b615b",
-        block_height: 98,
-        operate_info: "更新模板",
-        operate_time: "2020/8/5",
-        operater: "向超",
-        certificate_url: "cerdentials/85ad5037-6",
-        time: "2020-08-05",
-        starting_point: "西安",
-        certificate_name: "西咸高速",
-        ending_point: "咸阳",
-      },
-    ],
+    tableData: [],
     currentPage: 1,
     totalPage: 1,
     detailInfo: {},
     detailInfoShow: false,
-    baseUrl: "http://192.168.111.12:8100/api/bsn",
+    allInfoShow: false,
+    // baseUrl: "http://192.168.111.12:8100/api/bsn",
+    baseUrl: "http://192.168.1.252:8100/api/bsn",
+    showKeys: [],
+    currentContext: { data: {} },
   },
   computed: {
     // sliceTableData() {
@@ -86,6 +50,34 @@ new Vue({
     this.getBsnList("15529270813");
   },
   methods: {
+    /**
+     * @Author: zhang fq
+     * @Date: 2020-09-18
+     * @Description: 根据设计方和业主方 封装不同的下载附件方法  设计方使用的oss  业主方使用的金蝶自带
+     */
+    uploadFileZip(src) {
+      window.open(src, "_blank");
+      // const iframe = document.createElement("iframe");
+      // iframe.style.display = "none"; // 防止影响页面
+      // iframe.style.height = 0; // 防止影响页面
+      // iframe.src = src;
+      // document.body.appendChild(iframe); // 这一行必须，iframe挂在到dom树上才会发请求
+      // // 5分钟之后删除（onload方法对于下载链接不起作用，就先抠脚一下吧）
+      // setTimeout(() => {
+      //   iframe.remove();
+      // }, 60 * 1000);
+      // var form = $("<form>");
+      // form.attr("style", "display:none");
+      // form.attr("target", "_blank");
+      // form.attr("method", "get");
+      // form.attr("action", src);
+      // $("body").append(form);
+      // form.submit();
+      // setTimeout(() => {
+      //   form.remove();
+      // }, 1000 * 60);
+    },
+
     prevBtn() {
       if (this.currentPage > 1) {
         this.currentPage--;
@@ -96,17 +88,25 @@ new Vue({
         this.currentPage++;
       }
     },
+    /**
+     * @Author: zhang fq
+     * @Date: 2020-09-17
+     * @Description: 查看详情按钮  处理当前点击的列表行信息 截取部分字段用于正数字段信息展示
+     */
     checkDetails(row) {
       console.log(row);
+      this.currentContext = row.context;
+      let keys = Object.keys(this.currentContext.data);
+      this.showKeys = keys.length > 8 ? keys.slice(0, 7) : keys;
       this.detailInfoShow = true;
-      this.detailInfo.operate_info = row.operate_info;
-      this.detailInfo.operate_time = row.operate_info;
-      this.detailInfo.certificate_url = row.certificate_url;
-      this.detailInfo.operater = row.operater;
-      this.detailInfo.time = row.time;
-      this.detailInfo.starting_point = row.starting_point;
-      this.detailInfo.certificate_name = row.certificate_name;
-      this.detailInfo.ending_point = row.ending_point;
+    },
+    /**
+     * @Author: zhang fq
+     * @Date: 2020-09-17
+     * @Description: 点击详情页面查看更多按钮 打开所有信息展示面板 以及相关数据处理方法
+     */
+    checkAllInfo() {
+      this.allInfoShow = true;
     },
     /**
      * @Author: zhang fq
@@ -114,6 +114,7 @@ new Vue({
      * @Description: 根据接口文档封装区块链存证信息列表获取接口方法
      */
     getBsnList(id) {
+      let _this = this;
       let param = {
         userId: id,
       };
@@ -124,6 +125,36 @@ new Vue({
         // dataType: "json",
         success: (res) => {
           console.log(res);
+          /**
+           * @Author: zhang fq
+           * @Date: 2020-09-17
+           * @Description: 解构处理接口返回数据并重新拼装为表格展示数据格式
+           */
+          // 从列表接口获取的信息 结构出对应的key-value
+          if (res.code === "0") {
+            let data = res.data;
+            // let context = data.queryInfo.slice(1, data.queryInfo.length - 1);
+            let queryInfo = JSON.parse(data.queryInfo);
+            console.log(queryInfo);
+            let userids = queryInfo[0];
+            let projectids = queryInfo[1];
+            let tos = queryInfo[2];
+            let types = queryInfo[3];
+            let context = queryInfo[4];
+            _this.tableData = [];
+            let len = userids.length;
+            // 将结构出的数据重新拼装成表格列表数据用于展示
+            for (let i = 0; i < len; i++) {
+              _this.tableData.push({
+                user_id: userids[i],
+                project_id: projectids[i],
+                to: tos[i],
+                type: types[i],
+                context: JSON.parse(context[i]),
+              });
+            }
+            this.currentContext = this.tableData[0];
+          }
 
           // this.tableData = res.data;
         },

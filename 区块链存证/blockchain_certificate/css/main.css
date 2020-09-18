@@ -29,7 +29,7 @@ body {
   box-sizing: border-box;
 }
 
-.pagenation-box {
+#bcCertificateApp .pagenation-box {
   width: 1100px;
   height: 60px;
   display: flex;
@@ -37,27 +37,27 @@ body {
   align-items: center;
 }
 
-.detail-container {
+#bcCertificateApp .detail-container {
   width: 100%;
   height: 100%;
   position: absolute;
   top: 0;
   left: 0;
   background: rgba(0, 0, 0, 0.6);
-  z-index: 999;
+  z-index: 666;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.detail-box {
+#bcCertificateApp .detail-box {
   width: 1020px;
   height: 682px;
   background: url("../image/bg-text.png") no-repeat center 160px,
     url("../image/bg.jpg") no-repeat center/cover;
 }
 
-.detail-info-list {
+#bcCertificateApp .detail-info-list {
   width: 840px;
   height: 280px;
   /* border: 1px solid #333; */
@@ -68,7 +68,7 @@ body {
   align-items: flex-start;
 }
 
-.detail-info-item {
+#bcCertificateApp .detail-info-item {
   width: 48%;
   height: 69px;
   box-sizing: border-box;
@@ -78,22 +78,34 @@ body {
   align-items: center;
 }
 
-.label {
+/* .check-more {
+  justify-content: flex-end;
+} */
+
+#bcCertificateApp .label {
   /* min-width: 40px; */
   font-size: 16px;
   color: #2b2b2b;
   margin-right: 5px;
 }
 
-.value {
+#bcCertificateApp .label-more {
+  color: #5588ff;
+  cursor: pointer;
+}
+#bcCertificateApp .label-more:hover {
+  text-decoration: underline;
+}
+#bcCertificateApp .value {
   width: 300px;
+  font-size: 16px;
   text-overflow: ellipsis;
   -o-text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 }
 
-.close-btn {
+#bcCertificateApp .close-btn {
   position: absolute;
   top: 20px;
   right: 30px;
@@ -103,6 +115,37 @@ body {
   transition: transform 0.3s;
 }
 
-.close-btn:hover {
+#bcCertificateApp .close-btn:hover {
   transform: rotate(90deg) translateZ(0);
+}
+
+#bcCertificateApp .data-info-list {
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  color: #2b2b2b;
+  min-width: 800px;
+}
+
+#bcCertificateApp .data-info-list .data-info-item {
+  height: 30px;
+  line-height: 30px;
+}
+
+#bcCertificateApp .data-info-list .data-info-item-label {
+  font-weight: 700;
+  margin-right: 5px;
+  color: #333;
+}
+
+.el-dialog {
+  min-width: 800px;
+  max-height: 1000px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.el-table__header {
+  border-bottom: 1px solid #eee !important;
 }

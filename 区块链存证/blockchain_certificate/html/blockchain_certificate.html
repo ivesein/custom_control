@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 
 <html lang="en">
   <head>
@@ -10,63 +10,109 @@
 
     <title>Document</title>
   </head>
-  <body>
+  <body> -->
     <div id="bcCertificateApp">
       <div class="content">
         <div class="table-box">
           <el-table
             :data="tableData"
-            :header-cell-style="{'font-size':'14px',color:'#2b2b2b'}"
+            :header-cell-style="{'font-size':'14px',color:'#2b2b2b','border-bottom':'1px solid #eee'}"
             style="width: 1100px;"
             height=800
             border
           >
-            <el-table-column label="序号" type="index" width="60"></el-tooltip>
+            <el-table-column label="序号" type="index" width="80"></el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column label="名称" prop="name" width="240">
+            <el-table-column label="项目ID" prop="project_id" width="400">
             </el-table-column>
-            <el-table-column label="存证哈希" min-width="200">
+            <el-table-column label="发送者" min-width="200">
               <template slot-scope="scope">
-                <span class="unit-info">${ scope.row.certificate_hash }</span>
+                <span class="unit-info">${ scope.row.to }</span>
               </template>
             </el-table-column>
-            <el-table-column label="块高" width="100">
+            <el-table-column label="类型" width="100">
               <template slot-scope="scope">
-                <span class="unit-info">${ scope.row.block_height }</span>
+                <span class="unit-info">${ scope.row.type }</span>
               </template>
             </el-table-column>
-            <el-table-column label="详情" width="100">
+            <el-table-column label="详情" width="150">
               <template slot-scope="scope">
-                <el-button type="primary" @click="checkDetails(scope.row)">详情</el-button>
+                <span class="label label-more" @click="checkDetails(scope.row)">查看详情</span>
+                <!-- <el-button type="primary" @click="checkDetails(scope.row)">详情</el-button> -->
               </template>
             </el-table-column>
           </el-table>
-          <div class="pagenation-box">
+          <!-- <div class="pagenation-box">
             <el-pagination
             background
             layout="prev, pager, next"
             :total="1000">
-          </el-pagination>
+          </el-pagination> -->
           </div>
         </div>
+        <!-- 详情页面 -->
         <div class="detail-container" v-show="detailInfoShow">
           <div class="detail-box">
             <div class="detail-info-list">
-              <div class="detail-info-item" v-for="(val, key, index) in  detailInfo">
-                <span class="label">${transform(key)}:</span>
-                <span class="value">${val}</span>
+              <div class="detail-info-item" v-for="(key,index) in  showKeys" :key="index">
+                <span class="label">${key}:</span>
+                <span class="value">${currentContext.data[key]}</span>
+              </div>
+              <div class="detail-info-item check-more">
+                <span class="label label-more"@click="checkAllInfo" >查看更多</span>
               </div>
             </div>
           </div>
           <i class="close-btn el-icon-error" @click="closeDetailInfo"></i>
         </div>
+        <!-- 所有信息页面 -->
+        <!-- <div class="all-info-container" v-show="allInfoShow">
+
+        </div> -->
+      <el-dialog title="所有信息" :visible.sync="allInfoShow" :modal="false">
+          <div class="data-info-list">
+            <div class="data-info-item" v-for="(val, key, index) in currentContext.data">
+              <span class="data-info-item-label">${key}:</span><span>${val}</span>
+            </div>
+          </div>
+          <el-divider content-position="left">附件</el-divider>
+          <div class="attachement-info">
+            <el-table
+            :data="currentContext&&currentContext.attachment?currentContext.attachment:[]"
+            :header-cell-style="{'font-size':'14px',color:'#2b2b2b'}"
+            style="width: 1100px;"
+            border
+          >
+            <!-- <el-table-column label="序号" type="index" width="60"></el-tooltip>
+              </template>
+            </el-table-column> -->
+            <el-table-column label="附件名称" prop="fattachmentname" min-width="240">
+            </el-table-column>
+            <!-- <el-table-column label="上传人" prop="upload_user" width="100">
+            </el-table-column>
+            <el-table-column label="上传时间" prop="upload_time" width="200">
+            </el-table-column> -->
+            <el-table-column label="附件大小" prop="fattachmentsize">
+              <template slot-scope="scope">
+                <span>${scope.row.fattachmentsize}kb</span>
+                <!-- <el-button type="primary" @click="checkDetails(scope.row)">下载</el-button> -->
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="100">
+              <template slot-scope="scope">
+                <span class="label label-more" @click="uploadFileZip(scope.row.downloadUrl)">下载</span>
+                <!-- <el-button type="primary" @click="checkDetails(scope.row)">下载</el-button> -->
+              </template>
+            </el-table-column>
+          </div>
+        </el-dialog>
       </div>
     </div>
-    <script src="../js/jquery.js"></script>
+    <!-- <script src="../js/jquery.js"></script>
     <script src="../js/lodash.js"></script>
     <script src="../js/vue.min.js"></script>
     <script src="../js/element.js"></script>
     <script src="../js/test.js"></script>
   </body>
-</html>
+</html> -->
