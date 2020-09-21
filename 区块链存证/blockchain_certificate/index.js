@@ -53,11 +53,37 @@
                     // baseUrl: "http://192.168.1.252:8100/api/bsn",
                     showKeys: [],
                     currentContext: { data: {} },
+                    loading: true,
                   },
                   mounted() {
                     this.handleUpdata(model, props);
                   },
                   computed: {
+                    /**
+                     * @Author: zhang fq
+                     * @Date: 2020-09-21
+                     * @Description: 封装 区块链type类型实时转换方法
+                     */
+                    convertType(type) {
+                      return function (type) {
+                        switch (+type) {
+                          case 1:
+                            return "信息发布";
+                          case 2:
+                            return "项目要求下发";
+                          case 3:
+                            return "项目过程检查";
+                          case 4:
+                            return "项目过程检查申请";
+                          case 5:
+                            return "项目过程文件提交";
+                          case 6:
+                            return "项目交付管理";
+                          default:
+                            return "";
+                        }
+                      };
+                    },
                     // sliceTableData() {
                     //   return this.tableData.slice(
                     //     (this.currentPage - 1) * this.numPerPage,
@@ -89,11 +115,11 @@
                   },
                   methods: {
                     uploadFileZip(row) {
-                      if (row.ifoss) {
+                      if (row.ifoss === true) {
                         const iframe = document.createElement("iframe");
                         iframe.style.display = "none"; // 防止影响页面
                         iframe.style.height = 0; // 防止影响页面
-                        iframe.src = src;
+                        iframe.src = row.downloadUrl;
                         document.body.appendChild(iframe); // 这一行必须，iframe挂在到dom树上才会发请求
                         // 5分钟之后删除（onload方法对于下载链接不起作用，就先抠脚一下吧）
                         setTimeout(() => {
@@ -155,10 +181,13 @@
                         // dataType: "json",
                         success: (res) => {
                           console.log(res);
+                          this.loading = false;
                           /**
                            * @Author: zhang fq
                            * @Date: 2020-09-17
                            * @Description: 解构处理接口返回数据并重新拼装为表格展示数据格式
+                           * @Date: 2020-09-21
+                           * @Update: 添加接口数据获取过程中的加载动画
                            */
                           // 从列表接口获取的信息 结构出对应的key-value
                           if (res.code === "0") {
@@ -185,11 +214,11 @@
                             }
                             this.currentContext = this.tableData[0];
                           }
-
                           // this.tableData = res.data;
                         },
                         error: (err) => {
                           console.log(err);
+                          this.loading = false;
                           this.$message.error("网络错误，请稍后重试！");
                         },
                       });

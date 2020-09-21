@@ -11,8 +11,29 @@ new Vue({
     baseUrl: "http://192.168.1.252:8100/api/bsn",
     showKeys: [],
     currentContext: { data: {} },
+    loading: true,
   },
   computed: {
+    convertType(type) {
+      return function (type) {
+        switch (+type) {
+          case 1:
+            return "信息发布";
+          case 2:
+            return "项目要求下发";
+          case 3:
+            return "项目过程检查";
+          case 4:
+            return "项目过程检查申请";
+          case 5:
+            return "项目过程文件提交";
+          case 6:
+            return "项目交付管理";
+          default:
+            return "";
+        }
+      };
+    },
     // sliceTableData() {
     //   return this.tableData.slice(
     //     (this.currentPage - 1) * 2,
