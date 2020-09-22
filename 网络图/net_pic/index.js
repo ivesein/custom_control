@@ -525,9 +525,10 @@
                                           let text = {
                                             x: 0,
                                             y: 0,
-                                            label: v.option
-                                              ? v.option.text
-                                              : "",
+                                            label:
+                                              v.option && v.option.text
+                                                ? v.option.text
+                                                : "",
                                             duration:
                                               v.option === null ||
                                               (v.option.duration === 0 &&
