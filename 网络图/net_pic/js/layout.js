@@ -1321,11 +1321,12 @@ class Graph extends Evee {
       let code = this.vertexs[i].code;
       let critical = this.vertexs[i].critical;
       if (critical) {
-        visiteds[this.vertexs[i].code] = false;
+        visiteds[code] = false;
       }
     }
     let pathNodes = [];
     let paths = new Array();
+
     // 遍历所有节点，并依次调用sortHelper函数
     let keys = Object.keys(visiteds);
     for (let i = 0; i < keys.length; i++) {
@@ -1336,15 +1337,25 @@ class Graph extends Evee {
     }
     function sortHelper(v) {
       // 深度搜索
-      pathNodes.push(v);
       visiteds[v] = true;
       let _edges = that.edges.get(v);
       if (_edges && _edges.length > 0) {
-        _edges.forEach(function (w) {
-          if (w.critical) {
-            sortHelper(w.vertexEnd);
+        let count = 0;
+        _edges.forEach(function (_edge) {
+          if (_edge.critical) {
+            pathNodes.push(v);
+            sortHelper(_edge.vertexEnd);
+          } else {
+            count++;
           }
         });
+
+        if (count === _edges.length) {
+          paths.push({
+            path: pathNodes,
+          });
+          pathNodes = [];
+        }
       } else {
         paths.push({
           path: pathNodes,
@@ -1370,6 +1381,8 @@ class Graph extends Evee {
         visiteds[code] = false;
       }
     }
+
+    console.log("visiteds", visiteds);
     let pathNodes = [];
     let paths = new Array();
     // 遍历所有节点，并依次调用sortHelper函数
@@ -1888,6 +1901,7 @@ class Gantt {
     }
   }
   //设置紧后最早开始时间
+  //杜绝结束时间在例外时间造成额外工作时间而产生多余虚工作
   followMaxStartTime(taskCode, _time) {
     if (undefined === this.rawTasks[taskCode].followMaxStartTime) {
       this.rawTasks[taskCode].followMaxStartTime = _time;
@@ -2543,6 +2557,7 @@ class LinkPlan {
     // console.log("this:", this);
     this._updateRank(callback);
     // callback(nodes, option);
+    // this._optimize();
     console.timeEnd("点线计算");
   }
 
@@ -2576,9 +2591,11 @@ class LinkPlan {
           ? rawTaskInfo.free_float
           : 0
         : 0;
-      let freeDay = Number(Number(free / 24).toFixed(4));
-      let duration = taskInfo.duration || 0;
-      let durationDay = Number(Number(duration / 24).toFixed(4));
+      let duration = rawTaskInfo
+        ? rawTaskInfo.duration
+          ? rawTaskInfo.duration
+          : 0
+        : 0;
 
       if (!isDummy) {
         // 实工作
@@ -2641,10 +2658,8 @@ class LinkPlan {
           dummy: isDummy,
           length: lineLen,
           duration: duration,
-          durationDay: durationDay,
           direction: direction,
           free: free,
-          freeDay: freeDay,
           lineShape: lineShape,
         };
 
@@ -2668,7 +2683,11 @@ class LinkPlan {
         ? rawTaskInfo.free_float
         : 0
       : 0; // 自由时差 - 小时
-    let duration = Number(taskInfo.duration) || 0; // 持续时间 - 小时
+    let duration = rawTaskInfo
+      ? rawTaskInfo.duration
+        ? rawTaskInfo.duration
+        : 0
+      : 0; // 持续时间 - 小时
     let durationLength = (duration * lineLen) / (duration + free) || 0;
     let freeLength = (free * lineLen) / (duration + free) || 0;
     let isDummy = taskInfo.isDummy;
@@ -2811,7 +2830,11 @@ class LinkPlan {
           ? rawTaskInfo.free_float
           : 0
         : 0;
-      let duration = taskInfo.duration || 0;
+      let duration = rawTaskInfo
+        ? rawTaskInfo.duration
+          ? rawTaskInfo.duration
+          : 0
+        : 0;
 
       if (!isDummy) {
         // 实工作
@@ -3395,7 +3418,11 @@ class LinkPlan {
         label = rawTaskInfo.text ? rawTaskInfo.text : "";
       }
       let lineLen = Number(eX) - Number(sX);
-      let duration = taskInfo.duration || 0;
+      let duration = rawTaskInfo
+        ? rawTaskInfo.duration
+          ? rawTaskInfo.duration
+          : 0
+        : 0;
       let free = rawTaskInfo
         ? rawTaskInfo.free_float
           ? rawTaskInfo.free_float
@@ -3732,7 +3759,11 @@ class LinkPlan {
         label = rawTaskInfo.text ? rawTaskInfo.text : "";
       }
       let lineLen = Number(eX) - Number(sX);
-      let duration = taskInfo.duration || 0;
+      let duration = rawTaskInfo
+        ? rawTaskInfo.duration
+          ? rawTaskInfo.duration
+          : 0
+        : 0;
       let free = rawTaskInfo
         ? rawTaskInfo.free_float
           ? rawTaskInfo.free_float
@@ -4144,7 +4175,11 @@ class LinkPlan {
         label = rawTaskInfo.text ? rawTaskInfo.text : "";
       }
       let lineLen = Number(eX) - Number(sX);
-      let duration = taskInfo.duration || 0;
+      let duration = rawTaskInfo
+        ? rawTaskInfo.duration
+          ? rawTaskInfo.duration
+          : 0
+        : 0;
       let free = rawTaskInfo
         ? rawTaskInfo.free_float
           ? rawTaskInfo.free_float
@@ -5322,10 +5357,16 @@ class LinkPlan {
       let isDummy = taskInfo.isDummy;
       let direction = _DIRECTION.NONE;
       let lineLen = Number(eY) - Number(sY);
-      let free = rawTaskInfo ? rawTaskInfo.free_float : 0; // 自由时差 - 小时
-      let freeDay = Number(free / 24).toFixed(4);
-      let duration = taskInfo.duration || 0;
-      let durationDay = Number(duration / 24).toFixed(4);
+      let free = rawTaskInfo
+        ? rawTaskInfo.free_float
+          ? rawTaskInfo.free_float
+          : 0
+        : 0; // 自由时差 - 小时
+      let duration = rawTaskInfo
+        ? rawTaskInfo.duration
+          ? rawTaskInfo.duration
+          : 0
+        : 0;
       let deduction = 0;
       let intersections = [];
       let passNodes = [];
@@ -5401,10 +5442,8 @@ class LinkPlan {
           dummy: isDummy,
           length: lineLen,
           duration: duration,
-          durationDay: durationDay,
           direction: direction,
           free: free,
-          freeDay: freeDay,
         };
 
         let link = new Link(option, type, { lines: lines }, startCode, endCode);
@@ -5525,8 +5564,16 @@ class LinkPlan {
       let isCritical = taskInfo.isCritical;
       let isDummy = taskInfo.isDummy;
       let lineLen = Number(eX) - Number(sX);
-      let free = rawTaskInfo ? rawTaskInfo.free_float : 0;
-      let duration = taskInfo.duration || 0;
+      let free = rawTaskInfo
+        ? rawTaskInfo.free_float
+          ? rawTaskInfo.free_float
+          : 0
+        : 0;
+      let duration = rawTaskInfo
+        ? rawTaskInfo.duration
+          ? rawTaskInfo.duration
+          : 0
+        : 0;
 
       if (!isDummy) {
         // 非虚工作
@@ -6460,6 +6507,16 @@ class LinkPlan {
     // TODO: 计算线段坐标及相连线段坐标的偏移
   }
 
+  // 优化 optimize - 遍历所有的 link
+  _optimize() {
+    let keys = Object.keys(this.aoan.edgesMap);
+    for (let i = 0; i < keys.length; i++) {
+      let edgeCode = keys[keys.length - 1 - i]; // 倒序
+      let edge = this.aoan.edgesMap[edgeCode];
+      console.log("遍历所有的link ================> ", edge.link);
+    }
+  }
+
   // 更新坐标和连线的分层
   _updateRank(callback) {
     if (this.rankIncrement > 0) {
@@ -6549,61 +6606,56 @@ class Coordinate {
       }
       //ruleString = ruleString + '[weight=' + this.factor * 5 + ']\n';
     }
-    //关键路径,尽量保持直线
+    // //关键路径,尽量保持直线
     let pathsString = "";
-    let paths = this.aoan.criticalTopSort();
-    paths = this.handlePaths(paths);
-    //console.log('criticalTopSort', paths);
-    if (paths.length > 0) {
-      for (let i = 0; i < paths.length; i++) {
-        let pathNodes = paths[i].path;
-        let path = "";
-
-        for (let j = 0; j < pathNodes.length; j++) {
-          if (j === 0) {
-            path = pathNodes[j];
-          } else {
-            path = path + "->" + pathNodes[j];
-          }
-        }
-        pathsString =
-          pathsString + "    " + path + "[weight=" + this.factor * 2 + "]\n";
-      }
-    } else {
-      console.log("****************************");
-      console.log("***  Info：没有关键路径  ****");
-      console.log("****************************");
-    }
-    //非关键路径,尽量保持直线（权重降低）
-    paths = this.aoan.unCriticalTopSort();
-    paths = this.handlePaths(paths);
-    //console.log('unCriticalTopSort', paths);
-    if (paths.length > 0) {
-      for (let i = 0; i < paths.length; i++) {
-        let pathNodes = paths[i].path;
-        let path = "";
-        for (let j = 0; j < pathNodes.length; j++) {
-          if (j === 0) {
-            path = pathNodes[j];
-          } else {
-            path = path + "->" + pathNodes[j];
-          }
-        }
-        //优化普通路径
-        if (pathNodes.length > 2) {
-          pathsString =
-            pathsString +
-            "    " +
-            path +
-            "[weight=" +
-            Math.round(this.factor / 2) +
-            "]\n";
-        } else {
-          pathsString = pathsString + "    " + path + "\n";
-        }
-        //pathsString = pathsString + "    " + path + "\n";
-      }
-    }
+    // let paths = this.aoan.criticalTopSort();
+    // paths = this.handlePaths(paths);
+    // console.log('criticalTopSort', paths);
+    // if (paths.length > 0) {
+    //     for (let i = 0; i < paths.length; i++) {
+    //         let pathNodes = paths[i].path;
+    //         let path = "";
+    //         for (let j = 0; j < pathNodes.length; j++) {
+    //             if (j === 0) {
+    //                 path = pathNodes[j];
+    //             } else {
+    //                 path = path + "->" + pathNodes[j];
+    //                 //console.log(`${pathNodes[j - 1]}-${pathNodes[j]}`);
+    //                 //this.aoan.edgesMap[`${pathNodes[j - 1]}-${pathNodes[j]}`].isCoordinated = true;
+    //             }
+    //         }
+    //         pathsString = pathsString + "    " + path + "[weight=" + this.factor * 2 + "]\n";
+    //     }
+    // } else {
+    //     console.log("****************************");
+    //     console.log("***  Info：没有关键路径  ****");
+    //     console.log("****************************");
+    // }
+    // //非关键路径,尽量保持直线（权重降低）
+    // paths = this.aoan.unCriticalTopSort();
+    // paths = this.handlePaths(paths);
+    // //console.log('unCriticalTopSort', paths);
+    // if (paths.length > 0) {
+    //     for (let i = 0; i < paths.length; i++) {
+    //         let pathNodes = paths[i].path;
+    //         let path = "";
+    //         for (let j = 0; j < pathNodes.length; j++) {
+    //             if (j === 0) {
+    //                 path = pathNodes[j];
+    //             } else {
+    //                 path = path + "->" + pathNodes[j];
+    //                 //this.aoan.edgesMap[`${pathNodes[j - 1]}-${pathNodes[j]}`].isCoordinated = true;
+    //             }
+    //         }
+    //         //优化普通路径
+    //         if (pathNodes.length > 2) {
+    //             pathsString = pathsString + "    " + path + "[weight=" + Math.round(this.factor) + "]\n";
+    //         } else {
+    //             pathsString = pathsString + "    " + path + "\n";
+    //         }
+    //         //pathsString = pathsString + "    " + path + "\n";
+    //     }
+    // }
     // 剔除边数据约束，因为和路径数据重叠 2020-09-09
     let edgeString = "";
     keys = this.aoan.edges.keys();
@@ -6653,7 +6705,7 @@ class Coordinate {
     //console.log("pathsString:", pathsString);
     //console.log("ruleString:", ruleString);
     //console.log("graphData:", graphData);
-    console.log(graphData);
+    //console.log(graphData);
     return graphData;
   }
   /**
@@ -6848,7 +6900,7 @@ class Coordinate {
           max: maxYIndex,
         },
       };
-      console.log("__nodes", __nodes);
+      //console.log("__nodes", __nodes);
       that.option = option;
       that.nodes = __nodes;
       console.timeEnd("布局计算:");
@@ -7001,7 +7053,7 @@ class ActivityOnArrowNetwork extends Graph {
     this.aIntersects = {};
     this.timeScale = 1000 * 60 * 60 * 24; //时间刻度：天
     this.arbitraryDummyEdge = {};
-    this.firstNode = "";
+    this.firstNode = "1";
     this.lastNode = "LAST";
     this.projectStartTime = null;
     this.projectEndTime = null;
@@ -7537,32 +7589,21 @@ class ActivityOnArrowNetwork extends Graph {
 
           //let meetingNode = this._createSetTasks(key, parentKey);
           let createSetTasks = this._createSetTasks(key, parentKey);
-          console.log("createSetTasks", createSetTasks);
+          //console.log('createSetTasks', createSetTasks);
           let meetingNode = createSetTasks.meetingNode;
           if (difference.length != 0) {
             if (parentFinded == 0) {
               let aTask = this.getTaskInfo(aTaskCode);
               let aTaskNode = this.getTaskNode(aTaskCode);
-              console.log(aTaskCode, "---", aTaskNode);
-              let aTaskIsCreated = true;
               if (aTaskNode == null) {
                 aTaskNode = this.createTaskNode(aTask);
-                aTaskIsCreated = false;
               }
 
-              console.log(aTask, "---", aTaskNode);
+              //console.log(aTask, "---", aTaskNode);
               this._addTaskEdge(aTaskNode.start, aTaskNode.end, aTask);
               //创建交集汇点到aTask的虚工作
               let dummyCode = "D:" + meetingNode + "->" + aTaskNode.start;
-              console.log(
-                aTaskIsCreated,
-                aTask.text,
-                "创建22:",
-                meetingNode,
-                aTaskNode.start,
-                dummyCode,
-                null
-              );
+              //console.log(aTaskIsCreated, aTask.text, "创建22:", meetingNode, aTaskNode.start, dummyCode, null);
               this.addDummyEdge(meetingNode, aTaskNode.start, dummyCode, aTask);
             }
           } else {
@@ -7641,7 +7682,7 @@ class ActivityOnArrowNetwork extends Graph {
             for (let j = 0; j < tasks.length; j++) {
               let task = tasks[j];
               let taskNode = this.getTaskNode(task.code);
-              console.log(task.code, taskNode);
+              //console.log(task.code, taskNode);
               let endEdges = this.getEdges(taskNode.end);
               let hasRealTask = 0;
               let hasCritical = 0;
@@ -7890,7 +7931,6 @@ class ActivityOnArrowNetwork extends Graph {
     //创建搭接关系
     //console.log("_frontNode:", _frontNode);
     //console.log("_taskNode:", _taskNode);
-
     switch (type) {
       case TASK_LINK_TYPE$1.SS:
         if (_frontNode.start !== _taskNode.start) {
@@ -7991,9 +8031,13 @@ class ActivityOnArrowNetwork extends Graph {
     let source = relation.frontId;
     let target = relation.followId;
     let lag = 0;
+    //console.log('-------', frontTask.text, task.text);
     //只有关系符合时才计算延时数据
     if (source === frontTask.code && target === task.code) {
       lag = relation.lag;
+      // if (lag !== 0) {
+      //     console.log('-------', lag);
+      // }
     }
     if (!frontTaskIsCreate && !taskIsCreate) {
       //都没有创建过
@@ -8003,22 +8047,26 @@ class ActivityOnArrowNetwork extends Graph {
       let _taskNode = null;
       if (frontTaskIsCreate && taskIsCreate) {
         //都已经创建过
+        //console.log('1');
         _frontNode = this.getTaskNode(frontTask.code);
         _taskNode = this.getTaskNode(task.code);
       } else if (!frontTaskIsCreate) {
         //紧前没有创建过
+        //console.log('2');
         _taskNode = this.getTaskNode(task.code); //获取后任务的节点信息
         _frontNode = this._createFrontTaskEdge(frontTask); //创建紧前任务并获取节点
       } else if (!taskIsCreate) {
         //后任务没有创建过
+        //console.log('3');
         _frontNode = this.getTaskNode(frontTask.code); //获取紧前任务的节点信息
         _taskNode = this._createTaskEdge(task); //创建后任务并获取节点
       }
+
       //创建虚工作或延时工作
       if (_frontNode.end !== _taskNode.start) {
         //说明不是直接创建的，创建虚工作暂时连接
         if (lag !== 0) {
-          //创建延时工作
+          //console.log('-------', _frontNode, _taskNode);                   //创建延时工作
           this._createEdge(
             {
               node: _frontNode.end,
@@ -8055,167 +8103,152 @@ class ActivityOnArrowNetwork extends Graph {
   _createConsecutiveFSTask(frontTask, task, lag) {
     //==================创建前任务================================
     let libs = new Libs();
-    let taskStartDateFront = frontTask.start_date;
-    let taskEndDateFront = frontTask.end_date;
-    let frontMaxEndTime = frontTask.frontMaxEndTime
-      ? frontTask.frontMaxEndTime
-      : taskStartDateFront;
     let createTaskNodeFront = this.createTaskNode(frontTask);
     let createTaskNode = this.createTaskNode(task);
-    let taskStartDate = task.start_date;
-    let taskEndDate = task.end_date;
-    let taskMaxEndTime = task.isLastTask ? this.projectEndTime : taskEndDate;
     let realEdgeNode1 = {
       node: createTaskNodeFront.start,
-      time: frontMaxEndTime,
+      time: frontTask.start_date,
       critical: frontTask.isCriticalTask,
     };
     let realEdgeNode2 = {
       node: createTaskNodeFront.end,
-      time: taskEndDateFront,
+      time: frontTask.end_date,
       critical: frontTask.isCriticalTask,
     };
     let realEdgeNode3 = {
       node: createTaskNode.start,
-      time: taskStartDate,
+      time: task.start_date,
       critical: task.isCriticalTask,
     };
     let realEdgeNode4 = {
       node: createTaskNode.end,
-      time: taskMaxEndTime,
+      time: task.end_date,
       critical: task.isCriticalTask,
     };
-
-    let hangTaskCodeFront = "HS" + frontTask.code;
-    let startHangTime = libs.dateDifferenceToDays(
-      frontMaxEndTime,
-      taskStartDateFront
-    ).diff; //记录开始挂起时间长度
-    if (startHangTime !== 0 && INDEPENDENT_START_HANG) {
-      //需要添加前挂起工作
-      let hangEdgeStart = {
-        node: createTaskNodeFront.start,
-        time: frontMaxEndTime,
+    if (lag !== 0) {
+      //创建延时工作
+      let lagEdgeNode1 = {
+        node: realEdgeNode2.node,
+        time: "",
         critical: frontTask.isCriticalTask,
       };
-      let hangEdgeEnd = {
-        node: hangTaskCodeFront,
-        time: taskStartDateFront,
-        critical: frontTask.isCriticalTask,
+      let lagEdgeNode2 = {
+        node: realEdgeNode3.node,
+        time: "",
+        critical: task.isCriticalTask,
       };
-      //创建前挂起边
+      let option = {
+        taskType: TASK_TYPE$1.LAG,
+        typeText: "3" + TASK_TYPE$1.LAG_TEXT,
+        lag: lag,
+        relationLinkType: TASK_LINK_TYPE$1.SF,
+        relationLinkTypeText: TASK_LINK_TYPE$1.SF_TEXT,
+      };
+      //创建延迟任务
+      let lagTaskCode = "L" + frontTask.code + "-" + task.code;
+      let edgeIsCritical = frontTask.isCriticalTask && task.isCriticalTask;
       this._createEdge(
-        hangEdgeStart,
-        hangEdgeEnd,
-        TASK_TYPE$1.HANG,
-        frontTask.isCriticalTask,
-        hangTaskCodeFront,
-        { taskType: TASK_TYPE$1.HANG_TEXT, hangTime: startHangTime }
+        lagEdgeNode1,
+        lagEdgeNode2,
+        TASK_TYPE$1.LAG,
+        edgeIsCritical,
+        lagTaskCode,
+        option
       );
-      realEdgeNode1.node = hangTaskCodeFront;
-      realEdgeNode1.time = taskStartDateFront;
+    } else {
+      realEdgeNode2 = {
+        node: createTaskNode.start,
+        time: task.start_date,
+        critical: frontTask.isCriticalTask,
+      };
+      realEdgeNode3 = {
+        node: createTaskNode.start,
+        time: task.start_date,
+        critical: task.isCriticalTask,
+      };
     }
-    //==================创建后任务================================
-    let hangTaskCode = "HE" + task.code;
-    let endHangTime = libs.dateDifferenceToDays(taskEndDate, taskMaxEndTime)
-      .diff; //记录结束挂起时间长度
-    let hangEdgeStart = {
-      node: hangTaskCode,
-      time: taskEndDate,
-      critical: task.isCriticalTask,
-    };
-    let hangEdgeEnd = {
-      node: createTaskNode.end,
-      time: taskMaxEndTime,
-      critical: task.isCriticalTask,
-    };
 
-    if (endHangTime !== 0 && INDEPENDENT_END_HANG) {
-      //结束需要添加挂起工作
-      //创建后挂起边
-      // this._createEdge(hangEdgeStart, hangEdgeEnd, TASK_TYPE.HANG, task.isCriticalTask, hangTaskCode, { "taskType": TASK_TYPE.HANG_TEXT, "hangTime": startHangTime });
+    if (
+      task.isLastTask === true &&
+      task.end_date !== this.projectEndTime &&
+      ONLY_START_END
+    ) {
+      //创建后挂起工作
+      let hangNode = {
+        node: this.lastNode,
+        time: this.projectEndTime,
+        critical: true,
+      };
+      //修改后任务的节点信息
+      realEdgeNode4.node = realEdgeNode4.node + "TE";
+      //console.log('hangNode', hangNode, 'realEdgeNode4', realEdgeNode4);
+      let hangTaskCode = "HE" + task.code;
+      let hangTime = libs.dateDifferenceToDays(
+        realEdgeNode4.time,
+        this.projectEndTime
+      ).diff;
       this._createEdge(
-        hangEdgeStart,
-        hangEdgeEnd,
+        realEdgeNode4,
+        hangNode,
         TASK_TYPE$1.HANG,
         task.isCriticalTask,
         hangTaskCode,
-        { taskType: TASK_TYPE$1.HANG_TEXT, hangTime: startHangTime }
-      );
-      realEdgeNode4.node = hangTaskCode;
-      realEdgeNode4.time = taskEndDate;
-    } else {
-      let check = this.checkDuplicateNode(
-        createTaskNode.start,
-        createTaskNode.end,
-        task.code
-      );
-      //节点重复，但是任务不重复
-      if (check.nodeDuplicate && !check.taskDuplicate) {
-        //后面没有挂起工作，则添加一个挂起工作防止重复
-        //创建后挂起边
-        this._createEdge(
-          hangEdgeStart,
-          hangEdgeEnd,
-          TASK_TYPE$1.AVOID_REPETITION,
-          task.isCriticalTask,
-          "A" + task.code,
-          { taskType: TASK_TYPE$1.AVOID_REPETITION_TEXT }
-        );
-        realEdgeNode4.node = hangTaskCode;
-        realEdgeNode4.time = taskEndDate;
-      }
-    }
-
-    if (realEdgeNode2.time !== realEdgeNode3.time && lag !== 0) {
-      //console.log("realEdgeNode1:", realEdgeNode1, "realEdgeNode2", realEdgeNode2, "realEdgeNode3:", realEdgeNode3, "realEdgeNode4", realEdgeNode4);
-      //创建前任务
-      this._createEdge(
-        realEdgeNode1,
-        realEdgeNode2,
-        TASK_TYPE$1.REAL,
-        frontTask.isCriticalTask,
-        frontTask.code,
-        frontTask
-      );
-      //创建延迟任务
-      this._createEdge(
-        realEdgeNode2,
-        realEdgeNode3,
-        TASK_TYPE$1.LAG,
-        frontTask.isCriticalTask,
-        "L" + frontTask.code + "-" + task.code,
-        { taskType: TASK_TYPE$1.LAG_TEXT, lag: lag }
-      );
-      //创建后任务
-      this._createEdge(
-        realEdgeNode3,
-        realEdgeNode4,
-        TASK_TYPE$1.REAL,
-        task.isCriticalTask,
-        task.code,
-        task
-      );
-    } else {
-      //创建前任务
-      this._createEdge(
-        realEdgeNode1,
-        realEdgeNode3,
-        TASK_TYPE$1.REAL,
-        frontTask.isCriticalTask,
-        frontTask.code,
-        frontTask
-      );
-      //创建后任务
-      this._createEdge(
-        realEdgeNode3,
-        realEdgeNode4,
-        TASK_TYPE$1.REAL,
-        task.isCriticalTask,
-        task.code,
-        task
+        {
+          taskType: TASK_TYPE$1.HANG,
+          typeText: "1" + TASK_TYPE$1.HANG_TEXT,
+          hangTime: hangTime,
+        }
       );
     }
+    if (
+      frontTask.isFirstTask === true &&
+      frontTask.start_date !== this.projectStartTime &&
+      ONLY_START_END
+    ) {
+      //创建前挂起工作
+      let hangNode = {
+        node: this.firstNode,
+        time: this.projectStartTime,
+        critical: true,
+      };
+      //修改前任务的节点信息
+      realEdgeNode1.node = realEdgeNode1.node + "TS";
+      let hangTaskCode = "HS" + frontTask.code;
+      let hangTime = libs.dateDifferenceToDays(
+        this.projectStartTime,
+        realEdgeNode1.time
+      ).diff;
+      this._createEdge(
+        hangNode,
+        realEdgeNode1,
+        TASK_TYPE$1.HANG,
+        frontTask.isCriticalTask,
+        hangTaskCode,
+        {
+          taskType: TASK_TYPE$1.HANG,
+          typeText: "2" + TASK_TYPE$1.HANG_TEXT,
+          hangTime: hangTime,
+        }
+      );
+    }
+    //创建前任务
+    this._createEdge(
+      realEdgeNode1,
+      realEdgeNode2,
+      TASK_TYPE$1.REAL,
+      frontTask.isCriticalTask,
+      frontTask.code,
+      frontTask
+    );
+    //创建后任务
+    this._createEdge(
+      realEdgeNode3,
+      realEdgeNode4,
+      TASK_TYPE$1.REAL,
+      task.isCriticalTask,
+      task.code,
+      task
+    );
   }
   //创建前任务
   _createFrontTaskEdge(task) {
@@ -8586,9 +8619,8 @@ class ActivityOnArrowNetwork extends Graph {
     //}
     let check = this.checkDuplicateNode(node1, node2, task.code);
     if (check.nodeDuplicate) {
-      if (check.taskDuplicate) {
-        console.log("不允许完全重复的添加任务");
-      } else {
+      if (check.taskDuplicate);
+      else {
         //后面添加一个节点防止重复
         let vertexLeft = this._createVertex(node1, startDate, _isCriticalTask);
         let middleCode = "M" + taskCode;

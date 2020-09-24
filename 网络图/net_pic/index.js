@@ -520,6 +520,8 @@
                                          * @Author: zhang fq
                                          * @Date: 2020-08-21
                                          * @Description:修复连接线只有一条且为垂直方向时的 任务名lable显示坐标计算错误bug
+                                         * @Date: 2020-09-24
+                                         * @Update: 根据布局算法返回的新的数据结构，筛选出挂起工作 并显示其lable标签和工期（30%）
                                          */
                                         taskInfo.forEach((v) => {
                                           let text = {
