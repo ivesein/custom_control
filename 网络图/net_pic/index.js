@@ -538,6 +538,26 @@
                                                 ? 0
                                                 : v.option.duration,
                                           };
+                                          /**
+                                           * @Author: zhang fq
+                                           * @Date: 2020-09-25
+                                           * @Description:处理任务类型为搭接工作和挂起工作的 任务名标签和工期
+                                           */
+                                          switch (v.taskType) {
+                                            case 6:
+                                              text.label =
+                                                v.option.relationLinkType;
+                                              text.duration =
+                                                v.option.lag || "";
+                                              break;
+                                            case 3:
+                                              text.label = v.option.typeText;
+                                              text.duration =
+                                                v.option.hangTime || "";
+                                              break;
+                                            default:
+                                              break;
+                                          }
                                           if (v.link) {
                                             if (
                                               v.link.lines &&
@@ -1019,6 +1039,11 @@
                                           }
                                         });
                                         //循环处理完的linkData（边）数据 绘制边 挂载到根组
+                                        /**
+                                         * @Author: zhang fq
+                                         * @Date: 2020-09-25
+                                         * @Description: 添加挂起工作，搭接工作等类型的判断  暂定画虚线
+                                         */
                                         linkData.forEach((v) => {
                                           if (v.lines) {
                                             v.lines.forEach((vl, k) => {
@@ -1065,6 +1090,26 @@
                                                     vl,
                                                     this.rootG,
                                                     LINE_WAVE_COLOR,
+                                                    LINE_WIDTH,
+                                                    offsetX,
+                                                    offsetY,
+                                                    xUnit,
+                                                    yUnit,
+                                                    marginLeft,
+                                                    marginTop,
+                                                    scale
+                                                  );
+                                                  break;
+                                                case 4:
+                                                case 5:
+                                                case 6:
+                                                  // 画虚线
+                                                  drawDashedLine(
+                                                    v,
+                                                    vl,
+                                                    this.rootG,
+                                                    LINE_DASHED_COLOR,
+                                                    STROKE_DASHARRAY,
                                                     LINE_WIDTH,
                                                     offsetX,
                                                     offsetY,
