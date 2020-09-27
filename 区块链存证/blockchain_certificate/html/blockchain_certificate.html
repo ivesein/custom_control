@@ -68,13 +68,10 @@
           <i class="close-btn el-icon-error" @click="closeDetailInfo"></i>
         </div>
         <!-- 所有信息页面 -->
-        <!-- <div class="all-info-container" v-show="allInfoShow">
-
-        </div> -->
       <el-dialog title="所有信息" :visible.sync="allInfoShow" :modal="false">
           <div class="data-info-list">
             <div class="data-info-item" v-for="(val, key, index) in currentContext.data">
-              <span class="data-info-item-label">${key}:</span><span>${val}</span>
+              <div class="data-info-item-label">${key}:</div><div v-html="val"></div>
             </div>
           </div>
           <el-divider content-position="left">附件</el-divider>

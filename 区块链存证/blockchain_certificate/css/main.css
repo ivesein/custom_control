@@ -129,7 +129,8 @@ body {
 }
 
 #bcCertificateApp .data-info-list .data-info-item {
-  height: 30px;
+  /* height: 30px; */
+  display: flex;
   line-height: 30px;
 }
 
