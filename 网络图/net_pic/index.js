@@ -56,6 +56,8 @@
   const LINE_DEFAULT_COLOR = "blue";
   const LINE_DASHED_COLOR = "#000";
   const LINE_WAVE_COLOR = "#0592f7";
+  const LINE_RELATION_DASHED_COLOR = "green";
+  const STROKE_RELATION_DASHARRAY = "3,1,3";
   const STROKE_DASHARRAY = "3,3";
   const LINE_OFFSETX_UNIT = 5; // 连线偏移量单位
 
@@ -524,6 +526,8 @@
                                          * @Update: 根据布局算法返回的新的数据结构，筛选出挂起工作 并显示其lable标签和工期（30%）
                                          * @Date: 2020-09-27
                                          * @Update: 根据布局算法返回的新的数据结构，标识出搭接工作，挂起工作 并显示其lable标签和工期（80%）
+                                         * @Date: 2020-09-29
+                                         * @Update: 标识出搭接工作，挂起工作 并显示其lable标签和工期（100%）
                                          */
                                         taskInfo.forEach((v) => {
                                           let text = {
@@ -540,15 +544,10 @@
                                                 ? 0
                                                 : v.option.duration,
                                           };
-                                          /**
-                                           * @Author: zhang fq
-                                           * @Date: 2020-09-25
-                                           * @Description:处理任务类型为搭接工作和挂起工作的 任务名标签和工期
-                                           */
-                                          switch (v.taskType) {
+                                          switch (v.option.taskType) {
                                             case 6:
                                               text.label =
-                                                v.option.relationLinkType;
+                                                v.option.relationLinkTypeText;
                                               text.duration =
                                                 v.option.lag || "";
                                               break;
@@ -1102,9 +1101,9 @@
                                                     scale
                                                   );
                                                   break;
-                                                case 4:
-                                                case 5:
-                                                case 6:
+                                                case 4: //挂起
+                                                case 5: //避免重复
+                                                case 6: //延时
                                                   // 画虚线
                                                   drawDashedLine(
                                                     v,
@@ -1112,6 +1111,24 @@
                                                     this.rootG,
                                                     LINE_DASHED_COLOR,
                                                     STROKE_DASHARRAY,
+                                                    LINE_WIDTH,
+                                                    offsetX,
+                                                    offsetY,
+                                                    xUnit,
+                                                    yUnit,
+                                                    marginLeft,
+                                                    marginTop,
+                                                    scale
+                                                  );
+                                                  break;
+                                                case 7: //搭接
+                                                  // 画虚线
+                                                  drawDashedLine(
+                                                    v,
+                                                    vl,
+                                                    this.rootG,
+                                                    LINE_RELATION_DASHED_COLOR,
+                                                    STROKE_RELATION_DASHARRAY,
                                                     LINE_WIDTH,
                                                     offsetX,
                                                     offsetY,
