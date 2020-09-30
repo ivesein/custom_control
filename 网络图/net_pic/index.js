@@ -528,6 +528,8 @@
                                          * @Update: 根据布局算法返回的新的数据结构，标识出搭接工作，挂起工作 并显示其lable标签和工期（80%）
                                          * @Date: 2020-09-29
                                          * @Update: 标识出搭接工作，挂起工作 并显示其lable标签和工期（100%）
+                                         * @Date: 2020-09-30
+                                         * @Update:修复获取挂起工作工时显示时 会显示小数点后很多位的问题
                                          */
                                         taskInfo.forEach((v) => {
                                           let text = {
@@ -553,8 +555,18 @@
                                               break;
                                             case 3:
                                               text.label = v.option.typeText;
-                                              text.duration =
-                                                v.option.hangTime || "";
+                                              let duration = v.option.hangTime
+                                                ? v.option.hangTime + ""
+                                                : "";
+                                              if (
+                                                duration.indexOf(".") !== -1
+                                              ) {
+                                                text.duration = duration.toFixed(
+                                                  1
+                                                );
+                                              } else {
+                                                text.duration = duration;
+                                              }
                                               break;
                                             default:
                                               break;
