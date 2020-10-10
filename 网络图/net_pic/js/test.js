@@ -1,4 +1,4 @@
-import { ActivityOnArrowNetwork } from "./bundle.js";
+// import { ActivityOnArrowNetwork } from "./bundle.js";
 
 // 定义标尺绘制相关常量
 const ROLE_TEXT_COLOR = "#808000"; // 标尺内容文字颜色
@@ -56,6 +56,7 @@ new Vue({
     aoanOption: {
       layoutFactor: 10,
     },
+    projectName: "",
     dateData: {},
     timeScale: [
       {
