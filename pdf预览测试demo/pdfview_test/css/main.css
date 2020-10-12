@@ -1,0 +1,58 @@
+html,body{
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* 
+  @author  zhang fuqiang
+  @time  2020-02-07  
+  @description  头像墙自定义空页面样式
+*/
+
+#checkRecordsApp {
+  width: 100%;
+  /* background: #f2f5fe; */
+}
+
+#checkRecordsApp .content-box{
+  width: 100%;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  min-height: 100px;
+}
+
+#checkRecordsApp .title-text{
+  color: #5582f4;
+  font-size: 16px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 2px;
+}
+
+#checkRecordsApp .avatar-list-box{
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+#checkRecordsApp .avatar-list-box .avatar-box{
+  width: 80px;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+#checkRecordsApp .avatar-name{
+  font-size: 14px;
+  color: #999;
+  margin-top: 5px;
+}
+
+#checkRecordsApp .default-img{
+  background: #fff;
+}

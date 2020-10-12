@@ -348,19 +348,26 @@
                           });
                         });
                       }
-
+                      /**
+                       * @Author: zhang fq
+                       * @Date: 2020-10-12
+                       * @Description: 根据卢峰需求变更 修改质量计划 设置人员接口返回的数据做对应的处理
+                       */
                       // 处理setPerson
                       if (changeData.setPerson) {
                         changeData.setPerson.forEach((cv) => {
-                          originData.forEach((ov) => {
-                            if (cv.qp_owner_roleid === ov.qp_owner_roleid) {
-                              ov.qp_owner_role = cv.qp_owner_role;
-                              ov.skill = cv.skill;
-                              ov.skill_id = cv.skill_id;
-                              ov.qp_owner = cv.qp_owner;
-                              ov.qp_owner_id = cv.qp_owner_id;
-                            }
-                          });
+                          if (cv.isreply === "2") {
+                            originData.forEach((ov) => {
+                              if (cv.qp_owner_roleid === ov.qp_owner_roleid) {
+                                ov.qp_owner_role = cv.qp_owner_role;
+                                ov.skill = cv.skill;
+                                ov.skill_id = cv.skill_id;
+                                ov.qp_owner = cv.qp_owner;
+                                ov.qp_owner_id = cv.qp_owner_id;
+                                ov.isreply = cv.isreply;
+                              }
+                            });
+                          }
                         });
                       }
 
