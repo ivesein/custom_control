@@ -1,4 +1,5 @@
-// import { ActivityOnArrowNetwork } from "./bundle.js";
+// import { ActivityOnArrowNetwork } from "./layout.js";
+// var activityOnArrowNetwork = new ActivityOnArrowNetwork();
 
 // 定义标尺绘制相关常量
 const ROLE_TEXT_COLOR = "#808000"; // 标尺内容文字颜色
@@ -56,7 +57,6 @@ new Vue({
     aoanOption: {
       layoutFactor: 10,
     },
-    projectName: "",
     dateData: {},
     timeScale: [
       {
@@ -69,6 +69,10 @@ new Vue({
       },
     ],
     scale: 1,
+    dragFlag: false,
+    dragText: "停止拖拽",
+    projectName: "测试项目",
+    ifshowbotinfo: false,
   },
   computed: {
     getDataOptions() {
@@ -97,8 +101,33 @@ new Vue({
   created() {},
   mounted() {
     this.processData(this.option);
+
+    // let el = this.$refs.svgContainer;
+    // // el.addEvnetlisenter()
+    // el.onmousedown = function () {
+    //   document.onmousemove = function (ev) {
+    //     var l = ev.clientX;
+    //     var t = ev.clientY;
+    //     //console.log(l);
+    //     el.style.left = l + "px";
+    //     el.style.top = t + "px";
+    //   };
+    //   document.onmouseup = function () {
+    //     document.onmousemove = null;
+    //   };
+    // };
   },
   methods: {
+    /**
+     * @Author: zhang fq
+     * @Date: 2020-10-10
+     * @Description: 添加整体画布开始拖拽和停止拖拽按钮交互逻辑
+     * 需要拖动节点时必须禁止拖拽整个画布
+     */
+    goDrag() {
+      this.dragFlag = !this.dragFlag;
+      this.dragText = this.dragFlag ? "停止拖拽" : "开始拖拽";
+    },
     /**
      * @Author: zhang fq
      * @Date: 2020-08-26
@@ -120,13 +149,25 @@ new Vue({
       this.processData(val);
     },
     // 拖拽回调  移动画布
+    /**
+     * @Author: zhang fq
+     * @Date: 2020-10-10
+     * @Description: 根据测试要求 为查看操作便利增加 整体画布拖拽 兼容缩放坐标算法
+     */
     dragmove(d) {
-      d.x += d3.event.dx;
-      d.y += d3.event.dy;
-      d3.select("g").attr("transform", function (d) {
-        return "translate(" + d.x + "," + d.y + ")";
-      });
+      // console.log(d3.event);
+      if (this.dragFlag) {
+        this.$refs.svgContainer.scrollTop -= d3.event.dy;
+        this.$refs.svgContainer.scrollLeft -= d3.event.dx;
+      }
+
+      // d.x += d3.event.dx;
+      // d.y += d3.event.dy;
+      // d3.select("g").attr("transform", function (d) {
+      //   return "translate(" + d.x + "," + d.y + ")";
+      // });
     },
+
     // 缩放回调
     zoomed(d) {
       let k = d3.event.transform.k.toFixed(1);
@@ -196,17 +237,34 @@ new Vue({
         ganttData[dataoption],
         this.aoanOption
       );
-      aoanInstance.layoutPlan((nodeCoordinate, edges, option) => {
+      aoanInstance.layoutPlan(async (nodeCoordinate, edges, option) => {
         layoutData = { nodeCoordinate, edges, option };
-        if (layoutData) {
-          this.init({ result: layoutData, aoan: aoanInstance });
-        } else {
-          this.$message.error("布局数据获取失败");
-          this.$forceUpdate();
-        }
+        this.init({ result: layoutData, aoan: aoanInstance });
+        // if (layoutData) {
+        //   localforage
+        //     .setItem("layoutData", { result: layoutData, aoan: aoanInstance })
+        //     .then(() => {
+        //       this.$message.success("数据缓存成功！");
+        //     });
+
+        //   try {
+        //     let res = await localforage.getItem("layoutData");
+        //     this.init(res);
+        //   } catch (error) {
+        //     this.$message.error("读取缓存数据失败");
+        //   }
+        // } else {
+        //   this.$message.error("布局数据获取失败");
+        //   this.$forceUpdate();
+        // }
       });
     },
-    init(res, scale = 1) {
+    init(resault, scale = 1) {
+      console.log();
+      // let resS = JSON.stringify(JSON.decycle(resault));
+      // let res = JSON.retrocycle(JSON.parse(resS));
+      let res = resault;
+
       // 重绘时 移除上次重绘的画布实例
       if (this.svgInstance) {
         this.svgInstance.remove();
@@ -267,12 +325,19 @@ new Vue({
        * @Author: zhang fq
        * @Date: 2020-08-21
        * @Description:修复连接线只有一条且为垂直方向时的 任务名lable显示坐标计算错误bug
+       * @Date: 2020-09-01
+       * @Update:优化任务名称显示 添加任务名称所在横线跨度，根据跨度和字数自动截取为多行
+       * @Date: 2020-09-02
+       * @Update:修复切换到小时视图时，任务名所在任务长度计算错误会被截取多段显示的bug
+       * @Date: 2020-09-22
+       * @Update:修复bug1421，新的数据结构 任务的类型为延时时没有text字段导致报错
+       *
        */
       taskInfo.forEach((v) => {
         let text = {
           x: 0,
           y: 0,
-          label: v.option ? v.option.text : "",
+          label: v.option && v.option.text ? v.option.text : "",
           duration:
             v.option === null ||
             (v.option.duration === 0 && v.option.dummy === true) // 修复 虚工作工期不显示问题
@@ -294,6 +359,16 @@ new Vue({
                   //  优化  直接取线的起点 加上任务的工期除以2
                   text.x = v.link.lines[i].start.x + v.link.option.length / 2;
                   text.y = v.link.lines[i].start.y;
+                  // 添加标签所在横线的的宽度数据供绘制任务名标签时
+                  // 判断是否能需要截取为多行垂直显示
+                  text.width =
+                    Number(v.link.option.length) * xUnit - NODE_RADIUS * 2;
+                  if (scale === 2) {
+                    text.width =
+                      Number(v.link.option.length) * xUnit * 24 -
+                      NODE_RADIUS * 2;
+                  }
+                  // console.log(text.width);
                   break;
                 }
               }
@@ -308,7 +383,11 @@ new Vue({
         .drag()
         .on("drag", this.dragmove)
         .on("start", () => {
-          this.svgInstance.style("cursor", "pointer");
+          if (this.dragFlag) {
+            this.svgInstance.style("cursor", "pointer");
+          } else {
+            this.svgInstance.style("cursor", "not-allowed");
+          }
         })
         .on("end", () => {
           this.svgInstance.style("cursor", "default");
@@ -337,7 +416,7 @@ new Vue({
         .style("left", "0px")
         .attr("width", "100%")
         .attr("height", "100%")
-        // .call(drag)  //去掉此处drag  不然有bug
+        .call(drag)
         .call(zoom); //拖拽画布功能
 
       // 创建根组
@@ -423,6 +502,8 @@ new Vue({
        * 被穿线为水平 要循环找到穿点所在的那条垂直线 取这条线的xOffset
        * @Date: 2020-08-21
        * @Udate：修复直线和波浪线相交点上有交叉点时穿线桥绘制遗漏的bug
+       * @Date: 2020-09-04
+       * @Update: 优化穿线交叉点半圆桥绘制，去除同类线型合并后 交叉点多次绘制的问题
        */
       let xPoints = [];
       linkData.forEach((link, k) => {
@@ -608,6 +689,35 @@ new Vue({
       linkData.forEach((v) => {
         if (v.lines) {
           v.lines.forEach((vl, k) => {
+            // 初始化线相关数据  在这里只计算一次  去除在每条线段里都计算
+            let dataline = [
+              {
+                x1:
+                  (offsetX + xUnit) * vl.start.x +
+                  vl.start.xOffset * LINE_OFFSETX_UNIT +
+                  marginLeft,
+                y1: (offsetY + yUnit) * vl.start.y + marginTop,
+                x2:
+                  (offsetX + xUnit) * vl.end.x +
+                  vl.end.xOffset * LINE_OFFSETX_UNIT +
+                  marginLeft,
+                y2: (offsetY + yUnit) * vl.end.y + marginTop,
+              },
+            ];
+            if (scale === 2) {
+              let startx = conversionCoordinates(vl.start.x);
+              let endx = conversionCoordinates(vl.end.x);
+              dataline[0].x1 =
+                (offsetX + xUnit) * startx.int * 24 +
+                (offsetX + xUnit) * startx.double +
+                vl.start.xOffset * LINE_OFFSETX_UNIT +
+                marginLeft;
+              dataline[0].x2 =
+                (offsetX + xUnit) * endx.int * 24 +
+                (offsetX + xUnit) * endx.double +
+                vl.end.xOffset * LINE_OFFSETX_UNIT +
+                marginLeft;
+            }
             switch (vl.shape) {
               case 1:
                 // 画实线
@@ -617,13 +727,7 @@ new Vue({
                   this.rootG,
                   LINE_DEFAULT_COLOR,
                   LINE_WIDTH,
-                  offsetX,
-                  offsetY,
-                  xUnit,
-                  yUnit,
-                  marginLeft,
-                  marginTop,
-                  scale
+                  dataline
                 );
                 break;
               case 2:
@@ -635,13 +739,14 @@ new Vue({
                   LINE_DASHED_COLOR,
                   STROKE_DASHARRAY,
                   LINE_WIDTH,
-                  offsetX,
-                  offsetY,
-                  xUnit,
-                  yUnit,
-                  marginLeft,
-                  marginTop,
-                  scale
+                  dataline
+                  // offsetX,
+                  // offsetY,
+                  // xUnit,
+                  // yUnit,
+                  // marginLeft,
+                  // marginTop,
+                  // scale
                 );
                 break;
               case 3:
@@ -652,13 +757,14 @@ new Vue({
                   this.rootG,
                   LINE_WAVE_COLOR,
                   LINE_WIDTH,
-                  offsetX,
-                  offsetY,
-                  xUnit,
-                  yUnit,
-                  marginLeft,
-                  marginTop,
-                  scale
+                  dataline
+                  // offsetX,
+                  // offsetY,
+                  // xUnit,
+                  // yUnit,
+                  // marginLeft,
+                  // marginTop,
+                  // scale
                 );
                 break;
               default:
@@ -668,18 +774,20 @@ new Vue({
                   this.rootG,
                   LINE_DEFAULT_COLOR,
                   LINE_WIDTH,
-                  offsetX,
-                  offsetY,
-                  xUnit,
-                  yUnit,
-                  marginLeft,
-                  marginTop,
-                  scale
+                  dataline
+                  // offsetX,
+                  // offsetY,
+                  // xUnit,
+                  // yUnit,
+                  // marginLeft,
+                  // marginTop,
+                  // scale
                 );
             }
           });
         }
       });
+
       // 调用节点绘制方法 绘制节点
       drawNode(
         node_data,
@@ -692,7 +800,8 @@ new Vue({
         yUnit,
         marginLeft,
         marginTop,
-        scale
+        scale,
+        nodeDrag
       );
       // 调用绘制任务标签方法  绘制任务标签和工期
       drawText(
@@ -728,43 +837,51 @@ function drawDefaultLine(
   rootGroup,
   lineDefaultColor,
   lineWidth,
-  offsetX,
-  offsetY,
-  xUnit,
-  yUnit,
-  marginLeft,
-  marginTop,
-  scale = 1
+  dataline = [
+    {
+      x1: 0,
+      y1: 0,
+      x2: 0,
+      y2: 0,
+    },
+  ]
+  // offsetX,
+  // offsetY,
+  // xUnit,
+  // yUnit,
+  // marginLeft,
+  // marginTop,
+  // scale = 1
 ) {
   // console.log("------------画实线", obj, item);
-  let dataline = [
-    {
-      x1:
-        (offsetX + xUnit) * item.start.x +
-        item.start.xOffset * LINE_OFFSETX_UNIT +
-        marginLeft,
-      y1: (offsetY + yUnit) * item.start.y + marginTop,
-      x2:
-        (offsetX + xUnit) * item.end.x +
-        item.end.xOffset * LINE_OFFSETX_UNIT +
-        marginLeft,
-      y2: (offsetY + yUnit) * item.end.y + marginTop,
-    },
-  ];
-  if (scale === 2) {
-    let startx = conversionCoordinates(item.start.x);
-    let endx = conversionCoordinates(item.end.x);
-    dataline[0].x1 =
-      (offsetX + xUnit) * startx.int * 24 +
-      (offsetX + xUnit) * startx.double +
-      item.start.xOffset * LINE_OFFSETX_UNIT +
-      marginLeft;
-    dataline[0].x2 =
-      (offsetX + xUnit) * endx.int * 24 +
-      (offsetX + xUnit) * endx.double +
-      item.end.xOffset * LINE_OFFSETX_UNIT +
-      marginLeft;
-  }
+  // let dataline = [
+  //   {
+  //     x1:
+  //       (offsetX + xUnit) * item.start.x +
+  //       item.start.xOffset * LINE_OFFSETX_UNIT +
+  //       marginLeft,
+  //     y1: (offsetY + yUnit) * item.start.y + marginTop,
+  //     x2:
+  //       (offsetX + xUnit) * item.end.x +
+  //       item.end.xOffset * LINE_OFFSETX_UNIT +
+  //       marginLeft,
+  //     y2: (offsetY + yUnit) * item.end.y + marginTop,
+  //   },
+  // ];
+  // if (scale === 2) {
+  //   let startx = conversionCoordinates(item.start.x);
+  //   let endx = conversionCoordinates(item.end.x);
+  //   dataline[0].x1 =
+  //     (offsetX + xUnit) * startx.int * 24 +
+  //     (offsetX + xUnit) * startx.double +
+  //     item.start.xOffset * LINE_OFFSETX_UNIT +
+  //     marginLeft;
+  //   dataline[0].x2 =
+  //     (offsetX + xUnit) * endx.int * 24 +
+  //     (offsetX + xUnit) * endx.double +
+  //     item.end.xOffset * LINE_OFFSETX_UNIT +
+  //     marginLeft;
+  // }
   let lineGroup = rootGroup.append("g").attr("class", "line-group");
   lineGroup
     .append("line")
@@ -782,6 +899,9 @@ function drawDefaultLine(
       return d.y2;
     })
     .attr("stroke", function (d) {
+      if (item.critical) {
+        // console.log("critical line>>>", item);
+      }
       // 关键路径 标红
       return item.critical ? "red" : lineDefaultColor;
     })
@@ -798,43 +918,51 @@ function drawDashedLine(
   lineDashedColor,
   storkeDasharray,
   lineWidth,
-  offsetX,
-  offsetY,
-  xUnit,
-  yUnit,
-  marginLeft,
-  marginTop,
-  scale = 1
+  dataline = [
+    {
+      x1: 0,
+      y1: 0,
+      x2: 0,
+      y2: 0,
+    },
+  ]
+  // offsetX,
+  // offsetY,
+  // xUnit,
+  // yUnit,
+  // marginLeft,
+  // marginTop,
+  // scale = 1
 ) {
   // console.log("------------话虚线");
-  let dataline = [
-    {
-      x1:
-        (offsetX + xUnit) * item.start.x +
-        item.start.xOffset * LINE_OFFSETX_UNIT +
-        marginLeft,
-      y1: (offsetY + yUnit) * item.start.y + marginTop,
-      x2:
-        (offsetX + xUnit) * item.end.x +
-        item.end.xOffset * LINE_OFFSETX_UNIT +
-        marginLeft,
-      y2: (offsetY + yUnit) * item.end.y + marginTop,
-    },
-  ];
-  if (scale === 2) {
-    let startx = conversionCoordinates(item.start.x);
-    let endx = conversionCoordinates(item.end.x);
-    dataline[0].x1 =
-      (offsetX + xUnit) * startx.int * 24 +
-      (offsetX + xUnit) * startx.double +
-      item.start.xOffset * LINE_OFFSETX_UNIT +
-      marginLeft;
-    dataline[0].x2 =
-      (offsetX + xUnit) * endx.int * 24 +
-      (offsetX + xUnit) * endx.double +
-      item.end.xOffset * LINE_OFFSETX_UNIT +
-      marginLeft;
-  }
+  // let dataline = [
+  //   {
+  //     x1:
+  //       (offsetX + xUnit) * item.start.x +
+  //       item.start.xOffset * LINE_OFFSETX_UNIT +
+  //       marginLeft,
+  //     y1: (offsetY + yUnit) * item.start.y + marginTop,
+  //     x2:
+  //       (offsetX + xUnit) * item.end.x +
+  //       item.end.xOffset * LINE_OFFSETX_UNIT +
+  //       marginLeft,
+  //     y2: (offsetY + yUnit) * item.end.y + marginTop,
+  //   },
+  // ];
+  // if (scale === 2) {
+  //   let startx = conversionCoordinates(item.start.x);
+  //   let endx = conversionCoordinates(item.end.x);
+  //   dataline[0].x1 =
+  //     (offsetX + xUnit) * startx.int * 24 +
+  //     (offsetX + xUnit) * startx.double +
+  //     item.start.xOffset * LINE_OFFSETX_UNIT +
+  //     marginLeft;
+  //   dataline[0].x2 =
+  //     (offsetX + xUnit) * endx.int * 24 +
+  //     (offsetX + xUnit) * endx.double +
+  //     item.end.xOffset * LINE_OFFSETX_UNIT +
+  //     marginLeft;
+  // }
   let lineGroup = rootGroup.append("g").attr("class", "line-group");
   lineGroup
     .append("line")
@@ -852,6 +980,9 @@ function drawDashedLine(
       return d.y2;
     })
     .attr("stroke", function (d) {
+      if (item.critical) {
+        // console.log("critical line>>>", item);
+      }
       // 关键路径 标红
       return item.critical ? "red" : lineDashedColor;
     })
@@ -873,42 +1004,50 @@ function drawWaveLine(
   roogGroup,
   lineWaveColor,
   lineWidth,
-  offsetX,
-  offsetY,
-  xUnit,
-  yUnit,
-  marginLeft,
-  marginTop,
-  scale = 1
-) {
-  let dataline = [
+  dataline = [
     {
-      x1:
-        (offsetX + xUnit) * item.start.x +
-        item.start.xOffset * LINE_OFFSETX_UNIT +
-        marginLeft,
-      y1: (offsetY + yUnit) * item.start.y + marginTop,
-      x2:
-        (offsetX + xUnit) * item.end.x +
-        item.end.xOffset * LINE_OFFSETX_UNIT +
-        marginLeft,
-      y2: (offsetY + yUnit) * item.end.y + marginTop,
+      x1: 0,
+      y1: 0,
+      x2: 0,
+      y2: 0,
     },
-  ];
-  if (scale === 2) {
-    let startx = conversionCoordinates(item.start.x);
-    let endx = conversionCoordinates(item.end.x);
-    dataline[0].x1 =
-      (offsetX + xUnit) * startx.int * 24 +
-      (offsetX + xUnit) * startx.double +
-      item.start.xOffset * LINE_OFFSETX_UNIT +
-      marginLeft;
-    dataline[0].x2 =
-      (offsetX + xUnit) * endx.int * 24 +
-      (offsetX + xUnit) * endx.double +
-      item.end.xOffset * LINE_OFFSETX_UNIT +
-      marginLeft;
-  }
+  ]
+  // offsetX,
+  // offsetY,
+  // xUnit,
+  // yUnit,
+  // marginLeft,
+  // marginTop,
+  // scale = 1
+) {
+  // let dataline = [
+  //   {
+  //     x1:
+  //       (offsetX + xUnit) * item.start.x +
+  //       item.start.xOffset * LINE_OFFSETX_UNIT +
+  //       marginLeft,
+  //     y1: (offsetY + yUnit) * item.start.y + marginTop,
+  //     x2:
+  //       (offsetX + xUnit) * item.end.x +
+  //       item.end.xOffset * LINE_OFFSETX_UNIT +
+  //       marginLeft,
+  //     y2: (offsetY + yUnit) * item.end.y + marginTop,
+  //   },
+  // ];
+  // if (scale === 2) {
+  //   let startx = conversionCoordinates(item.start.x);
+  //   let endx = conversionCoordinates(item.end.x);
+  //   dataline[0].x1 =
+  //     (offsetX + xUnit) * startx.int * 24 +
+  //     (offsetX + xUnit) * startx.double +
+  //     item.start.xOffset * LINE_OFFSETX_UNIT +
+  //     marginLeft;
+  //   dataline[0].x2 =
+  //     (offsetX + xUnit) * endx.int * 24 +
+  //     (offsetX + xUnit) * endx.double +
+  //     item.end.xOffset * LINE_OFFSETX_UNIT +
+  //     marginLeft;
+  // }
   // 优化波浪线上有剪头时的算法  修复波浪线结尾对不上箭头的bug
   if (item.arrow === 4) {
     // 向右时 end.x减去节点圆圈半径和箭头箭身宽度四分之一
@@ -1120,7 +1259,18 @@ function handleArrowData(point, direction) {
   return line;
 }
 // ----------------------------------------------------------------------------------------------
+// 定义节点拖拽事件对象
+let nodeDrag = d3
+  .drag()
+  .on("drag", dragNodeMove)
+  .on("start", dragNodeMoveStart)
+  .on("end", dragNodeMoveEnd);
 // 封装绘制节点方法
+/**
+ * @Author: zhang fq
+ * @Date: 2020-10-13
+ * @Description: 修改节点绘制方法 添加节点拖拽处理代码
+ */
 function drawNode(
   nodes,
   lastNode,
@@ -1132,11 +1282,12 @@ function drawNode(
   yUnit,
   marginLeft,
   marginTop,
-  scale = 1
+  scale = 1,
+  nodeDrag
 ) {
   if (nodes) {
     for (let key in nodes) {
-      // console.log(key);
+      // console.log(typeof key);
       let item = nodes[key];
       // 根组 添加 node组
       let nodegroup = rootGroup.append("g").attr("class", "node-group");
@@ -1193,7 +1344,7 @@ function drawNode(
         .attr("transform", function () {
           return "translate(0 ,6)"; // 垂直居中
         });
-      if (key === "LAST") {
+      if (key == lastNode) {
         // 绘制结束标识
         let last = nodes[key];
         let x = (offsetX + xUnit) * last.x + marginLeft + nodeRaduis;
@@ -1215,6 +1366,7 @@ function drawNode(
           .attr("stroke-width", "1px")
           .attr("fill", "red");
       }
+      nodegroup.call(nodeDrag);
     }
   }
 }
@@ -1416,33 +1568,51 @@ function drawText(
 ) {
   textData.forEach((v) => {
     let textgroup = rootGroup.append("g").attr("class", "text-group");
+    let posX = offsetX + xUnit * v.x + marginLeft;
+    let posY = (offsetY + yUnit) * v.y + marginTop;
+    if (scale === 2) {
+      let x = conversionCoordinates(v.x);
+      posX = offsetX + xUnit * x.int * 24 + xUnit * x.double + marginLeft;
+    }
+    // 调用任务名标签 根据任务长度自动截取算法 添加任务名标签
+    appendMultiText(
+      textgroup,
+      v.label,
+      posX,
+      posY,
+      v.width,
+      labelOffsetHeight,
+      labelFontColor,
+      labelFontSize,
+      14
+    );
     // 绘制label任务名
-    textgroup
-      .append("text")
-      .text(v.label)
-      .attr("class", "label-text")
-      .attr("text-anchor", "middle") // 水平居中
-      .attr("x", function (d, i) {
-        if (scale === 2) {
-          let x = conversionCoordinates(v.x);
-          return offsetX + xUnit * x.int * 24 + xUnit * x.double + marginLeft;
-        } else {
-          return (
-            // (offsetX + xUnit) * (v.x1 + (v.x2 - v.x1) / 2) + marginLeft
-            offsetX + xUnit * v.x + marginLeft
-          );
-        }
-        // return (
-        //   // (offsetX + xUnit) * (v.x1 + (v.x2 - v.x1) / 2) + marginLeft
-        //   offsetX + xUnit * v.x + marginLeft
-        // );
-      })
-      .attr("y", function (d, i) {
-        return (offsetY + yUnit) * v.y + marginTop;
-      })
-      .attr("dy", -labelOffsetHeight)
-      .attr("font-size", labelFontSize)
-      .attr("fill", labelFontColor);
+    // textgroup
+    //   .append("text")
+    //   .text(v.label)
+    //   .attr("class", "label-text")
+    //   .attr("text-anchor", "middle") // 水平居中
+    //   .attr("x", function (d, i) {
+    //     if (scale === 2) {
+    //       let x = conversionCoordinates(v.x);
+    //       return offsetX + xUnit * x.int * 24 + xUnit * x.double + marginLeft;
+    //     } else {
+    //       return (
+    //         // (offsetX + xUnit) * (v.x1 + (v.x2 - v.x1) / 2) + marginLeft
+    //         offsetX + xUnit * v.x + marginLeft
+    //       );
+    //     }
+    //     // return (
+    //     //   // (offsetX + xUnit) * (v.x1 + (v.x2 - v.x1) / 2) + marginLeft
+    //     //   offsetX + xUnit * v.x + marginLeft
+    //     // );
+    //   })
+    //   .attr("y", function (d, i) {
+    //     return (offsetY + yUnit) * v.y + marginTop;
+    //   })
+    //   .attr("dy", -labelOffsetHeight)
+    //   .attr("font-size", labelFontSize)
+    //   .attr("fill", labelFontColor);
     // .attr("transform", function (d, i) {
     //   if (v.ifRotate) {
     //     return "translate(" + d.x + "," + d.y + ")rotate(90)";
@@ -1696,4 +1866,111 @@ function conversionCoordinates(number) {
       console.log("坐标值类型错误");
     }
   }
+}
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * @Author: zhang fq
+ * @Date: 2020-09-01
+ * @Description: 超长文字标签根据宽度自动截取为多行显示算法
+ * @Date: 2020-09-02
+ * @Update: 修复任务名文字截断成多行后从下往上排列的bug
+ */
+function appendMultiText(
+  container,
+  str,
+  posX,
+  posY,
+  width,
+  labelOffsetHeight,
+  labelFontColor,
+  labelFontSize,
+  fontfamily
+) {
+  if (arguments.length < 6) {
+    labelFontSize = 14;
+  }
+  if (arguments.length < 7) {
+    fontfamily = "simsun, arial";
+  } //获取分割后的字符串
+  var strs = splitByLine(str, width, labelFontSize);
+  var mulText = container
+    .append("text")
+    .attr("x", posX)
+    .attr("y", posY)
+    .attr("text-anchor", "middle") // 水平居中
+    // .attr("dy", -labelOffsetHeight)
+    .attr("fill", labelFontColor)
+    .style("font-size", labelFontSize)
+    .style("font-family", fontfamily);
+  mulText
+    .selectAll("tspan")
+    .data(strs)
+    .enter()
+    .append("tspan")
+    .attr("x", mulText.attr("x"))
+    .attr("dy", -labelOffsetHeight)
+    .text(function (d) {
+      return d;
+    });
+  return mulText;
+  function splitByLine(str, max, fontsize) {
+    var curLen = 0;
+    var result = [];
+    var start = 0,
+      end = 0;
+    for (var i = 0; i < str.length; i++) {
+      var code = str.charCodeAt(i);
+      var pixelLen = code > 255 ? fontsize : fontsize / 2;
+      curLen += pixelLen;
+      if (curLen > max) {
+        end = i;
+        result.push(str.substring(start, end));
+        start = i;
+        curLen = pixelLen;
+      }
+      if (i === str.length - 1) {
+        end = i;
+        result.push(str.substring(start, end + 1));
+      }
+    }
+    return result.reverse();
+  }
+}
+/**
+ * @Author: zhang fq
+ * @Date: 2020-10-13
+ * @Description: 封装节点拖动坐标重算处理函数
+ */
+function dragNodeMove() {
+  let x = d3.event.x - d3.event.subject.x;
+  let y = d3.event.y - d3.event.subject.y;
+  d3.select(this).attr("transform", function (d) {
+    return "translate(" + x + "," + y + ")";
+  });
+  d3.select(this.childNodes[0])
+    .attr("cx", d3.event.subject.x)
+    .attr("cy", d3.event.subject.y);
+  d3.select(this.childNodes[1])
+    .attr("x", d3.event.subject.x)
+    .attr("y", d3.event.subject.y);
+}
+/**
+ * @Author: zhang fq
+ * @Date: 2020-10-13
+ * @Description: 封装 节点拖动事件开始时事件处理方法
+ * 标记当前拖动节点 添加圆周高亮
+ */
+function dragNodeMoveStart() {
+  console.log("dragNodeMoveStart", this);
+
+  d3.select(this.childNodes[0]).attr("stroke", "green");
+}
+/**
+ * @Author: zhang fq
+ * @Date: 2020-10-13
+ * @Description: 封装节点拖动事件结束事件处理方法
+ */
+function dragNodeMoveEnd() {
+  d3.select(this).attr("stroke", null);
 }

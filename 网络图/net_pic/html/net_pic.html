@@ -1,16 +1,16 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <link rel="stylesheet" href="./css/d3-demo2.css" />
   <link rel="stylesheet" href="../css/element.css" />
+  <link rel="stylesheet" href="../css/main.css">
   <title>Document</title>
 </head>
 
-<body> -->
+<body>
 <div
   id="netPicApp"
   class="network-box"
@@ -18,7 +18,11 @@
   element-loading-text="图形绘制中..."
 >
   <div class="top-box">
-    <div class="log-box top-item"></div>
+    <div class="log-box top-item">
+      <el-button style="font-size: 24px; padding:4px 8px;" :type="dragFlag?'primary':'danger'" icon="el-icon-rank" size="mini"  @click="goDrag">
+        <!-- <i class="el-icon-rank" style="font-size: 18px;"></i> -->
+      </el-button>
+    </div>
     <div class="title-box">
       <span>${projectName}</span>
       <!-- <span class="version-text">2.0</span> -->
@@ -29,7 +33,7 @@
       >
     </div>
   </div>
-  <div id="svgContainer">
+  <div id="svgContainer" ref="svgContainer">
     <!-- <div class="role-box">
           <div class="date-item role-header">
             <div class="role-header-item date-role-cell">
@@ -49,7 +53,7 @@
           </div>
         </div> -->
   </div>
-  <div class="bot-info-box" v-show="false">
+  <div class="bot-info-box" v-show="ifshowbotinfo">
     <div class="box-info-left">
       <ul>
         <li>1.春节放假七天</li>
@@ -106,14 +110,16 @@
     </div>
   </div>
 </div>
-<!-- <script src="./js/lq.js"></script>
-    <script src="./js/dag.js"></script>
-    <script src="./js/libs/viz.js"></script>
-    <script src="./js/libs/full.render.js"></script>
-    <script src="./js/lodash.js"></script>
-    <script src="./js/libs/d3.v5.js"></script>
-    <script src="./js/vue.min.js"></script>
-    <script src="./js/element.js"></script>
-    <script src="./js/d3_demo3_index.js" type="module"></script>
+    <script src="../js/lq.js"></script>
+    <script src="../js/dag.js"></script>
+    <script src="../js/layoutfix.js"></script>
+    <script src="../js/viz.js"></script>
+    <script src="../js/full.render.js"></script>
+    <script src="../js/lodash.js"></script>
+    <script src="../js/d3.v5.min.js"></script>
+    <script src="../js/vue.min.js"></script>
+    <script src="../js/element.js"></script>
+    <script src="../js/localforage.min.js"></script>
+    <script src="../js/test.js" type="module"></script>
 </body>
-</html> -->
+</html>

@@ -57,7 +57,7 @@
   const LINE_DASHED_COLOR = "#000";
   const LINE_WAVE_COLOR = "#0592f7";
   const LINE_RELATION_DASHED_COLOR = "green";
-  const STROKE_RELATION_DASHARRAY = "3,1,3";
+  const STROKE_RELATION_DASHARRAY = "3,1,3,1";
   const STROKE_DASHARRAY = "3,3";
   const LINE_OFFSETX_UNIT = 5; // 连线偏移量单位
 
@@ -72,10 +72,10 @@
   // 定义边距相关常量
   const offsetX = 0; //x偏移
   const offsetY = 0; //y偏移
-  let xUnit = 150; // 每工期单位长度
+  var xUnit = 150; // 每工期单位长度
   const yUnit = 70; // 每层单位高度
   const marginLeft = 100 + NODE_RADIUS; // 左边距
-  let marginTop = 140; // 上边距
+  var marginTop = 140; // 上边距
   var layoutData = null; // 杨勇算法结果
   var aoanInstance = null; // aoan实例
   // ----------------------------------------
@@ -561,7 +561,7 @@
                                               if (
                                                 duration.indexOf(".") !== -1
                                               ) {
-                                                text.duration = duration.toFixed(
+                                                text.duration = (+duration).toFixed(
                                                   1
                                                 );
                                               } else {
@@ -1060,6 +1060,57 @@
                                         linkData.forEach((v) => {
                                           if (v.lines) {
                                             v.lines.forEach((vl, k) => {
+                                              // 初始化线相关数据  在这里只计算一次  去除在每条线段里都计算
+                                              let dataline = [
+                                                {
+                                                  x1:
+                                                    (offsetX + xUnit) *
+                                                      vl.start.x +
+                                                    vl.start.xOffset *
+                                                      LINE_OFFSETX_UNIT +
+                                                    marginLeft,
+                                                  y1:
+                                                    (offsetY + yUnit) *
+                                                      vl.start.y +
+                                                    marginTop,
+                                                  x2:
+                                                    (offsetX + xUnit) *
+                                                      vl.end.x +
+                                                    vl.end.xOffset *
+                                                      LINE_OFFSETX_UNIT +
+                                                    marginLeft,
+                                                  y2:
+                                                    (offsetY + yUnit) *
+                                                      vl.end.y +
+                                                    marginTop,
+                                                },
+                                              ];
+                                              if (scale === 2) {
+                                                let startx = conversionCoordinates(
+                                                  vl.start.x
+                                                );
+                                                let endx = conversionCoordinates(
+                                                  vl.end.x
+                                                );
+                                                dataline[0].x1 =
+                                                  (offsetX + xUnit) *
+                                                    startx.int *
+                                                    24 +
+                                                  (offsetX + xUnit) *
+                                                    startx.double +
+                                                  vl.start.xOffset *
+                                                    LINE_OFFSETX_UNIT +
+                                                  marginLeft;
+                                                dataline[0].x2 =
+                                                  (offsetX + xUnit) *
+                                                    endx.int *
+                                                    24 +
+                                                  (offsetX + xUnit) *
+                                                    endx.double +
+                                                  vl.end.xOffset *
+                                                    LINE_OFFSETX_UNIT +
+                                                  marginLeft;
+                                              }
                                               switch (vl.shape) {
                                                 case 1:
                                                   // 画实线
@@ -1069,13 +1120,7 @@
                                                     this.rootG,
                                                     LINE_DEFAULT_COLOR,
                                                     LINE_WIDTH,
-                                                    offsetX,
-                                                    offsetY,
-                                                    xUnit,
-                                                    yUnit,
-                                                    marginLeft,
-                                                    marginTop,
-                                                    scale
+                                                    dataline
                                                   );
                                                   break;
                                                 case 2:
@@ -1087,13 +1132,7 @@
                                                     LINE_DASHED_COLOR,
                                                     STROKE_DASHARRAY,
                                                     LINE_WIDTH,
-                                                    offsetX,
-                                                    offsetY,
-                                                    xUnit,
-                                                    yUnit,
-                                                    marginLeft,
-                                                    marginTop,
-                                                    scale
+                                                    dataline
                                                   );
                                                   break;
                                                 case 3:
@@ -1104,13 +1143,7 @@
                                                     this.rootG,
                                                     LINE_WAVE_COLOR,
                                                     LINE_WIDTH,
-                                                    offsetX,
-                                                    offsetY,
-                                                    xUnit,
-                                                    yUnit,
-                                                    marginLeft,
-                                                    marginTop,
-                                                    scale
+                                                    dataline
                                                   );
                                                   break;
                                                 case 4: //挂起
@@ -1124,13 +1157,7 @@
                                                     LINE_DASHED_COLOR,
                                                     STROKE_DASHARRAY,
                                                     LINE_WIDTH,
-                                                    offsetX,
-                                                    offsetY,
-                                                    xUnit,
-                                                    yUnit,
-                                                    marginLeft,
-                                                    marginTop,
-                                                    scale
+                                                    dataline
                                                   );
                                                   break;
                                                 case 7: //搭接
@@ -1142,13 +1169,7 @@
                                                     LINE_RELATION_DASHED_COLOR,
                                                     STROKE_RELATION_DASHARRAY,
                                                     LINE_WIDTH,
-                                                    offsetX,
-                                                    offsetY,
-                                                    xUnit,
-                                                    yUnit,
-                                                    marginLeft,
-                                                    marginTop,
-                                                    scale
+                                                    dataline
                                                   );
                                                   break;
                                                 default:
@@ -1158,13 +1179,7 @@
                                                     this.rootG,
                                                     LINE_DEFAULT_COLOR,
                                                     LINE_WIDTH,
-                                                    offsetX,
-                                                    offsetY,
-                                                    xUnit,
-                                                    yUnit,
-                                                    marginLeft,
-                                                    marginTop,
-                                                    scale
+                                                    dataline
                                                   );
                                               }
                                             });
@@ -1233,43 +1248,16 @@
     rootGroup,
     lineDefaultColor,
     lineWidth,
-    offsetX,
-    offsetY,
-    xUnit,
-    yUnit,
-    marginLeft,
-    marginTop,
-    scale = 1
+    dataline = [
+      {
+        x1: 0,
+        y1: 0,
+        x2: 0,
+        y2: 0,
+      },
+    ]
   ) {
     // console.log("------------画实线", obj, item);
-    let dataline = [
-      {
-        x1:
-          (offsetX + xUnit) * item.start.x +
-          item.start.xOffset * LINE_OFFSETX_UNIT +
-          marginLeft,
-        y1: (offsetY + yUnit) * item.start.y + marginTop,
-        x2:
-          (offsetX + xUnit) * item.end.x +
-          item.end.xOffset * LINE_OFFSETX_UNIT +
-          marginLeft,
-        y2: (offsetY + yUnit) * item.end.y + marginTop,
-      },
-    ];
-    if (scale === 2) {
-      let startx = conversionCoordinates(item.start.x);
-      let endx = conversionCoordinates(item.end.x);
-      dataline[0].x1 =
-        (offsetX + xUnit) * startx.int * 24 +
-        (offsetX + xUnit) * startx.double +
-        item.start.xOffset * LINE_OFFSETX_UNIT +
-        marginLeft;
-      dataline[0].x2 =
-        (offsetX + xUnit) * endx.int * 24 +
-        (offsetX + xUnit) * endx.double +
-        item.end.xOffset * LINE_OFFSETX_UNIT +
-        marginLeft;
-    }
     let lineGroup = rootGroup.append("g").attr("class", "line-group");
     lineGroup
       .append("line")
@@ -1303,43 +1291,16 @@
     lineDashedColor,
     storkeDasharray,
     lineWidth,
-    offsetX,
-    offsetY,
-    xUnit,
-    yUnit,
-    marginLeft,
-    marginTop,
-    scale = 1
+    dataline = [
+      {
+        x1: 0,
+        y1: 0,
+        x2: 0,
+        y2: 0,
+      },
+    ]
   ) {
     // console.log("------------话虚线");
-    let dataline = [
-      {
-        x1:
-          (offsetX + xUnit) * item.start.x +
-          item.start.xOffset * LINE_OFFSETX_UNIT +
-          marginLeft,
-        y1: (offsetY + yUnit) * item.start.y + marginTop,
-        x2:
-          (offsetX + xUnit) * item.end.x +
-          item.end.xOffset * LINE_OFFSETX_UNIT +
-          marginLeft,
-        y2: (offsetY + yUnit) * item.end.y + marginTop,
-      },
-    ];
-    if (scale === 2) {
-      let startx = conversionCoordinates(item.start.x);
-      let endx = conversionCoordinates(item.end.x);
-      dataline[0].x1 =
-        (offsetX + xUnit) * startx.int * 24 +
-        (offsetX + xUnit) * startx.double +
-        item.start.xOffset * LINE_OFFSETX_UNIT +
-        marginLeft;
-      dataline[0].x2 =
-        (offsetX + xUnit) * endx.int * 24 +
-        (offsetX + xUnit) * endx.double +
-        item.end.xOffset * LINE_OFFSETX_UNIT +
-        marginLeft;
-    }
     let lineGroup = rootGroup.append("g").attr("class", "line-group");
     lineGroup
       .append("line")
@@ -1373,42 +1334,15 @@
     roogGroup,
     lineWaveColor,
     lineWidth,
-    offsetX,
-    offsetY,
-    xUnit,
-    yUnit,
-    marginLeft,
-    marginTop,
-    scale = 1
-  ) {
-    let dataline = [
+    dataline = [
       {
-        x1:
-          (offsetX + xUnit) * item.start.x +
-          item.start.xOffset * LINE_OFFSETX_UNIT +
-          marginLeft,
-        y1: (offsetY + yUnit) * item.start.y + marginTop,
-        x2:
-          (offsetX + xUnit) * item.end.x +
-          item.end.xOffset * LINE_OFFSETX_UNIT +
-          marginLeft,
-        y2: (offsetY + yUnit) * item.end.y + marginTop,
+        x1: 0,
+        y1: 0,
+        x2: 0,
+        y2: 0,
       },
-    ];
-    if (scale === 2) {
-      let startx = conversionCoordinates(item.start.x);
-      let endx = conversionCoordinates(item.end.x);
-      dataline[0].x1 =
-        (offsetX + xUnit) * startx.int * 24 +
-        (offsetX + xUnit) * startx.double +
-        item.start.xOffset * LINE_OFFSETX_UNIT +
-        marginLeft;
-      dataline[0].x2 =
-        (offsetX + xUnit) * endx.int * 24 +
-        (offsetX + xUnit) * endx.double +
-        item.end.xOffset * LINE_OFFSETX_UNIT +
-        marginLeft;
-    }
+    ]
+  ) {
     // 优化波浪线上有剪头时的算法  修复波浪线结尾对不上箭头的bug
     if (item.arrow === 4) {
       // 向右时 end.x减去节点圆圈半径和箭头箭身宽度四分之一
@@ -2243,7 +2177,6 @@
       return result.reverse();
     }
   }
-
   // ----------------------------------------------------------------------------------
   // 注册自定义控件
   KDApi.register("net_pic", MyComponent);
