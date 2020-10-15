@@ -134,6 +134,10 @@
                                         },
                                       ],
                                       scale: 1,
+                                      dragFlag: false,
+                                      dragText: "停止拖拽",
+                                      projectName: "测试项目",
+                                      ifshowbotinfo: false,
                                     },
                                     created() {
                                       this.handleUpdata(model, props);
@@ -163,6 +167,18 @@
                                       },
                                     },
                                     methods: {
+                                      /**
+                                       * @Author: zhang fq
+                                       * @Date: 2020-10-10
+                                       * @Description: 添加整体画布开始拖拽和停止拖拽按钮交互逻辑
+                                       * 需要拖动节点时必须禁止拖拽整个画布
+                                       */
+                                      goDrag() {
+                                        this.dragFlag = !this.dragFlag;
+                                        this.dragText = this.dragFlag
+                                          ? "停止拖拽"
+                                          : "开始拖拽";
+                                      },
                                       handleUpdata(model, props) {
                                         if (props.data) {
                                           if (
@@ -301,20 +317,26 @@
                                       },
                                       // 拖拽回调  移动画布
                                       dragmove(d) {
-                                        d.x += d3.event.dx;
-                                        d.y += d3.event.dy;
-                                        d3.select("g").attr(
-                                          "transform",
-                                          function (d) {
-                                            return (
-                                              "translate(" +
-                                              d.x +
-                                              "," +
-                                              d.y +
-                                              ")"
-                                            );
-                                          }
-                                        );
+                                        // d.x += d3.event.dx;
+                                        // d.y += d3.event.dy;
+                                        // d3.select("g").attr(
+                                        //   "transform",
+                                        //   function (d) {
+                                        //     return (
+                                        //       "translate(" +
+                                        //       d.x +
+                                        //       "," +
+                                        //       d.y +
+                                        //       ")"
+                                        //     );
+                                        //   }
+                                        // );
+                                        if (this.dragFlag) {
+                                          this.$refs.svgContainer.scrollTop -=
+                                            d3.event.dy;
+                                          this.$refs.svgContainer.scrollLeft -=
+                                            d3.event.dx;
+                                        }
                                       },
                                       // 缩放回调
                                       zoomed(d) {
@@ -546,30 +568,32 @@
                                                 ? 0
                                                 : v.option.duration,
                                           };
-                                          switch (v.option.taskType) {
-                                            case 6:
-                                              text.label =
-                                                v.option.relationLinkTypeText;
-                                              text.duration =
-                                                v.option.lag || "";
-                                              break;
-                                            case 3:
-                                              text.label = v.option.typeText;
-                                              let duration = v.option.hangTime
-                                                ? v.option.hangTime + ""
-                                                : "";
-                                              if (
-                                                duration.indexOf(".") !== -1
-                                              ) {
-                                                text.duration = (+duration).toFixed(
-                                                  1
-                                                );
-                                              } else {
-                                                text.duration = duration;
-                                              }
-                                              break;
-                                            default:
-                                              break;
+                                          if (v.option && v.option.taskType) {
+                                            switch (v.option.taskType) {
+                                              case 6:
+                                                text.label =
+                                                  v.option.relationLinkTypeText;
+                                                text.duration =
+                                                  v.option.lag || "";
+                                                break;
+                                              case 3:
+                                                text.label = v.option.typeText;
+                                                let duration = v.option.hangTime
+                                                  ? v.option.hangTime + ""
+                                                  : "";
+                                                if (
+                                                  duration.indexOf(".") !== -1
+                                                ) {
+                                                  text.duration = (+duration).toFixed(
+                                                    1
+                                                  );
+                                                } else {
+                                                  text.duration = duration;
+                                                }
+                                                break;
+                                              default:
+                                                break;
+                                            }
                                           }
                                           if (v.link) {
                                             if (
@@ -636,10 +660,17 @@
                                           .drag()
                                           .on("drag", this.dragmove)
                                           .on("start", () => {
-                                            this.svgInstance.style(
-                                              "cursor",
-                                              "pointer"
-                                            );
+                                            if (this.dragFlag) {
+                                              this.svgInstance.style(
+                                                "cursor",
+                                                "pointer"
+                                              );
+                                            } else {
+                                              this.svgInstance.style(
+                                                "cursor",
+                                                "not-allowed"
+                                              );
+                                            }
                                           })
                                           .on("end", () => {
                                             this.svgInstance.style(
@@ -674,7 +705,7 @@
                                           .style("left", "0px")
                                           .attr("width", "100%")
                                           .attr("height", "100%")
-                                          // .call(drag)  //去掉此处drag  不然有bug
+                                          .call(drag) // 添加拖拽
                                           .call(zoom); //拖拽画布功能
 
                                         // 创建根组
