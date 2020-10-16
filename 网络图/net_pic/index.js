@@ -568,6 +568,11 @@
                                                 ? 0
                                                 : v.option.duration,
                                           };
+                                          /**
+                                           * @Author: zhang fq
+                                           * @Date: 2020-10-15
+                                           * @Description: 修复刘姣建的项目 数据报错bug
+                                           */
                                           if (v.option && v.option.taskType) {
                                             switch (v.option.taskType) {
                                               case 6:

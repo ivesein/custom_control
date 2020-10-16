@@ -49,7 +49,7 @@
                 ).then(function (result) {
                   model.dom.innerHTML = "";
                   model.dom.innerHTML = result;
-                  model.checkRecordsVue = new Vue({
+                  model.pdfViewVue = new Vue({
                     delimiters: ["${", "}"],
                     data: {
                       baseUrl: "",
@@ -60,20 +60,22 @@
                       }
                     },
                     methods: {
+                      pdfViewTest() {
+                        model.invoke("pdfViewTest", "");
+                      },
                       handleUpdata(model, props) {
-                        // TODO 处理数据更新  复制已阅读 和未阅读
                         if (props.data !== undefined) {
-                          this.baseUrl = props.data.baseUrl;
-                          this.pdfUrl = props.data.pdfUrl;
-                          window.open(
-                            encodeURIComponent(
+                          if (props.data.method === "pdfViewTest") {
+                            this.baseUrl = props.data.baseUrl;
+                            this.pdfUrl = props.data.pdfUrl;
+                            window.open(
                               this.baseUrl +
                                 "/pdf/web/viewer.html?file=" +
-                                this.pdfUrl
-                            ),
-                            "PDF",
-                            "width:50%;height:50%;top:100;left:100;"
-                          );
+                                this.pdfUrl,
+                              "PDF",
+                              "width:50%;height:50%;top:100;left:100;"
+                            );
+                          }
                         }
                       },
                     },

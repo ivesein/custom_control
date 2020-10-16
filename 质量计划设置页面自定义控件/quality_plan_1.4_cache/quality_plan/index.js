@@ -283,26 +283,29 @@
                      * @Author: zhang fq
                      * @Date: 2020-06-19
                      * @Description: 配合严孝翔修改质量计划设置角色新增角色接口数据处理
+                     * @Date: 2020-10-16
+                     * @Description: 配合卢峰重写质量计划设置人员接口数据处理逻辑
                      */
                     updateSetRole(originData, selectedIds, changeData) {
                       if (
-                        changeData.data === null &&
-                        changeData.setRole === null &&
-                        changeData.setPerson === null
+                        changeData.data === null
+                        // &&
+                        // changeData.setRole === null &&
+                        // changeData.setPerson === null
                       ) {
                         return;
                       }
                       this.allChecked = false;
                       // 处理setRole
-                      if (changeData.setRole) {
-                        originData.forEach((ov) => {
-                          if (changeData.setRole.qp_task_id === ov.id) {
-                            ov.qp_owner_roleid =
-                              changeData.setRole.qp_owner_roleid;
-                            ov.qp_owner_role = changeData.setRole.qp_owner_role;
-                          }
-                        });
-                      }
+                      // if (changeData.setRole) {
+                      //   originData.forEach((ov) => {
+                      //     if (changeData.setRole.qp_task_id === ov.id) {
+                      //       ov.qp_owner_roleid =
+                      //         changeData.setRole.qp_owner_roleid;
+                      //       ov.qp_owner_role = changeData.setRole.qp_owner_role;
+                      //     }
+                      //   });
+                      // }
 
                       // 处理data
                       if (changeData.data) {
@@ -345,6 +348,16 @@
                                 }
                               });
                             }
+                            changeData.data.forEach(function (cv) {
+                              if (ov.qp_owner_roleid === cv.qp_owner_roleid) {
+                                ov.qp_owner_role = cv.qp_owner_role;
+                                ov.skill = cv.skill;
+                                ov.skill_id = cv.skill_id;
+                                ov.qp_owner = cv.qp_owner;
+                                ov.qp_owner_id = cv.qp_owner_id;
+                                ov.isreply = cv.isreply;
+                              }
+                            });
                           });
                         });
                       }
@@ -354,22 +367,22 @@
                        * @Description: 根据卢峰需求变更 修改质量计划 设置人员接口返回的数据做对应的处理
                        */
                       // 处理setPerson
-                      if (changeData.setPerson) {
-                        changeData.setPerson.forEach((cv) => {
-                          if (cv.isreply === "2") {
-                            originData.forEach((ov) => {
-                              if (cv.qp_owner_roleid === ov.qp_owner_roleid) {
-                                ov.qp_owner_role = cv.qp_owner_role;
-                                ov.skill = cv.skill;
-                                ov.skill_id = cv.skill_id;
-                                ov.qp_owner = cv.qp_owner;
-                                ov.qp_owner_id = cv.qp_owner_id;
-                                ov.isreply = cv.isreply;
-                              }
-                            });
-                          }
-                        });
-                      }
+                      // if (changeData.setPerson) {
+                      //   changeData.setPerson.forEach((cv) => {
+                      //     if (cv.isreply === "2") {
+                      //       originData.forEach((ov) => {
+                      //         if (cv.qp_owner_roleid === ov.qp_owner_roleid) {
+                      //           ov.qp_owner_role = cv.qp_owner_role;
+                      //           ov.skill = cv.skill;
+                      //           ov.skill_id = cv.skill_id;
+                      //           ov.qp_owner = cv.qp_owner;
+                      //           ov.qp_owner_id = cv.qp_owner_id;
+                      //           ov.isreply = cv.isreply;
+                      //         }
+                      //       });
+                      //     }
+                      //   });
+                      // }
 
                       originData = setAuditTaskUndertaker(originData);
                       // 处理页面数据更新
