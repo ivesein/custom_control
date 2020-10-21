@@ -289,7 +289,7 @@
                                 return v !== osub.owner_id;
                               });
                             });
-                            // -------------------此处为新改得理逻-----------------------
+                            // -------------------此处为新改得逻辑-----------------------
                             ov.owner_time = {};
                             changeData.forEach((cv) => {
                               cv.subArray.forEach((item) => {
@@ -314,6 +314,7 @@
                                 ov[key] = cv[key];
                               }
                             });
+
                             // -------------------以下为上一版处理逻辑--------------------
                             // changeData.forEach(function (cv) {
                             //   // 根据质量维护设置人员、持续时间、或资源调配接口返回数据
@@ -350,6 +351,26 @@
                             //   }
                             // });
                           }
+                          /**
+                           * @Author: zhang fq
+                           * @Date: 2020-10-21
+                           * @Description: 处理和卢峰调试时测出的bug
+                           */
+                          changeData.forEach(function (cv) {
+                            cv.subArray.forEach(function (item) {
+                              if (item.isreply === "2") {
+                                ov.subArray.forEach(function (ovitem) {
+                                  if (
+                                    item.owner_roleid === ovitem.owner_roleid
+                                  ) {
+                                    for (var key in item) {
+                                      ovitem[key] = item[key];
+                                    }
+                                  }
+                                });
+                              }
+                            });
+                          });
                         });
                       });
                       // 同步更新成本维护对应字段
