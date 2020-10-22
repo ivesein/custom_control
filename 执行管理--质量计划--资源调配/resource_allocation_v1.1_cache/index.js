@@ -353,8 +353,8 @@
                           }
                           /**
                            * @Author: zhang fq
-                           * @Date: 2020-10-21
-                           * @Description: 处理和卢峰调试时测出的bug
+                           * @Date: 2020-10-22
+                           * @Description: 处理和卢峰调试时测出的 有相同角色的替换人员时 部分字段被替换的bug
                            */
                           changeData.forEach(function (cv) {
                             cv.subArray.forEach(function (item) {
@@ -363,9 +363,14 @@
                                   if (
                                     item.owner_roleid === ovitem.owner_roleid
                                   ) {
-                                    for (var key in item) {
-                                      ovitem[key] = item[key];
-                                    }
+                                    ovitem["owner"] = item["owner"];
+                                    ovitem["isreply"] = item["isreply"];
+                                    ovitem["owner_id"] = item["owner_id"];
+                                    ovitem["skill"] = item["skill"];
+                                    ovitem["skill_id"] = item["skill_id"];
+                                    // for (var key in item) {
+                                    //   ovitem[key] = item[key];
+                                    // }
                                   }
                                 });
                               }
