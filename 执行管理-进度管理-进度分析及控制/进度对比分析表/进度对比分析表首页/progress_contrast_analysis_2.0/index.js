@@ -220,6 +220,15 @@
                           case "goCurrentTaskControl":
                             this.goCurrentTaskControl();
                             break;
+                          case "goVda":
+                            model.invoke(
+                              "goVda",
+                              JSON.stringify({
+                                projectid: this.currentRow
+                                  ? this.currentRow.projectId
+                                  : "",
+                              })
+                            );
                           default:
                             this.$message.error("数据获取失败，请稍后重试..");
                         }
