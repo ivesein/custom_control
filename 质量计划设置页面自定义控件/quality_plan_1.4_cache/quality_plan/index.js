@@ -68,9 +68,24 @@
                     loading_icon: "el-icon-loading",
                     project_id: "",
                     pageStatus: false, //是否提交
+                    theMaxRoleWidth: 120,
                   },
                   created() {
                     this.handleUpdata(model, props);
+                  },
+                  updated() {
+                    let self = this;
+                    this.$nextTick(function () {
+                      // 修复测试指出的角色名称文字太长会换行不好看的bug
+                      let x = document.querySelectorAll(".role-span");
+                      console.log(x);
+                      for (i = 0; i < x.length; i++) {
+                        console.log(x[i].clientWidth);
+                        if (self.theMaxRoleWidth < x[i].clientWidth) {
+                          self.theMaxRoleWidth = x[i].clientWidth + 10;
+                        }
+                      }
+                    });
                   },
                   mounted() {
                     let self = this;
@@ -92,6 +107,7 @@
                         // 处理偶发性初始化加载不出来的bug
                         setHtml(model, props);
                       }
+
                       // 监听窗口大小变化
                       window.onresize = function () {
                         self.tableHeight =

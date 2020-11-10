@@ -119,22 +119,23 @@ v-loading="loading"
         </div>
       </template>
     </el-table-column>
-    <el-table-column v-if="getFieldShow('qp_owner_role')"  label="承担人角色" width="120">
+    <el-table-column v-if="getFieldShow('qp_owner_role')"  label="承担人角色" :width="theMaxRoleWidth">
       <template slot-scope="scope">
         <div class="checek-man" v-show="scope.row.task_type === '3'">
-          ${ scope.row.qp_owner_role }
+          <span class="role-span">${ scope.row.qp_owner_role }</span>
         </div>
         <div class="checek-man" v-show="scope.row.task_type === '3'">
-          ${ scope.row.the_owner_role }
+          <span class="role-span">${ scope.row.the_owner_role }</span>
+          
         </div>
         <div class="checek-man" v-show="scope.row.task_type === '3'">
-          ${ scope.row.qp_owner_role }
+          <span class="role-span">${ scope.row.qp_owner_role }</span>
         </div>
         <div class="checek-man" style="border:none" v-show="scope.row.task_type === '3'">
-          ${ scope.row.qp_owner_role }
+          <span class="role-span">${ scope.row.qp_owner_role }</span>
         </div>
         <div v-show="scope.row.task_type === '1'||scope.row.task_type === '2'">
-          ${ scope.row.qp_owner_role }
+          <span class="role-span">${ scope.row.qp_owner_role }</span>
         </div>
       </template>
     </el-table-column>

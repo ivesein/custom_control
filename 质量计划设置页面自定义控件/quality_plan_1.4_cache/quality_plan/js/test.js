@@ -7,6 +7,7 @@ new Vue({
     allChecked: false,
     allItems: null,
     isIndeterminate: false,
+    pageStatus: true,
     tableHeight: 800,
     funcPerm: [
       {
@@ -72,6 +73,7 @@ new Vue({
     loading: true,
     loading_text: "数据加载中...",
     loading_icon: "el-icon-loading",
+    theMaxRoleWidth: 120,
   },
   created() {
     let a = {};
@@ -135,7 +137,7 @@ new Vue({
         confirm_duration: "0.1",
         owner: "卢峰",
         owner_id: "754806414039319552",
-        owner_role: "设计员",
+        owner_role: "设计员min-widthmin-widthmin-width",
         owner_roleid: "789577461510730800",
         duration: "",
         start_date: "2019-02-06",
@@ -159,7 +161,7 @@ new Vue({
         confirm_duration: "0.1",
         owner: "严孝祥",
         owner_id: "1111",
-        owner_role: "勘查员",
+        owner_role: "勘查员勘查员勘查员勘查员勘查员",
         skill: "挖土",
         owner_roleid: "789577577239965700",
         duration: "",
@@ -279,17 +281,25 @@ new Vue({
     console.log("this.tableData>>>", this.tableData);
   },
   mounted() {
-    // let self = this;
+    let self = this;
     // // 固定表格表头 设置表格高度自适应填满剩余高度
-    // this.$nextTick(function () {
-    //   self.tableHeight =
-    //     window.innerHeight - self.$refs.qualityPlanTable.$el.offsetTop - 60;
-    //   // 监听窗口大小变化
-    //   window.onresize = function () {
-    //     self.tableHeight =
-    //       window.innerHeight - self.$refs.qualityPlanTable.$el.offsetTop - 60;
-    //   };
-    // });
+    this.$nextTick(function () {
+      let x = document.querySelectorAll(".role-span");
+      console.log(x);
+      for (i = 0; i < x.length; i++) {
+        console.log(x[i].clientWidth);
+        if (self.theMaxRoleWidth < x[i].clientWidth) {
+          self.theMaxRoleWidth = x[i].clientWidth + 10;
+        }
+      }
+      // self.tableHeight =
+      //   window.innerHeight - self.$refs.qualityPlanTable.$el.offsetTop - 60;
+      // // 监听窗口大小变化
+      // window.onresize = function () {
+      //   self.tableHeight =
+      //     window.innerHeight - self.$refs.qualityPlanTable.$el.offsetTop - 60;
+      // };
+    });
   },
   computed: {
     getBtnShow(btnId) {

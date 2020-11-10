@@ -134,6 +134,10 @@ button[disabled] {
   text-indent: 10px;
 }
 
+#qualityPlanApp .checek-man span {
+  white-space: nowrap;
+}
+
 #qualityPlanApp .checek-man:nth-child(2) {
   border-top: 1px solid #ebeef5;
 }

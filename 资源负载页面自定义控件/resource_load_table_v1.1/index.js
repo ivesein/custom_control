@@ -86,7 +86,7 @@
                 if (dates.length > 0) {
                   let tempVal = new Array(dates.length).fill("");
                   if (target && target.length > 0) {
-                    target.forEach((a) => {
+                    target.forEach(function (a) {
                       if (
                         a.projectAllocation.value === undefined ||
                         a.projectAllocation.value === "" ||
