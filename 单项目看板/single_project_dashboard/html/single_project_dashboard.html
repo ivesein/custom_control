@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="../css/main.css" />
+
+    <link rel="stylesheet" href="../css/element.css" />
+
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="spdbApp">
+      <div class="left-content">
+        <div class="steps-box">
+          <div class="step-bars-box">
+            <div class="step-bar" v-for="(bar,i) in 4" :key="i" :class="{'current-step':i<currentStep}"></div>
+          </div>
+          <div class="steps-title project-item-title"><span>任务周期</span></div>
+          <div class="steps-wrap">
+            <div class="step-items" v-for="(item,index) in stepsInfo" :key="index">
+              <div class="step-description" >
+                <div class="step-points" :class="{'current-step-points':index<=currentStep}"></div>
+                <span class="step-desc" :class="{'current-step-text':index<=currentStep}">${item.desc}</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="project-info-box">
+          <div class="project-info-item project-brief">
+            <div class="brief-title project-item-title"><span>项目情况</span></div>
+            <div class="project-brief-wrap">
+              <div class="brief-info-item">
+                <div class="brief-item-icon-box">
+                </div>
+                <div class="brief-item-text-box">
+                  <div class="text-span main-text">${planStartDate}</div>
+                  <div class="text-span sub-text">计划开始日期</div>
+                </div>
+              </div>
+              <div class="brief-info-item">
+                <div class="brief-item-icon-box">
+                </div>
+                <div class="brief-item-text-box">
+                  <div class="main-text">${planEndDate}</div>
+                  <div class="sub-text">计划完成日期</div>
+                </div>
+              </div>
+              <div class="brief-info-item">
+                <div class="brief-item-icon-box">
+                </div>
+                <div class="brief-item-text-box">
+                  <div class="main-text">${dayScompleted}/${totalDays}</div>
+                  <div class="sub-text">工期已完成天数</div>
+                </div>
+              </div>
+            </div>
+            <div class="project-brief-wrap">
+              <div class="brief-info-item">
+                <div class="brief-item-icon-box">
+                </div>
+                <div class="brief-item-text-box">
+                  <div class="main-text">${tasksScompleted}/${totalTasks}</div>
+                  <div class="sub-text">已完成任务数</div>
+                </div>
+              </div>
+            </div>
+            <div class="earned-value-progress">
+              <div class="earned-value-title">项目挣值进度</div>
+              <div class="progress-bar-box">
+                <div class="progress-bar" :style="{'width':earnedValue+'%'}"></div>
+              </div>
+              <div class="progress-value"><span class="earned-value-text">${earnedValue}</span><span>%</span></div>
+            </div>
+          </div>
+          <div class="project-info-item project-target">
+            <div class="target-title project-item-title"><span>项目目标</span></div>
+            <div class="target-item-box">
+              <div class="target-item" v-for="(item,index) in proTargetInfo" :key="index">
+                <div class="icon-box"  :style="{'background-image':'url('+item.imgUrl+')'}"></div>
+                <div class="title-box">
+                  <div class="main-title">${item.title}</div>
+                  <div class="sub-title">${item.subTitle}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="project-tasks">
+          <div class="target-title project-item-title"><span>项目任务</span></div>
+          <div class="project-task-item">
+            <div class="task-item-info" v-for="(task,index) in taskInfo">
+              <div class="task-info-title">${task.title}</div>
+              <div class="task-info-number">${task.number}</div>
+            </div>
+          </div>
+          <div class="project-task-item project-task-item-center">
+            <div class="task-item-info" v-for="(task,index) in taskStatusInfo">
+              <div class="task-info-title">${task.title}</div>
+              <div class="task-info-number" :style="{color:task.color}">${task.number}</div>
+            </div>
+          </div>
+          <div class="project-task-item project-task-item-last" >
+            <div class="progress-cicle-container">
+              <!-- <el-progress width="58" type="dashboard" :percentage="percentage" :color="colors"></el-progress> -->
+
+            </div>
+          </div>
+        </div>
+        <div class="project-chart">
+
+        </div>
+      </div>
+      <div class="right-content">
+        <div class="project-quality">
+
+        </div>
+        <div class="project-team">
+
+        </div>
+      </div>
+    </div>
+    <script src="../js/vue.min.js"></script>
+    <script src="../js/echarts.min.js"></script>
+    <script src="../js/element.js"></script>
+    <script src="../js/test.js"></script>
+  </body>
+</html>

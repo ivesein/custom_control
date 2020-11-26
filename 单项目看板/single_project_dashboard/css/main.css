@@ -1,0 +1,443 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Source Han Sans CN", "Microsoft YaHei", Georgia, Serif;
+}
+
+div {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+#spdbApp {
+  width: 100%;
+  height: 100%;
+  /* padding: 24px; */
+  padding-top: 0.12rem;
+  padding-left: 0.12rem;
+  padding-right: 0.12rem;
+  padding-bottom: 0.12rem;
+
+  background-color: rgba(85, 130, 243, 0.12);
+  /* box-sizing: border-box; */
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  min-width: 9.6rem;
+  min-height: 5.1rem;
+}
+
+.left-content {
+  width: 68%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.steps-box {
+  width: 100%;
+  height: 0.5rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+  position: relative;
+  /* padding-top: 0.08rem; */
+  padding-left: 0.36rem;
+  padding-right: 0.36rem;
+  /* padding-bottom: 0.08rem; */
+  background: #fff;
+}
+
+.project-item-title {
+  position: absolute;
+  top: 0.08rem;
+  left: 0.08rem;
+  width: auto;
+  font-size: 0.08rem;
+  color: #2b2b2b;
+  font-weight: 700;
+}
+
+.step-bars-box {
+  height: 0.04rem;
+  width: 100%;
+  position: absolute;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  top: 0;
+  left: 0;
+  transform: translateY(50%);
+  padding-left: 0.536rem;
+  padding-right: 0.5rem;
+  margin-top: 0.2rem;
+}
+
+.step-bar {
+  flex: 1;
+  height: 100%;
+  background: #eaf0fe;
+}
+
+.steps-box .steps-wrap {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+.step-items {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 0.2rem;
+}
+
+.step-description {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 0.07rem;
+}
+
+.step-description .step-desc {
+  font-size: 0.07rem;
+  color: #999;
+}
+
+.step-points {
+  position: relative;
+  width: 0.08rem;
+  height: 0.08rem;
+  border: 0.02rem solid #eaf0fe;
+  border-radius: 100%;
+  background: #fff;
+  z-index: 900;
+  margin-bottom: 0.05rem;
+}
+
+.current-step {
+  background: #5582f3;
+}
+
+.current-step-points {
+  border: 0.02rem solid #5582f3;
+}
+
+.step-items .step-description .current-step-text {
+  color: #5582f3;
+}
+
+.project-info-box {
+  width: 100%;
+  height: 1.7rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+
+  margin-top: 0.12rem;
+}
+
+.project-info-box .project-info-item {
+  position: relative;
+  flex: 1;
+  /* margin-right: 0.12rem; */
+  padding-left: 0.1rem;
+  padding-right: 0.1rem;
+  background: #fff;
+}
+
+.project-info-box .project-brief {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  padding-top: 0.165rem;
+  padding-bottom: 0.165rem;
+  margin-right: 0.12rem;
+}
+
+.project-brief .project-brief-wrap {
+  height: 0.27rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+}
+
+.brief-info-item {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  flex-shrink: 0;
+}
+
+.brief-item-icon-box {
+  width: 0.27rem;
+  height: 0.27rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #eaf0fe;
+  background-image: url("../img/date.png");
+  background-size: 0.12rem;
+  background-repeat: no-repeat;
+  background-position-x: center;
+  background-position-y: center;
+  margin-right: 0.05rem;
+}
+
+.brief-info-item:hover .brief-item-icon-box {
+  background: #5582f3;
+  background-image: url("../img/date_hover.png");
+  background-size: 0.12rem;
+  background-repeat: no-repeat;
+  background-position-x: center;
+  background-position-y: center;
+  /* color: #f19149; */
+}
+
+.brief-info-item:hover .brief-item-text-box .main-text {
+  color: #f19149;
+}
+
+.brief-item-text-box {
+  display: flex;
+  flex: 1;
+  flex-shrink: 0;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: stretch;
+  font-size: 0.09rem;
+}
+
+.brief-item-text-box .text-span {
+  /* display: inline-block; */
+  color: #2b2b2b;
+}
+
+.brief-item-text-box .sub-text {
+  font-size: 0.07rem;
+  color: #b4b4b4;
+}
+
+.earned-value-progress {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex: 1;
+  margin-top: 0.1rem;
+}
+
+.earned-value-title {
+  font-size: 0.07rem;
+  color: #2b2b2b;
+}
+
+.progress-bar-box {
+  flex: 1;
+  height: 0.08rem;
+  position: relative;
+  background-color: rgba(85, 130, 243, 0.12);
+  border-radius: 0.04rem;
+  margin-left: 0.1rem;
+  margin-right: 0.1rem;
+}
+
+.progress-bar {
+  position: absolute;
+  height: 0.08rem;
+  top: 0;
+  left: 0;
+  background: #5582f3;
+  border-radius: 0.04rem;
+  box-shadow: 0px 2px 5px 0px rgba(85, 130, 243, 0.3);
+}
+
+.progress-value {
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
+  font-size: 0.07rem;
+}
+
+.progress-value .earned-value-text {
+  font-size: 0.18rem;
+  font-weight: 700;
+  margin-right: 0.02rem;
+}
+/* -----------project-target----------- */
+.project-target {
+  padding-top: 0.24rem;
+  padding-left: 0.1rem;
+  padding-right: 0.1rem;
+  padding-bottom: 0.24rem;
+}
+.target-item-box {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.target-item {
+  width: 1.4rem;
+  height: 0.4rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: rgba(85, 130, 243, 0.12);
+  margin-bottom: 0.04rem;
+  padding-left: 0.09rem;
+  padding-right: 0.09rem;
+}
+
+.target-item:nth-child(odd) {
+  margin-right: 0.04rem;
+}
+
+.target-item:hover {
+  background-color: #eaf0fe;
+}
+
+.icon-box {
+  display: flex;
+  flex-shrink: 0;
+  width: 0.21rem;
+  height: 0.21rem;
+  background-repeat: no-repeat;
+  background-position-x: center;
+  background-position-y: center;
+  background-size: 0.21rem;
+  margin-right: 0.1rem;
+}
+.title-box {
+  height: 0.21rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.main-title {
+  font-size: 0.07rem;
+  color: #999;
+}
+
+.sub-title {
+  font-size: 0.07rem;
+  color: #2b2b2b;
+  overflow: hidden;
+}
+/* -----------project-tasks----------- */
+
+.project-tasks {
+  position: relative;
+  width: 100%;
+  height: 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.12rem;
+  background: #fff;
+}
+
+.project-task-item {
+  width: 1.86rem;
+  height: 0.35rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: stretch;
+  padding-left: 0.1rem;
+  padding-right: 0.1rem;
+}
+
+.project-task-item-center {
+  width: 2.5rem;
+  border-left: 1px solid #e6e6e6;
+  border-right: 1px solid #e6e6e6;
+}
+
+.project-task-item .task-item-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.project-task-item .task-item-info .task-info-title {
+  font-size: 0.08rem;
+  color: #999;
+}
+.project-task-item .task-item-info .task-info-number {
+  font-size: 0.18rem;
+  color: #2b2b2b;
+}
+
+.project-task-item-last {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+  height: 100%;
+}
+
+.progress-cicle-container {
+}
+/* ----------------------------------- */
+.project-chart {
+  width: 100%;
+  /* height: 1.53rem; */
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  margin-top: 0.12rem;
+  background: #fff;
+}
+
+.right-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex: 1;
+  margin-left: 0.12rem;
+  box-sizing: border-box;
+}
+
+.right-content .project-quality {
+  width: 100%;
+  height: 2.32rem;
+  display: flex;
+  padding-top: 0.08rem;
+  padding-left: 0.08rem;
+  padding-right: 0.08rem;
+  padding-bottom: 0.08rem;
+  background: #fff;
+}
+
+.right-content .project-team {
+  flex: 1;
+  margin-top: 0.12rem;
+  background: #fff;
+}
