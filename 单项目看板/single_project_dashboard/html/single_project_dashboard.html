@@ -101,14 +101,13 @@
             </div>
           </div>
           <div class="project-task-item project-task-item-last" >
-            <div class="progress-cicle-container">
-              <!-- <el-progress width="58" type="dashboard" :percentage="percentage" :color="colors"></el-progress> -->
-
-            </div>
+            <canvas id="progressCanvas"></canvas>
           </div>
         </div>
         <div class="project-chart">
-
+          <div class="target-title project-item-title"><span>项目争执</span></div>
+          <div class="legend-info"><div class="legend-bar"></div><div class="legend-text">金额 (元)</div></div>
+          <div class="chart-box" id="lineChart" ></div>
         </div>
       </div>
       <div class="right-content">

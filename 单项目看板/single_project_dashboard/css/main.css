@@ -401,20 +401,52 @@ div {
   height: 100%;
 }
 
-.progress-cicle-container {
-}
 /* ----------------------------------- */
 .project-chart {
+  position: relative;
   width: 100%;
+  height: 1.55rem;
   /* height: 1.53rem; */
-  flex: 1;
-  display: flex;
-  justify-content: space-between;
-  align-items: stretch;
+  /* flex: 1; */
+  /* display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch; */
   margin-top: 0.12rem;
   background: #fff;
+  padding-top: 0.25rem;
+  padding-right: 0.2rem;
+  padding-bottom: 0.1rem;
+  padding-left: 0.1rem;
 }
 
+.legend-info {
+  position: absolute;
+  top: 0.08rem;
+  right: 0.1rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 0.07rem;
+  color: #2b2b2b;
+}
+
+.legend-bar {
+  width: 0.15rem;
+  height: 0.04rem;
+  border-radius: 0.04rem;
+  background: #5582f3;
+  margin-right: 0.04rem;
+}
+
+.chart-box {
+  display: block;
+  position: static;
+  width: 100%;
+  height: 100%;
+}
+/* ------------------------------------ */
 .right-content {
   display: flex;
   flex-direction: column;
